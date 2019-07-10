@@ -1,0 +1,72 @@
+{% include "Company/layout/header.html" %}
+{% include "Company/layout/menu_bar_layout.html" %}
+
+
+{% if user %}
+<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>Dashboard  Welcome <b>{{user.name}}</b></pre>
+
+                                    </header>
+                                    <div class="tools">
+                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                                    </div>
+
+                                </div>
+                                <div class="card-body ">
+                                  <div class="table-scrollable">
+                                    <table id="example1" class="display full-width">
+                                        <thead>
+                                        <tr>
+                                            <tr>
+                                            <th>ID</th>
+                                                <th>User Name</th>
+                                                <th>Email</th>
+                                                <th>Corporate ID</th>
+                                                <th>User Type</th>
+                                                <th>Access Token</th>
+                                                <th>Local Access</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ user.id }}</td>
+                                                <td>{{user.name}}</td>
+                                                <td>{{user.email}}</td>
+                                                <td>{{user.corporate_id}}</td>
+                                                <td>{{request.session.login_type}}</td>
+                                                <td>{{request.session.access_token}}</td>
+                                                <td>{{user.is_local}}</td>
+                                            </tr>
+                                        </tbody>
+
+                                        </table>
+	                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- end page content -->
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Company/layout/footer.html" %}
+
+
+
+
+

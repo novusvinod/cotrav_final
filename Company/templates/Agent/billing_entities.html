@@ -1,0 +1,99 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+
+{% if user.status %}
+<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>ALL CORPORATE BILLING ENTITIES LIST</header>
+                                    <div class="tools">
+                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                                    </div>
+                                </div>
+                                <div class="card-body ">
+
+                                    <div class="row p-b-20">
+                                        <div class="col-md-6 col-sm-6 col-6">
+                                            <div class="btn-group">
+<!--                                                <button type="submit" id="addRow"  formaction="/agents/corporate">-->
+<!--                                                    Add New <i class="fa fa-plus"></i>-->
+<!--                                                </button>-->
+                                                <a class="btn btn-info" href="/agents/corporate" > Add New <i class="fa fa-plus"></i> </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                  <div class="table-scrollable">
+                                    <table id="example1" class="display full-width">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Operator Name</th>
+                                                <th>Entity name</th>
+                                                <th>Billing City</th>
+                                                <th>Contact Name</th>
+                                                <th>Contact Email</th>
+                                                <th>Contact No</th>
+                                                <th>Address Line 1</th>
+                                                <th>Address Line 2</th>
+                                                <th>Address Line 3</th>
+                                                <th>GSTIN NO</th>
+                                                <th>PAN NO</th>
+
+                                                <th>Edit/Delete</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                        {% for billing_entitie in billing_entities %}
+                                            <tr>
+                                                <td>{{ billing_entitie.id }}</td>
+                                                <td>{{ billing_entitie.corporate_name }}</td>
+                                                <td>{{ billing_entitie.entity_name }}</td>
+                                                <td>{{ billing_entitie.billing_city }}</td>
+                                                <td>{{ billing_entitie.contact_person_name }}</td>
+                                                <td>{{ billing_entitie.contact_person_email }}</td>
+                                                <td>{{ billing_entitie.contact_person_no }}</td>
+                                                <td>{{ billing_entitie.address_line_1 }} hrs</td>
+                                                <td>{{ billing_entitie.address_line_2 }}</td>
+                                                <td>{{ billing_entitie.address_line_3 }}</td>
+                                                <td>{{ billing_entitie.gst_id }}</td>
+                                                <td>{{ billing_entitie.pan_no }}</td>
+
+                                                <td><a href="/agents/edit_corporate_billing_entitie/{{ billing_entitie.id }}">Edit</a> / <a id="delete_rate" href="#" onclick="Confirm.render('Are you sure you want to delete this Rate?', ' \/agents\/delete_corporate_billing_entitie\/{{ billing_entitie.id }}');">Delete</a>
+								                </td>
+                                            </tr>
+                                        {% endfor %}
+                                            </tbody>
+                                        </table>
+	                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- end page content -->
+
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+
+
+
+

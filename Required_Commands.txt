@@ -1,0 +1,15 @@
+#Django middleware that keep request instance for every thread.
+pip install django-middleware-global-request
+
+#Django REST framework is a powerful and flexible toolkit for building Web APIs.
+pip install djangorestframework
+
+# Django REST framework CALL Internal API
+pip install requests
+
+
+corporate_login_access_tokens_set_expiry_date_30days
+
+BEGIN
+    SET NEW.expiry_date = now() + INTERVAL 1 MONTH;
+END

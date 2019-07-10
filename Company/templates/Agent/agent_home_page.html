@@ -1,0 +1,64 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+
+{% if user.status %}
+<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>BASIC TABLE</header>
+                                    <div class="tools">
+                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                                    </div>
+                                </div>
+                                <div class="card-body ">
+                                  <div class="table-scrollable">
+                                    <table id="example1" class="display full-width">
+                                        <thead>
+                                        <tr>
+                                            <tr>
+                                                <th>User Name</th>
+                                                <th>Email</th>
+                                                <th>Corporate ID</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>{{user.username}}</td>
+                                                <td>{{user.email}}</td>
+                                                <td>{{user.status}}</td>
+                                            </tr>
+                                        </tbody>
+
+                                        </table>
+	                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- end page content -->
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+
+
+
+
