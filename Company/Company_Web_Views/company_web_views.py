@@ -265,46 +265,40 @@ def add_company_rate(request,id):
 
 @login_required(login_url='/login')
 def add_company_entity(request,id):
-    request = get_request()
-    user_id = request.POST.get('user_id', '')
-    corporate_id = request.POST.get('corporate_id', '')
-    login_type = request.POST.get('login_type', '')
-    access_token = request.POST.get('access_token', '')
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    entity_name = request.POST.get('entity_name', '')
-    billing_city_id = request.POST.get('billing_city_id', '')
-    contact_person_name = request.POST.get('contact_person_name', '')
-    contact_person_email = request.POST.get('contact_person_email', '')
-    contact_person_no = request.POST.get('contact_person_no', '')
-    address_line_1 = request.POST.get('address_line_1', '')
-    address_line_2 = request.POST.get('address_line_2', '')
-    address_line_3 = request.POST.get('address_line_3', '')
-    gst_id = request.POST.get('gst_id', '')
-    pan_no = request.POST.get('pan_no', '')
+        entity_name = request.POST.get('entity_name', '')
+        billing_city_id = request.POST.get('billing_city_id')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        address_line_1 = request.POST.get('address_line_1', '')
+        address_line_2 = request.POST.get('address_line_2', '')
+        address_line_3 = request.POST.get('address_line_3', '')
+        gst_id = request.POST.get('gst_id', '')
+        pan_no = request.POST.get('pan_no', '')
 
-    entity_id = request.POST.get('entity_id', '')
+        entity_id = request.POST.get('entity_id')
 
-    is_delete = request.POST.get('is_delete', '')
+        delete_id = request.POST.get('delete_id')
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = 0
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,
+                   'entity_name':entity_name,'billing_city_id':billing_city_id,'contact_person_name':contact_person_name,'contact_person_email':contact_person_email,
+                   'contact_person_no':contact_person_no,'address_line_1':address_line_1,'address_line_2':address_line_2,
+                   'address_line_3':address_line_3,'gst_id':gst_id,'pan_no':pan_no,'entity_id':entity_id,'is_delete':delete_id,}
 
-    payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,
-               'entity_name':entity_name,'billing_city_id':billing_city_id,'contact_person_name':contact_person_name,'contact_person_email':contact_person_email,
-               'contact_person_no':contact_person_no,'address_line_1':address_line_1,'address_line_2':address_line_2,
-               'address_line_3':address_line_3,'gst_id':gst_id,'pan_no':pan_no,'entity_id':entity_id,'is_delete':is_delete,}
+        url = settings.API_BASE_URL + "add_billing_entity"
+        company = getDataFromAPI(login_type,access_token,url,payload)
 
-    url = settings.API_BASE_URL + "add_billing_entity"
-    company = getDataFromAPI(login_type,access_token,url,payload)
-
-    print(company)
-
-    if company['success'] == 1:
-        return HttpResponseRedirect("/company-billing_entities/"+corporate_id,{'message':"Added Successfully"})
-    else:
-        return HttpResponseRedirect(request.path_info)
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-billing_entities/"+corporate_id,{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/company-billing_entities/"+corporate_id,{'message':"Record Not Added"})
 
 
 def getDataFromAPI(login_type,access_token,url,payload):

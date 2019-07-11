@@ -20,9 +20,7 @@
                 <input type="hidden" name="entity_id" id="entity_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
-                <input type="hidden" name="user_type" value="{{request.session.login_type}}">
-                <input type="hidden" name="access_token" value="{{request.session.access_token}}">
-                <input type="hidden" name="delete_id" id="delete_id">
+                <input type="test" name="delete_id" id="delete_id">
                 <!-- Modal footer -->
                 <div class="modal-body">
 
@@ -246,11 +244,12 @@ $(function() {
     var pan_no = button.data('pan_no');
 
     var delete_id = button.data('delete_id');
+
     var modal = $(this);
 
-    if(delete_id == 1){
-
-    modal.find('#delete_id').val(1);
+    if(delete_id = 1){
+alert(delete_id);
+    modal.find('#delete_id').val(delete_id);
     modal.find('#entity_id').val(id);
     $("#billing_city_id").val(billing_city).trigger('change');
     modal.find('#entity_name').val(entity_name);

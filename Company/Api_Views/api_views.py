@@ -268,8 +268,11 @@ def employee(request):
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):
     try:
+        user = {}
+        user_info = {}
         if user_type == '1':
             user = Corporate_Login_Access_Token.objects.get(access_token=user_token)
+
         elif user_type == '2':
             user = Corporate_Approves_1_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '3':
@@ -284,8 +287,10 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
         if user.expiry_date.date() < present.date():
             return None
         else:
+
             if user_type == '1':
                 user_info = Corporate_Login.objects.get(id=user.corporate_login_id)
+
             elif user_type == '2':
                 user_info = Corporate_Approves_1_Login.objects.get(id=user.subgroup_authenticater_id)
             elif user_type == '3':
@@ -335,9 +340,8 @@ def add_billing_entity(request):
     corporate_id = request.POST.get('corporate_id', '')
 
     user_id = request.POST.get('user_id', '')
-    login_type = request.POST.get('login_type', '')
     entity_name = request.POST.get('entity_name', '')
-    billing_city_id = request.POST.get('billing_city_id', '')
+    billing_city_id = request.POST.get('billing_city_id')
     contact_person_name = request.POST.get('contact_person_name', '')
     contact_person_email = request.POST.get('contact_person_email', '')
     contact_person_no = request.POST.get('contact_person_no', '')
@@ -347,27 +351,43 @@ def add_billing_entity(request):
     gst_id = request.POST.get('gst_id', '')
     pan_no = request.POST.get('pan_no', '')
 
-    entity_id = request.POST.get('entity_id', '')
-    is_delete = request.POST.get('is_delete', '')
+    entity_id = request.POST.get('entity_id')
+    is_delete = request.POST.get('is_delete')
 
     if corporate_id:
         corporate_id = corporate_id
     else:
         corporate_id = '0'
-    user ={}
+
+    if entity_id:
+        entity_id = entity_id
+    else:
+        entity_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
 
     if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+            user = {}
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('addNewCorporateBillingEntity', [user_id,corporate_id,login_type,entity_name,billing_city_id,contact_person_name,
-                                                                    contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
-                                                                    gst_id,pan_no,entity_id,is_delete])
-                data = {'success': 1, 'message': "Data Insert Successfully"}
-                return JsonResponse(data)
+                try:
+                    cursor.callproc('addNewCorporateBillingEntity', [user_id,corporate_id,user_type,entity_name,billing_city_id,contact_person_name,
+                                                                        contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
+                                                                        gst_id,pan_no,entity_id,is_delete])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
