@@ -40,7 +40,10 @@ urlpatterns = [
 
     path('add-company-rate/<int:id>', company_web_views.add_company_rate),
     path('add-company-entity/<int:id>', company_web_views.add_company_entity),
+    path('add-company-group/<int:id>', company_web_views.add_company_group),
 
+
+    path('view-company-group/<int:id>', company_web_views.view_company_group),
 ######################### END CORPORATE PATH URLS ###############
 
 

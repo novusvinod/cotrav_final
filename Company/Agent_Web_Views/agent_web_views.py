@@ -123,9 +123,11 @@ def logout_action(request):
 def agent_homepage(request):
     return render(request,'Agent/agent_home_page.html',{'user': request.user})
 
+
 def agent_login(request):
     form = Corporate_Agent_Login_Form()
     return render(request, 'Agent/corporate_agent_login.html', {'form': form})
+
 
 def agent_login_action(request):
     context = {}
@@ -147,6 +149,7 @@ def agent_login_action(request):
         form = Corporate_Agent_Login_Form()
         return render(request,'Agent/corporate_agent_login.html',{'form':form})
 
+
 def agent_logout_action(request):
     request = get_request()
     access_token = request.session['access_token']
@@ -155,6 +158,7 @@ def agent_logout_action(request):
     user.save()  # this will update only
     logout(request)  # the user is now LogOut
     return redirect("/agents/login")
+
 
 @login_required(login_url='/login')
 def add_company(request):

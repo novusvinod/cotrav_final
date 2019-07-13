@@ -400,6 +400,79 @@ def add_billing_entity(request):
 
 
 
+def add_group(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+    group_name = request.POST.get('group_name', '')
+    zone_name = request.POST.get('zone_name')
+    name = request.POST.get('name', '')
+    email = request.POST.get('email', '')
+    cid = request.POST.get('cid', '')
+    contact_no = request.POST.get('contact_no', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    group_id = request.POST.get('group_id')
+
+    is_delete = request.POST.get('delete_id')
+    access_token = request.POST.get('access_token_auth','')
+    password = request.POST.get('password','')
+    group_auth_id = request.POST.get('group_auth_id','')
+
+    if corporate_id:
+        corporate_id = corporate_id
+    else:
+        corporate_id = '0'
+
+    if group_id:
+        group_id = group_id
+    else:
+        group_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('addNewCorporateGroup', [user_id,corporate_id,user_type,group_name,zone_name,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                                                             is_water_bottles,is_reverse_logistics,group_id,is_delete,access_token,password,group_auth_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 def dictfetchall(cursor):

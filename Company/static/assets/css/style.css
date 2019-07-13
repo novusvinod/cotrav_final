@@ -8563,3 +8563,12 @@ span.notificationtime {
   right: 0;
 }
 
+.model_custom_style h4 {
+    font-size: 12px !important;
+}
+
+..model_custom_style label{
+font-weight: bold;
+}
+
+

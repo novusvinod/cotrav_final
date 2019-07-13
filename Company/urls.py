@@ -14,4 +14,5 @@ urlpatterns = [
     path('api/cities', api_views.cities),
 
     path('api/add_billing_entity', api_views.add_billing_entity),
+    path('api/add_group', api_views.add_group),
 ]

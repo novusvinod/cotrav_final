@@ -4,16 +4,10 @@ from django.http import HttpResponseRedirect
 import requests
 import json
 from datetime import datetime
-from django.views.decorators.csrf import csrf_exempt
 from django_global_request.middleware import get_request
-# Create your views here.
 from django.contrib.auth import authenticate, login as auth_login, logout
 from Company.forms import Corporate_Login_Form
 from django.contrib.auth.decorators import login_required
-
-from Company.forms import Corporate_Agent_Login_Form
-from Company.forms import Corporate_Form
-from Company.models import Corporate
 from django.contrib.auth.hashers import make_password
 from Company.models import Corporate_Login_Access_Token
 from Company.models import Corporate_Spoc_Login_Access_Token
@@ -30,6 +24,7 @@ def homepage(request):
 def login(request):
     form = Corporate_Login_Form()
     return render(request, 'corporate_login.html', {'form': form})
+
 
 def login_action(request):
     context = {}
@@ -92,6 +87,7 @@ def login_action(request):
         # the login is a  GET request, so just show the user the login form.
         form = Corporate_Login_Form()
         return render(request,'corporate_login.html',{'form':form})
+
 
 def logout_action(request):
     request = get_request()
@@ -299,6 +295,88 @@ def add_company_entity(request,id):
             return HttpResponseRedirect("/company-billing_entities/"+corporate_id,{'message':"Added Successfully"})
         else:
             return HttpResponseRedirect("/company-billing_entities/"+corporate_id,{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def add_company_group(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        access_token_auth = request.session['access_token']
+
+        group_name = request.POST.get('group_name', '')
+        zone_name = request.POST.get('zone_name')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
+
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+        group_id = request.POST.get('group_id')
+        group_auth_id = request.POST.get('group_auth_id')
+        delete_id = request.POST.get('delete_id')
+
+        if group_id:
+            password = ""
+            group_auth_id = group_auth_id
+        else:
+            password = make_password("taxi123")
+            group_auth_id = 0
+
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,'group_name':group_name,'zone_name':zone_name, 'name':name,'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles': is_water_bottles,'is_reverse_logistics':is_reverse_logistics,'group_id':group_id,'delete_id':delete_id,'password':password,'group_auth_id':group_auth_id,'access_token_auth':access_token_auth}
+
+        print(payload)
+        url = settings.API_BASE_URL + "add_group"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-groups/"+corporate_id,{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/company-groups/"+corporate_id,{'message':"Record Not Added"})
+
+
+
+
+@login_required(login_url='/login')
+def view_company_group(request, id):
+    request = get_request()
+    login_type = request.session['login_type']
+    access_token = request.session['access_token']
+    url = settings.API_BASE_URL + "groups"
+    payload = {'corporate_id': id}
+    headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+    r = requests.post(url, data=payload, headers=headers)
+    company = json.loads(r.text)
+    if company['success'] == 1:
+        groups = company['Groups']
+        return render(request, "Company/view_groups.html", {'groups': groups})
+    else:
+        return render(request, "Company/view_groups.html", {'groups': {}})
+
+
+
+
+
+
+
+
+
+
+
 
 
 def getDataFromAPI(login_type,access_token,url,payload):
