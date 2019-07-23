@@ -14,5 +14,39 @@ urlpatterns = [
     path('api/cities', api_views.cities),
 
     path('api/add_billing_entity', api_views.add_billing_entity),
+
+    path('api/view_group_auth', api_views.view_group_auth),
+    path('api/add_group_auth', api_views.add_group_auth),
+    path('api/update_group_auth', api_views.update_group_auth),
+    path('api/delete_group_auth', api_views.delete_group_auth),
+
+    path('api/view_group', api_views.view_group),
     path('api/add_group', api_views.add_group),
+    path('api/update_group', api_views.update_group),
+    path('api/delete_group', api_views.delete_group),
+
+    path('api/view_subgroup', api_views.view_subgroup),
+    path('api/add_subgroup', api_views.add_subgroup),
+    path('api/update_subgroup', api_views.update_subgroup),
+    path('api/delete_subgroup', api_views.delete_subgroup),
+
+    path('api/view_subgroup_auth', api_views.view_subgroup_auth),
+    path('api/add_subgroup_auth', api_views.add_subgroup_auth),
+    path('api/update_subgroup_auth', api_views.update_subgroup_auth),
+    path('api/delete_subgroup_auth', api_views.delete_subgroup_auth),
+
+    path('api/add_admin', api_views.add_admin),
+    path('api/update_admin', api_views.update_admin),
+    path('api/delete_admin', api_views.delete_admin),
+
+    path('api/view_spoc', api_views.view_spoc),
+    path('api/add_spoc', api_views.add_spoc),
+    path('api/update_spoc', api_views.update_spoc),
+    path('api/delete_spoc', api_views.delete_spoc),
+
+    path('api/view_employee', api_views.view_employee),
+    path('api/add_employee', api_views.add_employee),
+    path('api/update_employee', api_views.update_employee),
+    path('api/delete_employee', api_views.delete_employee),
+
 ]

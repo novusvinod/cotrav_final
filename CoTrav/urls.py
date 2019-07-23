@@ -23,28 +23,26 @@ from Company.Company_Web_Views import company_web_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-######################### CORPORATE PATH URLS ################
+######################### Comman urls ################
 
     path('login', company_web_views.login),
     path('postlogin', company_web_views.login_action),
     path('logout', company_web_views.logout_action),
-    path('home', company_web_views.homepage),
-    path('company-billing_entities/<int:id>', company_web_views.company_billing_entities),
-    path('company-rates/<int:id>', company_web_views.company_rates),
-    path('company-admins/<int:id>', company_web_views.company_admins),
-    path('company-groups/<int:id>', company_web_views.company_groups),
-    path('company-subgroups/<int:id>', company_web_views.company_subgroups),
-    path('company-spocs/<int:id>', company_web_views.company_spocs),
-    path('company-employees/<int:id>', company_web_views.company_employees),
 
 
-    path('add-company-rate/<int:id>', company_web_views.add_company_rate),
-    path('add-company-entity/<int:id>', company_web_views.add_company_entity),
-    path('add-company-group/<int:id>', company_web_views.add_company_group),
+######################### END Commann urls ###############
 
+######################### CORPORATE ADMIN URLS ############################
 
-    path('view-company-group/<int:id>', company_web_views.view_company_group),
-######################### END CORPORATE PATH URLS ###############
+    path('', include('Company.URL.Admin.urls')),
+
+    path('', include('Company.URL.Spoc.urls')),
+
+    path('', include('Company.URL.Approves_1.urls')),
+
+    path('', include('Company.URL.Approves_2.urls')),
+
+######################### END CORPORATE URLS ####################
 
 
 ######################### AGENTS URLS ############################
@@ -70,6 +68,8 @@ urlpatterns = [
     path('agents/edit-company/<int:id>', agent_web_views.edit_company),
 
 ######################### END AGENTS URLS ################
+
+
 
 
 

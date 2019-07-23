@@ -67,7 +67,7 @@ class Corporate_Spoc_Login(models.Model):
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
-    spoc_id = models.CharField(max_length=10)
+    corporate_id = models.CharField(default=True, max_length=10)
     is_radio = models.BooleanField()
     is_local = models.BooleanField()
     is_outstation = models.BooleanField()
@@ -102,7 +102,7 @@ class Corporate_Approves_1_Login(models.Model):
     email = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
-    subgroup_id = models.CharField(max_length=10)
+    corporate_id = models.CharField(default=True, max_length=10)
     is_radio = models.BooleanField()
     is_local = models.BooleanField()
     is_outstation = models.BooleanField()
@@ -137,7 +137,7 @@ class Corporate_Approves_2_Login(models.Model):
     email = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
-    group_id = models.CharField(max_length=10)
+    corporate_id = models.CharField(default=True, max_length=10)
     is_radio = models.BooleanField()
     is_local = models.BooleanField()
     is_outstation = models.BooleanField()
@@ -199,6 +199,7 @@ class Corporate_Login_Access_Token(models.Model):
 
     class Meta:
         db_table = "corporate_login_access_tokens"
+
 
 class Corporate_Spoc_Login_Access_Token(models.Model):
     spoc_id = models.CharField(default=True, max_length=10)

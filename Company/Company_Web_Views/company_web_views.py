@@ -46,40 +46,36 @@ def login_action(request):
                 if user_type == '1':
                     cursor.callproc('getAllCorporateAdminsDetails', [user.corporate_id])
                     user_info = dictfetchall(cursor)
-                    print("Found User Info")
-                    print(user_info)
+                    auth_login(request, user, backend='Company.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    return redirect("Corporate/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '2':
                     cursor.callproc('getAllCorporateSubgroupsDetails', [user.corporate_id])
                     user_info = dictfetchall(cursor)
-                    print("Found User Info")
-                    print(user_info)
+                    auth_login(request, user, backend='Company.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    return redirect("Approves_1/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '3':
                     cursor.callproc('getAllCorporateGroupsDetails', [user.corporate_id])
                     user_info = dictfetchall(cursor)
-                    print("Found User Info")
-                    print(user_info)
+                    auth_login(request, user, backend='Company.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    return redirect("Approves_2/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '4':
                     cursor.callproc('getAllCorporateSpocsDetails', [user.corporate_id])
                     user_info = dictfetchall(cursor)
-                    print("Found User Info")
                     print(user_info)
+                    auth_login(request, user, backend='Company.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    return redirect("Spoc/home")
                 else:
                     print("User Info Not Found")
-                print(user_info)
-                auth_login(request, user, backend='Company.backends.CustomCompanyUserAuth')  # the user is now logged in
-                print("with login")
 
-
-                return redirect("/home")
         else:
             context['error'] = "Invalid Email Or Password"
             return render(request,'corporate_login.html',context)
@@ -187,6 +183,7 @@ def company_groups(request,id):
     else:
         return render(request, "Company/groups.html", {'groups': {}})
 
+
 @login_required(login_url='/login')
 def company_subgroups(request,id):
     request = get_request()
@@ -198,8 +195,12 @@ def company_subgroups(request,id):
     r = requests.post(url, data=payload, headers=headers)
     company = json.loads(r.text)
     if company['success'] == 1:
+        url2 = settings.API_BASE_URL + "groups"
         subgroups = company['Subgroups']
-        return render(request, "Company/subgroups.html", {'subgroups': subgroups})
+        r = requests.post(url2, data=payload, headers=headers)
+        gr = json.loads(r.text)
+        groups = gr['Groups']
+        return render(request, "Company/subgroups.html", {'subgroups': subgroups,'groups':groups})
     else:
         return render(request, "Company/subgroups.html", {'subgroups': {}})
 
@@ -216,7 +217,7 @@ def company_spocs(request,id):
     company = json.loads(r.text)
     if company['success'] == 1:
         spocs = company['Spocs']
-        return render(request, "Company/spocs.html", {'subgroups': spocs})
+        return render(request, "Company/spocs.html", {'spocs': spocs})
     else:
         return render(request, "Company/spocs.html", {'spocs': {}})
 
@@ -302,14 +303,145 @@ def add_company_group(request,id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
+        corporate_id = id
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        group_name = request.POST.get('group_name', '')
+        zone_name = request.POST.get('zone_name')
+
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,'group_name':group_name,'zone_name':zone_name}
+
+        print(payload)
+        url = settings.API_BASE_URL + "add_group"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-groups/"+str(id),{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/company-groups/"+str(id),{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def add_company_subgroup(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        subgroup_name = request.POST.get('group_name', '')
+        group_id = request.POST.get('group_id', '')
+
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,'subgroup_name':subgroup_name,'group_id':group_id}
+
+        print(payload)
+        url = settings.API_BASE_URL + "add_subgroup"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-subgroups/"+str(id),{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/company-subgroups/"+str(id),{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def update_company_group(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        group_id = request.POST.get('group_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        group_name = request.POST.get('group_name', '')
+        zone_name = request.POST.get('zone_name')
+
+        payload = {'group_id': group_id,'access_token':access_token,'group_name':group_name,'zone_name':zone_name,'user_id':user_id,'login_type':login_type}
+
+        print(payload)
+        url = settings.API_BASE_URL + "update_group"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/view-company-group/"+group_id,{'message':"Update Successfully"})
+        else:
+            return HttpResponseRedirect("/view-company-group/"+group_id,{'message':"Record Not Updated"})
+
+
+@login_required(login_url='/login')
+def update_company_subgroup(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        group_name = request.POST.get('group_name', '')
+
+        payload = {'subgroup_id': subgroup_id,'access_token':access_token,'group_name':group_name,'user_id':user_id,'login_type':login_type}
+
+        print(payload)
+        url = settings.API_BASE_URL + "update_subgroup"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/view-company-subgroup/"+str(id),{'message':"Update Successfully"})
+        else:
+            return HttpResponseRedirect("/view-company-subgroup/"+str(id),{'message':"Record Not Updated"})
+
+
+@login_required(login_url='/login')
+def delete_company_group(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        group_id = request.POST.get('group_id')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        access_token_auth = request.session['access_token']
+        payload = {'group_id': group_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,'access_token_auth':access_token_auth}
+        url = settings.API_BASE_URL + "delete_group"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-groups/"+str(id),{'message':"Delete Successfully"})
+        else:
+            return HttpResponseRedirect("/company-groups/"+str(id),{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def delete_company_subgroup(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        subgroup_id = request.POST.get('subgroup_id')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        access_token_auth = request.session['access_token']
+        payload = {'subgroup_id': subgroup_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,'access_token_auth':access_token_auth}
+        url = settings.API_BASE_URL + "delete_subgroup"
+        company = getDataFromAPI(login_type,access_token,url,payload)
+        print(payload)
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-subgroups/"+str(id),{'message':"Delete Successfully"})
+        else:
+            return HttpResponseRedirect("/company-subgroups/"+str(id),{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def add_company_group_auth(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
         login_type = request.session['login_type']
         access_token = request.session['access_token']
 
         access_token_auth = request.session['access_token']
 
-        group_name = request.POST.get('group_name', '')
-        zone_name = request.POST.get('zone_name')
         name = request.POST.get('name', '')
         email = request.POST.get('email', '')
         cid = request.POST.get('cid', '')
@@ -331,24 +463,228 @@ def add_company_group(request,id):
         delete_id = request.POST.get('delete_id')
 
         if group_id:
-            password = ""
+            group_auth_id = group_auth_id
+            password = make_password("taxi123")
+
+        if group_auth_id:
             group_auth_id = group_auth_id
         else:
-            password = make_password("taxi123")
-            group_auth_id = 0
+            group_auth_id=0
 
-        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token,'group_name':group_name,'zone_name':zone_name, 'name':name,'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles': is_water_bottles,'is_reverse_logistics':is_reverse_logistics,'group_id':group_id,'delete_id':delete_id,'password':password,'group_auth_id':group_auth_id,'access_token_auth':access_token_auth}
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token, 'name':name,'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles': is_water_bottles,'is_reverse_logistics':is_reverse_logistics,'group_id':group_id,'delete_id':delete_id,'password':password,'group_auth_id':group_auth_id,'access_token_auth':access_token_auth}
 
-        print(payload)
-        url = settings.API_BASE_URL + "add_group"
-        company = getDataFromAPI(login_type,access_token,url,payload)
+        url =""
+        if group_auth_id:
+            url = settings.API_BASE_URL + "update_group_auth"
+            print("in auth id")
+            if delete_id == '1':
+                url = settings.API_BASE_URL + "delete_group_auth"
+                print(url)
 
-        if company['success'] == 1:
-            return HttpResponseRedirect("/company-groups/"+corporate_id,{'message':"Added Successfully"})
         else:
-            return HttpResponseRedirect("/company-groups/"+corporate_id,{'message':"Record Not Added"})
+            url = settings.API_BASE_URL + "add_group_auth"
+
+        company = getDataFromAPI(login_type,access_token,url,payload)
+        print(url)
+        print(delete_id)
+        if company['success'] == 1:
+            return HttpResponseRedirect("/view-company-group/"+group_id,{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/view-company-group/"+group_id,{'message':"Record Not Added"})
 
 
+@login_required(login_url='/login')
+def add_company_subgroup_auth(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        access_token_auth = request.session['access_token']
+
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
+
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+        subgroup_id = request.POST.get('subgroup_id')
+        subgroup_auth_id = request.POST.get('subgroup_auth_id')
+        delete_id = request.POST.get('delete_id')
+
+        if subgroup_id:
+            subgroup_auth_id = subgroup_auth_id
+            password = make_password("taxi123")
+
+        if subgroup_auth_id:
+            subgroup_auth_id = subgroup_auth_id
+        else:
+            subgroup_auth_id=0
+
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token, 'name':name,'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles': is_water_bottles,'is_reverse_logistics':is_reverse_logistics,'subgroup_id':subgroup_id,'delete_id':delete_id,'password':password,'subgroup_auth_id':subgroup_auth_id,'access_token_auth':access_token_auth}
+
+        url =""
+        if subgroup_auth_id:
+            url = settings.API_BASE_URL + "update_subgroup_auth"
+            print("in auth id")
+            if delete_id == '1':
+                url = settings.API_BASE_URL + "delete_subgroup_auth"
+                print(url)
+
+        else:
+            url = settings.API_BASE_URL + "add_subgroup_auth"
+
+        company = getDataFromAPI(login_type,access_token,url,payload)
+        print(url)
+        print(company)
+        if company['success'] == 1:
+            return HttpResponseRedirect("/view-company-subgroup/"+subgroup_id,{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/view-company-subgroup/"+subgroup_id,{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def add_company_admins(request, id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        access_token_auth = request.session['access_token']
+
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
+
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+        admin_id = request.POST.get('admin_id')
+
+        delete_id = request.POST.get('delete_id')
+
+        if admin_id:
+            password =''
+        else:
+            password = make_password("taxi123")
+
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token, 'name':name,'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles': is_water_bottles,'is_reverse_logistics':is_reverse_logistics,'admin_id':admin_id,'delete_id':delete_id,'password':password,'access_token_auth':access_token_auth}
+
+        url =""
+        if admin_id:
+            url = settings.API_BASE_URL + "update_admin"
+            print("in auth id")
+            if delete_id == '1':
+                url = settings.API_BASE_URL + "delete_admin"
+                print(url)
+
+        else:
+            url = settings.API_BASE_URL + "add_admin"
+
+        company = getDataFromAPI(login_type,access_token,url,payload)
+        print(url)
+        print(company)
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-admins/"+str(id),{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/company-admins/"+str(id),{'message':"Record Not Added"})
+
+
+@login_required(login_url='/login')
+def add_spocs(request, id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        access_token_auth = request.session['access_token']
+
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
+
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+        admin_id = request.POST.get('admin_id')
+
+        delete_id = request.POST.get('delete_id')
+
+        if admin_id:
+            password =''
+        else:
+            password = make_password("taxi123")
+
+        payload = {'corporate_id': corporate_id,'user_id':user_id,'login_type':login_type,'access_token':access_token, 'name':name,'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles': is_water_bottles,'is_reverse_logistics':is_reverse_logistics,'admin_id':admin_id,'delete_id':delete_id,'password':password,'access_token_auth':access_token_auth}
+
+        url =""
+        if admin_id:
+            url = settings.API_BASE_URL + "update_admin"
+            print("in auth id")
+            if delete_id == '1':
+                url = settings.API_BASE_URL + "delete_admin"
+                print(url)
+
+        else:
+            url = settings.API_BASE_URL + "add_admin"
+
+        company = getDataFromAPI(login_type,access_token,url,payload)
+        print(url)
+        print(company)
+        if company['success'] == 1:
+            return HttpResponseRedirect("/company-admins/"+str(id),{'message':"Added Successfully"})
+        else:
+            return HttpResponseRedirect("/company-admins/"+str(id),{'message':"Record Not Added"})
+    else:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        url = settings.API_BASE_URL + "groups"
+        payload = {'corporate_id': id}
+        headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+        r = requests.post(url, data=payload, headers=headers)
+        company = json.loads(r.text)
+        groups = company['Groups']
+
+        url_subgroup = settings.API_BASE_URL + "subgroups"
+        r = requests.post(url_subgroup, data=payload, headers=headers)
+        company_sub = json.loads(r.text)
+        subgroups = company_sub['Subgroups']
+        return render(request, 'Company/add-spoc.html', {'group':groups,'subgroup':subgroups})
 
 
 @login_required(login_url='/login')
@@ -356,17 +692,47 @@ def view_company_group(request, id):
     request = get_request()
     login_type = request.session['login_type']
     access_token = request.session['access_token']
-    url = settings.API_BASE_URL + "groups"
-    payload = {'corporate_id': id}
+
+    url = settings.API_BASE_URL + "view_group"
+    payload = {'group_id': id}
     headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
     r = requests.post(url, data=payload, headers=headers)
     company = json.loads(r.text)
+
+    url = settings.API_BASE_URL + "view_group_auth"
+    r = requests.post(url, data=payload, headers=headers)
+    grp_auths = json.loads(r.text)
+    print(grp_auths)
     if company['success'] == 1:
         groups = company['Groups']
-        return render(request, "Company/view_groups.html", {'groups': groups})
+        grp_auths = grp_auths['Groups']
+        return render(request, "Company/view_groups.html", {'group': groups,'grp_auths':grp_auths})
     else:
-        return render(request, "Company/view_groups.html", {'groups': {}})
+        return render(request, "Company/view_groups.html", {'group': {}})
 
+
+@login_required(login_url='/login')
+def view_company_subgroup(request, id):
+    request = get_request()
+    login_type = request.session['login_type']
+    access_token = request.session['access_token']
+
+    url = settings.API_BASE_URL + "view_subgroup"
+    payload = {'subgroup_id': id}
+    headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+    r = requests.post(url, data=payload, headers=headers)
+    company = json.loads(r.text)
+
+    url = settings.API_BASE_URL + "view_subgroup_auth"
+    r = requests.post(url, data=payload, headers=headers)
+    subgrp_auths = json.loads(r.text)
+    print(subgrp_auths)
+    if company['success'] == 1:
+        subgroups = company['SubGroups']
+        subgrp_auths = subgrp_auths['SubGroups']
+        return render(request, "Company/view_subgroups.html", {'subgroup': subgroups,'subgrp_auths':subgrp_auths})
+    else:
+        return render(request, "Company/view_subgroups.html", {'group': {}})
 
 
 

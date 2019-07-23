@@ -399,7 +399,6 @@ def add_billing_entity(request):
         return JsonResponse(data)
 
 
-
 def add_group(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
@@ -408,6 +407,240 @@ def add_group(request):
     user_id = request.POST.get('user_id', '')
     group_name = request.POST.get('group_name', '')
     zone_name = request.POST.get('zone_name')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('addNewCorporateGroup', [user_id,corporate_id,user_type,group_name,zone_name])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_group(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    group_id = request.POST.get('group_id', '')
+
+    user_id = request.POST.get('user_id', '')
+    group_name = request.POST.get('group_name', '')
+    zone_name = request.POST.get('zone_name')
+
+    if group_id:
+        group_id = group_id
+    else:
+        group_id = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateGroupDetails', [group_id,group_name,zone_name,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Updated Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_group(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    group_id = request.POST.get('group_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    if group_id:
+        group_id = group_id
+    else:
+        group_id = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteGroupDetails', [group_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Deleted Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_subgroup(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+    subgroup_name = request.POST.get('subgroup_name', '')
+    group_id = request.POST.get('group_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('addNewCorporateSubGroup', [user_id,corporate_id,user_type,subgroup_name,group_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_subgroup(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    group_id = request.POST.get('group_id', '')
+    subgroup_id = request.POST.get('subgroup_id', '')
+    user_id = request.POST.get('user_id', '')
+    subgroup_name = request.POST.get('group_name', '')
+
+    if subgroup_id:
+        subgroup_id = subgroup_id
+    else:
+        subgroup_id = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateSubGroupDetails', [subgroup_id,subgroup_name,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Updated Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_subgroup(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    subgroup_id = request.POST.get('subgroup_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    if subgroup_id:
+        subgroup_id = subgroup_id
+    else:
+        subgroup_id = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteSubGroupDetails', [subgroup_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Deleted Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_group_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+
     name = request.POST.get('name', '')
     email = request.POST.get('email', '')
     cid = request.POST.get('cid', '')
@@ -454,7 +687,7 @@ def add_group(request):
             if user:
                 cursor = connection.cursor()
                 try:
-                    cursor.callproc('addNewCorporateGroup', [user_id,corporate_id,user_type,group_name,zone_name,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                    cursor.callproc('addNewCorporateGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
                                                              is_water_bottles,is_reverse_logistics,group_id,is_delete,access_token,password,group_auth_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
@@ -464,6 +697,954 @@ def add_group(request):
                     data = {'success': 1, 'message': "Error in Data Insert"}
                     return JsonResponse(data)
 
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_group_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user_id = request.POST.get('user_id', '')
+    name = request.POST.get('name', '')
+    email = request.POST.get('email', '')
+    cid = request.POST.get('cid', '')
+    contact_no = request.POST.get('contact_no', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    group_auth_id = request.POST.get('group_auth_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateCorporateGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,group_auth_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_group_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    group_auth_id = request.POST.get('group_auth_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteGroupAuthenticator', [group_auth_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_subgroup_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+
+    name = request.POST.get('name', '')
+    email = request.POST.get('email', '')
+    cid = request.POST.get('cid', '')
+    contact_no = request.POST.get('contact_no', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    subgroup_id = request.POST.get('subgroup_id')
+
+    is_delete = request.POST.get('delete_id')
+    access_token = request.POST.get('access_token_auth','')
+    password = request.POST.get('password','')
+    subgroup_auth_id = request.POST.get('subgroup_auth_id','')
+
+    if corporate_id:
+        corporate_id = corporate_id
+    else:
+        corporate_id = '0'
+
+    if subgroup_id:
+        subgroup_id = subgroup_id
+    else:
+        subgroup_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('addNewCorporateSubGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                                                             is_water_bottles,is_reverse_logistics,subgroup_id,is_delete,access_token,password,subgroup_auth_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_subgroup_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user_id = request.POST.get('user_id', '')
+    name = request.POST.get('name', '')
+    email = request.POST.get('email', '')
+    cid = request.POST.get('cid', '')
+    contact_no = request.POST.get('contact_no', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    subgroup_auth_id = request.POST.get('subgroup_auth_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateCorporateSubGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,subgroup_auth_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_subgroup_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    subgroup_auth_id = request.POST.get('subgroup_auth_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteSubGroupAuthenticator', [subgroup_auth_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_admin(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+
+    name = request.POST.get('name', '')
+    email = request.POST.get('email', '')
+    contact_no = request.POST.get('contact_no', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    is_delete = request.POST.get('delete_id')
+    access_token = request.POST.get('access_token_auth','')
+    password = request.POST.get('password','')
+    admin_id = request.POST.get('admin_id','')
+
+    if corporate_id:
+        corporate_id = corporate_id
+    else:
+        corporate_id = '0'
+
+    if admin_id:
+        admin_id = admin_id
+    else:
+        admin_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('addNewCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_admin(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user_id = request.POST.get('user_id', '')
+    name = request.POST.get('name', '')
+    email = request.POST.get('email', '')
+    contact_no = request.POST.get('contact_no', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    admin_id = request.POST.get('admin_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,admin_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_admin(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    admin_id = request.POST.get('admin_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteCorporateAdmin', [admin_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_spoc(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+
+    group_id = request.POST.get('group_id', '')
+    subgroup_id = request.POST.get('subgroup_id', '')
+    user_cid = request.POST.get('user_cid', '')
+
+    user_name = request.POST.get('user_name', '')
+    user_contact = request.POST.get('user_contact', '')
+    email = request.POST.get('email', '')
+    username = request.POST.get('username', '')
+    budget = request.POST.get('budget')
+    expense = request.POST.get('expense')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    is_delete = request.POST.get('delete_id')
+    access_token = request.POST.get('access_token_auth','')
+    password = request.POST.get('password','')
+    spoc_id = request.POST.get('spoc_id')
+
+    if corporate_id:
+        corporate_id = corporate_id
+    else:
+        corporate_id = '0'
+
+    if spoc_id:
+        admin_id = spoc_id
+    else:
+        admin_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    result = cursor.callproc('addNewCorporateSpoc', [user_id,corporate_id,user_type,group_id,subgroup_id,user_cid,user_name,user_contact,email,username,
+                                                            budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,spoc_id])
+
+                    print(result)
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_spoc(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    group_id = request.POST.get('group_id', '')
+    subgroup_id = request.POST.get('subgroup_id', '')
+    user_cid = request.POST.get('user_cid', '')
+
+    user_name = request.POST.get('user_name', '')
+    user_contact = request.POST.get('user_contact', '')
+    email = request.POST.get('email', '')
+    username = request.POST.get('username', '')
+    budget = request.POST.get('budget', '')
+    expense = request.POST.get('expense', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    is_delete = request.POST.get('delete_id')
+    access_token = request.POST.get('access_token_auth','')
+    spoc_id = request.POST.get('spoc_id')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateCorporateSpoc', [user_id,corporate_id,user_type,group_id,subgroup_id,user_cid,user_name,user_contact,email,username,
+                                                            budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                                                             is_water_bottles,is_reverse_logistics,is_delete,spoc_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_spoc(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    spoc_id = request.POST.get('spoc_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteCorporateSpoc', [spoc_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_employee(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+
+    spoc_id = request.POST.get('spoc_id')
+    core_employee_id = request.POST.get('core_employee_id', '')
+    employee_cid = request.POST.get('employee_cid', '')
+
+    employee_name = request.POST.get('employee_name', '')
+    employee_email = request.POST.get('employee_email', '')
+    employee_contact = request.POST.get('employee_contact', '')
+    age = request.POST.get('age', '')
+    gender = request.POST.get('gender')
+    id_proof_type = request.POST.get('id_proof_type')
+
+    id_proof_no = request.POST.get('id_proof_no', '')
+    is_active = request.POST.get('is_active', '')
+    has_dummy_email = request.POST.get('has_dummy_email', '')
+    fcm_regid = request.POST.get('fcm_regid', '')
+    is_cxo = request.POST.get('is_cxo', '')
+    designation = request.POST.get('designation', '')
+    home_city = request.POST.get('home_city', '')
+    home_address = request.POST.get('home_address', '')
+    assistant_id = request.POST.get('assistant_id', '')
+    date_of_birth = request.POST.get('date_of_birth', '')
+
+    is_delete = request.POST.get('delete_id')
+    password = request.POST.get('password','')
+    employee_id = request.POST.get('employee_id')
+
+    if employee_id:
+        employee_id = employee_id
+    else:
+        employee_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
+
+
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    result = cursor.callproc('addNewCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
+                    employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id])
+
+                    print(result)
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_employee(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    spoc_id = request.POST.get('spoc_id')
+    core_employee_id = request.POST.get('core_employee_id', '')
+    employee_cid = request.POST.get('employee_cid', '')
+
+    employee_name = request.POST.get('employee_name', '')
+    employee_email = request.POST.get('employee_email', '')
+    employee_contact = request.POST.get('employee_contact', '')
+    age = request.POST.get('age', '')
+    gender = request.POST.get('gender')
+    id_proof_type = request.POST.get('id_proof_type')
+
+    id_proof_no = request.POST.get('id_proof_no', '')
+    is_active = request.POST.get('is_active', '')
+    has_dummy_email = request.POST.get('has_dummy_email', '')
+    fcm_regid = request.POST.get('fcm_regid', '')
+    is_cxo = request.POST.get('is_cxo', '')
+    designation = request.POST.get('designation', '')
+    home_city = request.POST.get('home_city', '')
+    home_address = request.POST.get('home_address', '')
+    assistant_id = request.POST.get('assistant_id', '')
+    date_of_birth = request.POST.get('date_of_birth', '')
+
+    is_delete = request.POST.get('delete_id')
+    employee_id = request.POST.get('employee_id')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    result = cursor.callproc('updateCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
+                    employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id])
+                    print(result)
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_employee(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    employee_id = request.POST.get('employee_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteCorporateEmployee', [employee_id,user_id,user_type])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_group(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    group_id = request.POST.get('group_id', '')
+
+    if group_id:
+        group_id = group_id
+    else:
+        group_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewGroupDetails', [group_id])
+                group = dictfetchall(cursor)
+                data = {'success': 1, 'Groups': group}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_group_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    group_id = request.POST.get('group_id', '')
+
+    if group_id:
+        group_id = group_id
+    else:
+        group_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllCorporateGroupsAuthenticator', [group_id])
+                group = dictfetchall(cursor)
+                data = {'success': 1, 'Groups': group}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_subgroup(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    subgroup_id = request.POST.get('subgroup_id', '')
+
+    if subgroup_id:
+        subgroup_id = subgroup_id
+    else:
+        subgroup_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewSubGroupDetails', [subgroup_id])
+                group = dictfetchall(cursor)
+                data = {'success': 1, 'SubGroups': group}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_subgroup_auth(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    subgroup_id = request.POST.get('subgroup_id', '')
+
+    if subgroup_id:
+        subgroup_id = subgroup_id
+    else:
+        subgroup_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllCorporateSubGroupsAuthenticator', [subgroup_id])
+                group = dictfetchall(cursor)
+                data = {'success': 1, 'SubGroups': group}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_spoc(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    spoc_id = request.POST.get('spoc_id', '')
+
+    if spoc_id:
+        spoc_id = spoc_id
+    else:
+        spoc_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewSpocDetails', [spoc_id])
+                spoc = dictfetchall(cursor)
+                data = {'success': 1, 'Spoc': spoc}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_employee(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    employee_id = request.POST.get('employee_id', '')
+
+    if employee_id:
+        employee_id = employee_id
+    else:
+        employee_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewEmployeeDetails', [employee_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Employee': emp}
+                return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)

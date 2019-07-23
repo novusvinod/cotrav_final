@@ -70,27 +70,5 @@ END
 
 
 
-,corporate_id,login_type,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no
-One or more errors have occurred while processing your request:
-The following query has failed: "CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewCorporateBillingEntity`(IN `user_id` INT, IN `corporate_id` INT(11), IN `login_type` INT(11), IN `entity_name` VARCHAR(100), IN `billing_city_id` VARCHAR(100), IN `contact_person_name` VARCHAR(100), IN `contact_person_email` VARCHAR(100), IN `contact_person_no` VARCHAR(100), IN `address_line_1` VARCHAR(100), IN `address_line_2` VARCHAR(100), IN `address_line_3` VARCHAR(100), IN `gst_id` VARCHAR(100), IN `pan_no` VARCHAR(100), IN `entity_id` INT(11), IN `is_delete` INT(11)) NOT DETERMINISTIC NO SQL SQL SECURITY DEFINER BEGIN DECLARE gen_entity_id INT DEFAULT 0; DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; END; START TRANSACTION; IF(entity_id IS NULL) THEN INSERT INTO corporate_billing_entities(corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no) VALUES(corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no); SET gen_entity_id = LAST_INSERT_ID(); INSERT INTO corporate_billing_entities_action_log (corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no, is_deleted, action_date, entity_id, user_id, user_type, action) select corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no, is_deleted, NOW(), gen_entity_id, user_id, user_type, 'ADD' from corporate_billing_entities where id = gen_entity_id ; ELSE commands IF(is_delete IS NULL) THEN INSERT INTO corporate_billing_entities_action_log (corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no, is_deleted, action_date, entity_id, user_id, user_type, action) select corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no, is_deleted, NOW(), entity_id, user_id, user_type, 'UPDATE' from corporate_billing_entities where id = entity_id ; UPDATE corporate_billing_entities SET entity_name = entity_name, billing_city_id = billing_city_id, contact_person_name = contact_person_name, contact_person_email = contact_person_email, contact_person_no = contact_person_no, address_line_1 = address_line_1, address_line_2 = address_line_2, address_line_3 = address_line_3, gst_id = gst_id, pan_no = pan_no WHERE id = entity_id; ELSE commands INSERT INTO corporate_billing_entities_action_log (corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no, is_deleted, action_date, entity_id, user_id, user_type, action) select corporate_id,entity_name,billing_city_id,contact_person_name,contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,gst_id,pan_no, is_deleted, NOW(), entity_id, user_id, login_type, 'DELETE' from corporate_billing_entities where id = entity_id ; UPDATE corporate_billing_entities SET is_deleted = 1 WHERE id = entity_id; END IF; END IF; COMMIT; END"
-MySQL said: #1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF(is_delete IS NULL) THEN INSERT INTO corporate_billing_enti' at line 21
-Routines  Documentation
-Name	Action	Type	Returns
-	create_corporate_with_basic_details	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCity	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateAdminsDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateBillingEntitiesDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateEmployeesDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateGroupsDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateRatesDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateSpocsDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	getAllCorporateSubgroupsDetails	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	test	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-	addNewCorporateBillingEntity	Edit Edit	Execute Execute	Export Export	Drop Drop	PROCEDURE	
-With selected:  Check all With selected: Export Export Drop Drop
- New
- Add routine  Documentation
-
 
 
