@@ -14,11 +14,4 @@ BEGIN
     SET NEW.expiry_date = now() + INTERVAL 1 MONTH;
 END
 
-A donation is a gift for charity, humanitarian aid, or to benefit a cause. A donation may take various forms, including money, alms, services, or goods such as clothing, toys, food, or vehicles
-
-Yc%3@p&L
-
-super 30
-
-kalank
 
