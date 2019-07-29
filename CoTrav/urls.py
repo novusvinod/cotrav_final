@@ -22,44 +22,29 @@ from Company.VIEW import basic_web_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-######################### Comman urls ################
 
+######################### Comman urls ################
     path('login', basic_web_views.login),
     path('postlogin', basic_web_views.login_action),
     path('logout', basic_web_views.logout_action),
-
-
 ######################### END Commann urls ###############
 
+
 ######################### CORPORATE ADMIN URLS ############################
-
     path('', include('Company.URL.Admin.urls')),
-
     path('', include('Company.URL.Spoc.urls')),
-
     path('', include('Company.URL.Approves_1.urls')),
-
     path('', include('Company.URL.Approves_2.urls')),
-
 ######################### END CORPORATE URLS ####################
 
 
 ######################### AGENTS URLS ############################
-
     path('', include('Company.URL.Agent.urls')),
-
-
-
 ######################### END AGENTS URLS ################
 
 
-
-
-
 ######################### API URLS ############################
-
-    path('', include('Company.urls')),
-
+    path('', include('Company.URL.Api.urls')),
 ######################### END API URLS ####################
 
 

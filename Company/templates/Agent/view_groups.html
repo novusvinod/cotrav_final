@@ -1,0 +1,510 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+
+{% if user %}
+<!-- start page content -->
+ {% for g in group %}
+<!-- The Modal -->
+<div class="modal fade model_custom_style" id="model_add_new_group" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title-status" id="delete_label">Add New Corporate Billing Entitie Form</h4>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+            </div>
+
+            <form action="/agents/add-company-group-auth/0" enctype="multipart/form-data" method="post">
+
+                <input id="set_group_id" name="group_id" type="hidden">
+                <input id="group_auth_id" name="group_auth_id" type="hidden">
+                <input name="user_id" type="hidden" value="{{user.id}}">
+                <input name="corporate_id" type="hidden" value="{{g.corporate_id}}">
+                <input id="delete_id" name="delete_id" type="hidden">
+                <!-- Modal footer -->
+                <div class="modal-body">
+
+
+                    <div class="form-group row" id="name1">
+                        <label class="col-sm-5 control-label">Authenticater Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name"
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="email1">
+                        <label class="col-sm-5 control-label">Authenticater Email</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email"
+                                   type="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="cid1">
+                        <label class="col-sm-5 control-label">Authenticater C_ID</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="cid" name="cid" placeholder="Authenticater C_ID"
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="contact_no1">
+                        <label class="col-sm-5 control-label">Contact</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact"
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_radio1">
+                        <label class="col-sm-5 control-label">Radio Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_radio">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_local1">
+                        <label class="col-sm-5 control-label">Local Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_local">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_outstation1">
+                        <label class="col-sm-5 control-label">Outstation Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_outstation">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_bus1">
+                        <label class="col-sm-5 control-label">Bus Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_bus">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_train1">
+                        <label class="col-sm-5 control-label">Train Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_train">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row" id="is_hotel1">
+                        <label class="col-sm-5 control-label">Hotel Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_hotel">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row" id="is_flight1">
+                        <label class="col-sm-5 control-label">Flight Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_flight">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_meal1">
+                        <label class="col-sm-5 control-label">Meal Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_meal">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_water_bottles1">
+                        <label class="col-sm-5 control-label">Water Bottles Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_water_bottles">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_reverse_logistics1">
+                        <label class="col-sm-5 control-label">Reverse Logistics Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_reverse_logistics">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" id="delete_btn" type="submit">Save</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="row">
+
+            <div class="col-md-4">
+            </div>
+
+
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Group Basic Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                    <form action="/agents/update-company-group/{{g.id}}" enctype="multipart/form-data" method="post">
+                        <input name="user_id" type="hidden" value="{{user.id}}">
+                        <input name="group_id" id="group_id" type="hidden" value="{{g.id}}">
+                        <div class="form-group row" id="group_name1">
+                            <label class="col-sm-5 control-label">Group Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" id="group_name" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{g.group_name}}">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row" id="zone_name1">
+                            <label class="col-sm-5 control-label">Zone Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" id="zone_name" name="zone_name" placeholder="Zone Name"
+                                       type="text" value="{{g.zone_name}}">
+                            </div>
+                        </div>
+
+
+                        <center><button class="btn btn-primary" type="submit">Update Group <i class="fa fa-pencil"></i> </button></center>
+                    </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="col-md-4">
+            </div>
+
+        </div>
+  {% endfor %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ALL CORPORATE GROUP AUTHENTICATOR LIST</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+
+                        <div class="row p-b-20">
+                            <div class="col-md-6 col-sm-6 col-6">
+                                <div class="btn-group">
+                                    <a class="btn btn-info" data-target="#model_add_new_group" data-toggle="modal"
+                                       href="#"> Add New Group Authenticator <i class="fa fa-plus"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-scrollable">
+                            <table class="display full-width" id="example1">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+
+                                    <th>Auth Name</th>
+                                    <th>Auth Email</th>
+                                    <th>Contact Phone</th>
+                                    <th>CID</th>
+                                    <th>Radio</th>
+                                    <th>Local</th>
+                                    <th>OutStation</th>
+                                    <th>Bus</th>
+                                    <th>Train</th>
+                                    <th>Hotel</th>
+                                    <th>Meal</th>
+                                    <th>Flight</th>
+                                    <th>Watter Bottle</th>
+                                    <th>Reverse Logistics</th>
+                                    <th>Action</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for group in grp_auths %}
+                                <tr>
+                                    <td>{{ group.id }}</td>
+                                    <td>{{ group.name }}</td>
+                                    <td>{{ group.email }}</td>
+                                    <td>{{ group.contact_no }}</td>
+                                    <td>{{ group.cid }}</td>
+                                    {% if group.is_radio == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_local == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_outstation == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_bus == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_train == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_hotel == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_meal == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_flight == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_water_bottles == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+
+                                    {% if group.is_reverse_logistics == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+                                    <td>
+                                        <a class="btn btn-tbl-edit btn-xs" href="#" data-toggle="modal" class="btn btn-tbl-delete btn-xs"
+                                        data-target="#model_add_new_group"  data-id="{{group.id}}" data-name="{{group.name}}" data-email="{{group.email}}"
+                                        data-contact_no="{{group.contact_no}}" data-cid="{{group.cid}}" data-is_reverse_logistics="{{group.is_reverse_logistics}}"
+                                        data-is_local="{{group.is_local}}" data-is_water_bottles="{{group.is_water_bottles}}" data-is_radio="{{group.is_radio}}"
+                                        data-is_hotel="{{group.is_hotel}}" data-is_outstation="{{group.is_outstation}}" data-is_bus="{{group.is_bus}}"
+                                        data-is_train="{{group.is_train}}" data-is_flight="{{group.is_flight}}" data-is_meal="{{group.is_meal}}">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a class="btn btn-tbl-delete btn-xs" data-delete_id="1" data-id="{{group.id}}" data-name="{{group.name}}" data-email="{{group.email}}"
+                                        data-contact_no="{{group.contact_no}}" data-cid="{{group.cid}}" data-is_reverse_logistics="{{group.is_reverse_logistics}}"
+                                        data-is_local="{{group.is_local}}" data-is_water_bottles="{{group.is_water_bottles}}" data-is_radio="{{group.is_radio}}"
+                                        data-is_hotel="{{group.is_hotel}}" data-is_outstation="{{group.is_outstation}}" data-is_bus="{{group.is_bus}}"
+                                        data-is_train="{{group.is_train}}" data-is_flight="{{group.is_flight}}" data-is_meal="{{group.is_meal}}"
+                                           data-target="#model_add_new_group" data-toggle="modal" href="#">
+                                            <i class="fa fa-trash-o "></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+<script type="text/javascript">
+$(function() {
+
+var bla = $('#group_id').val();
+$('#set_group_id').val(bla);
+
+  $('#model_add_new_group').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+    var name = button.data('name');
+    var email = button.data('email');
+    var cid = button.data('cid');
+    var contact_no = button.data('contact_no');
+
+    var is_radio = button.data('is_radio');
+    var is_local = button.data('is_local');
+    var is_outstation = button.data('is_outstation');
+    var is_bus = button.data('is_bus');
+    var is_train = button.data('is_train');
+    var is_hotel = button.data('is_hotel');
+    var is_meal = button.data('is_meal');
+    var is_flight = button.data('is_flight');
+    var is_water_bottles = button.data('is_water_bottles');
+    var is_reverse_logistics = button.data('is_reverse_logistics');
+
+    var delete_id = button.data('delete_id');
+
+
+    var modal = $(this);
+
+    if(delete_id == 1){
+
+    modal.find('#delete_id').val(1);
+    modal.find('#group_auth_id').val(id);
+    modal.find('#name').val(name);
+    modal.find('#email').val(email);
+    modal.find('#cid').val(cid);
+    modal.find('#contact_no').val(contact_no);
+
+    modal.find('#is_radio').val(is_radio);
+    modal.find('#is_local').val(is_local);
+    modal.find('#is_outstation').val(is_outstation);
+    modal.find('#is_bus').val(is_bus);
+    modal.find('#is_train').val(is_train);
+    modal.find('#is_hotel').val(is_hotel);
+    modal.find('#is_meal').val(is_meal);
+    modal.find('#is_flight').val(is_flight);
+    modal.find('#is_water_bottles').val(is_water_bottles);
+    modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+
+    $('#delete_label').text("Do You Want to Delete This Record");
+    $('#delete_btn').html("Yes");
+
+    $('#group_auth_id1').hide();
+    $('#name1').hide();
+    $('#email1').hide();
+    $('#cid1').hide();
+    $('#contact_no1').hide();
+    $('#is_radio1').hide();
+    $('#is_local1').hide();
+    $('#is_outstation1').hide();
+    $('#is_bus1').hide();
+    $('#is_train1').hide();
+    $('#is_hotel1').hide();
+    $('#is_meal1').hide();
+    $('#is_flight1').hide();
+    $('#is_water_bottles1').hide();
+    $('#is_reverse_logistics1').hide();
+
+    }else{
+
+    modal.find('#group_auth_id').val(id);
+    modal.find('#name').val(name);
+    modal.find('#email').val(email);
+    modal.find('#cid').val(cid);
+    modal.find('#contact_no').val(contact_no);
+
+    modal.find('#is_radio').val(is_radio);
+    modal.find('#is_local').val(is_local);
+    modal.find('#is_outstation').val(is_outstation);
+    modal.find('#is_bus').val(is_bus);
+    modal.find('#is_train').val(is_train);
+    modal.find('#is_hotel').val(is_hotel);
+    modal.find('#is_meal').val(is_meal);
+    modal.find('#is_flight').val(is_flight);
+    modal.find('#is_water_bottles').val(is_water_bottles);
+    modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+
+    modal.find('#delete_id').val('');
+
+    $('#delete_label').text("Group Details");
+    $('#delete_btn').html("Save");
+
+    $('#group_auth_id1').show();
+    $('#name1').show();
+    $('#email1').show();
+    $('#cid1').show();
+    $('#contact_no1').show();
+    $('#is_radio1').show();
+    $('#is_local1').show();
+    $('#is_outstation1').show();
+    $('#is_bus1').show();
+    $('#is_train1').show();
+    $('#is_hotel1').show();
+    $('#is_meal1').show();
+    $('#is_flight1').show();
+    $('#is_water_bottles1').show();
+    $('#is_reverse_logistics1').show();
+
+
+
+    }
+
+    });
+
+});
+
+</script>

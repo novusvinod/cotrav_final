@@ -2,8 +2,18 @@ from django.urls import path,include
 from Company.VIEW.Api import api_views
 
 urlpatterns = [
+
     path('api/companies', api_views.companies),
+    path('api/view_company', api_views.view_company),
+    path('api/add_company', api_views.add_companies),
+    path('api/update_company', api_views.update_company),
+    path('api/delete_company', api_views.delete_company),
+
     path('api/company_rates', api_views.company_rates),
+    path('api/add_company_rates', api_views.add_company_rates),
+    path('api/update_company_rates', api_views.update_company_rates),
+    path('api/delete_company_rates', api_views.delete_company_rates),
+
     path('api/billing_entities', api_views.billing_entities),
     path('api/admins', api_views.admins),
     path('api/groups', api_views.groups),
@@ -12,8 +22,11 @@ urlpatterns = [
     path('api/employees', api_views.employee),
 
     path('api/cities', api_views.cities),
+    path('api/taxi_types',api_views.taxi_types),
 
     path('api/add_billing_entity', api_views.add_billing_entity),
+    path('api/update_billing_entity', api_views.update_billing_entity),
+    path('api/delete_billing_entity', api_views.delete_billing_entity),
 
     path('api/view_group_auth', api_views.view_group_auth),
     path('api/add_group_auth', api_views.add_group_auth),

@@ -41,6 +41,293 @@ def companies(request):
         return JsonResponse(data)
 
 
+def view_company(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user ={}
+    print(user_type)
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewCorporateDetails', [corporate_id])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_companies(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_name = request.POST.get('corporate_name', '')
+    corporate_code = request.POST.get('corporate_code', '')
+    contact_person_name = request.POST.get('contact_person_name', '')
+    contact_person_no = request.POST.get('contact_person_no', '')
+    contact_person_email = request.POST.get('contact_person_email', '')
+    bill_corporate_name = request.POST.get('bill_corporate_name', '')
+    address_line_1 = request.POST.get('address_line_1', '')
+    address_line_2 = request.POST.get('address_line_2', '')
+    address_line_3 = request.POST.get('address_line_3', '')
+    gst_id = request.POST.get('gst_id', '')
+
+    has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+    has_auth_level = request.POST.get('has_auth_level', '')
+    no_of_auth_level = request.POST.get('no_of_auth_level', '')
+    has_assessment_codes = request.POST.get('has_assessment_codes', '')
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+    is_spoc = request.POST.get('is_spoc', '')
+
+    cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
+    user_type = request.POST.get('user_type', '')
+    password = request.POST.get('password', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
+                  address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
+                   is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_company(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_name = request.POST.get('corporate_name', '')
+    corporate_code = request.POST.get('corporate_code', '')
+    contact_person_name = request.POST.get('contact_person_name', '')
+    contact_person_no = request.POST.get('contact_person_no', '')
+    contact_person_email = request.POST.get('contact_person_email', '')
+
+    has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+    has_auth_level = request.POST.get('has_auth_level', '')
+    no_of_auth_level = request.POST.get('no_of_auth_level', '')
+    has_assessment_codes = request.POST.get('has_assessment_codes', '')
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    user_id = request.POST.get('user_id', '')
+    corporate_id = request.POST.get('corporate_id', '')
+    user_type = request.POST.get('user_type', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
+                  has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
+                   is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_company(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id = request.POST.get('user_id', '')
+    corporate_id = request.POST.get('corporate_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteCorporate',[corporate_id,user_id,user_type])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_company_rates(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    package_name = request.POST.get('package_name', '')
+    city_id = request.POST.get('city_id')
+    taxi_type = request.POST.get('taxi_type', '')
+    tour_type = request.POST.get('tour_type', '')
+    kms = request.POST.get('kms', '')
+    hours = request.POST.get('hours', '')
+    km_rate = request.POST.get('km_rate', '')
+    hour_rate = request.POST.get('hour_rate', '')
+    base_rate = request.POST.get('base_rate', '')
+    night_rate = request.POST.get('night_rate', '')
+
+    rate_id = request.POST.get('rate_id')
+
+    if rate_id:
+        pass
+    else:
+        rate_id=0
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
+                                                    night_rate,user_id,user_type,rate_id])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_company_rates(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    package_name = request.POST.get('package_name', '')
+    city_id = request.POST.get('city_id')
+    taxi_type = request.POST.get('taxi_type', '')
+    tour_type = request.POST.get('tour_type', '')
+    kms = request.POST.get('kms', '')
+    hours = request.POST.get('hours', '')
+    km_rate = request.POST.get('km_rate', '')
+    hour_rate = request.POST.get('hour_rate', '')
+    base_rate = request.POST.get('base_rate', '')
+    night_rate = request.POST.get('night_rate', '')
+
+    rate_id = request.POST.get('rate_id')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
+                                                    night_rate,user_id,user_type,rate_id])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_company_rates(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id = request.POST.get('user_id', '')
+    rate_id = request.POST.get('rate_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : "+user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteCorporateRate',[rate_id,user_id,user_type])
+                company = dictfetchall(cursor)
+                data = {'success': 1, 'Corporates': company}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
 def company_rates(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
@@ -71,6 +358,8 @@ def company_rates(request):
     else:
         data = {'success': 0, 'error': "Access Token Empty"}
         return JsonResponse(data)
+
+
 
 
 def billing_entities(request):
@@ -266,47 +555,7 @@ def employee(request):
         return JsonResponse(data)
 
 
-def getUserinfoFromAccessToken(user_token=None, user_type=None):
-    try:
-        user = {}
-        user_info = {}
-        if user_type == '1':
-            user = Corporate_Login_Access_Token.objects.get(access_token=user_token)
 
-        elif user_type == '2':
-            user = Corporate_Approves_1_Login_Access_Token.objects.get(access_token=user_token)
-        elif user_type == '3':
-            user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=user_token)
-        elif user_type == '4':
-            user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=user_token)
-        elif user_type == 'agent':
-            user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
-
-        present = datetime.now()
-
-        if user.expiry_date.date() < present.date():
-            return None
-        else:
-
-            if user_type == '1':
-                user_info = Corporate_Login.objects.get(id=user.corporate_login_id)
-
-            elif user_type == '2':
-                user_info = Corporate_Approves_1_Login.objects.get(id=user.subgroup_authenticater_id)
-            elif user_type == '3':
-                user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
-            elif user_type == '4':
-                user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
-            elif user_type == 'agent':
-                user_info = Corporate_Agent.objects.get(id=user.agent_id)
-            else:
-                return None
-
-            return user_info
-
-    except Exception as e:
-        print(e)
-        return None
 
 
 def cities(request):
@@ -332,6 +581,32 @@ def cities(request):
     else:
         data = {'success': 0, 'error': "Access Token Empty"}
         return JsonResponse(data)
+
+
+def taxi_types(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : " + user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllTaxiTypes', [])
+                cities = dictfetchall(cursor)
+                data = {'success': 1, 'Taxies': cities}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
 
 
 def add_billing_entity(request):
@@ -380,6 +655,113 @@ def add_billing_entity(request):
                     cursor.callproc('addNewCorporateBillingEntity', [user_id,corporate_id,user_type,entity_name,billing_city_id,contact_person_name,
                                                                         contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
                                                                         gst_id,pan_no,entity_id,is_delete])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_billing_entity(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+
+    user_id = request.POST.get('user_id', '')
+    entity_name = request.POST.get('entity_name', '')
+    billing_city_id = request.POST.get('billing_city_id')
+    contact_person_name = request.POST.get('contact_person_name', '')
+    contact_person_email = request.POST.get('contact_person_email', '')
+    contact_person_no = request.POST.get('contact_person_no', '')
+    address_line_1 = request.POST.get('address_line_1', '')
+    address_line_2 = request.POST.get('address_line_2', '')
+    address_line_3 = request.POST.get('address_line_3', '')
+    gst_id = request.POST.get('gst_id', '')
+    pan_no = request.POST.get('pan_no', '')
+
+    entity_id = request.POST.get('entity_id')
+
+    if corporate_id:
+        corporate_id = corporate_id
+    else:
+        corporate_id = '0'
+
+    if entity_id:
+        entity_id = entity_id
+    else:
+        entity_id = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateCorporateBillingEntity', [user_id,corporate_id,user_type,entity_name,billing_city_id,contact_person_name,
+                                                                        contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
+                                                                        gst_id,pan_no,entity_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_billing_entity(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    entity_id = request.POST.get('entity_id')
+    is_delete = request.POST.get('is_delete')
+
+
+    if entity_id:
+        entity_id = entity_id
+    else:
+        entity_id = '0'
+
+    if is_delete:
+        is_delete = is_delete
+    else:
+        is_delete = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteCorporateBillingEntity',
+                                    [user_id, user_type, entity_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
@@ -1654,6 +2036,69 @@ def view_employee(request):
     else:
         data = {'success': 0, 'error': "Access Token Empty"}
         return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def getUserinfoFromAccessToken(user_token=None, user_type=None):
+    try:
+        user = {}
+        user_info = {}
+        if user_type == '1':
+            user = Corporate_Login_Access_Token.objects.get(access_token=user_token)
+
+        elif user_type == '2':
+            user = Corporate_Approves_1_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '3':
+            user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '4':
+            user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '10':
+            user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
+
+        present = datetime.now()
+
+        if user.expiry_date.date() < present.date():
+            return None
+        else:
+
+            if user_type == '1':
+                user_info = Corporate_Login.objects.get(id=user.corporate_login_id)
+
+            elif user_type == '2':
+                user_info = Corporate_Approves_1_Login.objects.get(id=user.subgroup_authenticater_id)
+            elif user_type == '3':
+                user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
+            elif user_type == '4':
+                user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
+            elif user_type == '10':
+                user_info = Corporate_Agent.objects.get(id=user.agent_id)
+            else:
+                return None
+
+            return user_info
+
+    except Exception as e:
+        print(e)
+        return None
 
 
 def dictfetchall(cursor):

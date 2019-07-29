@@ -40,7 +40,7 @@ class CustomCompanyUserAuth(object):
                 user = Corporate_Approves_2_Login.objects.get(email=username)
             elif login_type == '4':
                 user = Corporate_Spoc_Login.objects.get(username=username)
-            elif login_type == 'agent':
+            elif login_type == '10':
                 user = Corporate_Agent.objects.get(email=username)
             else:
                 return None
@@ -57,7 +57,7 @@ class CustomCompanyUserAuth(object):
                         insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user.id, access_token=gen_access_token,user_agent=user_info)
                     elif login_type == '4':
                         insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user.id,access_token=gen_access_token, user_agent=user_info)
-                    elif login_type == 'agent':
+                    elif login_type == '10':
                         insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user.id, access_token=gen_access_token, user_agent=user_info)
 
                     request.session['access_token'] = insert_data.access_token
@@ -85,7 +85,7 @@ class CustomCompanyUserAuth(object):
                 user = Corporate_Approves_2_Login.objects.get(pk=user_id)
             elif login_type == '4':
                 user = Corporate_Spoc_Login.objects.get(pk=user_id)
-            elif login_type == 'agent':
+            elif login_type == '10':
                 user = Corporate_Agent.objects.get(pk=user_id)
             else:
                 return None
