@@ -3848,7 +3848,7 @@ S2.define('select2/dropdown',[
 
   Dropdown.prototype.render = function () {
     var $dropdown = $(
-      '<span class="select2-dropdown">' +
+      '<span class="select2-dropdown" style="width:100%">' +
         '<span class="select2-results"></span>' +
       '</span>'
     );
