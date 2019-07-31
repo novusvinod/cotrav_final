@@ -12,6 +12,27 @@ from Company.models import Corporate_Spoc_Login_Access_Token
 from Company.models import Corporate_Approves_1_Login_Access_Token
 from Company.models import Corporate_Approves_2_Login_Access_Token
 from Company.models import Corporate_Agent_Login_Access_Token
+from django.contrib.auth.hashers import check_password
+
+
+def login(request):
+    user_name = request.POST.get('user_name', '')
+    user_password = request.POST.get('user_password', '')
+    user_type = request.POST.get('user_type', '')
+
+    cursor = connection.cursor()
+    cursor.callproc('getLoginDetails', [user_name,user_type])
+    user = dictfetchall(cursor)
+    if user:
+        print(user[0]['id'])
+        password = check_password(user_password, user[0]['password'])
+        if password:
+            data = {'success': 1, 'User': user}
+        else:
+            data = {'success': 1, 'message': 'Invalide User Name Or Password'}
+    else:
+        data = {'success': 0, 'User': ''}
+    return JsonResponse(data)
 
 
 def companies(request):
@@ -1845,6 +1866,160 @@ def delete_employee(request):
         data = {'success': 0, 'error': "Access Token Empty"}
         return JsonResponse(data)
 
+def add_agent(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    emp_id = request.POST.get('emp_id', '')
+    username = request.POST.get('username', '')
+    contact_no = request.POST.get('contact_no', '')
+    email = request.POST.get('email', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    has_billing_access = request.POST.get('has_billing_access', '')
+    has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
+    has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
+    is_super_admin = request.POST.get('is_super_admin', '')
+
+    password = request.POST.get('password', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    result = cursor.callproc('addAgent', [emp_id, username, contact_no,email,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,
+                                                          is_meal,is_flight,is_water_bottles,is_reverse_logistics,has_billing_access,
+                                                          has_voucher_payment_access,has_voucher_approval_access,is_super_admin,password,user_id,
+                                                          user_type])
+
+                    print(result)
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_agent(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    emp_id = request.POST.get('emp_id', '')
+    username = request.POST.get('username', '')
+    contact_no = request.POST.get('contact_no', '')
+    email = request.POST.get('email', '')
+
+    is_radio = request.POST.get('is_radio', '')
+    is_local = request.POST.get('is_local', '')
+    is_outstation = request.POST.get('is_outstation', '')
+    is_bus = request.POST.get('is_bus', '')
+    is_train = request.POST.get('is_train', '')
+    is_hotel = request.POST.get('is_hotel', '')
+    is_meal = request.POST.get('is_meal', '')
+    is_flight = request.POST.get('is_flight', '')
+    is_water_bottles = request.POST.get('is_water_bottles', '')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+    has_billing_access = request.POST.get('has_billing_access', '')
+    has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
+    has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
+    is_super_admin = request.POST.get('is_super_admin', '')
+
+    agent_id = request.POST.get('agent_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    result = cursor.callproc('updateAgent', [emp_id, username, contact_no,email,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,
+                                                          is_meal,is_flight,is_water_bottles,is_reverse_logistics,has_billing_access,
+                                                          has_voucher_payment_access,has_voucher_approval_access,is_super_admin,user_id,
+                                                          user_type,agent_id])
+                    print(result)
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_agent(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    agent_id = request.POST.get('agent_id','')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteAgent', [user_id,user_type,agent_id])
+
+                    data = {'success': 1, 'message': "Data Insert Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
 
 def view_group(request):
     req_token = request.META['HTTP_AUTHORIZATION']
@@ -2038,7 +2213,63 @@ def view_employee(request):
         return JsonResponse(data)
 
 
+def view_agent(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    agent_id = request.POST.get('agent_id', '')
 
+    if agent_id:
+        agent_id = agent_id
+    else:
+        agent_id = '0'
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewAgentDetails', [agent_id])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Agent': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def get_agents(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllAgentsDetails', [])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Agents': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 

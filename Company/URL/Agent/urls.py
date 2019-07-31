@@ -49,4 +49,8 @@ urlpatterns = [
 
     path('agents/employees/<int:id>', agent_views.company_employees),
     path('agents/add-employee/<int:id>', agent_views.add_employee),
+
+    path('agents/agents', agent_views.view_agents),
+    path('agents/add-agent/<int:id>', agent_views.add_agent),
+
 ]

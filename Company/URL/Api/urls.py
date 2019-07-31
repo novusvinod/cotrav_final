@@ -3,6 +3,8 @@ from Company.VIEW.Api import api_views
 
 urlpatterns = [
 
+    path('api/login', api_views.login),
+
     path('api/companies', api_views.companies),
     path('api/view_company', api_views.view_company),
     path('api/add_company', api_views.add_companies),
@@ -62,4 +64,9 @@ urlpatterns = [
     path('api/update_employee', api_views.update_employee),
     path('api/delete_employee', api_views.delete_employee),
 
+    path('api/agents', api_views.get_agents),
+    path('api/view_agent', api_views.view_agent),
+    path('api/add_agent', api_views.add_agent),
+    path('api/update_agent', api_views.update_agent),
+    path('api/delete_agent', api_views.delete_agent),
 ]

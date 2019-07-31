@@ -25,7 +25,7 @@ SECRET_KEY = 'g#gtui399&t+up!=938cgm507xh69!^2&#ofa+c!-mi1snqjyv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static"),

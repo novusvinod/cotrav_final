@@ -1009,6 +1009,87 @@ def add_employee(request, id):
 
 
 @login_required(login_url='/login')
+def add_agent(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        user_id = request.POST.get('user_id', '')
+
+        emp_id = request.POST.get('emp_id', '')
+        username = request.POST.get('username', '')
+        contact_no = request.POST.get('contact_no', '')
+        email = request.POST.get('email', '')
+
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+
+        has_billing_access = request.POST.get('has_billing_access', '')
+        has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
+        has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
+        is_super_admin = request.POST.get('is_super_admin', '')
+
+        agent_id = request.POST.get('agents_id','')
+
+        delete_id = request.POST.get('delete_id')
+
+        if agent_id:
+            password = ''
+        else:
+            password = make_password("taxi123")
+            agent_id =0
+
+        payload = {'emp_id': emp_id,'username': username,'contact_no': contact_no,'email': email,'is_radio': is_radio,'is_local': is_local,
+              'is_outstation': is_outstation,'is_bus': is_bus,'is_train': is_train,'is_hotel': is_hotel,'is_meal':is_meal,'is_flight':is_flight,
+                 'is_water_bottles':  is_water_bottles,'is_reverse_logistics':
+        is_reverse_logistics,'has_billing_access':has_billing_access,'has_voucher_payment_access':has_voucher_payment_access,
+                  'has_voucher_approval_access': has_voucher_approval_access,'is_super_admin':is_super_admin,'password':password,'user_id':user_id,'user_type':login_type,'agent_id':agent_id}
+
+        url = ""
+        print(payload)
+        if agent_id:
+            url = settings.API_BASE_URL + "update_agent"
+            print("in auth id")
+            if delete_id == '1':
+                url = settings.API_BASE_URL + "delete_agent"
+                print(url)
+
+        else:
+            url = settings.API_BASE_URL + "add_agent"
+
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/agents/agents", {'message': "Added Successfully"})
+        else:
+            return HttpResponseRedirect("/agents/agents", {'message': "Record Not Added"})
+    else:
+        request = get_request()
+        if id:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+
+            url_agent = settings.API_BASE_URL + "view_agent"
+            payload = {'agent_id': id}
+            r = requests.post(url_agent, data=payload, headers=headers)
+            agent = json.loads(r.text)
+            agents = agent['Agent']
+            return render(request, 'Agent/add-agent.html', {'agent':agents})
+        else:
+            return render(request, 'Agent/add-agent.html', {})
+
+
+@login_required(login_url='/login')
 def view_company_group(request, id):
     request = get_request()
     login_type = request.session['login_type']
@@ -1055,6 +1136,24 @@ def view_company_subgroup(request, id):
                       {'subgroup': subgroups, 'subgrp_auths': subgrp_auths})
     else:
         return render(request, "Agent/view_subgroups.html", {'group': {}})
+
+
+def view_agents(request):
+    request = get_request()
+    login_type = request.session['login_type']
+    access_token = request.session['access_token']
+    url = settings.API_BASE_URL+"agents"
+    payload = {'some': 'data'}
+    headers = {'Authorization': 'Token '+access_token,'usertype':login_type}
+    r = requests.post(url, data=payload, headers=headers)
+    agents = json.loads(r.text)
+    if agents['success'] == 1:
+        agents = agents['Agents']
+        return render(request,"Agent/agents.html",{'agents':agents})
+    else:
+        return render(request,"Agent/agents.html",{'agents':{}})
+
+
 
 
 def getDataFromAPI(login_type, access_token, url, payload):
