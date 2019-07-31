@@ -27,7 +27,7 @@ def login(request):
         print(user[0]['id'])
         password = check_password(user_password, user[0]['password'])
         if password:
-            data = {'success': 1, 'User': user}
+            data = {'success': 1,'access_token':user[0]['access_token'], 'User': user}
         else:
             data = {'success': 1, 'message': 'Invalide User Name Or Password'}
     else:
