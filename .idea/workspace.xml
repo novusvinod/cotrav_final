@@ -5,49 +5,1147 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38edb318-cd5a-4a39-b6c2-35133688e42a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Company/VIEW/Api/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Company/VIEW/Api/api_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/billing_entities.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/billing_entities.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/companies.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/companies.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/company_admins.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/company_admins.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/company_rates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/company_rates.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/employees.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/employees.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/home_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/home_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/layout/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/spocs.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/spocs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/subgroups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/subgroups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/view_groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/view_groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/view_subgroups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Admin/view_subgroups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/billing_entities.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/billing_entities.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/companies.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_admins.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_admins.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_rates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_rates.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/employees.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/employees.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/home_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/home_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/spocs.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/spocs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/subgroups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_1/subgroups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/billing_entities.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/billing_entities.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/companies.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/company_admins.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/company_admins.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/company_rates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/company_rates.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/employees.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/employees.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/home_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/home_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/spocs.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/spocs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/subgroups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Approves_2/subgroups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/billing_entities.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/billing_entities.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/companies.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/company_admins.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/company_admins.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/company_rates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/company_rates.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/employees.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/employees.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/groups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/groups.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/home_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/home_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/spocs.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/spocs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/subgroups.html" beforeDir="false" afterPath="$PROJECT_DIR$/Company/templates/Company/Spoc/subgroups.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoTrav/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoTrav/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoTrav/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoTrav/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/URL/Admin/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/URL/Agent/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/URL/Api/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/URL/Approves_1/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/URL/Approves_2/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/URL/Spoc/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/Admin/admin_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/Agent/agent_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/Api/api_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/Approves_1/approves_1_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/Approves_2/approves_2_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/Spoc/spoc_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/VIEW/basic_web_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/backends.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/forms.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/migrations/0002_auto_20190629_1316.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/material_style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/animate_page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/extra_pages.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/formlayout.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/inbox.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/pricing.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/steps.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/timeline.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/pages/typography.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/plugins.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/responsive.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/css/theme-color.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/bg-01.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/blog/blog1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/blog/blog2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/blog/blog3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/blog/blog4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/dp.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/driver.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ad.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ae.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/af.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ag.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/al.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/am.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/an.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/as.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/at.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/au.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/aw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ax.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/az.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ba.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/be.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/br.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/by.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/bz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ca.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/catalonia.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ch.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ci.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ck.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/co.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/cz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/de.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/dj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/dk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/dm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/do.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/dz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ec.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ee.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/eg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/eh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/england.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/er.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/es.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/et.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/europeanunion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fam.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/fr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/french_flag.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ga.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/germany_flag.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/gy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/hk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/hm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/hn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/hr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ht.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/hu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/id.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ie.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/il.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/in.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/io.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/iq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ir.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/is.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/it.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/italy_flag.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/jm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/jo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/jp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ke.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ki.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/km.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ky.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/kz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/la.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/li.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ls.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/lv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ly.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ma.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/md.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/me.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ml.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ms.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/my.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/mz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/na.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/nc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ne.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/nf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ng.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ni.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/nl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/no.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/np.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/nr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/nu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/nz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/om.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pe.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ph.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ps.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/pw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/py.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/qa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/re.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ro.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/rs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ru.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/russia_flag.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/rw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/scotland.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/se.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/si.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/so.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/spain_flag.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/st.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/sz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/td.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/th.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tl.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/to.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/tz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ua.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ug.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/um.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/us.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/usa_flag.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/uy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/uz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/va.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/vc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ve.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/vg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/vi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/vn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/vu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/wales.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/wf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ws.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/ye.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/yt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/za.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/zm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/flags/zw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/11.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/12.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/13.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/14.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/15.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-11.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-12.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-13.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-14.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-15.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/image-gallery/thumb/thumb-9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/invoice_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/mega-img1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/mega-img2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/mega-img3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/fullimage1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/fullimage2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/fullimage3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/owl8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/slider1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/slider2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/slider/slider3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/taxi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user11.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/user9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/user/usrbig9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/car1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/car2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/v1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/v2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/v3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/v4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/v5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/img/vehicle/v6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/layout.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/calendar/calendar.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/chartjs/chartjs-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/chartjs/home-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/chartjs/home-data2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/chartjs/home-data3.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/echart/echart-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/knob/knob_chart_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/morris/morris_chart_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/morris/morris_home_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/chart/morris/morris_home_driver_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/extra_pages/login.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/map/gmap-home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/map/gmap-route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/map/google-maps-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/map/vector-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/material-loading/material-loading.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/material_select/getmdl-select.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/owl-carousel/owl_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/select2/select2-init.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/smart-wizard/wizard-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/sparkline/sparkline-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/steps/steps-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/summernote/summernote-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/sweet-alert/sweet-alert-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/table/editable_table_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/table/table_data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/timeline/timeline.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/treeview/treeview-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/ui/animations.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/pages/validation/form-validation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/js/theme-color.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha-horizontal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/img/bootstrap-colorpicker/hue-horizontal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker-init.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.standalone.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.standalone.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.standalone.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ar.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.az.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.bg.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.bs.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ca.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.cs.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.cy.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.da.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.de.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.el.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.eo.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.et.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.eu.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.fa.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.fi.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.fo.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.fr-CH.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.fr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.gl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.he.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.hr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.hu.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.hy.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.id.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.is.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.it-CH.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.it.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ja.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ka.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.kh.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.kk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ko.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.kr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.lt.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.lv.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.me.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.mk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.mn.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ms.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.nb.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.nl-BE.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.nl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.no.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.pl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.pt.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ro.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.rs-latin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.rs.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ru.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sq.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sr-latin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sv.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.sw.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.th.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.tr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.uk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-TW.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker-init.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/CHANGELOG.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/LICENSE-MIT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/bootstrap-editable/img/clear.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/bootstrap-editable/img/loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/inputs-ext/address/address.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-editable/inputs-ext/address/address.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-inputmask/bootstrap-inputmask.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-tabdrop/css/tabdrop.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap-treeview/bootstrap-treeview.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap/css/bootstrap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/bootstrap/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/chart-js/Chart.bundle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/chart-js/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/counterup/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/counterup/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/counterup/jquery.counterup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/counterup/jquery.counterup.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/counterup/jquery.waypoints.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/datatables.all.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/datatables.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/datatables.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/editabletable.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/Sorting icons.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/back_disabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/back_enabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/back_enabled_hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/forward_disabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/forward_enabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/forward_enabled_hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/sort_asc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/sort_asc_disabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/sort_both.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/sort_desc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/images/sort_desc_disabled.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/jquery.dataTables.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/jquery.dataTables.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/dropzone/dropzone-call.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/dropzone/dropzone.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/dropzone/dropzone.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/bar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/chord.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/eventRiver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/force.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/funnel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/gauge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/heatmap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/k.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/line.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/map.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/pie.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/radar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/scatter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/tree.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/treemap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/venn.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/chart/wordCloud.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/echarts-all.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/echarts/echarts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/css/font-awesome.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/fonts/FontAwesome.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/fonts/fontawesome-webfont.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/fonts/fontawesome-webfont.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/fonts/fontawesome-webfont.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/fonts/fontawesome-webfont.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/font-awesome/fonts/fontawesome-webfont.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/fullcalendar/fullcalendar.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/fullcalendar/fullcalendar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/fullcalendar/fullcalendar.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/gmaps/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/gmaps/gmaps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/gmaps/gmaps.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/css/material-design-iconic-font.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/css/material-design-iconic-font.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/fonts/Material-Design-Iconic-Font.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/fonts/Material-Design-Iconic-Font.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/fonts/Material-Design-Iconic-Font.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/fonts/Material-Design-Iconic-Font.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/iconic/fonts/Material-Design-Iconic-Font.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/bower.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/dist/jquery.knob.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/excanvas.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/js/jquery.knob.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/knob.jquery.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jQuery-Knob/secretplan.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-blockui/jquery.blockui.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/blueimp-gallery/jquery.blueimp-gallery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/cors/postmessage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/cors/result.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/demo-ie8.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/demo.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/jquery.fileupload-noscript.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/jquery.fileupload-ui-noscript.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/jquery.fileupload.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/img/loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/img/progressbar.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/cors/jquery.postmessage-transport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/cors/jquery.xdr-transport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-angular.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-audio.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-image.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-jquery-ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-process.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-validate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload-video.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.fileupload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/jquery.iframe-transport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/vendor/load-image.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-file-upload/js/vendor/tmpl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-slimscroll/jquery.slimscroll.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-tags-input/jquery-tags-input-init.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-tags-input/jquery-tags-input.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-tags-input/jquery-tags-input.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/bower.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/demos/css/jquery.toast.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/demos/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/demos/js/jquery.toast.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/dist/jquery.toast.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/dist/jquery.toast.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/dist/toast.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/src/jquery.toast.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-toast/src/jquery.toast.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_diagonals-thick_18_b81900_40x40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_diagonals-thick_20_666666_40x40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_flat_10_000000_40x100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_glass_100_f6f6f6_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_glass_100_fdf5ce_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_glass_65_ffffff_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_gloss-wave_35_f6a828_500x100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_highlight-soft_100_eeeeee_1x100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-bg_highlight-soft_75_ffe45c_1x100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-icons_222222_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-icons_228ef1_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-icons_ef8c08_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-icons_ffd27a_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/images/ui-icons_ffffff_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/jquery-ui.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-ui/jquery-ui.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/additional-methods.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/additional-methods.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/jquery.validate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/jquery.validate.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ar.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_bg.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_bg.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_bn_BD.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_bn_BD.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ca.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ca.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_cs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_cs.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_da.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_da.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_de.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_de.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_el.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_el.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_es.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_es.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_es_AR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_es_AR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_es_PE.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_es_PE.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_et.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_et.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_eu.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_eu.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_fa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_fa.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_fi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_fi.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_fr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_fr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ge.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_gl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_gl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_he.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_he.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_hr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_hr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_hu.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_hu.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_hy_AM.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_hy_AM.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_id.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_id.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_is.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_is.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_it.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_it.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ja.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ja.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ka.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ka.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_kk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_kk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ko.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ko.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_lt.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_lt.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_lv.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_lv.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_my.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_my.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_nl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_nl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_no.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_no.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_pl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_pl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_pt_BR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_pt_BR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_pt_PT.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_pt_PT.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ro.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ro.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ru.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_ru.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_si.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_si.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sr_lat.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sr_lat.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sv.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_sv.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_th.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_th.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_tj.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_tj.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_tr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_tr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_uk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_uk.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_vi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_vi.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_zh.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_zh.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_zh_TW.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/messages_zh_TW.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_de.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_de.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_es_CL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_es_CL.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_fi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_fi.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_nl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_nl.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_pt.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery-validation/js/localization/methods_pt.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jquery/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/data/jquery.vmap.sampledata.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/jquery.vmap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/jquery.vmap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/jquery.vmap.packed.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/jqvmap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/jqvmap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/continents/jquery.vmap.africa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/continents/jquery.vmap.asia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/continents/jquery.vmap.australia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/continents/jquery.vmap.europe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/continents/jquery.vmap.north-america.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/continents/jquery.vmap.south-america.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.algeria.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.argentina.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.brazil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.canada.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.croatia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.europe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.france.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.germany.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.greece.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.indonesia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.iran.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.iraq.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.new_regions_france.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.russia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.serbia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.tunisia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.turkey.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.ukraine.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.usa.districts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.usa.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/jqvmap/maps/jquery.vmap.world.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/css/lightgallery.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/fonts/lg-1.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/fonts/lg.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/fonts/lg.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/fonts/lg.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/fonts/lg.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/img/loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/img/video-play.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/img/vimeo-play.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/img/youtube-play.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/js/image-gallery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/light-gallery/js/lightgallery-all.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-datetimepicker/bootstrap-material-design.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-datetimepicker/datetimepicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-datetimepicker/moment-with-locales.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/MaterialIcons-Regular.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/MaterialIcons-Regular.ijmap" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/MaterialIcons-Regular.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/MaterialIcons-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/MaterialIcons-Regular.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/MaterialIcons-Regular.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/codepoints" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material-icons/iconfont/material-icons.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material/material.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/material/material.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/modernizr/modernizr.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/moment/moment.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/_template.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/area-as-line.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/area.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/bar-colors.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/bar-no-axes.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/bar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/days.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/decimal-custom-hover.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/diagonal-xlabels-bar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/diagonal-xlabels.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/donut-colors.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/donut-formatter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/donut.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/dst.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/events.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/goals.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/lib/example.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/lib/example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/months-no-smooth.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/negative.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/no-grid.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/non-continuous.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/non-date.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/quarters.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/resize.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/stacked_bars.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/timestamps.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/updating.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/weeks.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/examples/years.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/less/morris.core.less" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.area.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.bar.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.donut.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.grid.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.hover.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/lib/morris.line.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/morris.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/morris.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/morris.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/raphael-min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/area/area_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/bar/bar_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/bar/colours.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/commas_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/donut/donut_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/grid/auto_grid_lines_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/grid/set_data_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/grid/y_label_format_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/hover_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/label_series_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/line/line_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/pad_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/lib/parse_time_spec.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/specs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/support/placeholder.coffee" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/examples.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/exemplary/area0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/exemplary/bar0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/exemplary/line0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/exemplary/stacked_bar0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/run.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/test.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/morris/spec/viz/visual_specs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/owl-carousel/owl.carousel.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/owl-carousel/owl.carousel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/owl-carousel/owl.carousel.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/owl-carousel/owl.theme.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/popper/popper.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/css/select2-bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/css/select2.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/img/select2-spinner.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/img/select2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/img/select2x2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/js/select2-init.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/select2/js/select2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/smart-wizard/css/smart_wizard.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/smart-wizard/css/smart_wizard.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/smart-wizard/js/jquery.smartWizard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/smart-wizard/js/jquery.smartWizard.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/sparkline/jquery.sparkline.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/steps/jquery.steps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/steps/jquery.steps.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/font/summernote.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/font/summernote.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/font/summernote.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ar-AR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ar-AR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-bg-BG.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-bg-BG.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ca-ES.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ca-ES.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-cs-CZ.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-cs-CZ.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-da-DK.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-da-DK.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-de-DE.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-de-DE.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-el-GR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-el-GR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-es-ES.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-es-ES.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-es-EU.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-es-EU.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-fa-IR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-fa-IR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-fi-FI.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-fi-FI.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-fr-FR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-fr-FR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-gl-ES.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-gl-ES.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-he-IL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-he-IL.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-hr-HR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-hr-HR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-hu-HU.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-hu-HU.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-id-ID.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-id-ID.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-it-IT.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-it-IT.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ja-JP.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ja-JP.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ko-KR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ko-KR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-lt-LT.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-lt-LT.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-lt-LV.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-lt-LV.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-mn-MN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-mn-MN.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-nb-NO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-nb-NO.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-nl-NL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-nl-NL.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-pl-PL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-pl-PL.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-pt-BR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-pt-BR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-pt-PT.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-pt-PT.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ro-RO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ro-RO.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ru-RU.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ru-RU.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sk-SK.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sk-SK.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sl-SI.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sl-SI.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sr-RS-Latin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sr-RS-Latin.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sr-RS.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sr-RS.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sv-SE.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-sv-SE.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ta-IN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-ta-IN.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-th-TH.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-th-TH.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-tr-TR.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-tr-TR.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-uk-UA.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-uk-UA.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-vi-VN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-vi-VN.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-zh-CN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-zh-CN.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-zh-TW.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/lang/summernote-zh-TW.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/plugin/databasic/summernote-ext-databasic.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/plugin/databasic/summernote-ext-databasic.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/plugin/hello/summernote-ext-hello.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/plugin/specialchars/summernote-ext-specialchars.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/summernote.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/summernote.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/summernote/summernote.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/sweet-alert/sweetalert.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/sweet-alert/sweetalert.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/assets/plugins/sweet-alert/thumbs_up.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/Poppins.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Black.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-BlackItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Bold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-BoldItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-ExtraBold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-ExtraBoldItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-ExtraLight.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-ExtraLightItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Light.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-LightItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-MediumItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-SemiBold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-SemiBoldItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-Thin.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/Poppins/fonts/Poppins-ThinItalic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/css/font-awesome.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/fonts/FontAwesome.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/fonts/fontawesome-webfont.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/fonts/fontawesome-webfont.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/fonts/fontawesome-webfont.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/fonts/fontawesome-webfont.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/font-awesome/fonts/fontawesome-webfont.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/material-design-icons/iconfont/MaterialIcons-Regular.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/material-design-icons/iconfont/MaterialIcons-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/material-design-icons/iconfont/MaterialIcons-Regular.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/material-design-icons/iconfont/MaterialIcons-Regular.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/static/fonts/material-design-icons/material-icon.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/add-agent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/add-employee.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/add-spoc.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/add_company.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/agent_home_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/agents.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/billing_entities.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/companies.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/company_admins.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/company_rates.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/corporate_agent_login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/edit_company.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/employees.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/home_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/layout/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/layout/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/layout/menu_bar_layout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/spocs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/view_groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Agent/view_subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/add-employee.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/add-spoc.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/add_company.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/billing_entities.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/companies.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/company_admins.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/company_rates.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/edit_company.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/employees.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/home_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/layout/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/layout/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/layout/menu_bar_layout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/spocs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/view_groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Admin/view_subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/billing_entities.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_admins.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_rates.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/employees.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/home_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/menu_bar_layout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/spocs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_1/subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/billing_entities.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/company_admins.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/company_rates.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/employees.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/home_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/menu_bar_layout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/spocs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Approves_2/subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/billing_entities.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/company_admins.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/company_rates.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/employees.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/groups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/home_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/menu_bar_layout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/spocs.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/Company/Spoc/subgroups.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/corporate_agent_login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/templates/corporate_login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Company/tests.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,30 +1154,31 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CoTrav/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="287">
+              <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+              <folding>
+                <element signature="e#630#662#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>company_subgroups</find>
-      <find>{{user.corporate_id}}</find>
-      <find>add_company_subgroup</find>
-      <find>company_spocs</find>
-      <find>corporate_id1</find>
-      <find>add_spocs</find>
-      <find>user</find>
-      <find>add_employee</find>
-      <find>add_company_entity</find>
-      <find>add_billing_entity</find>
-      <find>model_add_new_entities</find>
-      <find>contact_person_email</find>
       <find>&lt;span</find>
       <find>select2-dropdown--below</find>
       <find>100px</find>
@@ -98,12 +1197,20 @@
       <find>set_agents_id</find>
       <find>view_agent</find>
       <find>home</find>
+      <find>Company</find>
+      <find>Corporate/add-company-group</find>
+      <find>add-company-admins</find>
+      <find>Approves_1/home</find>
+      <find>Corporate/Spoc/company-employees</find>
+      <find>CustomCompanyUserAuth</find>
+      <find>company_rates</find>
+      <find>Corporate/Approves_2/company-rate</find>
+      <find>/Corporate/Approver_2</find>
+      <find>company_employees</find>
+      <find>Corporate_Approves_1_Login_Access_Token</find>
+      <find>agent_login_action</find>
     </findStrings>
     <replaceStrings>
-      <replace>{% static '</replace>
-      <replace>False</replace>
-      <replace>corporate_rate</replace>
-      <replace>user_agent</replace>
       <replace>companies</replace>
       <replace>Poppins</replace>
       <replace>company</replace>
@@ -127,7 +1234,13 @@
       <replace>/agents</replace>
       <replace>font-size: 11px;</replace>
       <replace>0</replace>
+      <replace />
       <replace>agent</replace>
+      <replace>Common</replace>
+      <replace>Corporate/Admin/add-company-group</replace>
+      <replace>Corporate/Admin/add-employee</replace>
+      <replace>Corporate/Approver_1/home</replace>
+      <replace>Corporate/Spoc/company-employees</replace>
     </replaceStrings>
     <dirStrings>
       <dir>D:\Taxivaxi_Python_Projects\CoTrav</dir>
@@ -150,31 +1263,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Company/static/assets/css/plugins.min.css" />
-        <option value="$PROJECT_DIR$/Company/templates/Agent/add-employee.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Agent/layout/menu_bar_layout.html" />
-        <option value="$PROJECT_DIR$/Company/URL/Agent/urls.py" />
-        <option value="$PROJECT_DIR$/CoTrav/settings.py" />
-        <option value="$PROJECT_DIR$/Company/URL/Api/urls.py" />
-        <option value="$PROJECT_DIR$/Company/templates/Agent/add-agent.html" />
-        <option value="$PROJECT_DIR$/Company/VIEW/Agent/agent_views.py" />
-        <option value="$PROJECT_DIR$/Company/templates/Agent/agents.html" />
-        <option value="$PROJECT_DIR$/Company/VIEW/Api/api_views.py" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/billing_entities.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/companies.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/company_rates.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/employees.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/groups.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/subgroups.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/view_groups.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/view_subgroups.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Agent/layout/header.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/layout/header.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/header.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/header.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/header.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/company_admins.html" />
-        <option value="$PROJECT_DIR$/Company/templates/Company/Admin/spocs.html" />
         <option value="$PROJECT_DIR$/Company/templates/Company/Approves_1/companies.html" />
         <option value="$PROJECT_DIR$/Company/templates/Company/Approves_1/company_rates.html" />
         <option value="$PROJECT_DIR$/Company/templates/Company/Approves_1/employees.html" />
@@ -201,6 +1289,31 @@
         <option value="$PROJECT_DIR$/Company/templates/Company/Spoc/spocs.html" />
         <option value="$PROJECT_DIR$/Company/templates/Company/Spoc/subgroups.html" />
         <option value="$PROJECT_DIR$/Company/templates/Company/Admin/home_page.html" />
+        <option value="$PROJECT_DIR$/Company/templates/Agent/home_page.html" />
+        <option value="$PROJECT_DIR$/Company/templates/Agent/agent_home_page.html" />
+        <option value="$PROJECT_DIR$/Company/templates/Company/Spoc/layout/menu_bar_layout.html" />
+        <option value="$PROJECT_DIR$/CoTrav/settings.py" />
+        <option value="$PROJECT_DIR$/Common/migrations/0002_auto_20190629_1316.py" />
+        <option value="$PROJECT_DIR$/Common/URL/Admin/urls.py" />
+        <option value="$PROJECT_DIR$/Common/backends.py" />
+        <option value="$PROJECT_DIR$/Common/forms.py" />
+        <option value="$PROJECT_DIR$/Common/URL/Approves_1/urls.py" />
+        <option value="$PROJECT_DIR$/Common/URL/Approves_2/urls.py" />
+        <option value="$PROJECT_DIR$/Common/templates/Company/Approves_2/employees.html" />
+        <option value="$PROJECT_DIR$/Common/templates/Company/Admin/layout/menu_bar_layout.html" />
+        <option value="$PROJECT_DIR$/Common/templates/Company/Approves_1/layout/menu_bar_layout.html" />
+        <option value="$PROJECT_DIR$/Common/templates/Company/Approves_2/layout/menu_bar_layout.html" />
+        <option value="$PROJECT_DIR$/Common/VIEW/basic_web_views.py" />
+        <option value="$PROJECT_DIR$/Common/URL/Spoc/urls.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py" />
+        <option value="$PROJECT_DIR$/Common/templates/Company/Spoc/add-taxi-booking.html" />
+        <option value="$PROJECT_DIR$/Common/templates/Company/Spoc/layout/menu_bar_layout.html" />
+        <option value="$PROJECT_DIR$/Common/templates/corporate_agent_login.html" />
+        <option value="$PROJECT_DIR$/Common/templates/corporate_login.html" />
+        <option value="$PROJECT_DIR$/CoTrav/urls.py" />
+        <option value="$PROJECT_DIR$/Common/URL/Agent/urls.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py" />
+        <option value="$PROJECT_DIR$/Common/templates/Agent/corporate_agent_login.html" />
       </list>
     </option>
   </component>
@@ -226,13 +1339,46 @@
             <path>
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
               <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="Company" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
               <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
-              <item name="Company" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="URL" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
               <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+              <item name="Agent" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+              <item name="Spoc" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
@@ -338,6 +1484,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25285172" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -366,343 +1513,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Add Entity Function" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Company/VIEW/Agent/agent_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="1042" column="47" selection-start-line="1042" selection-start-column="38" selection-end-line="1042" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/URL/Agent/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="53" column="59" selection-start-line="53" selection-start-column="50" selection-end-line="53" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/VIEW/Api/api_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="29" column="69" selection-start-line="29" selection-start-column="69" selection-end-line="29" selection-end-column="69" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/add-employee.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/companies.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Agent/companies.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="72" column="50" selection-start-line="72" selection-start-column="45" selection-end-line="72" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/edit_company.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/employees.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="63" column="96" lean-forward="true" selection-start-line="63" selection-start-column="83" selection-end-line="63" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/subgroups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="108" column="88" selection-start-line="108" selection-start-column="88" selection-end-line="108" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/company_rates.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="22" column="77" selection-start-line="22" selection-start-column="63" selection-end-line="22" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/view_subgroups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="242" column="74" selection-start-line="242" selection-start-column="74" selection-end-line="242" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Agent/billing_entities.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-192">
-          <caret line="193" column="76" lean-forward="true" selection-start-line="193" selection-start-column="65" selection-end-line="193" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Agent/layout/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="44" column="120" lean-forward="true" selection-start-line="12" selection-start-column="3" selection-end-line="44" selection-end-column="120" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/layout/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="44" column="120" selection-start-line="44" selection-start-column="120" selection-end-line="44" selection-end-column="120" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/layout/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="44" column="120" selection-start-line="44" selection-start-column="120" selection-end-line="44" selection-end-column="120" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="44" column="120" selection-start-line="44" selection-start-column="120" selection-end-line="44" selection-end-column="120" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/layout/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="44" column="120" selection-start-line="44" selection-start-column="120" selection-end-line="44" selection-end-column="120" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/URL/Admin/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/layout/menu_bar_layout.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="229" column="52" selection-start-line="229" selection-start-column="48" selection-end-line="229" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/view_groups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="252" column="74" selection-start-line="252" selection-start-column="61" selection-end-line="252" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/spocs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="63" column="77" selection-start-line="63" selection-start-column="77" selection-end-line="63" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/company_admins.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="196" column="77" selection-start-line="196" selection-start-column="77" selection-end-line="196" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/layout/menu_bar_layout.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3679" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/companies.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-289">
-          <caret line="13" column="53" selection-start-line="13" selection-start-column="53" selection-end-line="13" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/billing_entities.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="154" column="67" selection-start-line="154" selection-start-column="52" selection-end-line="154" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/billing_entities.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="34" column="88" selection-start-line="34" selection-start-column="88" selection-end-line="34" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/company_admins.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="14" column="37" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/company_rates.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="96" selection-start-line="23" selection-start-column="83" selection-end-line="23" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/employees.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="24" column="78" selection-start-line="24" selection-start-column="64" selection-end-line="24" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/groups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="88" selection-start-line="24" selection-start-column="75" selection-end-line="24" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/home_page.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="25" column="96" selection-start-line="25" selection-start-column="96" selection-end-line="25" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/spocs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="96" selection-start-line="25" selection-start-column="83" selection-end-line="25" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/subgroups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="24" column="88" lean-forward="true" selection-start-line="24" selection-start-column="75" selection-end-line="24" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_1/billing_entities.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="34" column="88" lean-forward="true" selection-start-line="34" selection-start-column="75" selection-end-line="34" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/company_admins.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" column="77" selection-start-line="27" selection-start-column="63" selection-end-line="27" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/employees.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="86" selection-start-line="25" selection-start-column="86" selection-end-line="25" selection-end-column="86" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/company_rates.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="77" lean-forward="true" selection-start-line="22" selection-start-column="63" selection-end-line="22" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/groups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="88" lean-forward="true" selection-start-line="24" selection-start-column="75" selection-end-line="24" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/home_page.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="77" lean-forward="true" selection-start-line="24" selection-start-column="63" selection-end-line="24" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/spocs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="25" column="96" lean-forward="true" selection-start-line="25" selection-start-column="83" selection-end-line="25" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Approves_2/subgroups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="67" lean-forward="true" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/billing_entities.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="32" column="67" selection-start-line="32" selection-start-column="67" selection-end-line="32" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/company_admins.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="26" column="95" selection-start-line="26" selection-start-column="81" selection-end-line="26" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/company_rates.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="77" selection-start-line="22" selection-start-column="62" selection-end-line="22" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/spocs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="77" selection-start-line="24" selection-start-column="77" selection-end-line="24" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/subgroups.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="67" selection-start-line="23" selection-start-column="67" selection-end-line="23" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/employees.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="25" column="97" selection-start-line="25" selection-start-column="82" selection-end-line="25" selection-end-column="97" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/home_page.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="24" column="77" selection-start-line="24" selection-start-column="77" selection-end-line="24" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/groups.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -717,10 +1527,390 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/billing_entities.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="155" column="89" selection-start-line="155" selection-start-column="75" selection-end-line="155" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/templates/Agent/agent_home_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="96" selection-start-line="22" selection-start-column="96" selection-end-line="22" selection-end-column="96" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/VIEW/Agent/agent_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="1042" column="47" selection-start-line="1042" selection-start-column="38" selection-end-line="1042" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/templates/Agent/home_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="96" lean-forward="true" selection-start-line="25" selection-start-column="83" selection-end-line="25" selection-end-column="96" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/templates/Company/Spoc/layout/menu_bar_layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="39" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/admin.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/templates/corporate_agent_login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-70" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/templates/corporate_login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="27" column="55" lean-forward="true" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/backends.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="80" column="18" selection-start-line="80" selection-start-column="18" selection-end-line="80" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="916">
+          <caret line="226" column="9" selection-start-line="226" selection-start-column="9" selection-end-line="226" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/VIEW/basic_web_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/URL/Admin/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="42" selection-start-line="4" selection-start-column="42" selection-end-line="4" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Company/VIEW/Admin/admin_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="28" lean-forward="true" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Company/templates/Company/Admin/home_page.html">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/migrations/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/migrations/0002_auto_20190629_1316.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="79" column="10" lean-forward="true" selection-start-line="79" selection-start-column="10" selection-end-line="79" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoTrav/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="10" lean-forward="true" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+          <folding>
+            <element signature="e#84#93#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoTrav/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#222#231#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Admin/home_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-306" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Admin/spocs.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/backends.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="84" column="35" lean-forward="true" selection-start-line="84" selection-start-column="35" selection-end-line="84" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Admin/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="30" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Approves_2/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="94" selection-start-line="13" selection-start-column="77" selection-end-line="13" selection-end-column="94" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Approves_2/approves_2_views.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
-          <caret line="24" column="78" selection-start-line="24" selection-start-column="78" selection-end-line="24" selection-end-column="78" />
+          <caret line="136" column="60" selection-start-line="136" selection-start-column="51" selection-end-line="136" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Approves_1/employees.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="41" column="48" lean-forward="true" selection-end-line="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Approves_2/employees.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1309">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Approves_1/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="13" selection-end-column="96" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Approves_1/layout/menu_bar_layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="637">
+          <caret line="319" column="33" lean-forward="true" selection-start-line="277" selection-start-column="27" selection-end-line="319" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Admin/layout/menu_bar_layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="597">
+          <caret line="319" column="33" lean-forward="true" selection-start-line="277" selection-start-column="27" selection-end-line="319" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1955">
+          <caret line="213" column="45" selection-start-line="213" selection-start-column="6" selection-end-line="213" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Approves_2/layout/menu_bar_layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="273" column="54" lean-forward="true" selection-start-line="273" selection-start-column="54" selection-end-line="273" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="645" selection-start-line="645" selection-end-line="648" selection-end-column="109" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="474">
+          <caret line="206" column="70" selection-start-line="206" selection-start-column="49" selection-end-line="206" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Spoc/spocs.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="79" lean-forward="true" selection-end-line="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Spoc/add-taxi-booking.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/basic_web_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" column="6" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Spoc/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="42" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Company/Spoc/layout/menu_bar_layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="273" column="91" selection-start-line="273" selection-start-column="91" selection-end-line="273" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/corporate_agent_login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="27" column="58" selection-start-line="27" selection-start-column="53" selection-end-line="27" selection-end-column="58" />
+          <folding>
+            <element signature="n#style#0;n#p#0;n#form#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Agent/corporate_agent_login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="58" selection-start-line="27" selection-start-column="58" selection-end-line="27" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="35" column="40" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/corporate_login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="27" column="51" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="51" />
+          <folding>
+            <element signature="n#style#0;n#p#0;n#form#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Agent/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="55" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoTrav/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="25" column="54" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+          <folding>
+            <element signature="e#630#662#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

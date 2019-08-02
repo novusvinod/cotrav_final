@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Company.VIEW import basic_web_views
+from Common.VIEW import basic_web_views
 
 
 
@@ -24,27 +24,26 @@ urlpatterns = [
 
 
 ######################### Comman urls ################
-    path('login', basic_web_views.login),
-    path('postlogin', basic_web_views.login_action),
+    path('login', basic_web_views.login_action),
     path('logout', basic_web_views.logout_action),
 ######################### END Commann urls ###############
 
 
 ######################### CORPORATE ADMIN URLS ############################
-    path('', include('Company.URL.Admin.urls')),
-    path('', include('Company.URL.Spoc.urls')),
-    path('', include('Company.URL.Approves_1.urls')),
-    path('', include('Company.URL.Approves_2.urls')),
+    path('', include('Common.URL.Admin.urls')),
+    path('', include('Common.URL.Spoc.urls')),
+    path('', include('Common.URL.Approves_1.urls')),
+    path('', include('Common.URL.Approves_2.urls')),
 ######################### END CORPORATE URLS ####################
 
 
 ######################### AGENTS URLS ############################
-    path('', include('Company.URL.Agent.urls')),
+    path('', include('Common.URL.Agent.urls')),
 ######################### END AGENTS URLS ################
 
 
 ######################### API URLS ############################
-    path('', include('Company.URL.Api.urls')),
+    path('', include('Common.URL.Api.urls')),
 ######################### END API URLS ####################
 
 

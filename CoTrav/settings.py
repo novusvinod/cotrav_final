@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static"),
-    '/Python_Project_TaxiVaxi/CoTrav/Company/static/',
+    '/Python_Project_TaxiVaxi/CoTrav/Common/static/',
 ]
 
 ######################### AUTH ############################
@@ -37,14 +37,14 @@ STATICFILES_DIRS = [
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.RemoteUserBackend',
         'django.contrib.auth.backends.ModelBackend',
-        'Company.backends.CustomCompanyUserAuth',
+        'Common.backends.CustomCompanyUserAuth',
 )
 
 LOGIN_REDIRECT_URL='/home'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'Company.authentication.MyOwnTokenAuthentication',
+        'Common.authentication.MyOwnTokenAuthentication',
 
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Company',
+    'Common',
     'django_global_request',
     'rest_framework'
 ]
