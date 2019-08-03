@@ -19,6 +19,10 @@ def login(request):
     user_name = request.POST.get('user_name', '')
     user_password = request.POST.get('user_password', '')
     user_type = request.POST.get('user_type', '')
+    if user_type:
+        user_type=user_type
+    else:
+        user_type=10
 
     cursor = connection.cursor()
     cursor.callproc('getLoginDetails', [user_name,user_type])

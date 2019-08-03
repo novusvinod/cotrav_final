@@ -13,7 +13,6 @@ def homepage(request):
 
 @login_required(login_url='/login')
 def company_admins(request, id):
-    print(id)
     request = get_request()
     login_type = request.session['login_type']
     access_token = request.session['access_token']
@@ -203,10 +202,23 @@ def add_taxi_booking(request,id):
         company_emp = json.loads(r.text)
         employees = company_emp['Employees']
 
+        url_city = settings.API_BASE_URL + "cities"
+        cities = getDataFromAPI(login_type, access_token, url_city, payload)
+        cities = cities['Cities']
         if id:
-            return render(request, 'Company/Spoc/add-taxi-booking.html', {'employees':employees})
+            return render(request, 'Company/Spoc/add-taxi-booking.html', {'employees':employees,'cities':cities})
         else:
             return render(request, 'Company/Spoc/add-taxi-booking.html', {})
+
+
+
+
+
+
+
+
+
+
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

@@ -21,9 +21,98 @@
                                     </div>
                                 </div>
                                 <div class="card-body ">
+                                 <div class="row">
+                                     <div class="col-md-4 col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" >Pickup City*</label>
+                                             <input type="text" class="form-control col-sm-8" name="pickup_city_name" id="pickup_city" placeholder="Pickup City" required>
+                                        </div>
+                                    </div>
 
 
-                                </div>
+
+
+
+                                      <div class="col-md-4 col-sm-4">
+
+                                           <div class="form-group row">
+                                            <label class="col-sm-4" >Booking Reason/ Comment*</label>
+                                            <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                                        </div>
+
+                                           <div class="form-group row">
+                                            <label class="col-sm-4" >Number Of Employees*</label>
+                                            <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5" style="display: none">5</option>
+										        <option value="6" style="display: none">6</option>
+                                            </select>
+                                        </div>
+
+                                           <div class="form-group row" id="emp_row_1">
+                                                <label class="col-sm-4" >Employee 1</label>
+                                                 <select name="employee_id_1" class="form-control col-sm-8">
+                                                    {% for employee in employees %}
+                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                          <div class="form-group row" id="emp_row_2" style="display: none">
+                                                <label class="col-sm-4" >Employee 2</label>
+                                                 <select name="employee_id_2" class="form-control col-sm-8">
+                                                    {% for employee in employees %}
+                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                          <div class="form-group row"  id="emp_row_3" style="display: none">
+                                                <label class="col-sm-4" >Employee 3</label>
+                                                 <select name="employee_id_3" class="form-control col-sm-8">
+                                                    {% for employee in employees %}
+                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                          <div class="form-group row"  id="emp_row_4" style="display: none">
+                                                <label class="col-sm-4" >Employee 4</label>
+                                                 <select name="employee_id_4" class="form-control col-sm-8">
+                                                    {% for employee in employees %}
+                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                           <div class="form-group row"  id="emp_row_5" style="display: none">
+                                                <label class="col-sm-4" >Employee 5</label>
+                                                 <select name="employee_id_5" class="form-control col-sm-8">
+                                                    {% for employee in employees %}
+                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                           <div class="form-group row"  id="emp_row_6" style="display: none">
+                                                <label class="col-sm-4" >Employee 6</label>
+                                                 <select name="employee_id_6" class="form-control col-sm-8">
+                                                    {% for employee in employees %}
+                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                      </div>
+                                 </div>
+
+
+
+
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -41,3 +130,35 @@
 {% endif %}
 
 {% include "Company/Spoc/layout/footer.html" %}
+
+<script type="text/javascript">
+ $(function() {
+
+
+var pickup_city = document.getElementById('pickup_city');
+var options = {
+	  types: [],
+	  componentRestrictions: {country: 'in'}
+	};
+var ac_pickup_city = new google.maps.places.Autocomplete(pickup_city, options);
+
+
+$(".no_of_seats").change(function()
+    {
+    	var no_of_seats = $(this).val();
+    	if(no_of_seats > 0){
+           for(i=1;i<=no_of_seats;i++)
+            {
+                $('#emp_row_'+i).css("display","block");
+            }
+            var j = parseInt(no_of_seats) + 1;
+			for(j=j; j<=6; j++)
+			{
+				$('#emp_row_'+j).css("display","none");
+
+			}
+    	}
+    });
+ });
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&key=AIzaSyCOrOff99hL9hsMIZXJg2ncJQmi-ZynKeY"></script>

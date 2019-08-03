@@ -616,7 +616,7 @@ def add_spocs(request, id):
         if company['success'] == 1:
             return HttpResponseRedirect("/Corporate/Admin/company-admins/" + str(id), {'message': "Added Successfully"})
         else:
-            return HttpResponseRedirect("/Corporate/Admin/company-admins/" + str(id), {'message': "Record Not Added"})
+            return HttpResponseRedirect("/Corporate/company-spocs/" + str(id), {'message': "Record Not Added"})
     else:
         request = get_request()
         login_type = request.session['login_type']
@@ -713,9 +713,9 @@ def add_employee(request, id):
         print(url)
         print(company)
         if company['success'] == 1:
-            return HttpResponseRedirect("/Corporate/Admin/company-employees/" + str(id), {'message': "Added Successfully"})
+            return HttpResponseRedirect("/Corporate/company-employees/" + str(id), {'message': "Added Successfully"})
         else:
-            return HttpResponseRedirect("/Corporate/Admin/company-employees/" + str(id), {'message': "Record Not Added"})
+            return HttpResponseRedirect("/Corporate/company-employees/" + str(id), {'message': "Record Not Added"})
     else:
         request = get_request()
         login_type = request.session['login_type']
