@@ -5,6 +5,15 @@ urlpatterns = [
 
     path('api/login', api_views.login),
 
+    path('api/cities', api_views.cities),
+    path('api/add_city_name', api_views.add_city_name),
+    path('api/add_state_name', api_views.add_state_name),
+    path('api/add_country_name', api_views.add_country_name),
+
+
+
+    path('api/taxi_types', api_views.taxi_types),
+
     path('api/companies', api_views.companies),
     path('api/view_company', api_views.view_company),
     path('api/add_company', api_views.add_companies),
@@ -22,9 +31,6 @@ urlpatterns = [
     path('api/subgroups', api_views.subgroups),
     path('api/spocs', api_views.spocs),
     path('api/employees', api_views.employee),
-
-    path('api/cities', api_views.cities),
-    path('api/taxi_types',api_views.taxi_types),
 
     path('api/add_billing_entity', api_views.add_billing_entity),
     path('api/update_billing_entity', api_views.update_billing_entity),
@@ -69,4 +75,10 @@ urlpatterns = [
     path('api/add_agent', api_views.add_agent),
     path('api/update_agent', api_views.update_agent),
     path('api/delete_agent', api_views.delete_agent),
+
+    ######### TAXI BOOKING API #####################
+    path('api/taxi_bookings', api_views.taxi_bookings),
+    path('api/view_taxi_booking', api_views.view_taxi_booking),
+    path('api/add_taxi_booking', api_views.add_taxi_booking),
+    path('api/add_employee_taxi_booking', api_views.add_employee_taxi_booking),
 ]

@@ -1,0 +1,101 @@
+{% include "Company/Spoc/layout/header.html" %}
+{% include "Company/Spoc/layout/menu_bar_layout.html" %}
+
+{% if user %}
+<!-- start page content -->
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ALL CORPORATE TAXI BOOKINGS</header>
+                             <div class="row p-b-20">
+
+                            </div>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+
+                        <div class="row">
+                             <div class="col-md-6">
+                                    <div class="btn-group">
+                                        <a class="btn btn-info" href="/Corporate/Spoc/add-taxi-booking/{{user.id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="table-scrollable table-bordered">
+
+                            <table id="example1" class="display full-width">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Reference No</th>
+                                    <th>Tour Type</th>
+                                    <th>City</th>
+                                    <th>Pickup Location</th>
+                                    <th>Drop Location</th>
+                                    <th>Pickup Datetime</th>
+                                    <th>Booking Date</th>
+                                    <th>No Of Seats</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.id }}</td>
+                                    <td>{{ booking.reference_no }}</td>
+                                    {% if booking.tour_type == 1 %}
+                                    <td>Local</td>
+                                    {% elif booking.tour_type == 2 %}
+                                    <td>Radio</td>
+                                    {% else %}
+                                    <td>Outstation</td>
+                                    {% endif %}
+                                    <td>{{ booking.city_name }}</td>
+                                    <td>{{ booking.pickup_location }}</td>
+                                    <td>{{ booking.drop_location }}</td>
+                                    <td>{{ booking.pickup_datetime }}</td>
+                                    <td>{{ booking.booking_date}}</td>
+                                    <td>{{ booking.no_of_seats }}</td>
+                                    <td>{{ booking.reason_booking }}</td>
+                                    <td>{{ booking.booking_status }}</td>
+                                    <td>
+                                        <a href="/Corporate/Spoc/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+{% include "Company/Spoc/layout/footer.html" %}
+
+
+

@@ -31,4 +31,7 @@ urlpatterns = [
 
     path('Corporate/Admin/company-employees/<int:id>', admin_views.company_employees),
     path('Corporate/Admin/add-employee/<int:id>', admin_views.add_employee),
+
+    path('Corporate/Admin/taxi-bookings/<int:id>', admin_views.taxi_bookings),
+    path('Corporate/Admin/view-taxi-booking/<int:id>', admin_views.view_taxi_booking),
 ]

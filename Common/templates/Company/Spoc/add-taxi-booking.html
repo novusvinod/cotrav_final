@@ -6,120 +6,182 @@
 <!-- start page content -->
 
 
-            <div class="page-content-wrapper">
-                <div class="page-content">
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card card-topline-aqua">
-                                <div class="card-head">
-                                    <header>ADD TAXI BOOKING</header>
-                                    <div class="tools">
-                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
-                                    </div>
-                                </div>
-                                <div class="card-body ">
-                                 <div class="row">
-                                     <div class="col-md-4 col-sm-4">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4" >Pickup City*</label>
-                                             <input type="text" class="form-control col-sm-8" name="pickup_city_name" id="pickup_city" placeholder="Pickup City" required>
-                                        </div>
-                                    </div>
-
-
-
-
-
-                                      <div class="col-md-4 col-sm-4">
-
-                                           <div class="form-group row">
-                                            <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                            <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
-                                        </div>
-
-                                           <div class="form-group row">
-                                            <label class="col-sm-4" >Number Of Employees*</label>
-                                            <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5" style="display: none">5</option>
-										        <option value="6" style="display: none">6</option>
-                                            </select>
-                                        </div>
-
-                                           <div class="form-group row" id="emp_row_1">
-                                                <label class="col-sm-4" >Employee 1</label>
-                                                 <select name="employee_id_1" class="form-control col-sm-8">
-                                                    {% for employee in employees %}
-                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-                                          <div class="form-group row" id="emp_row_2" style="display: none">
-                                                <label class="col-sm-4" >Employee 2</label>
-                                                 <select name="employee_id_2" class="form-control col-sm-8">
-                                                    {% for employee in employees %}
-                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-                                          <div class="form-group row"  id="emp_row_3" style="display: none">
-                                                <label class="col-sm-4" >Employee 3</label>
-                                                 <select name="employee_id_3" class="form-control col-sm-8">
-                                                    {% for employee in employees %}
-                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-                                          <div class="form-group row"  id="emp_row_4" style="display: none">
-                                                <label class="col-sm-4" >Employee 4</label>
-                                                 <select name="employee_id_4" class="form-control col-sm-8">
-                                                    {% for employee in employees %}
-                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-                                           <div class="form-group row"  id="emp_row_5" style="display: none">
-                                                <label class="col-sm-4" >Employee 5</label>
-                                                 <select name="employee_id_5" class="form-control col-sm-8">
-                                                    {% for employee in employees %}
-                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-                                           <div class="form-group row"  id="emp_row_6" style="display: none">
-                                                <label class="col-sm-4" >Employee 6</label>
-                                                 <select name="employee_id_6" class="form-control col-sm-8">
-                                                    {% for employee in employees %}
-                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-
-                                      </div>
-                                 </div>
-
-
-
-
-                                 </div>
-                            </div>
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <form method="post" action="/Corporate/Spoc/add-taxi-booking/{{user.corporate_id}}">
+            <input type="hidden" name="spoc_id" value="{{user.id}}">
+            <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
+            <input type="hidden" name="group_id" value="{{user.group_id}}">
+            <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ADD TAXI BOOKING</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
                         </div>
                     </div>
+                    <div class="card-body ">
+                     <div class="row">
+                         <div class="col-md-4 col-sm-4">
 
+                             <div class="form-group row">
+                                <label class="col-sm-4" >Tour Type*</label>
+                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type">
+                                      <option value="">Select Tour Type </option>
+                                      <option value="1">Radio </option>
+                                      <option value="2">Local </option>
+                                      <option value="3">Outstation </option>
+                                  </select>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Pickup City*</label>
+                                 <input type="text" class="form-control col-sm-8" name="pickup_city" id="pickup_city" placeholder="Pickup City" required>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Pickup Location*</label>
+                                 <input type="text" class="form-control col-sm-8" name="pickup_location" id="pickup_location" placeholder="Pickup Location" required>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Drop Location*</label>
+                                 <input type="text" class="form-control col-sm-8" name="drop_location" id="drop_location" placeholder="Drop Location" required>
+                            </div>
+
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Pickup DateTime*</label>
+                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date" id="" placeholder="Pickup Date/Time" required>
+                            </div>
+
+                              <div class="form-group row" id="tr_taxi_type" style="display: none">
+                                    <label class="col-sm-4" >Taxi Type</label>
+                                     <select name="taxi_type" class="form-control col-sm-8">
+                                        {% for taxi in taxies %}
+                                        <option value="{{taxi.id}}">{{taxi.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                             <div class="form-group row" id="tr_package" style="display: none">
+                                    <label class="col-sm-4" >Select Package</label>
+                                     <select name="package_id" class="form-control col-sm-8">
+
+                                    </select>
+                                </div>
+
+                              <div class="form-group row" id="tr_no_of_days" style="display: none">
+                                    <label class="col-sm-4" >No of Days</label>
+                                      <input type="text" class="form-control col-sm-8" name="no_of_days" id="id_no_of_days" placeholder="No of Days">
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+
+
+                          <div class="col-md-4 col-sm-4">
+
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
+                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                            </div>
+
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Number Of Employees*</label>
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5" style="display: none">5</option>
+                                    <option value="6" style="display: none">6</option>
+                                </select>
+                            </div>
+
+                               <div class="form-group row" id="emp_row_1">
+                                    <label class="col-sm-4" >Employee 1</label>
+                                     <select name="employee_id_1" class="form-control col-sm-8">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                              <div class="form-group row" id="emp_row_2" style="display: none">
+                                    <label class="col-sm-4" >Employee 2</label>
+                                     <select name="employee_id_2" class="form-control col-sm-8">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                              <div class="form-group row"  id="emp_row_3" style="display: none">
+                                    <label class="col-sm-4" >Employee 3</label>
+                                     <select name="employee_id_3" class="form-control col-sm-8">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                              <div class="form-group row"  id="emp_row_4" style="display: none">
+                                    <label class="col-sm-4" >Employee 4</label>
+                                     <select name="employee_id_4" class="form-control col-sm-8">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                               <div class="form-group row"  id="emp_row_5" style="display: none">
+                                    <label class="col-sm-4" >Employee 5</label>
+                                     <select name="employee_id_5" class="form-control col-sm-8">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                               <div class="form-group row"  id="emp_row_6" style="display: none">
+                                    <label class="col-sm-4" >Employee 6</label>
+                                     <select name="employee_id_6" class="form-control col-sm-8">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                          </div>
+                     </div>
+
+
+
+
+                     </div>
+                      <div class="form-group">
+                    <div class="offset-md-3 col-md-9">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
                 </div>
             </div>
-            <!-- end page content -->
+        </div>
+        </form>
+    </div>
+</div>
+<!-- end page content -->
 
 
 
@@ -130,22 +192,15 @@
 {% endif %}
 
 {% include "Company/Spoc/layout/footer.html" %}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
  $(function() {
 
-
-var pickup_city = document.getElementById('pickup_city');
-var options = {
-	  types: [],
-	  componentRestrictions: {country: 'in'}
-	};
-var ac_pickup_city = new google.maps.places.Autocomplete(pickup_city, options);
-
-
 $(".no_of_seats").change(function()
     {
     	var no_of_seats = $(this).val();
+    	alert(no_of_seats);
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
             {
@@ -159,6 +214,46 @@ $(".no_of_seats").change(function()
 			}
     	}
     });
+
+$("#tour_type").change(function()
+    {
+    	var tour_type = $(this).val();
+
+    	switch(tour_type){
+           case '1':
+              {
+                $('#tr_taxi_type').css("display","none");
+                $('#tr_package').css("display","none");
+                $('#tr_no_of_days').css("display","none");
+                break;
+              }
+           case '2':
+              {
+                $('#tr_taxi_type').css("display","block");
+                $('#tr_package').css("display","block");
+                $('#tr_no_of_days').css("display","none");
+                break;
+              }
+           case '3':
+              {
+                $('#tr_taxi_type').css("display","block");
+                $('#tr_package').css("display","block");
+                $('#tr_no_of_days').css("display","block");
+                break;
+              }
+    	}
+    });
+
+var pickup_city = document.getElementById('pickup_city');
+var pickup_location = document.getElementById('pickup_location');
+var drop_location = document.getElementById('drop_location');
+var options = {
+ types: ['(cities)'],
+ componentRestrictions: {country: 'in'}
+};
+
+   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
+   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
+   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
  });
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&key=AIzaSyCOrOff99hL9hsMIZXJg2ncJQmi-ZynKeY"></script>

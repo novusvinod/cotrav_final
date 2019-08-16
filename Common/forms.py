@@ -14,7 +14,7 @@ class Corporate_Login_Form(forms.ModelForm):
 class Corporate_Agent_Login_Form(forms.ModelForm):
     class Meta:
         model = Corporate_Agent
-        fields = ['email','password','status','username']
+        fields = ['email','password','status','user_name']
 
 
 class Corporate_Form(forms.ModelForm):

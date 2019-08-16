@@ -38,7 +38,7 @@ class Corporate_Login(models.Model):
 
 
 class Corporate_Agent(models.Model):
-    username = models.CharField(max_length=200)
+    user_name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
@@ -68,6 +68,8 @@ class Corporate_Spoc_Login(models.Model):
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
     corporate_id = models.CharField(default=True, max_length=10)
+    group_id = models.CharField(default=True, max_length=10)
+    subgroup_id = models.CharField(default=True, max_length=10)
     is_radio = models.BooleanField()
     is_local = models.BooleanField()
     is_outstation = models.BooleanField()

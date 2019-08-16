@@ -13,5 +13,8 @@ urlpatterns = [
     path('Corporate/Spoc/company-spocs/<int:id>', spoc_views.company_spocs),
     path('Corporate/Spoc/company-employees/<int:id>', spoc_views.company_employees),
 
+    path('Corporate/Spoc/taxi-bookings/<int:id>', spoc_views.taxi_bookings),
     path('Corporate/Spoc/add-taxi-booking/<int:id>', spoc_views.add_taxi_booking),
+    path('Corporate/Spoc/view-taxi-booking/<int:id>', spoc_views.view_taxi_booking),
+
 ]

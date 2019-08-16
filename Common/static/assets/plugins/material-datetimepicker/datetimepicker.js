@@ -66,7 +66,7 @@ $(document).ready(function()
 				$('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
 			});
 
-			$('#min-date').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
+			$('#min-date').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm:ss', minDate : new Date() });
 
 			
 		});

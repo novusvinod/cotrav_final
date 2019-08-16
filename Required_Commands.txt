@@ -8,10 +8,4 @@ pip install djangorestframework
 pip install requests
 
 
-corporate_login_access_tokens_set_expiry_date_30days
-
-BEGIN
-    SET NEW.expiry_date = now() + INTERVAL 1 MONTH;
-END
-
 

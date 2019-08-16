@@ -37,8 +37,12 @@ def login_action(request):
                     cursor.callproc('getAllCorporateAdminsDetails', [user.corporate_id])
                     user_info = dictfetchall(cursor)
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    print("after login")
-                    return redirect("Corporate/Admin/home")
+
+                    next_url = request.POST.get('next')
+                    if next_url:
+                        redirect(next_url)
+                    else:
+                        return redirect("Corporate/Admin/home")
                 else:
                     print("User Info Not Found")
 
@@ -46,7 +50,14 @@ def login_action(request):
                     cursor.callproc('getAllCorporateSubgroupsDetails', [user.corporate_id])
                     user_info = dictfetchall(cursor)
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    return redirect("Corporate/Approver_1/home")
+                    next_url = request.GET.get('next', None)
+                    print("next URL")
+                    print(next_url)
+                    if next_url:
+                        redirect(next_url)
+                    else:
+                        return redirect("Corporate/Approver_1/home")
+
                 else:
                     print("User Info Not Found")
 

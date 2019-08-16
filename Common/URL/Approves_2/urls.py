@@ -12,4 +12,7 @@ urlpatterns = [
     path('Corporate/Approver_2/company-admins/<int:id>', approves_2_views.company_admins),
     path('Corporate/Approver_2/company-spocs/<int:id>', approves_2_views.company_spocs),
     path('Corporate/Approver_2/company-employees/<int:id>', approves_2_views.company_employees),
+
+    path('Corporate/Approver_2/taxi-bookings/<int:id>', approves_2_views.taxi_bookings),
+    path('Corporate/Approver_2/view-taxi-booking/<int:id>', approves_2_views.view_taxi_booking),
 ]
