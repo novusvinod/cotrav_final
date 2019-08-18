@@ -4,26 +4,24 @@ import requests
 import json
 from django_global_request.middleware import get_request
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 
 
 @login_required(login_url='/login')
 def homepage(request):
-    request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
-    if login_type:
+    if 'login_type' in request.session:
         return render(request, 'Company/Approves_1/home_page.html', {'user': request.user})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_admins(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
         url = settings.API_BASE_URL + "admins"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -39,10 +37,11 @@ def company_admins(request, id):
 @login_required(login_url='/login')
 def company_billing_entities(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "billing_entities"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -62,10 +61,11 @@ def company_billing_entities(request, id):
 @login_required(login_url='/login')
 def company_rates(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "company_rates"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -81,10 +81,11 @@ def company_rates(request, id):
 @login_required(login_url='/login')
 def company_groups(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "groups"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -100,10 +101,11 @@ def company_groups(request, id):
 @login_required(login_url='/login')
 def company_subgroups(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "subgroups"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -122,10 +124,11 @@ def company_subgroups(request, id):
 @login_required(login_url='/login')
 def company_spocs(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "spocs"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -141,10 +144,11 @@ def company_spocs(request, id):
 @login_required(login_url='/login')
 def company_employees(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "employees"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -160,10 +164,11 @@ def company_employees(request, id):
 @login_required(login_url='/login')
 def view_company_group(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_group"
         payload = {'group_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -184,10 +189,11 @@ def view_company_group(request, id):
 @login_required(login_url='/login')
 def view_company_subgroup(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_subgroup"
         payload = {'subgroup_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -206,11 +212,12 @@ def view_company_subgroup(request, id):
 
 def taxi_bookings(request,id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
-        url = settings.API_BASE_URL + "taxi_bookings"
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "approver_1_taxi_bookings"
         payload = {'approver_1_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -225,10 +232,11 @@ def taxi_bookings(request,id):
 
 def view_taxi_booking(request,id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_taxi_booking"
         payload = {'booking_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -242,7 +250,53 @@ def view_taxi_booking(request,id):
         return redirect('/login')
 
 
+def accept_taxi_booking(request,id):
+    request = get_request()
 
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "approver_1_accept_taxi_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "approver_1_taxi_bookings"
+            payload = {'approver_1_id': request.user.id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Approves_1/taxi_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Approves_1/taxi_bookings.html",{})
+    else:
+        return redirect('/login')
+
+
+def reject_taxi_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "approver_1_reject_taxi_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "approver_1_taxi_bookings"
+            payload = {'approver_1_id': user_id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Approves_1/taxi_bookings.html", {'bookings': booking})
+        else:
+            return render(request, "Company/Approves_1/taxi_bookings.html",{})
+    else:
+        return redirect('/login')
 
 
 

@@ -50,10 +50,10 @@ def agent_logout_action(request):
 @login_required(login_url='/login')
 def add_company(request):
     if request.method == "POST":
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
 
-        if user_type:
             corporate_name = request.POST.get('corporate_name', '')
             corporate_code = request.POST.get('corporate_code', '')
             contact_person_name = request.POST.get('contact_person_name', '')
@@ -125,25 +125,28 @@ def add_company(request):
 @login_required(login_url='/login')
 def companies(request):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
-    url = settings.API_BASE_URL+"companies"
-    payload = {'some': 'data'}
-    company = getDataFromAPI(login_type, access_token, url, payload)
-    if company['success'] == 1:
-        corporates_data = company['Corporates']
-        return render(request,"Agent/companies.html",{'companies':corporates_data})
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        url = settings.API_BASE_URL+"companies"
+        payload = {'some': 'data'}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        if company['success'] == 1:
+            corporates_data = company['Corporates']
+            return render(request,"Agent/companies.html",{'companies':corporates_data})
+        else:
+            return render(request,"Agent/companies.html",{'companies':{}})
     else:
-        return render(request,"Agent/companies.html",{'companies':{}})
+        redirect('/agents/login')
 
 
 @login_required(login_url='/login')
 def edit_company(request, id):
     if request.method == "POST":
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
 
-        if user_type:
             corporate_name = request.POST.get('corporate_name', '')
             corporate_code = request.POST.get('corporate_code', '')
             contact_person_name = request.POST.get('contact_person_name', '')
@@ -163,7 +166,6 @@ def edit_company(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
-
 
             user_id = request.POST.get('user_id', '')
 
@@ -185,10 +187,10 @@ def edit_company(request, id):
         else:
             redirect('/agents/login')
     else:
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
 
-        if user_type:
             url = settings.API_BASE_URL + "view_company"
             payload = {'corporate_id': id}
             company = getDataFromAPI(user_type, access_token, url, payload)
@@ -200,16 +202,15 @@ def edit_company(request, id):
 
 def delete_company(request,id):
     request = get_request()
-    user_type = request.session['login_type']
-    access_token = request.session['access_token']
+    if 'login_type' in request.session:
+        user_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    if user_type:
         corporate_id = request.POST.get('corporate_id', '')
         user_id = request.POST.get('user_id', '')
 
         url = settings.API_BASE_URL+"delete_company"
         payload = {'corporate_id': corporate_id,'user_id':user_id}
-        print(payload)
         company = getDataFromAPI(user_type, access_token, url, payload)
         if company['success'] == 1:
             return HttpResponseRedirect("/agents/companies", {'message': "Deleted Successfully"})
@@ -218,14 +219,14 @@ def delete_company(request,id):
     else:
         redirect('/agents/login')
 
+
 @login_required(login_url='/login')
 def company_admins(request, id):
-    print(id)
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    if login_type:
         url = settings.API_BASE_URL + "admins"
         payload = {'corporate_id': id}
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
@@ -248,10 +249,10 @@ def company_admins(request, id):
 @login_required(login_url='/login')
 def company_billing_entities(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    if login_type:
         url = settings.API_BASE_URL + "billing_entities"
         payload = {'corporate_id': id}
 
@@ -276,10 +277,11 @@ def company_billing_entities(request, id):
 @login_required(login_url='/login')
 def company_rates(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "company_rates"
         payload = {'corporate_id': id}
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
@@ -308,10 +310,10 @@ def company_rates(request, id):
 @login_required(login_url='/login')
 def company_groups(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    if login_type:
         url = settings.API_BASE_URL + "groups"
         payload = {'corporate_id': id}
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
@@ -334,10 +336,11 @@ def company_groups(request, id):
 @login_required(login_url='/login')
 def company_subgroups(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "subgroups"
         payload = {'corporate_id': id}
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
@@ -365,10 +368,11 @@ def company_subgroups(request, id):
 @login_required(login_url='/login')
 def company_spocs(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "spocs"
         payload = {'corporate_id': id}
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
@@ -386,10 +390,10 @@ def company_spocs(request, id):
 @login_required(login_url='/login')
 def company_employees(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    if login_type:
         url = settings.API_BASE_URL + "employees"
         payload = {'corporate_id': id}
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
@@ -409,11 +413,12 @@ def add_company_rate(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
         corporate_id = request.POST.get('corporate_id', '')
 
-        if user_type:
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             package_name = request.POST.get('package_name', '')
             city_id = request.POST.get('city_id')
             taxi_type = request.POST.get('taxi_type', '')
@@ -431,20 +436,17 @@ def add_company_rate(request, id):
             payload = {'corporate_id': corporate_id,'package_name':package_name,'city_id':city_id,'taxi_type':taxi_type,
             'tour_type':tour_type,'kms':kms,'hours':hours,'km_rate':km_rate,'hour_rate':hour_rate,'base_rate':base_rate,'night_rate':night_rate,
             'user_id': user_id, 'user_type': user_type,'rate_id':rate_id,'is_delete': delete_id, }
-            print(payload)
+
             if rate_id:
                 url = settings.API_BASE_URL + "update_company_rates"
-                print("in auth id")
+
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_company_rates"
-                    print(url)
 
             else:
                 url = settings.API_BASE_URL + "add_company_rates"
 
             company = getDataFromAPI(user_type, access_token, url, payload)
-            print(url)
-            print(delete_id)
             if company['success'] == 1:
                 return HttpResponseRedirect("/agents/rates/0", {'message': "Added Successfully"})
             else:
@@ -459,10 +461,11 @@ def add_company_entity(request, id):
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
 
             entity_name = request.POST.get('entity_name', '')
             billing_city_id = request.POST.get('billing_city_id')
@@ -517,10 +520,11 @@ def add_company_group(request, id):
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_name = request.POST.get('group_name', '')
             zone_name = request.POST.get('zone_name')
 
@@ -545,9 +549,11 @@ def add_company_subgroup(request, id):
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        if login_type:
+
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             subgroup_name = request.POST.get('group_name', '')
             group_id = request.POST.get('group_id', '')
 
@@ -572,10 +578,11 @@ def update_company_group(request, id):
         request = get_request()
         user_id = request.POST.get('user_id', '')
         group_id = request.POST.get('group_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_name = request.POST.get('group_name', '')
             zone_name = request.POST.get('zone_name')
 
@@ -599,10 +606,11 @@ def update_company_subgroup(request, id):
         request = get_request()
         user_id = request.POST.get('user_id', '')
         subgroup_id = request.POST.get('subgroup_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_name = request.POST.get('group_name', '')
 
             payload = {'subgroup_id': subgroup_id, 'access_token': access_token, 'group_name': group_name,
@@ -628,11 +636,12 @@ def delete_company_group(request, id):
         request = get_request()
         user_id = request.POST.get('user_id', '')
         group_id = request.POST.get('group_id')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        access_token_auth = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            access_token_auth = request.session['access_token']
+
             payload = {'group_id': group_id, 'user_id': user_id, 'login_type': login_type, 'access_token': access_token,
                        'access_token_auth': access_token_auth}
             url = settings.API_BASE_URL + "delete_group"
@@ -649,13 +658,14 @@ def delete_company_group(request, id):
 def delete_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        subgroup_id = request.POST.get('subgroup_id')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        access_token_auth = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            subgroup_id = request.POST.get('subgroup_id')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            access_token_auth = request.session['access_token']
+
             payload = {'subgroup_id': subgroup_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'access_token_auth': access_token_auth}
             url = settings.API_BASE_URL + "delete_subgroup"
@@ -673,11 +683,13 @@ def delete_company_subgroup(request, id):
 def add_company_group_auth(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        if login_type:
+
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             access_token_auth = request.session['access_token']
 
             name = request.POST.get('name', '')
@@ -729,8 +741,7 @@ def add_company_group_auth(request, id):
                 url = settings.API_BASE_URL + "add_group_auth"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
-            print(url)
-            print(delete_id)
+
             if company['success'] == 1:
                 return HttpResponseRedirect("/agents/view-company-group/" + group_id, {'message': "Added Successfully"})
             else:
@@ -743,11 +754,13 @@ def add_company_group_auth(request, id):
 def add_company_subgroup_auth(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        if login_type:
+
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             access_token_auth = request.session['access_token']
 
             name = request.POST.get('name', '')
@@ -815,11 +828,12 @@ def add_company_subgroup_auth(request, id):
 def add_company_admins(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        if login_type:
+
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
             access_token_auth = request.session['access_token']
 
             name = request.POST.get('name', '')
@@ -881,12 +895,12 @@ def add_company_admins(request, id):
 def add_spocs(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
 
             group_id = request.POST.get('group_id', '')
             subgroup_id = request.POST.get('subgroup_id', '')
@@ -954,7 +968,7 @@ def add_spocs(request, id):
         login_type = request.session['login_type']
         access_token = request.session['access_token']
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
-        if login_type:
+        if 'login_type' in request.session:
             url_spoc = settings.API_BASE_URL + "view_spoc"
             payload = {'spoc_id': id}
             r = requests.post(url_spoc, data=payload, headers=headers)
@@ -990,12 +1004,12 @@ def add_spocs(request, id):
 def add_employee(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
 
             spoc_id = request.POST.get('spoc_id', '')
             core_employee_id = request.POST.get('core_employee_id', '')
@@ -1059,10 +1073,11 @@ def add_employee(request, id):
             redirect('/agents/login')
     else:
         request = get_request()
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             url_emp = settings.API_BASE_URL + "view_employee"
             payload = {'employee_id': id}
             company_emp = getDataFromAPI(login_type, access_token, url_emp, payload)
@@ -1085,10 +1100,11 @@ def add_employee(request, id):
 def add_agent(request,id):
     if request.method == 'POST':
         request = get_request()
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             user_id = request.POST.get('user_id', '')
 
             emp_id = request.POST.get('emp_id', '')
@@ -1152,10 +1168,11 @@ def add_agent(request,id):
     else:
         request = get_request()
         if id:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
 
-            if login_type:
+            if 'login_type' in request.session:
+                login_type = request.session['login_type']
+                access_token = request.session['access_token']
+
                 url_agent = settings.API_BASE_URL + "view_agent"
                 payload = {'agent_id': id}
                 agent = getDataFromAPI(login_type, access_token, url_agent, payload)
@@ -1170,9 +1187,11 @@ def add_agent(request,id):
 @login_required(login_url='/login')
 def view_company_group(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
-    if login_type:
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_group"
         payload = {'group_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -1189,13 +1208,15 @@ def view_company_group(request, id):
     else:
         redirect('/agents/login')
 
+
 @login_required(login_url='/login')
 def view_company_subgroup(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_subgroup"
         payload = {'subgroup_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -1213,12 +1234,14 @@ def view_company_subgroup(request, id):
     else:
         redirect('/agents/login')
 
+
 def view_agents(request):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL+"agents"
         payload = {'some': 'data'}
         agents = getDataFromAPI(login_type, access_token, url, payload)
@@ -1229,6 +1252,257 @@ def view_agents(request):
             return render(request,"Agent/agents.html",{'agents':{}})
     else:
         redirect('/agents/login')
+
+
+def operators(request):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL+"operators"
+        payload = {'some': 'data'}
+        operators = getDataFromAPI(login_type, access_token, url, payload)
+        if operators['success'] == 1:
+            operators = operators['Operators']
+            return render(request,"Agent/operators.html",{'operators':operators})
+        else:
+            return render(request,"Agent/operators.html",{'operators':{}})
+    else:
+        redirect('/agents/login')
+
+
+def view_operator(request,id):
+    pass
+
+
+def add_operator(request):
+    if request.method == 'POST':
+        request = get_request()
+
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
+
+            type = request.POST.get('type', '')
+            username = request.POST.get('username', '')
+            operator_name = request.POST.get('operator_name', '')
+            operator_email = request.POST.get('operator_email', '')
+
+            operator_contact = request.POST.get('operator_contact', '')
+            website = request.POST.get('website', '')
+            operator_address = request.POST.get('operator_address', '')
+            contact_name = request.POST.get('contact_name', '')
+            contact_email = request.POST.get('contact_email', '')
+            contact_no = request.POST.get('contact_no', '')
+            beneficiary_name = request.POST.get('beneficiary_name', '')
+            beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+            bank_name = request.POST.get('bank_name', '')
+            ifsc_code = request.POST.get('ifsc_code', '')
+
+            is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
+            service_tax_number = request.POST.get('service_tax_number', '')
+            night_start_time = request.POST.get('night_start_time', '')
+            night_end_time = request.POST.get('night_end_time', '')
+            tds_rate = request.POST.get('tds_rate', '')
+            gst_id = request.POST.get('gst_id', '')
+            pan_no = request.POST.get('pan_no', '')
+
+            operator_id = request.POST.get('operator_id', '')
+            delete_id = request.POST.get('delete_id')
+
+            if operator_id:
+                password = ''
+            else:
+                password = make_password("taxi123")
+                agent_id = 0
+
+            payload = {'type':type,'username':username,'password':password,'operator_name':operator_name,'operator_email':operator_email,'operator_contact':operator_contact,
+                       'website':website,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,'contact_no':contact_no,
+                       'beneficiary_name':beneficiary_name,'beneficiary_account_no':beneficiary_account_no,'bank_name':bank_name,'ifsc_code':ifsc_code,
+                       'is_service_tax_applicable':is_service_tax_applicable,'service_tax_number':service_tax_number,'night_start_time':night_start_time,
+                       'night_end_time':night_end_time,'tds_rate':tds_rate,'gst_id':gst_id,'pan_no':pan_no,'operator_id':operator_id,'user_id':cotrav_agent_id,'user_type':login_type}
+
+            url = ""
+
+            if operator_id:
+                url = settings.API_BASE_URL + "update_operator"
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_operator"
+            else:
+                url = settings.API_BASE_URL + "add_operator"
+
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+
+            if operator['success'] == 1:
+                return HttpResponseRedirect("/agents/operators", {'message': "Added Successfully"})
+            else:
+                return HttpResponseRedirect("/agents/operators", {'message': "Record Not Added"})
+        else:
+            redirect('/agents/login')
+
+    else:
+        request = get_request()
+        if 'login_type' in request.session:
+            return render(request, 'Agent/add_operator.html', {})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
+def operator_rates(request,id):
+    pass
+
+
+def add_operator_rate(request,id):
+    pass
+
+
+def taxi_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "agent_taxi_bookings"
+        payload = {'agent_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/taxi_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Agent/taxi_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def view_taxi_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_taxi_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/view_taxi_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Agent/view_taxi_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def add_taxi_booking(request,id):
+    if request.method == 'POST':
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            corporate_id = request.POST.get('corporate_id', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            group_id = request.POST.get('group_id', '')
+            subgroup_id = request.POST.get('subgroup_id', '')
+
+            tour_type = request.POST.get('tour_type', '')
+            pickup_city = request.POST.get('pickup_city', '')
+            pickup_location = request.POST.get('pickup_location', '')
+            drop_location = request.POST.get('drop_location', '')
+            pickup_datetime = request.POST.get('pickup_datetime', '')
+            taxi_type = request.POST.get('taxi_type', '')
+            package_id = request.POST.get('package_id', '')
+            no_of_days = request.POST.get('no_of_days', '')
+
+            reason_booking = request.POST.get('reason_booking', '')
+            no_of_seats = request.POST.get('no_of_seats', '')
+
+            employees = []
+            no_of_emp = int(no_of_seats) + 1
+            for i in range(1,no_of_emp):
+                employees.append(request.POST.get('employee_id_'+str(i), ''))
+                print(employees)
+
+            pickup_details = [x.strip() for x in pickup_city.split(',')]
+            city_data = {'login_type': login_type, 'access_token': access_token, 'city_country': pickup_details[2]}
+
+            url_add_city = settings.API_BASE_URL + "add_city_name"
+            url_add_state = settings.API_BASE_URL + "add_state_name"
+            url_add_country = settings.API_BASE_URL + "add_country_name"
+
+            country_id = getDataFromAPI(login_type, access_token, url_add_country, city_data)
+            for conty_id in country_id['id']:
+                actual_country_id = conty_id['id']
+
+            city_data = {'login_type': login_type, 'access_token': access_token, 'city_state': pickup_details[1], 'country_id': actual_country_id}
+            state_id = getDataFromAPI(login_type, access_token, url_add_state, city_data)
+
+            for conty_id in state_id['id']:
+                actual_state_id = conty_id['id']
+
+            city_data = {'login_type': login_type, 'access_token': access_token, 'city_name': pickup_details[0],
+                         'state_id': actual_state_id}
+            city_id = getDataFromAPI(login_type, access_token, url_add_city, city_data)
+
+            for conty_id in city_id['id']:
+                actual_city_id = conty_id['id']
+
+            payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
+                       'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,
+                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
+                       'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees}
+            print(payload)
+
+            url_taxi_booking = settings.API_BASE_URL + "spoc_add_taxi_booking"
+            booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
+
+            if booking['success'] == 1:
+                url = settings.API_BASE_URL + "view_taxi_bookings"
+                payload = {'spoc_id': id}
+                company = getDataFromAPI(login_type, access_token, url, payload)
+
+                if company['success'] == 1:
+                    booking = company['Bookings']
+                    return render(request, "Agent/view_taxi_booking.html", {'bookings': booking})
+                else:
+                    return render(request, "Agent/view_taxi_booking.html", {'group': {}})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        request = get_request()
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+
+            url_emp = settings.API_BASE_URL + "employees"
+            payload = {'corporate_id': id}
+            r = requests.post(url_emp, data=payload, headers=headers)
+            company_emp = json.loads(r.text)
+            employees = company_emp['Employees']
+
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['Cities']
+
+            url_taxi = settings.API_BASE_URL + "taxi_types"
+            taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
+            taxies = taxies['Taxies']
+
+            if id:
+                return render(request, 'Agent/add-taxi-booking.html', {'employees':employees,'cities':cities,'taxies':taxies})
+            else:
+                return render(request, 'Agent/add-taxi-booking.html', {})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
 
 
 

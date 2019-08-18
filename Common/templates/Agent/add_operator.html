@@ -1,0 +1,233 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+
+{% if user.status %}
+			<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+ <form method="post" action="/agents/add-operator">
+      {% csrf_token %}
+     <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>General Information</header>
+                                     <button id = "panel-button"
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent">
+
+
+                                         <div class="form-group row">
+                                                <label class="col-sm-4" for="simpleFormEmail">Operator Type</label>
+                                                <select class="col-sm-8 form-control" name="type">
+	                                                <option value="Taxi">Taxi</option>
+	                                                <option value="Bus">Bus</option>
+                                                    <option value="Train">Train</option>
+                                                    <option value="Hotel">Hotel</option>
+                                                    <option value="Flight">Flight</option>
+                                                    <option value="Meal">Meal</option>
+
+	                                            </select>
+                                            </div>
+
+                                          <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Login User Name</label>
+                                            <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="username" placeholder="Login User Name">
+                                        </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Operator Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="operator_name" placeholder="Operator Name">
+                                        </div>
+
+                                      <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Operator Email</label>
+                                            <input type="email" class="col-sm-8 form-control" name="operator_email" placeholder="Operator Email">
+                                        </div>
+
+                                      <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Operator Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" placeholder="Operator Contact">
+                                        </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Website</label>
+                                            <input type="text" class="col-sm-8 form-control" name="website" placeholder="Website">
+                                        </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Operator Address</label>
+                                            <input type="text" class="col-sm-8 form-control" name="operator_address" placeholder="Operator Address">
+                                        </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>Contact Person / Account Details</header>
+                                     <button
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " >
+
+                                          <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Person Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_name" placeholder="Person Name">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Person Email</label>
+                                            <input type="email" class="col-sm-8 form-control" name="contact_email" placeholder="Person Email">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Person No</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_no" placeholder="Person No">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Beneficiary Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="beneficiary_name" placeholder="Beneficiary Name">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Beneficiary Account No</label>
+                                            <input type="text" class="col-sm-8 form-control" name="beneficiary_account_no" placeholder="Beneficiary Account No">
+                                        </div>
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Bank Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="bank_name" placeholder="Bank Name">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">IFSC Code</label>
+                                            <input type="text" class="col-sm-8 form-control" name="ifsc_code" placeholder="IFSC Code">
+                                        </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>Other Details</header>
+                                    <button id = "panel-button2"
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button2">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent1">
+
+                                     <div class="form-group row">
+                                                <label class="col-sm-4">Tax Applicable</label>
+                                                <select class="col-sm-8 form-control" name="is_service_tax_applicable">
+	                                                <option value="1">Yes</option>
+	                                                <option value="0">No</option>
+	                                            </select>
+                                            </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Service Tax Number</label>
+                                            <input type="text" class="col-sm-8 form-control" name="service_tax_number" placeholder="Service Tax Number">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Night Start Time</label>
+                                            <input type="text" class="col-sm-8 form-control" name="night_start_time" placeholder="Night Start Time">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Night End Time</label>
+                                            <input type="text" class="col-sm-8 form-control" name="night_end_time" placeholder="Night End Time">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">TDS Rate</label>
+                                            <input type="text" class="col-sm-8 form-control" name="tds_rate" placeholder="TDS Rate">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">GST ID</label>
+                                            <input type="text" class="col-sm-8 form-control" name="gst_id" placeholder="GST ID">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">PAN NO</label>
+                                            <input type="text" class="col-sm-8 form-control" name="pan_no" placeholder="PAN NO">
+                                        </div>
+
+
+
+
+                                        <div class="form-group">
+                                            <div class="offset-md-3 col-md-9">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ </form>
+  </div>
+</div>
+
+<!-- end page content -->
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+<script type="text/javascript">
+ $(function() {
+
+ });
+</script>

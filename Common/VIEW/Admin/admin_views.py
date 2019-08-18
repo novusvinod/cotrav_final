@@ -16,10 +16,10 @@ def homepage(request):
 @login_required(login_url='/login')
 def company_admins(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
 
-    if login_type:
         url = settings.API_BASE_URL + "admins"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -29,16 +29,17 @@ def company_admins(request, id):
         else:
             return render(request, "Company/Admin/company_admins.html", {'admins': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_billing_entities(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "billing_entities"
         payload = {'corporate_id': id}
 
@@ -54,16 +55,17 @@ def company_billing_entities(request, id):
         else:
             return render(request, "Company/Admin/billing_entities.html", {'entities': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_rates(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "company_rates"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -73,16 +75,17 @@ def company_rates(request, id):
         else:
             return render(request, "Company/Admin/company_rates.html", {'entities': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_groups(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "groups"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -92,16 +95,17 @@ def company_groups(request, id):
         else:
             return render(request, "Company/Admin/groups.html", {'groups': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_subgroups(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "subgroups"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -114,16 +118,17 @@ def company_subgroups(request, id):
         else:
             return render(request, "Company/Admin/subgroups.html", {'subgroups': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_spocs(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "spocs"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -133,16 +138,17 @@ def company_spocs(request, id):
         else:
             return render(request, "Company/Admin/spocs.html", {'spocs': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def company_employees(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "employees"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -152,17 +158,18 @@ def company_employees(request, id):
         else:
             return render(request, "Company/Admin/employees.html", {'employees': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_company_rate(request, id):
     if request.method == 'POST':
         request = get_request()
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             url = settings.API_BASE_URL + "company_rates"
             payload = {'corporate_id': id}
             company = getDataFromAPI(login_type, access_token, url, payload)
@@ -172,7 +179,7 @@ def add_company_rate(request, id):
             else:
                 return render(request, "Company/Admin/company_rates.html", {'entities': {}})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
     else:
         return render(request, "Company/Admin/company_rate_add.html", {'entities': {}})
         pass
@@ -182,12 +189,12 @@ def add_company_rate(request, id):
 def add_company_entity(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
 
             entity_name = request.POST.get('entity_name', '')
             billing_city_id = request.POST.get('billing_city_id')
@@ -223,19 +230,20 @@ def add_company_entity(request, id):
                 return HttpResponseRedirect("/Corporate/Admin/company-billing_entities/" + corporate_id,
                                             {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_company_group(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = id
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = id
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_name = request.POST.get('group_name', '')
             zone_name = request.POST.get('zone_name')
 
@@ -251,19 +259,19 @@ def add_company_group(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/company-groups/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
 
-        if login_type:
             subgroup_name = request.POST.get('group_name', '')
             group_id = request.POST.get('group_id', '')
 
@@ -279,19 +287,20 @@ def add_company_subgroup(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/company-subgroups/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def update_company_group(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        group_id = request.POST.get('group_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            group_id = request.POST.get('group_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_name = request.POST.get('group_name', '')
             zone_name = request.POST.get('zone_name')
 
@@ -307,19 +316,20 @@ def update_company_group(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/view-company-group/" + group_id, {'message': "Record Not Updated"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def update_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        subgroup_id = request.POST.get('subgroup_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            subgroup_id = request.POST.get('subgroup_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_name = request.POST.get('group_name', '')
 
             payload = {'subgroup_id': subgroup_id, 'access_token': access_token, 'group_name': group_name,
@@ -336,19 +346,20 @@ def update_company_subgroup(request, id):
                 return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + str(id),
                                             {'message': "Record Not Updated"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def delete_company_group(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        group_id = request.POST.get('group_id')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            group_id = request.POST.get('group_id')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             access_token_auth = request.session['access_token']
             payload = {'group_id': group_id, 'user_id': user_id, 'login_type': login_type, 'access_token': access_token,
                        'access_token_auth': access_token_auth}
@@ -360,19 +371,21 @@ def delete_company_group(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/company-groups/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
+
 
 @login_required(login_url='/login')
 def delete_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        subgroup_id = request.POST.get('subgroup_id')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
-        access_token_auth = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            subgroup_id = request.POST.get('subgroup_id')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            access_token_auth = request.session['access_token']
+
             payload = {'subgroup_id': subgroup_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'access_token_auth': access_token_auth}
             url = settings.API_BASE_URL + "delete_subgroup"
@@ -383,20 +396,20 @@ def delete_company_subgroup(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/company-subgroups/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 @login_required(login_url='/login')
 def add_company_group_auth(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        access_token_auth = request.session['access_token']
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            access_token_auth = request.session['access_token']
 
-        if login_type:
             name = request.POST.get('name', '')
             email = request.POST.get('email', '')
             cid = request.POST.get('cid', '')
@@ -453,21 +466,21 @@ def add_company_group_auth(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/view-company-group/" + group_id, {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_company_subgroup_auth(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        access_token_auth = request.session['access_token']
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            access_token_auth = request.session['access_token']
 
-        if login_type:
             name = request.POST.get('name', '')
             email = request.POST.get('email', '')
             cid = request.POST.get('cid', '')
@@ -517,8 +530,7 @@ def add_company_subgroup_auth(request, id):
                 url = settings.API_BASE_URL + "add_subgroup_auth"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
-            print(url)
-            print(company)
+
             if company['success'] == 1:
                 return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id,
                                             {'message': "Added Successfully"})
@@ -526,21 +538,20 @@ def add_company_subgroup_auth(request, id):
                 return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id,
                                             {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_company_admins(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        access_token_auth = request.session['access_token']
-
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            access_token_auth = request.session['access_token']
 
             name = request.POST.get('name', '')
             email = request.POST.get('email', '')
@@ -594,19 +605,20 @@ def add_company_admins(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/Admin/company-admins/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_spocs(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             group_id = request.POST.get('group_id', '')
             subgroup_id = request.POST.get('subgroup_id', '')
             user_cid = request.POST.get('user_cid', '')
@@ -667,13 +679,14 @@ def add_spocs(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/company-spocs/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
     else:
         request = get_request()
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
 
             url_spoc = settings.API_BASE_URL + "view_spoc"
@@ -698,19 +711,20 @@ def add_spocs(request, id):
             else:
                 return render(request, 'Company/Admin/add-spoc.html', {'groups': groups, 'subgroups': subgroups})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def add_employee(request, id):
     if request.method == 'POST':
         request = get_request()
-        user_id = request.POST.get('user_id', '')
-        corporate_id = request.POST.get('corporate_id', '')
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            user_id = request.POST.get('user_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             spoc_id = request.POST.get('spoc_id', '')
             core_employee_id = request.POST.get('core_employee_id', '')
             employee_cid = request.POST.get('employee_cid', '')
@@ -770,13 +784,14 @@ def add_employee(request, id):
             else:
                 return HttpResponseRedirect("/Corporate/company-employees/" + str(id), {'message': "Record Not Added"})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
     else:
         request = get_request()
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
 
-        if login_type:
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
             url_emp = settings.API_BASE_URL + "view_employee"
             payload = {'employee_id': id}
 
@@ -793,16 +808,17 @@ def add_employee(request, id):
             else:
                 return render(request, 'Company/Admin/add-employee.html', {'spocs':spocs})
         else:
-            return redirect('/login')
+            return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def view_company_group(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_group"
         payload = {'group_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -817,16 +833,17 @@ def view_company_group(request, id):
         else:
             return render(request, "Company/Admin/view_groups.html", {'group': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 @login_required(login_url='/login')
 def view_company_subgroup(request, id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_subgroup"
         payload = {'subgroup_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -842,16 +859,17 @@ def view_company_subgroup(request, id):
         else:
             return render(request, "Company/Admin/view_subgroups.html", {'group': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 def taxi_bookings(request,id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
-        url = settings.API_BASE_URL + "taxi_bookings"
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "admin_taxi_bookings"
         payload = {'corporate_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -861,15 +879,16 @@ def taxi_bookings(request,id):
         else:
             return render(request, "Company/Admin/taxi_bookings.html", {'': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
 
 
 def view_taxi_booking(request,id):
     request = get_request()
-    login_type = request.session['login_type']
-    access_token = request.session['access_token']
 
-    if login_type:
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
         url = settings.API_BASE_URL + "view_taxi_booking"
         payload = {'booking_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -880,7 +899,55 @@ def view_taxi_booking(request,id):
         else:
             return render(request, "Company/Admin/view_taxi_booking.html", {'': {}})
     else:
-        return redirect('/login')
+        return HttpResponseRedirect("/login")
+
+
+def accept_taxi_booking(request,id):
+    request = get_request()
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_accept_taxi_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "admin_taxi_bookings"
+            payload = {'corporate_id': request.user.corporate_id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Admin/taxi_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/taxi_bookings.html",{})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reject_taxi_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_reject_taxi_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "admin_taxi_bookings"
+            payload = {'corporate_id': request.user.corporate_id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Admin/taxi_bookings.html", {'bookings': booking})
+        else:
+            return render(request, "Company/Admin/taxi_bookings.html",{})
+    else:
+        return HttpResponseRedirect("/login")
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

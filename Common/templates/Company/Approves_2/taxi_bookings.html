@@ -1,5 +1,5 @@
-{% include "Company/Spoc/layout/header.html" %}
-{% include "Company/Spoc/layout/menu_bar_layout.html" %}
+{% include "Company/Approves_2/layout/header.html" %}
+{% include "Company/Approves_2/layout/menu_bar_layout.html" %}
 
 {% if user %}
 <!-- start page content -->
@@ -23,13 +23,6 @@
                     </div>
                     <div class="card-body ">
 
-                        <div class="row">
-                             <div class="col-md-6">
-                                    <div class="btn-group">
-                                        <a class="btn btn-info" href="/Corporate/Spoc/add-taxi-booking/{{user.id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
-                                    </div>
-                                </div>
-                            </div>
 
                         <div class="table-scrollable table-bordered">
 
@@ -47,6 +40,7 @@
                                     <th>No Of Seats</th>
                                     <th>Reason</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                     <th>Details</th>
 
                                 </tr>
@@ -70,9 +64,23 @@
                                     <td>{{ booking.booking_date}}</td>
                                     <td>{{ booking.no_of_seats }}</td>
                                     <td>{{ booking.reason_booking }}</td>
-                                    <td>{{ booking.booking_status }}</td>
+                                    <td >{{ booking.booking_status }}</td>
+
+                                    {% if booking.status_client == 1 %}
                                     <td>
-                                        <a href="/Corporate/Spoc/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
+                                        <a href="/Corporate/Approves_2/accept-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
+                                            <i class="fa fa-check"></i>
+                                        </a>
+                                         <a href="/Corporate/Approves_2/reject-taxi-booking/{{ booking.id }}" class="btn btn-tbl-delete btn-xs">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </td>
+                                    {% else %}
+                                    <td>-</td>
+                                    {% endif %}
+
+                                    <td>
+                                        <a href="/Corporate/Approves_2/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                     </td>
@@ -95,7 +103,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Spoc/layout/footer.html" %}
+{% include "Company/Approves_2/layout/footer.html" %}
 
 
 

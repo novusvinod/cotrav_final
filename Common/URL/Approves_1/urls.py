@@ -15,4 +15,6 @@ urlpatterns = [
 
     path('Corporate/Approver_1/taxi-bookings/<int:id>', approves_1_views.taxi_bookings),
     path('Corporate/Approver_1/view-taxi-booking/<int:id>', approves_1_views.view_taxi_booking),
+    path('Corporate/Approver_1/accept-taxi-booking/<int:id>', approves_1_views.accept_taxi_booking),
+    path('Corporate/Approver_1/reject-taxi-booking/<int:id>', approves_1_views.reject_taxi_booking),
 ]

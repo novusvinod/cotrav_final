@@ -43,4 +43,16 @@ urlpatterns = [
     path('agents/agents', agent_views.view_agents),
     path('agents/add-agent/<int:id>', agent_views.add_agent),
 
+    path('agents/operators', agent_views.operators),
+    path('agents/view-operator', agent_views.view_operator),
+    path('agents/add-operator', agent_views.add_operator),
+    path('agents/operator-rates', agent_views.operator_rates),
+    path('agents/add-operator-rates', agent_views.add_operator_rate),
+
+    path('agents/taxi-bookings/<int:id>', agent_views.taxi_bookings),
+    path('agents/add-taxi-booking/<int:id>', agent_views.add_taxi_booking),
+    path('agents/view-taxi-booking/<int:id>', agent_views.view_taxi_booking),
+
+
+
 ]

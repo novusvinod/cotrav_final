@@ -3,14 +3,20 @@ from Common.VIEW.Api import api_views
 
 urlpatterns = [
 
+######################### CORPORATE ADMIN URLS ############################
+    path('', include('Common.URL.Api.admin_urls')),
+    path('', include('Common.URL.Api.spoc_urls')),
+    path('', include('Common.URL.Api.approver_1_urls')),
+    path('', include('Common.URL.Api.approver_2_urls')),
+    path('', include('Common.URL.Api.agent_urls')),
+######################### END CORPORATE URLS ####################
+
     path('api/login', api_views.login),
 
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
     path('api/add_state_name', api_views.add_state_name),
     path('api/add_country_name', api_views.add_country_name),
-
-
 
     path('api/taxi_types', api_views.taxi_types),
 
@@ -77,8 +83,7 @@ urlpatterns = [
     path('api/delete_agent', api_views.delete_agent),
 
     ######### TAXI BOOKING API #####################
-    path('api/taxi_bookings', api_views.taxi_bookings),
+
     path('api/view_taxi_booking', api_views.view_taxi_booking),
-    path('api/add_taxi_booking', api_views.add_taxi_booking),
-    path('api/add_employee_taxi_booking', api_views.add_employee_taxi_booking),
+
 ]
