@@ -18,6 +18,7 @@ from Common.models import Corporate_Agent_Login_Access_Token
 def operators(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
+
     user = {}
     if req_token:
         user_token = req_token.split()
@@ -28,6 +29,33 @@ def operators(request):
                 cursor.callproc('AllOperators', [])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Operators': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_operator(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    operator_id = request.POST.get('operator_id', '')
+
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewOperator', [operator_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Operator': emp}
                 return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
@@ -180,6 +208,340 @@ def delete_operator(request):
         return JsonResponse(data)
 
 
+def operator_rates(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('AllOperatorRates', [])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Rates': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_operator_rate(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    rate_id = request.POST.get('rate_id', '')
+
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewOperatorRate', [rate_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Rate': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_operator_rate(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id= request.POST.get('user_id', '')
+
+    operator_id = request.POST.get('operator_id', '')
+    city_id = request.POST.get('city_id', '')
+    taxi_type_id = request.POST.get('taxi_type_id', '')
+    package_name = request.POST.get('package_name', '')
+    tour_type = request.POST.get('tour_type', '')
+    kms = request.POST.get('kms', '')
+    hours = request.POST.get('hours', '')
+    km_rate = request.POST.get('km_rate', '')
+    hour_rate = request.POST.get('hour_rate', '')
+    base_rate = request.POST.get('base_rate', '')
+    night_rate = request.POST.get('night_rate', '')
+    fuel_rate = request.POST.get('fuel_rate', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addOperatorRate', [operator_id,city_id,taxi_type_id,package_name,tour_type,kms,hours,km_rate,hour_rate,
+                                base_rate,night_rate,fuel_rate,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_operator_rate(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id= request.POST.get('user_id', '')
+    rate_id = request.POST.get('rate_id', '')
+
+    operator_id = request.POST.get('operator_id', '')
+    city_id = request.POST.get('city_id', '')
+    taxi_type_id = request.POST.get('taxi_type_id', '')
+    package_name = request.POST.get('package_name', '')
+    tour_type = request.POST.get('tour_type', '')
+    kms = request.POST.get('kms', '')
+    hours = request.POST.get('hours', '')
+    km_rate = request.POST.get('km_rate', '')
+    hour_rate = request.POST.get('hour_rate', '')
+    base_rate = request.POST.get('base_rate', '')
+    night_rate = request.POST.get('night_rate', '')
+    fuel_rate = request.POST.get('fuel_rate', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateOperatorRate', [operator_id,city_id,taxi_type_id,package_name,tour_type,kms,hours,km_rate,hour_rate,
+                                base_rate,night_rate,fuel_rate,rate_id,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_operator_rate(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user = {}
+    user_id = request.POST.get('user_id', '')
+    rate_id = request.POST.get('rate_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteOperators', [rate_id,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Operators': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def operator_drivers(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('AllOperatorDrivers', [])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Drivers': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def view_operator_driver(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    driver_id = request.POST.get('driver_id', '')
+
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewOperatorDriver', [driver_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Drivers': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_operator_driver(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id= request.POST.get('user_id', '')
+    operator_id = request.POST.get('operator_id', '')
+    driver_name = request.POST.get('driver_name', '')
+    driver_contact = request.POST.get('driver_contact', '')
+    driver_email = request.POST.get('driver_email', '')
+    licence_no = request.POST.get('licence_no', '')
+    password = request.POST.get('password', '')
+    fcm_regid = request.POST.get('fcm_regid', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,password,fcm_regid,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Drivers': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_operator_driver(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id= request.POST.get('user_id', '')
+    driver_id = request.POST.get('driver_id', '')
+
+    user_id= request.POST.get('user_id', '')
+    operator_id = request.POST.get('operator_id', '')
+    driver_name = request.POST.get('driver_name', '')
+    driver_contact = request.POST.get('driver_contact', '')
+    driver_email = request.POST.get('driver_email', '')
+    licence_no = request.POST.get('licence_no', '')
+    fcm_regid = request.POST.get('fcm_regid', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,fcm_regid,driver_id,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Drivers': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_operator_driver(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user = {}
+    user_id = request.POST.get('user_id', '')
+    driver_id = request.POST.get('driver_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteOperatorDriver', [driver_id,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Operators': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+
+
+
+
+
 
 def spoc_taxi_bookings(request):
     req_token = request.META['HTTP_AUTHORIZATION']
@@ -285,13 +647,96 @@ def spoc_add_taxi_booking(request):
         return JsonResponse(data)
 
 
+def accept_taxi_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('acceptTaxiBooking', [booking_id,user_id,user_type])
+                data = {'success': 1}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
+def reject_taxi_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('acceptTaxiBooking', [booking_id,user_id,user_type])
+                data = {'success': 1}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
+def assign_taxi_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
 
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
 
+    vendor_booking_id = request.POST.get('vendor_booking_id', '')
+    operator_id = request.POST.get('operator_id', '')
+    driver_id = request.POST.get('driver_id', '')
+    taxi_id = request.POST.get('taxi_id', '')
 
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('assignTaxiBooking', [vendor_booking_id,operator_id,driver_id,taxi_id,booking_id,user_id,user_type])
+                data = {'success': 1}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 

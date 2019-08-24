@@ -1,0 +1,154 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+
+{% if user %}
+			<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+ <form method="post" action="/agents/add-operator-driver/0">
+      {% csrf_token %}
+     <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
+
+            {% if operator_drivers %}
+            {% for driver in operator_drivers %}
+            <input type="hidden" class="col-sm-8 form-control" name="driver_id" value="{{driver.id }}">
+            {% endfor %}
+            {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>General Information</header>
+                                     <button id = "panel-button"
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent">
+
+
+                                         <div class="form-group row">
+                                                <label class="col-sm-4">Operator</label>
+                                             {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+	                                                 <select class="col-sm-8 form-control" name="operator_id">
+                                                    {% for operator in operators %}
+                                                     <option value="{{operator.id}}" {%if driver.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                            {% endfor %}
+                                              {% else %}
+
+                                                <select class="col-sm-8 form-control" name="operator_id">
+	                                                {% for operator in operators %}
+                                                     <option value="{{operator.id}}" >{{operator.operator_name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                             {% endif %}
+                                            </div>
+
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Driver Name</label>
+                                         {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+                                            <input type="text" class="col-sm-8 form-control" name="driver_name"  value="{{driver.driver_name}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="driver_name" placeholder="Driver Name">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Driver Contact</label>
+                                         {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+                                            <input type="text" class="col-sm-8 form-control" name="driver_contact"  value="{{driver.driver_contact}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="driver_contact" placeholder="Driver Contact">
+                                         {% endif %}
+                                        </div>
+
+
+                                       <div class="form-group row">
+                                            <label class="col-sm-4" >Driver Email</label>
+                                         {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+                                            <input type="text" class="col-sm-8 form-control" name="driver_email"  value="{{driver.driver_email}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="driver_email" placeholder="Driver Email">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Driver Licence_no</label>
+                                         {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+                                            <input type="text" class="col-sm-8 form-control" name="licence_no"  value="{{driver.licence_no}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="licence_no" placeholder="Driver Licence_no">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Fcm Regid</label>
+                                         {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+                                            <input type="text" class="col-sm-8 form-control" name="fcm_regid"  value="{{driver.fcm_regid}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="fcm_regid" placeholder="Fcm Regid">
+                                         {% endif %}
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <div class="offset-md-3 col-md-9">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+ </form>
+  </div>
+</div>
+
+<!-- end page content -->
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+<script type="text/javascript">
+ $(function() {
+
+ });
+</script>

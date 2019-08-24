@@ -7,6 +7,10 @@ urlpatterns = [
     path('agents/logout', agent_views.agent_logout_action),
     path('agents/agent_home', agent_views.agent_homepage),
 
+    path('agents/taxi-types',agent_views.taxi_types),
+    path('agents/taxi-models',agent_views.taxi_models),
+    path('agents/taxis',agent_views.taxis),
+
     path('agents/companies', agent_views.companies),
     path('agents/add-company', agent_views.add_company),
     path('agents/edit-company/<int:id>', agent_views.edit_company),
@@ -44,14 +48,21 @@ urlpatterns = [
     path('agents/add-agent/<int:id>', agent_views.add_agent),
 
     path('agents/operators', agent_views.operators),
-    path('agents/view-operator', agent_views.view_operator),
-    path('agents/add-operator', agent_views.add_operator),
+    path('agents/add-operator/<int:id>', agent_views.add_operator),
+    path('agents/delete-operator/<int:id>', agent_views.delete_operator),
     path('agents/operator-rates', agent_views.operator_rates),
-    path('agents/add-operator-rates', agent_views.add_operator_rate),
+    path('agents/add-operator-rate/<int:id>', agent_views.add_operator_rate),
+    path('agents/delete-operator-rate/<int:id>', agent_views.delete_operator_rate),
+
+    path('agents/operator-drivers', agent_views.operator_drivers),
+    path('agents/add-operator-driver/<int:id>', agent_views.add_operator_driver),
+    path('agents/delete-operator-driver/<int:id>', agent_views.delete_operator_driver),
 
     path('agents/taxi-bookings/<int:id>', agent_views.taxi_bookings),
     path('agents/add-taxi-booking/<int:id>', agent_views.add_taxi_booking),
     path('agents/view-taxi-booking/<int:id>', agent_views.view_taxi_booking),
+    path('agents/accept-taxi-booking', agent_views.accept_taxi_booking),
+    path('agents/assign-taxi-booking/<int:id>', agent_views.assign_taxi_booking),
 
 
 

@@ -1,0 +1,273 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+
+{% if user %}
+			<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+ <form method="post" action="/agents/add-operator-rate/0">
+      {% csrf_token %}
+     <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
+
+            {% if operator_rates %}
+            {% for rate in operator_rates %}
+            <input type="hidden" class="col-sm-8 form-control" name="rate_id" value="{{rate.id }}">
+            {% endfor %}
+            {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>General Information</header>
+                                     <button id = "panel-button"
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent">
+
+
+                                         <div class="form-group row">
+                                                <label class="col-sm-4">Operator</label>
+                                             {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+	                                                 <select class="col-sm-8 form-control" name="operator_id">
+                                                    {% for operator in operators %}
+                                                     <option value="{{operator.id}}" {%if rate.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                            {% endfor %}
+                                              {% else %}
+
+                                                <select class="col-sm-8 form-control" name="operator_id">
+	                                                {% for operator in operators %}
+                                                     <option value="{{operator.id}}" >{{operator.operator_name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                             {% endif %}
+                                            </div>
+
+
+                                        <div class="form-group row">
+                                                <label class="col-sm-4">City</label>
+                                             {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+	                                                 <select class="col-sm-8 form-control" name="city_id">
+                                                         {% for city in cities %}
+                                                     <option value="{{city.id}}" {%if rate.city_id == city.id %} selected {%endif%}>{{city.name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                            {% endfor %}
+                                              {% else %}
+
+                                                <select class="col-sm-8 form-control" name="city_id">
+	                                                {% for city in cities %}
+                                                     <option value="{{city.id}}" >{{city.name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                             {% endif %}
+                                            </div>
+
+                                    <div class="form-group row">
+                                                <label class="col-sm-4">Taxi Type</label>
+                                             {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+	                                                 <select class="col-sm-8 form-control" name="taxi_type_id">
+                                                         {% for taxi_type in taxi_types %}
+                                                     <option value="{{taxi_type.id}}" {%if rate.taxi_type_id == taxi_type.id %} selected {%endif%}>{{taxi_type.name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                            {% endfor %}
+                                              {% else %}
+
+                                                <select class="col-sm-8 form-control" name="taxi_type_id">
+	                                                {% for taxi_type in taxi_types %}
+                                                     <option value="{{taxi_type.id}}" >{{taxi_type.name}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                             {% endif %}
+                                            </div>
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Package Name</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="package_name"  value="{{rate.package_name}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="package_name" placeholder="Package Name">
+                                         {% endif %}
+                                        </div>
+
+
+                                      <div class="form-group row">
+                                                <label class="col-sm-4">Tour Type</label>
+                                             {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+	                                                 <select class="col-sm-8 form-control" name="tour_type">
+                                                     <option value="1" {%if rate.tour_type == 1 %} selected {%endif%}>Local</option>
+                                                    <option value="2" {%if rate.tour_type == 2 %} selected {%endif%}>Radio</option>
+                                                         <option value="3" {%if rate.tour_type == 3 %} selected {%endif%}>Outstation</option>
+	                                            </select>
+                                            {% endfor %}
+                                              {% else %}
+
+                                                <select class="col-sm-8 form-control" name="tour_type">
+                                                    <option value="1">Local</option>
+                                                    <option value="2">Radio</option>
+                                                    <option value="3">Outstation</option>
+	                                            </select>
+                                             {% endif %}
+                                            </div>
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>Rate Details</header>
+                                     <button
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " >
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >KMS</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="kms"  value="{{rate.kms}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="kms" placeholder="KMS">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Hours</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="hours"  value="{{rate.hours}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="hours" placeholder="Hours">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Km Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="km_rate"  value="{{rate.km_rate}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="km_rate" placeholder="Km Rate">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Hours Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="hour_rate"  value="{{rate.hour_rate}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="hour_rate" placeholder="Hours Rate">
+                                         {% endif %}
+                                        </div>
+
+                                      <div class="form-group row">
+                                            <label class="col-sm-4" >Base Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="base_rate"  value="{{rate.base_rate}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="base_rate" placeholder="Base Rate">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Night Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="night_rate"  value="{{rate.night_rate}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="night_rate" placeholder="Night Rate">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Fuel Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="fuel_rate"  value="{{rate.fuel_rate}}">
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="fuel_rate" placeholder="Fuel Rate">
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group">
+                                            <div class="offset-md-3 col-md-9">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+ </form>
+  </div>
+</div>
+
+<!-- end page content -->
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+<script type="text/javascript">
+ $(function() {
+
+ });
+</script>

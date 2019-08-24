@@ -48,6 +48,207 @@ def agent_logout_action(request):
 
 
 @login_required(login_url='/login')
+def taxi_types(request):
+    if request.method == "POST":
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            corporate_id = request.POST.get('corporate_id', '')
+            type_name = request.POST.get('type_name', '')
+
+            taxitype_id = request.POST.get('taxitype_id', '')
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+            print(delete_id)
+            url = ""
+            payload = {}
+            if taxitype_id:
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_taxi_type"
+                    payload = {'taxitype_id':taxitype_id,'user_id':user_id,'user_type':user_type}
+                else:
+                    url = settings.API_BASE_URL + "update_taxi_type"
+                    payload = {'type_name':type_name,'corporate_id':corporate_id,'taxitype_id':taxitype_id,'user_id':user_id,'user_type':user_type}
+            else:
+                url = settings.API_BASE_URL + "add_taxi_type"
+                payload = {'type_name':type_name,'corporate_id':corporate_id,'user_id':user_id,'user_type':user_type}
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+            if taxi['success'] == 1:
+                url = settings.API_BASE_URL + "taxi_types"
+                payload = {'': ''}
+                taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+                taxi_data = taxi['taxi_types']
+                url_companies = settings.API_BASE_URL + "companies"
+                companies = getDataFromAPI(user_type, access_token, url_companies, payload)
+                companies = companies['Corporates']
+                return render(request, "Agent/taxitypes.html", {'types': taxi_data, 'companies': companies})
+
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        user_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "taxi_types"
+        payload = {'': ''}
+        taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+        if taxi['success'] == 1:
+            taxi_data = taxi['taxi_types']
+            url_companies = settings.API_BASE_URL + "companies"
+            companies = getDataFromAPI(user_type, access_token, url_companies, payload)
+            companies = companies['Corporates']
+            return render(request, "Agent/taxitypes.html", {'types': taxi_data, 'companies': companies})
+        else:
+            return render(request, "Agent/taxitypes.html", {'Types': {}})
+
+
+@login_required(login_url='/login')
+def taxi_models(request):
+    if request.method == "POST":
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            brand_name = request.POST.get('brand_name', '')
+            model_name = request.POST.get('model_name', '')
+            taxitype_id = request.POST.get('taxitype_id', '')
+            no_of_seats = request.POST.get('no_of_seats', '')
+
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+            model_id = request.POST.get('model_id', '')
+
+            url = ""
+            payload = {}
+            if model_id:
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_taxi_model"
+                    payload = {'model_id':model_id,'user_id':user_id,'user_type':user_type}
+                else:
+                    url = settings.API_BASE_URL + "update_taxi_model"
+                    payload = {'brand_name':brand_name,'model_name':model_name,'taxitype_id':taxitype_id,'no_of_seats':no_of_seats,'model_id':model_id,'user_id':user_id,'user_type':user_type}
+            else:
+                url = settings.API_BASE_URL + "add_taxi_model"
+                payload = {'brand_name':brand_name,'model_name':model_name,'taxitype_id':taxitype_id,'no_of_seats':no_of_seats,'user_id':user_id,'user_type':user_type}
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+            if taxi['success'] == 1:
+                url = settings.API_BASE_URL + "taxi_types"
+                payload = {'': ''}
+                taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+                url_m = settings.API_BASE_URL + "taxi_models"
+                payload = {'': ''}
+                taxi_model = getDataFromAPI(user_type, access_token, url_m, payload)
+
+                taxi_data = taxi['taxi_types']
+                taxi_model = taxi_model['Models']
+
+                return render(request, "Agent/taxi_models.html", {'taxi_models': taxi_model,'taxis':taxi_data})
+
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        user_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "taxi_types"
+        payload = {'': ''}
+        taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+        url_m = settings.API_BASE_URL + "taxi_models"
+        payload = {'': ''}
+        taxi_model = getDataFromAPI(user_type, access_token, url_m, payload)
+
+        if taxi['success'] == 1:
+            taxi_data = taxi['taxi_types']
+            taxi_model = taxi_model['Models']
+            return render(request, "Agent/taxi_models.html", {'types': taxi_data, 'taxi_models': taxi_model})
+        else:
+            return render(request, "Agent/taxi_models.html", {'Types': {}})
+
+
+@login_required(login_url='/login')
+def taxis(request):
+    if request.method == "POST":
+        if 'login_type' in request.session:
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            model_id = request.POST.get('model_id', '')
+            taxi_reg_no = request.POST.get('taxi_reg_no', '')
+            make_year = request.POST.get('make_year', '')
+            garage_location = request.POST.get('garage_location', '')
+            garage_distance = request.POST.get('garage_distance', '')
+
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+            taxi_id = request.POST.get('taxi_id', '')
+
+            print(taxi_id)
+            print(delete_id)
+
+            url = ""
+            payload = {}
+            if taxi_id:
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_taxi"
+                    payload = {'taxi_id':taxi_id,'user_id':user_id,'user_type':user_type}
+                else:
+                    url = settings.API_BASE_URL + "update_taxi"
+                    payload = {'model_id':model_id,'taxi_reg_no':taxi_reg_no,'make_year':make_year,'garage_location':garage_location,'garage_distance':garage_distance,'taxi_id':taxi_id,'user_id':user_id,'user_type':user_type}
+            else:
+                url = settings.API_BASE_URL + "add_taxi"
+                payload = {'model_id':model_id,'taxi_reg_no':taxi_reg_no,'make_year':make_year,'garage_location':garage_location,'garage_distance':garage_distance,'user_id':user_id,'user_type':user_type}
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+            if taxi['success'] == 1:
+                url = settings.API_BASE_URL + "taxis"
+                payload = {'': ''}
+                taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+                url_m = settings.API_BASE_URL + "taxi_models"
+                payload = {'': ''}
+                taxi_model = getDataFromAPI(user_type, access_token, url_m, payload)
+
+                taxi = taxi['Taxis']
+                taxi_model = taxi_model['Models']
+
+                return render(request, "Agent/taxis.html", {'taxis': taxi, 'taxi_models': taxi_model})
+
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        user_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "taxis"
+        payload = {'': ''}
+        taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+        url_m = settings.API_BASE_URL + "taxi_models"
+        payload = {'': ''}
+        taxi_model = getDataFromAPI(user_type, access_token, url_m, payload)
+
+        if taxi['success'] == 1:
+            taxi = taxi['Taxis']
+            taxi_model = taxi_model['Models']
+            return render(request, "Agent/taxis.html", {'taxis': taxi, 'taxi_models': taxi_model})
+        else:
+            return render(request, "Agent/taxis.html", {'Types': {}})
+
+
+@login_required(login_url='/login')
 def add_company(request):
     if request.method == "POST":
         if 'login_type' in request.session:
@@ -111,7 +312,7 @@ def add_company(request):
             else:
                 return HttpResponseRedirect("/agents/companies", {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
     else:
         request = get_request()
 
@@ -137,7 +338,7 @@ def companies(request):
         else:
             return render(request,"Agent/companies.html",{'companies':{}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -185,7 +386,7 @@ def edit_company(request, id):
             else:
                 return HttpResponseRedirect("/agents/companies", {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
     else:
         if 'login_type' in request.session:
             user_type = request.session['login_type']
@@ -197,7 +398,7 @@ def edit_company(request, id):
             companys = company['Corporates']
             return render(request, 'Agent/edit_company.html', {'companys': companys})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 def delete_company(request,id):
@@ -217,7 +418,7 @@ def delete_company(request,id):
         else:
             return HttpResponseRedirect("/agents/companies", {'message': "Fail"})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -243,7 +444,7 @@ def company_admins(request, id):
         else:
             return render(request, "Agent/company_admins.html", {'admins': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
     
 @login_required(login_url='/login')
@@ -271,7 +472,7 @@ def company_billing_entities(request, id):
         else:
             return render(request, "Agent/billing_entities.html", {'entities': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -299,12 +500,12 @@ def company_rates(request, id):
         if company['success'] == 1:
             company_rates = company['Corporate_Retes']
             cities = cities["Cities"]
-            taxi_type = taxi_type['Taxies']
+            taxi_type = taxi_type['taxi_types']
             return render(request, "Agent/company_rates.html", {'corporate_rates': company_rates,'companies':companies,'cities':cities,'taxi_types':taxi_type})
         else:
             return render(request, "Agent/company_rates.html", {'entities': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -330,7 +531,7 @@ def company_groups(request, id):
         else:
             return render(request, "Agent/groups.html", {'groups': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -351,7 +552,6 @@ def company_subgroups(request, id):
         companies = getDataFromAPI(login_type, access_token, url_companies, payload)
         companies = companies['Corporates']
 
-
         if company['success'] == 1:
             url2 = settings.API_BASE_URL + "groups"
             subgroups = company['Subgroups']
@@ -362,7 +562,7 @@ def company_subgroups(request, id):
         else:
             return render(request, "Agent/subgroups.html", {'subgroups': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -384,7 +584,7 @@ def company_spocs(request, id):
         else:
             return render(request, "Agent/spocs.html", {'spocs': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -405,7 +605,7 @@ def company_employees(request, id):
         else:
             return render(request, "Agent/employees.html", {'employees': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -452,7 +652,7 @@ def add_company_rate(request, id):
             else:
                 return HttpResponseRedirect("/agents/rates/0", {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -511,7 +711,7 @@ def add_company_entity(request, id):
                 return HttpResponseRedirect("/agents/billing_entities//0",
                                             {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -540,7 +740,7 @@ def add_company_group(request, id):
             else:
                 return HttpResponseRedirect("/agents/groups/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -569,7 +769,7 @@ def add_company_subgroup(request, id):
             else:
                 return HttpResponseRedirect("/agents/subgroups/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -598,7 +798,8 @@ def update_company_group(request, id):
             else:
                 return HttpResponseRedirect("/agents/view-company-group/" + group_id, {'message': "Record Not Updated"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
+
 
 @login_required(login_url='/login')
 def update_company_subgroup(request, id):
@@ -627,7 +828,7 @@ def update_company_subgroup(request, id):
                 return HttpResponseRedirect("/agents/view-company-subgroup/" + str(id),
                                             {'message': "Record Not Updated"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -652,7 +853,8 @@ def delete_company_group(request, id):
             else:
                 return HttpResponseRedirect("/agents/groups/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
+
 
 @login_required(login_url='/login')
 def delete_company_subgroup(request, id):
@@ -676,7 +878,7 @@ def delete_company_subgroup(request, id):
             else:
                 return HttpResponseRedirect("/agents/subgroups/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -747,7 +949,7 @@ def add_company_group_auth(request, id):
             else:
                 return HttpResponseRedirect("/agents/view-company-group/" + group_id, {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -821,7 +1023,7 @@ def add_company_subgroup_auth(request, id):
                 return HttpResponseRedirect("/agents/view-company-subgroup/" + subgroup_id,
                                             {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -888,7 +1090,7 @@ def add_company_admins(request, id):
             else:
                 return HttpResponseRedirect("/agents/admins/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -962,7 +1164,7 @@ def add_spocs(request, id):
             else:
                 return HttpResponseRedirect("/agents/spocs/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
     else:
         request = get_request()
         login_type = request.session['login_type']
@@ -998,7 +1200,8 @@ def add_spocs(request, id):
             else:
                 return render(request, 'Agent/add-spoc.html', {'groups': groups, 'subgroups': subgroups,'companies':companies})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
+
 
 @login_required(login_url='/login')
 def add_employee(request, id):
@@ -1070,7 +1273,7 @@ def add_employee(request, id):
             else:
                 return HttpResponseRedirect("/agents/employees/" + str(id), {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
     else:
         request = get_request()
 
@@ -1093,7 +1296,7 @@ def add_employee(request, id):
             else:
                 return render(request, 'Agent/add-employee.html', {'spocs':spocs})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -1163,7 +1366,7 @@ def add_agent(request,id):
             else:
                 return HttpResponseRedirect("/agents/agents", {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
@@ -1179,7 +1382,7 @@ def add_agent(request,id):
                 agents = agent['Agent']
                 return render(request, 'Agent/add-agent.html', {'agent':agents})
             else:
-                redirect('/agents/login')
+                return HttpResponseRedirect("/agents/login")
         else:
             return render(request, 'Agent/add-agent.html', {})
 
@@ -1206,7 +1409,7 @@ def view_company_group(request, id):
         else:
             return render(request, "Agent/view_groups.html", {'group': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 @login_required(login_url='/login')
@@ -1232,7 +1435,7 @@ def view_company_subgroup(request, id):
         else:
             return render(request, "Agent/view_subgroups.html", {'group': {}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 def view_agents(request):
@@ -1251,7 +1454,7 @@ def view_agents(request):
         else:
             return render(request,"Agent/agents.html",{'agents':{}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
 def operators(request):
@@ -1262,7 +1465,7 @@ def operators(request):
         access_token = request.session['access_token']
 
         url = settings.API_BASE_URL+"operators"
-        payload = {'some': 'data'}
+        payload = {}
         operators = getDataFromAPI(login_type, access_token, url, payload)
         if operators['success'] == 1:
             operators = operators['Operators']
@@ -1270,17 +1473,32 @@ def operators(request):
         else:
             return render(request,"Agent/operators.html",{'operators':{}})
     else:
-        redirect('/agents/login')
+        return HttpResponseRedirect("/agents/login")
 
 
-def view_operator(request,id):
-    pass
+def delete_operator(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        operator_id = request.POST.get('operator_id', '')
+        user_id = request.POST.get('user_id', '')
+
+        url = settings.API_BASE_URL+"delete_operator"
+        payload = {'operator_id': operator_id,'user_id':user_id,'user_type':login_type}
+        operators = getDataFromAPI(login_type, access_token, url, payload)
+        if operators['success'] == 1:
+            operators = operators['Operators']
+            return render(request,"Agent/operators.html",{'operators':operators})
+        else:
+            return render(request,"Agent/operators.html",{'operators':{}})
+    else:
+        return HttpResponseRedirect("/agents/login")
 
 
-def add_operator(request):
+def add_operator(request,id):
     if request.method == 'POST':
-        request = get_request()
-
         if 'login_type' in request.session:
             login_type = request.session['login_type']
             access_token = request.session['access_token']
@@ -1317,7 +1535,7 @@ def add_operator(request):
                 password = ''
             else:
                 password = make_password("taxi123")
-                agent_id = 0
+                operator_id = 0
 
             payload = {'type':type,'username':username,'password':password,'operator_name':operator_name,'operator_email':operator_email,'operator_contact':operator_contact,
                        'website':website,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,'contact_no':contact_no,
@@ -1333,7 +1551,7 @@ def add_operator(request):
                     url = settings.API_BASE_URL + "delete_operator"
             else:
                 url = settings.API_BASE_URL + "add_operator"
-
+            print(url)
             operator = getDataFromAPI(login_type, access_token, url, payload)
 
             if operator['success'] == 1:
@@ -1341,22 +1559,295 @@ def add_operator(request):
             else:
                 return HttpResponseRedirect("/agents/operators", {'message': "Record Not Added"})
         else:
-            redirect('/agents/login')
+            return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
         if 'login_type' in request.session:
-            return render(request, 'Agent/add_operator.html', {})
+            if id:
+                login_type = request.session['login_type']
+                access_token = request.session['access_token']
+                payload = {'operator_id':id}
+                url = settings.API_BASE_URL + "view_operator"
+                operator = getDataFromAPI(login_type, access_token, url, payload)
+                operator = operator['Operator']
+                return render(request, 'Agent/add_operator.html', {'operators':operator})
+            else:
+                return render(request, 'Agent/add_operator.html', {})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-def operator_rates(request,id):
-    pass
+def operator_rates(request):
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "operator_rates"
+        payload = {}
+        op_rates = getDataFromAPI(login_type, access_token, url, payload)
+        if op_rates['success'] == 1:
+            op_rates = op_rates['Rates']
+            return render(request, "Agent/operator_rates.html", {'op_rates': op_rates})
+        else:
+            return render(request, "Agent/operator_rates.html", {'op_rates': {}})
+    else:
+        return HttpResponseRedirect("/agents/login")
 
 
 def add_operator_rate(request,id):
-    pass
+    if request.method == 'POST':
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            user_id = request.POST.get('cotrav_agent_id', '')
+
+            operator_id = request.POST.get('operator_id', '')
+            city_id = request.POST.get('city_id', '')
+            taxi_type_id = request.POST.get('taxi_type_id', '')
+            package_name = request.POST.get('package_name', '')
+            tour_type = request.POST.get('tour_type', '')
+            kms = request.POST.get('kms', '')
+            hours = request.POST.get('hours', '')
+            km_rate = request.POST.get('km_rate', '')
+            hour_rate = request.POST.get('hour_rate', '')
+            base_rate = request.POST.get('base_rate', '')
+            night_rate = request.POST.get('night_rate', '')
+            fuel_rate = request.POST.get('fuel_rate', '')
+
+            rate_id = request.POST.get('rate_id', '')
+
+            payload = {'operator_id':operator_id,'city_id':city_id,'taxi_type_id':taxi_type_id,'package_name':package_name,'tour_type':tour_type,
+                       'kms':kms,'hours':hours,'km_rate':km_rate,'hour_rate':hour_rate,'base_rate':base_rate,'night_rate':night_rate,'fuel_rate':fuel_rate,
+                       'rate_id':rate_id,'user_id':user_id,'login_type':login_type}
+
+            url = ""
+
+            if rate_id:
+                url = settings.API_BASE_URL + "update_operator_rate"
+            else:
+                url = settings.API_BASE_URL + "add_operator_rate"
+
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+
+            if operator['success'] == 1:
+                url = settings.API_BASE_URL + "operator_rates"
+                payload = {}
+                op_rates = getDataFromAPI(login_type, access_token, url, payload)
+                if op_rates['success'] == 1:
+                    op_rates = op_rates['Rates']
+                    return render(request, "Agent/operator_rates.html", {'op_rates': op_rates})
+                else:
+                    return render(request, "Agent/operator_rates.html", {'op_rates': {}})
+            else:
+                payload = {'operator_id': id}
+                url = settings.API_BASE_URL + "operator_rate"
+                operators = getDataFromAPI(login_type, access_token, url, payload)
+                operators = operators['Rates']
+
+                url_cities = settings.API_BASE_URL + "cities"
+                cities = getDataFromAPI(login_type, access_token, url_cities, payload)
+                cities = cities['Cities']
+
+                url_taxi_type = settings.API_BASE_URL + "taxi_types"
+                taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
+                taxi_types = taxi_types['taxi_types']
+                return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        request = get_request()
+        if 'login_type' in request.session:
+            if id:
+                if 'login_type' in request.session:
+                    login_type = request.session['login_type']
+                    access_token = request.session['access_token']
+                    payload = {'rate_id': id}
+                    url = settings.API_BASE_URL + "view_operator_rate"
+                    op_rates = getDataFromAPI(login_type, access_token, url, payload)
+                    op_rates = op_rates['Rate']
+
+                    url = settings.API_BASE_URL + "operators"
+                    operators = getDataFromAPI(login_type, access_token, url, payload)
+                    operators = operators['Operators']
+
+                    url_cities = settings.API_BASE_URL + "cities"
+                    cities = getDataFromAPI(login_type, access_token, url_cities, payload)
+                    cities = cities['Cities']
+
+                    url_taxi_type = settings.API_BASE_URL + "taxi_types"
+                    taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
+                    taxi_types = taxi_types['taxi_types']
+
+                    return render(request, 'Agent/add_operator_rate.html', {'operator_rates': op_rates,'operators':operators,'cities':cities,'taxi_types':taxi_types})
+                else:
+                    return HttpResponseRedirect("/agents/login")
+            else:
+                if 'login_type' in request.session:
+                    login_type = request.session['login_type']
+                    access_token = request.session['access_token']
+
+                    payload = {'operator_id': id}
+                    url = settings.API_BASE_URL + "operators"
+                    operators = getDataFromAPI(login_type, access_token, url, payload)
+                    operators = operators['Operators']
+
+                    url_cities = settings.API_BASE_URL + "cities"
+                    cities = getDataFromAPI(login_type, access_token, url_cities, payload)
+                    cities = cities['Cities']
+
+                    url_taxi_type = settings.API_BASE_URL + "taxi_types"
+                    taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
+                    taxi_types = taxi_types['taxi_types']
+
+                    return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types})
+                else:
+                    return HttpResponseRedirect("/agents/login")
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
+def delete_operator_rate(request,id):
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        rate_id = request.POST.get('rate_id', '')
+        user_id = request.POST.get('user_id', '')
+
+        url = settings.API_BASE_URL+"delete_operator_rate"
+        payload = {'rate_id': rate_id,'user_id':user_id,'user_type':login_type}
+        operators = getDataFromAPI(login_type, access_token, url, payload)
+        if operators['success'] == 1:
+
+            operators = operators['Operators']
+            return render(request,"Agent/operators.html",{'operators':operators})
+        else:
+            return render(request,"Agent/operators.html",{'operators':{}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def operator_drivers(request):
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "operator_drivers"
+        payload = {}
+        op_drivers = getDataFromAPI(login_type, access_token, url, payload)
+        if op_drivers['success'] == 1:
+            drivers = op_drivers['Drivers']
+            return render(request, "Agent/operator_drivers.html", {'op_drivers': drivers})
+        else:
+            return render(request, "Agent/operator_drivers.html", {'op_drivers': {}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def add_operator_driver(request,id):
+    if request.method == 'POST':
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            user_id = request.POST.get('cotrav_agent_id', '')
+
+            operator_id = request.POST.get('operator_id', '')
+            driver_name = request.POST.get('driver_name', '')
+            driver_contact = request.POST.get('driver_contact', '')
+            driver_email = request.POST.get('driver_email', '')
+            licence_no = request.POST.get('licence_no', '')
+            fcm_regid = request.POST.get('fcm_regid', '')
+
+            driver_id = request.POST.get('driver_id', '')
+            if driver_id:
+                password = ''
+            else:
+                password = make_password("taxi123")
+                driver_id = 0
+
+            payload = {'operator_id':operator_id,'driver_name':driver_name,'driver_contact':driver_contact,'driver_email':driver_email,'licence_no':licence_no,
+                          'fcm_regid':fcm_regid,'password':password,'driver_id':driver_id,'user_id':user_id,'login_type':login_type}
+
+            url = ""
+
+            if driver_id:
+                url = settings.API_BASE_URL + "update_operator_driver"
+            else:
+                url = settings.API_BASE_URL + "add_operator_driver"
+
+            op_drivers = getDataFromAPI(login_type, access_token, url, payload)
+
+            if op_drivers['success'] == 1:
+                url = settings.API_BASE_URL + "operator_drivers"
+                payload = {}
+                op_drivers = getDataFromAPI(login_type, access_token, url, payload)
+                if op_drivers['success'] == 1:
+                    op_drivers = op_drivers['Drivers']
+                    return render(request, "Agent/operator_drivers.html", {'op_drivers': op_drivers})
+                else:
+                    return render(request, "Agent/operator_drivers.html", {'op_drivers': {}})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        request = get_request()
+        if 'login_type' in request.session:
+            if id:
+                if 'login_type' in request.session:
+                    login_type = request.session['login_type']
+                    access_token = request.session['access_token']
+                    payload = {'driver_id': id}
+                    url = settings.API_BASE_URL + "view_operator_driver"
+                    op_drivers = getDataFromAPI(login_type, access_token, url, payload)
+                    op_drivers = op_drivers['Drivers']
+
+                    url = settings.API_BASE_URL + "operators"
+                    operators = getDataFromAPI(login_type, access_token, url, payload)
+                    operators = operators['Operators']
+
+                    return render(request, 'Agent/add_operator_driver.html', {'operator_drivers': op_drivers,'operators':operators})
+                else:
+                    return HttpResponseRedirect("/agents/login")
+            else:
+                if 'login_type' in request.session:
+                    login_type = request.session['login_type']
+                    access_token = request.session['access_token']
+
+                    payload = {'operator_id': id}
+                    url = settings.API_BASE_URL + "operators"
+                    operators = getDataFromAPI(login_type, access_token, url, payload)
+                    operators = operators['Operators']
+
+                    return render(request, 'Agent/add_operator_driver.html', {'operators':operators})
+                else:
+                    return HttpResponseRedirect("/agents/login")
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
+def delete_operator_driver(request,id):
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        driver_id = request.POST.get('driver_id', '')
+        user_id = request.POST.get('user_id', '')
+
+        url = settings.API_BASE_URL+"delete_operator_driver"
+        payload = {'driver_id': driver_id,'user_id':user_id,'user_type':login_type}
+        operators = getDataFromAPI(login_type, access_token, url, payload)
+
+        if operators['success'] == 1:
+            url = settings.API_BASE_URL + "operator_drivers"
+            payload = {}
+            op_drivers = getDataFromAPI(login_type, access_token, url, payload)
+            if op_drivers['success'] == 1:
+                drivers = op_drivers['Drivers']
+                return render(request, "Agent/operator_drivers.html", {'op_drivers': drivers})
+        else:
+            return render(request,"Agent/operator_drivers.html",{'operators':{}})
+    else:
+        return HttpResponseRedirect("/agents/login")
 
 
 def taxi_bookings(request,id):
@@ -1407,8 +1898,11 @@ def add_taxi_booking(request,id):
 
             corporate_id = request.POST.get('corporate_id', '')
             spoc_id = request.POST.get('spoc_id', '')
-            group_id = request.POST.get('group_id', '')
-            subgroup_id = request.POST.get('subgroup_id', '')
+            spoc_details = [x.strip() for x in spoc_id.split(',')]
+
+            spoc_id = spoc_details[0]
+            group_id = spoc_details[1]
+            subgroup_id = spoc_details[2]
 
             tour_type = request.POST.get('tour_type', '')
             pickup_city = request.POST.get('pickup_city', '')
@@ -1479,13 +1973,11 @@ def add_taxi_booking(request,id):
         if 'login_type' in request.session:
             login_type = request.session['login_type']
             access_token = request.session['access_token']
-            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
 
-            url_emp = settings.API_BASE_URL + "employees"
-            payload = {'corporate_id': id}
-            r = requests.post(url_emp, data=payload, headers=headers)
-            company_emp = json.loads(r.text)
-            employees = company_emp['Employees']
+            url = settings.API_BASE_URL + "companies"
+            payload = {'some': 'data'}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            companies = company['Corporates']
 
             url_city = settings.API_BASE_URL + "cities"
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
@@ -1493,14 +1985,129 @@ def add_taxi_booking(request,id):
 
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
-            taxies = taxies['Taxies']
+            taxies = taxies['taxi_types']
 
             if id:
-                return render(request, 'Agent/add-taxi-booking.html', {'employees':employees,'cities':cities,'taxies':taxies})
+                return render(request, 'Agent/add-taxi-booking.html', {'companies':companies,'cities':cities,'taxies':taxies})
             else:
-                return render(request, 'Agent/add-taxi-booking.html', {})
+                return render(request, 'Agent/add-taxi-booking.html', {'companies':companies,'cities':cities,'taxies':taxies})
         else:
             return HttpResponseRedirect("/agents/login")
+
+
+def accept_taxi_booking(request):
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        accept_id = request.POST.get('accept_id', '')
+        reject_id = request.POST.get('reject_id', '')
+
+        url = ""
+        if accept_id:
+            url = settings.API_BASE_URL + "accept_taxi_booking"
+
+        if reject_id:
+            url = settings.API_BASE_URL + "reject_taxi_booking"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
+
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url2 = settings.API_BASE_URL + "agent_taxi_bookings"
+            payload2 = {'agent_id': user_id}
+            company = getDataFromAPI(login_type, access_token, url2, payload2)
+            booking = company['Bookings']
+            return render(request, "Agent/taxi_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Agent/taxi_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def assign_taxi_booking(request,id):
+    if 'login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            booking_id = request.POST.get('booking_id', '')
+            user_id = request.POST.get('user_id', '')
+
+            vendor_booking_id = request.POST.get('vendor_booking_id', '')
+            operator_id = request.POST.get('operator_id', '')
+            driver_id = request.POST.get('driver_id', '')
+            taxi_id= request.POST.get('taxi_id', '')
+
+            is_client_sms = request.POST.get('is_client_sms', '')
+            is_client_email = request.POST.get('is_client_email', '')
+            is_driver_sms = request.POST.get('is_driver_sms', '')
+
+            url = settings.API_BASE_URL + "assign_taxi_booking"
+            payload = {'vendor_booking_id':vendor_booking_id,'operator_id':operator_id,'driver_id':driver_id,'taxi_id':taxi_id,'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+
+            if company['success'] == 1:
+                url2 = settings.API_BASE_URL + "agent_taxi_bookings"
+                payload2 = {'agent_id': user_id}
+                company = getDataFromAPI(login_type, access_token, url2, payload2)
+                booking = company['Bookings']
+                return render(request, "Agent/taxi_bookings.html",{'bookings': booking})
+            else:
+                return render(request, "Agent/taxi_bookings.html", {'': {}})
+        else:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            payload = {'booking_id': id}
+            opr_url = settings.API_BASE_URL + "operators"
+            operators = getDataFromAPI(login_type, access_token, opr_url, payload)
+            operators = operators['Operators']
+
+            drivers_url = settings.API_BASE_URL + "operator_drivers"
+            operator_drivers = getDataFromAPI(login_type, access_token, drivers_url, payload)
+            operator_drivers = operator_drivers['Drivers']
+
+            url_taxi = settings.API_BASE_URL + "taxi_models"
+            taxis = getDataFromAPI(login_type, access_token, url_taxi, payload)
+            models = taxis['Models']
+
+            url_taxi_types = settings.API_BASE_URL + "taxi_types"
+            url_taxi_types = getDataFromAPI(login_type, access_token, url_taxi_types, payload)
+            taxi_types = url_taxi_types['taxi_types']
+
+            url_taxis = settings.API_BASE_URL + "taxis"
+            url_taxis = getDataFromAPI(login_type, access_token, url_taxis, payload)
+            taxis = url_taxis['Taxis']
+
+            url = settings.API_BASE_URL + "view_taxi_booking"
+            payload = {'booking_id': id}
+            booking = getDataFromAPI(login_type, access_token, url, payload)
+            booking = booking['Bookings']
+
+            return render(request, 'Agent/assign-taxi-booking.html',
+                          {'bookings': booking, 'operators': operators, 'operator_drivers': operator_drivers,
+                           'models': models,'taxi_types':taxi_types,'taxis':taxis})
+
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,6 +4,38 @@
 {% if user %}
 <!-- start page content -->
 
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_action">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="delete_label" class="modal-title-status">Booking Action</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/accept-taxi-booking" method="post" enctype="multipart/form-data" id="form_id">
+                <input type="hidden" name="booking_id" id="booking_id">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="accept_id" id="accept_id">
+                <input type="hidden" name="reject_id" id="reject_id">
+
+                <label>Are you sure you want to Perform Action</label>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
 <div class="page-content-wrapper">
     <div class="page-content">
 
@@ -13,7 +45,13 @@
                     <div class="card-head">
                         <header>ALL CORPORATE TAXI BOOKINGS</header>
                              <div class="row p-b-20">
-
+                                <div class="row">
+                                     <div class="col-md-6">
+                                            <div class="btn-group">
+                                                <a class="btn btn-info" href="/agents/add-taxi-booking/{{user.id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
+                                            </div>
+                                    </div>
+                                </div>
                             </div>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
@@ -23,13 +61,7 @@
                     </div>
                     <div class="card-body ">
 
-                        <div class="row">
-                             <div class="col-md-6">
-                                    <div class="btn-group">
-                                        <a class="btn btn-info" href="Agent/add-taxi-booking/{{user.id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
-                                    </div>
-                                </div>
-                            </div>
+
 
                         <div class="table-scrollable table-bordered">
 
@@ -46,9 +78,11 @@
                                     <th>Tour Type</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
-                                    <th>Accept/Reject</th>
+                                    <th>Accept / Reject</th>
                                     <th>Operator Details</th>
+                                    <th>Taxi/Driver Assign</th>
                                     <th>Spoc Details</th>
+
                                     <th>Passenger Details</th>
                                     <th>Account Used</th>
                                     <th>Details</th>
@@ -75,20 +109,32 @@
 
 
 
-                                    <td>{{ booking.cotrav_status }}</td>
-                                    <td>{{ booking.client_status }}</td>
+                                    <td>{{ booking.client_status }} </td>
+                                    <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 
                                     <td>
-                                        <a style="margin-left:10px;" class="fa-trash" onclick="Confirm.render('Accept this Booking?', ' \/taxivaxibooking\/accept\/46723 ');">
-                                    <i class="fa fa-check icon-green"></i>
-                                </a>
-                                        <a style="margin-left:10px;" class="fa-trash" onclick="Confirm.render('Reject this Booking?', ' \/taxivaxibooking\/rejectreason\/46723 ');">
-                                    <i class="fa fa-remove icon-green"></i>
-                                </a>
-                                                            </td>
+                                        {% if booking.status_cotrav == 1 %}
+                                     <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                           data-toggle="modal"> <i class="fa fa-check icon-green" style="color:green;font-size:15px;"></i> </a>
+                                    {% endif %}
+                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                           data-toggle="modal"> <i class="fa fa-remove icon-green" style="color:red;font-size:15px;"></i> </a>
+                                    </td>
 
-                                    <td>{{ booking.cotrav_status }}</td>
-                                    <td>{{ booking.cotrav_status }}</td>
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}({{ booking.operator_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+
+                                    {% if booking.status_cotrav == 2 %}
+                                    <td><a href="/agents/assign-taxi-booking/{{booking.id}}" > <span class="label label-sm box-shadow-1 label-warning">Assign </span> </a></td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+                                    <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
                                     <td>{{ booking.cotrav_status }}</td>
                                     <td>{{ booking.cotrav_status }}</td>
 
@@ -120,5 +166,31 @@
 
 {% include "Agent/layout/footer.html" %}
 
+<script type="text/javascript">
+$(function() {
+
+  $('#model_action').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+    var accept_id = button.data('accept_id');
+    var reject_id = button.data('reject_id');
+
+    var modal = $(this);
+    modal.find('#booking_id').val(id);
+
+    if(reject_id == 1){
+        modal.find('#reject_id').val(1);
+    }
+    if(accept_id == 1){
+        modal.find('#accept_id').val(1);
+    }
+
+    });
+
+});
+
+
+
+</script>
 
 

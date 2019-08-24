@@ -1,0 +1,335 @@
+{% include "Agent/layout/header.html" %}
+{% include "Agent/layout/menu_bar_layout.html" %}
+
+{% if user %}
+<!-- start page content -->
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+{% for booking in bookings %}
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Basic Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Reference No</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                     readonly  type="text" value="{{ booking.reference_no }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Tour Type</label>
+                            <div class="col-sm-7">
+                                    {% if booking.tour_type == 1 %}
+                                     <input readonly class="form-control"name="tour_type" type="text" value="Radio">
+                                    {% elif booking.tour_type == 2 %}
+                                     <input readonly class="form-control" name="tour_type" type="text" value="Local">
+                                    {% else %}
+                                    <input readonly class="form-control" name="tour_type" type="text" value="Outstation">
+                                    {% endif %}
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">City Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="City Name"
+                                     readonly  type="text" value="{{ booking.city_name }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Pickup Location</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="pickup_location" placeholder="Pickup Location"
+                                     readonly  type="text" value="{{ booking.pickup_location }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Drop Location</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="drop_location" placeholder="Drop Location"
+                                     readonly  type="text" value="{{ booking.drop_location }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Pickup Date</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
+                                     readonly  type="text" value="{{ booking.pickup_datetime }}">
+                            </div>
+                        </div>
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Booking Date</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="booking_date" placeholder="Booking Date"
+                                     readonly  type="text" value="{{ booking.booking_date }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">No Of Seats</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="no_of_seats" placeholder="No Of Seats"
+                                     readonly  type="text" value="{{ booking.no_of_seats }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Booking Reason</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
+                                     readonly  type="text" value="{{ booking.reason_booking }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-md-4">
+
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Assign Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Reference No/Account Used</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="vendor_booking_id" >
+                            </div>
+                        </div>
+                     <form method="post" action="/agents/assign-taxi-booking/{{booking.id}}">
+                          <input type="hidden" class="col-sm-8 form-control" name="user_id"  value="{{user.id }}">
+                          <input type="hidden" class="col-sm-8 form-control" name="booking_id"  value="{{booking.id}}">
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Operator Name</label>
+                            <div class="col-sm-7">
+                                <select name="operator_id" class="form-control" required>
+                                    <option value="">Select</option>
+                                    {% for operator in operators %}
+                                        <option value="{{operator.id}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+<!--                        <div class="form-group row">-->
+<!--                            <label class="col-sm-5 control-label">Taxi Model</label>-->
+<!--                            <div class="col-sm-7">-->
+<!--                                <select name="taxi_id" class="form-control selectpicker" id="taxi_details" required>-->
+<!--                                    <option value="" data-details="">Select</option>-->
+<!--                                    {% for model in models %}-->
+<!--                                        <option value="{{model.id}}" >{{model.model_name}}/{{model.brand_name}}</option>-->
+<!--                                    {% endfor %}-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Taxi Reg No</label>
+                            <div class="col-sm-7">
+                                <select name="taxi_id" class="form-control" required>
+                                   <option value="">Select</option>
+                                    {% for taxi in taxis %}
+                                        <option value="{{taxi.id}}">{{taxi.taxi_reg_no}} ( {{taxi.brand_name}}({{taxi.model_name}}) )</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Driver Name</label>
+                            <div class="col-sm-7">
+                               <select name="driver_id" class="form-control" required>
+                                   <option value="">Select</option>
+                                    {% for operator_driver in operator_drivers %}
+                                        <option value="{{operator_driver.id}}">{{operator_driver.driver_name}} ({{operator_driver.driver_contact}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Driver Contact</label>
+                            <div class="col-sm-7">
+                               <input class="form-control" name="driver_contact" >
+                            </div>
+                        </div>
+
+
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Send Client SMS</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="is_client_sms">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Send Client Email</label>
+                            <div class="col-sm-7">
+                                 <select class="form-control" name="is_client_email">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Send Driver SMS</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="is_driver_sms">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <div class="offset-md-3 col-md-9">
+                                <button type="submit" class="btn btn-info">Assign</button>
+                            </div>
+                        </div>
+
+
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+             <div class="col-md-4">
+
+                  <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Passenger Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" readonly  type="text" value="{{ booking.user_name }}">
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="col-md-4">
+
+                  <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Spoc Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" readonly  type="text" value="{{ booking.user_name }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Email</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="user_email" readonly  type="text" value="{{ booking.email }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Contact</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="user_contact" readonly  type="text" value="{{ booking.user_contact }}">
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+ {% endfor %}
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+{% include "Agent/layout/footer.html" %}
+
+<script type="text/javascript">
+
+$('#taxi_details').change(function(){
+     var taxi_detail = $('#taxi_details option:selected').data('details');
+    temp = taxi_detail.split(',');
+
+    if(temp[0] != '' ){
+        $("#taxi_reg_no").val(temp[0]);
+        $("#garage_location").val(temp[1]);
+        $("#garage_distance").val(temp[2]);
+     }
+     else{
+        $("#taxi_reg_no").val('');
+        $("#garage_location").val('');
+        $("#garage_distance").val('');
+     }
+});
+ </script>

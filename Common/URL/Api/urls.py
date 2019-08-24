@@ -18,7 +18,23 @@ urlpatterns = [
     path('api/add_state_name', api_views.add_state_name),
     path('api/add_country_name', api_views.add_country_name),
 
+    path('api/corporate_package', api_views.corporate_package),
+
     path('api/taxi_types', api_views.taxi_types),
+    path('api/add_taxi_type', api_views.add_taxi_type),
+    path('api/update_taxi_type', api_views.update_taxi_type),
+    path('api/delete_taxi_type', api_views.delete_taxi_type),
+
+    path('api/taxi_models', api_views.taxi_models),
+    path('api/add_taxi_model', api_views.add_taxi_model),
+    path('api/update_taxi_model', api_views.update_taxi_model),
+    path('api/delete_taxi_model', api_views.delete_taxi_model),
+
+    path('api/taxis', api_views.taxis),
+    path('api/add_taxi', api_views.add_taxi),
+    path('api/update_taxi', api_views.update_taxi),
+    path('api/delete_taxi', api_views.delete_taxi),
+
 
     path('api/companies', api_views.companies),
     path('api/view_company', api_views.view_company),

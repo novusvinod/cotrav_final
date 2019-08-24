@@ -94,6 +94,7 @@ def spoc_add_taxi_booking(request):
                     cursor.callproc('addTaxiBooking', [user_type,spoc_id,corporate_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
                                                              taxi_type,package_id,no_of_days,reason_booking,no_of_seats])
                     booking_id = dictfetchall(cursor)
+                    print(booking_id)
                     cursor.close()
                     for id in booking_id:
                         for e in employees:
