@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from Common.forms import Corporate_Login_Form
 from Common.models import Corporate_Login_Access_Token
 from Common.models import Corporate_Spoc_Login_Access_Token
+from Common.models import Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
@@ -78,6 +79,17 @@ def login_action(request):
                 else:
                     print("User Info Not Found")
 
+                if user_type == '6':
+                    print(user.employee_name)
+                    print(user.spoc_id)
+                    cursor.callproc('getAllCorporateEmployeesDetails', [user.spoc_id])
+                    user_info = dictfetchall(cursor)
+                    print(user)
+                    auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    return redirect("Corporate/Employee/home")
+                else:
+                    print("User Info Not Found")
+
         else:
             context['error'] = "Invalid Email Or Password"
             return render(request,'corporate_login.html',context)
@@ -100,6 +112,8 @@ def logout_action(request):
         user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=access_token)
     elif login_type == '4':
         user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=access_token)
+    elif login_type == '6':
+        user = Corporate_Employee_Login_Access_Token.objects.get(access_token=access_token)
     elif login_type == 'agent':
         user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
     else:

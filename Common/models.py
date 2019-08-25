@@ -99,6 +99,34 @@ class Corporate_Spoc_Login(models.Model):
         return '<User %r>' % (self.name)
 
 
+class Corporate_Employee_Login(models.Model):
+    spoc_id = models.CharField(default=True, max_length=10)
+    corporate_id = models.CharField(default=True, max_length=10)
+    employee_name = models.CharField(max_length=200)
+    employee_email = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
+    password = models.CharField(max_length=100)
+    last_login = models.DateTimeField(max_length=100)
+
+    class Meta:
+        db_table = "corporate_employees"
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def __repr__(self):
+        return '<User %r>' % (self.name)
+
+
 class Corporate_Approves_1_Login(models.Model):
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
@@ -211,6 +239,16 @@ class Corporate_Spoc_Login_Access_Token(models.Model):
 
     class Meta:
         db_table = "corporate_spoc_access_tokens"
+
+
+class Corporate_Employee_Login_Access_Token(models.Model):
+    employee_id = models.CharField(default=True, max_length=10)
+    access_token = models.CharField(default=True,max_length=200)
+    expiry_date = models.DateTimeField(max_length=100)
+    user_agent = models.CharField(default=True, max_length=200)
+
+    class Meta:
+        db_table = "corporate_employee_access_token"
 
 
 class Corporate_Approves_1_Login_Access_Token(models.Model):

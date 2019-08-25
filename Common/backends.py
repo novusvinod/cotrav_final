@@ -3,6 +3,7 @@ import random
 
 from Common.models import Corporate_Login
 from Common.models import Corporate_Spoc_Login
+from Common.models import Corporate_Employee_Login
 from Common.models import Corporate_Approves_1_Login
 from Common.models import Corporate_Approves_2_Login
 from django.contrib.auth.hashers import check_password
@@ -13,6 +14,7 @@ from Common.models import Corporate_Agent
 
 from Common.models import Corporate_Login_Access_Token
 from Common.models import Corporate_Spoc_Login_Access_Token
+from Common.models import Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
@@ -40,6 +42,8 @@ class CustomCompanyUserAuth(object):
                 user = Corporate_Approves_2_Login.objects.get(email=username)
             elif login_type == '4':
                 user = Corporate_Spoc_Login.objects.get(username=username)
+            elif login_type == '6':
+                user = Corporate_Employee_Login.objects.get(username=username)
             elif login_type == '10':
                 user = Corporate_Agent.objects.get(email=username)
             else:
@@ -57,6 +61,8 @@ class CustomCompanyUserAuth(object):
                         insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user.id, access_token=gen_access_token,user_agent=user_info)
                     elif login_type == '4':
                         insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user.id,access_token=gen_access_token, user_agent=user_info)
+                    elif login_type == '6':
+                        insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user.id,access_token=gen_access_token, user_agent=user_info)
                     elif login_type == '10':
                         insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user.id, access_token=gen_access_token, user_agent=user_info)
                     request.session['access_token'] = insert_data.access_token
@@ -84,6 +90,8 @@ class CustomCompanyUserAuth(object):
                 user = Corporate_Approves_2_Login.objects.get(pk=user_id)
             elif login_type == '4':
                 user = Corporate_Spoc_Login.objects.get(pk=user_id)
+            elif login_type == '6':
+                user = Corporate_Employee_Login.objects.get(pk=user_id)
             elif login_type == '10':
                 user = Corporate_Agent.objects.get(pk=user_id)
             else:

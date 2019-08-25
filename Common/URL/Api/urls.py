@@ -6,6 +6,7 @@ urlpatterns = [
 ######################### CORPORATE ADMIN URLS ############################
     path('', include('Common.URL.Api.admin_urls')),
     path('', include('Common.URL.Api.spoc_urls')),
+    path('', include('Common.URL.Api.employee_urls')),
     path('', include('Common.URL.Api.approver_1_urls')),
     path('', include('Common.URL.Api.approver_2_urls')),
     path('', include('Common.URL.Api.agent_urls')),

@@ -4,18 +4,20 @@ from django.http import JsonResponse
 from django.db import connection
 from Common.models import Corporate_Login
 from Common.models import Corporate_Spoc_Login
+from Common.models import Corporate_Employee_Login
 from Common.models import Corporate_Approves_1_Login
 from Common.models import Corporate_Approves_2_Login
 from Common.models import Corporate_Agent
 
 from Common.models import Corporate_Login_Access_Token
 from Common.models import Corporate_Spoc_Login_Access_Token
+from Common.models import Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
 
 
-def spoc_taxi_bookings(request):
+def employee_taxi_bookings(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
     spoc_id = request.POST.get('spoc_id', '')
@@ -27,7 +29,7 @@ def spoc_taxi_bookings(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllSPOCTaxiBookings', [spoc_id])
+                cursor.callproc('AllEmployeeTaxiBookings', [spoc_id])
                 emp = dictfetchall(cursor)
                 print(emp)
                 data = {'success': 1, 'Bookings': emp}
@@ -43,10 +45,11 @@ def spoc_taxi_bookings(request):
         return JsonResponse(data)
 
 
-def spoc_add_taxi_booking(request):
+def employee_add_taxi_booking(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
 
+    user_id = request.POST.get('user_id', '')
     corporate_id = request.POST.get('corporate_id', '')
     spoc_id = request.POST.get('spoc_id', '')
     group_id = request.POST.get('group_id', '')
@@ -91,7 +94,7 @@ def spoc_add_taxi_booking(request):
                 cursor = connection.cursor()
                 try:
 
-                    cursor.callproc('addTaxiBooking', [user_type,spoc_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
+                    cursor.callproc('addTaxiBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
                                                              taxi_type,package_id,no_of_days,reason_booking,no_of_seats])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
@@ -151,6 +154,8 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
             user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '4':
             user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '6':
+            user = Corporate_Employee_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '10':
             user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
 
@@ -169,6 +174,8 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
                 user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
             elif user_type == '4':
                 user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
+            elif user_type == '6':
+                user_info = Corporate_Employee_Login.objects.get(id=user.employee_id)
             elif user_type == '10':
                 user_info = Corporate_Agent.objects.get(id=user.agent_id)
             else:

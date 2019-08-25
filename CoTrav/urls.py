@@ -32,6 +32,7 @@ urlpatterns = [
 ######################### CORPORATE ADMIN URLS ############################
     path('', include('Common.URL.Admin.urls')),
     path('', include('Common.URL.Spoc.urls')),
+    path('', include('Common.URL.Employee.urls')),
     path('', include('Common.URL.Approves_1.urls')),
     path('', include('Common.URL.Approves_2.urls')),
 ######################### END CORPORATE URLS ####################

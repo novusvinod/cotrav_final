@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 @login_required(login_url='/login')
 def homepage(request):
     if 'login_type' in request.session:
-        return render(request, 'Company/Spoc/home_page.html', {'user': request.user})
+        return render(request, 'Company/Employee/home_page.html', {'user': request.user})
     else:
         return HttpResponseRedirect("/login")
 
@@ -28,9 +28,9 @@ def company_admins(request, id):
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             admins = company['Admins']
-            return render(request, "Company/Spoc/company_admins.html", {'admins': admins})
+            return render(request, "Company/Employee/company_admins.html", {'admins': admins})
         else:
-            return render(request, "Company/Spoc/company_admins.html", {'admins': {}})
+            return render(request, "Company/Employee/company_admins.html", {'admins': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -51,10 +51,10 @@ def company_billing_entities(request, id):
         if company['success'] == 1:
             entities = company['Entitys']
             cities = cities["Cities"]
-            return render(request, "Company/Spoc/billing_entities.html",
+            return render(request, "Company/Employee/billing_entities.html",
                           {'billing_entities': entities, "cities": cities, })
         else:
-            return render(request, "Company/Spoc/billing_entities.html", {'entities': {}})
+            return render(request, "Company/Employee/billing_entities.html", {'entities': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -72,9 +72,9 @@ def company_rates(request, id):
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             company_rates = company['Corporate_Retes']
-            return render(request, "Company/Spoc/company_rates.html", {'corporate_rates': company_rates})
+            return render(request, "Company/Employee/company_rates.html", {'corporate_rates': company_rates})
         else:
-            return render(request, "Company/Spoc/company_rates.html", {'entities': {}})
+            return render(request, "Company/Employee/company_rates.html", {'entities': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -92,9 +92,9 @@ def company_groups(request, id):
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             groups = company['Groups']
-            return render(request, "Company/Spoc/groups.html", {'groups': groups})
+            return render(request, "Company/Employee/groups.html", {'groups': groups})
         else:
-            return render(request, "Company/Spoc/groups.html", {'groups': {}})
+            return render(request, "Company/Employee/groups.html", {'groups': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -115,9 +115,9 @@ def company_subgroups(request, id):
             subgroups = company['Subgroups']
             gr = getDataFromAPI(login_type, access_token, url2, payload)
             groups = gr['Groups']
-            return render(request, "Company/Spoc/subgroups.html", {'subgroups': subgroups, 'groups': groups})
+            return render(request, "Company/Employee/subgroups.html", {'subgroups': subgroups, 'groups': groups})
         else:
-            return render(request, "Company/Spoc/subgroups.html", {'subgroups': {}})
+            return render(request, "Company/Employee/subgroups.html", {'subgroups': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -135,9 +135,9 @@ def company_spocs(request, id):
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             spocs = company['Spocs']
-            return render(request, "Company/Spoc/spocs.html", {'spocs': spocs})
+            return render(request, "Company/Employee/spocs.html", {'spocs': spocs})
         else:
-            return render(request, "Company/Spoc/spocs.html", {'spocs': {}})
+            return render(request, "Company/Employee/spocs.html", {'spocs': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -155,9 +155,9 @@ def company_employees(request, id):
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             employees = company['Employees']
-            return render(request, "Company/Spoc/employees.html", {'employees': employees})
+            return render(request, "Company/Employee/employees.html", {'employees': employees})
         else:
-            return render(request, "Company/Spoc/employees.html", {'employees': {}})
+            return render(request, "Company/Employee/employees.html", {'employees': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -180,9 +180,9 @@ def view_company_group(request, id):
         if company['success'] == 1:
             groups = company['Groups']
             grp_auths = grp_auths['Groups']
-            return render(request, "Company/Spoc/view_groups.html", {'group': groups, 'grp_auths': grp_auths})
+            return render(request, "Company/Employee/view_groups.html", {'group': groups, 'grp_auths': grp_auths})
         else:
-            return render(request, "Company/Spoc/view_groups.html", {'group': {}})
+            return render(request, "Company/Employee/view_groups.html", {'group': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -203,10 +203,10 @@ def view_company_subgroup(request, id):
         if company['success'] == 1:
             subgroups = company['SubGroups']
             subgrp_auths = subgrp_auths['SubGroups']
-            return render(request, "Company/Spoc/view_subgroups.html",
+            return render(request, "Company/Employee/view_subgroups.html",
                           {'subgroup': subgroups, 'subgrp_auths': subgrp_auths})
         else:
-            return render(request, "Company/Spoc/view_subgroups.html", {'group': {}})
+            return render(request, "Company/Employee/view_subgroups.html", {'group': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -218,15 +218,15 @@ def taxi_bookings(request,id):
         login_type = request.session['login_type']
         access_token = request.session['access_token']
 
-        url = settings.API_BASE_URL + "spoc_taxi_bookings"
+        url = settings.API_BASE_URL + "employee_taxi_bookings"
         payload = {'spoc_id': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/taxi_bookings.html",{'bookings': booking})
+            return render(request, "Company/Employee/taxi_bookings.html",{'bookings': booking})
         else:
-            return render(request, "Company/Spoc/taxi_bookings.html", {'': {}})
+            return render(request, "Company/Employee/taxi_bookings.html", {'': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -244,9 +244,9 @@ def view_taxi_booking(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/view_taxi_booking.html",{'bookings': booking})
+            return render(request, "Company/Employee/view_taxi_booking.html",{'bookings': booking})
         else:
-            return render(request, "Company/Spoc/view_taxi_booking.html", {'': {}})
+            return render(request, "Company/Employee/view_taxi_booking.html", {'': {}})
     else:
         return HttpResponseRedirect("/login")
 
@@ -257,10 +257,21 @@ def add_taxi_booking(request,id):
             login_type = request.session['login_type']
             access_token = request.session['access_token']
 
+            employee_id = request.POST.get('employee_id', '')
+
             corporate_id = request.POST.get('corporate_id', '')
             spoc_id = request.POST.get('spoc_id', '')
-            group_id = request.POST.get('group_id', '')
-            subgroup_id = request.POST.get('subgroup_id', '')
+
+            payload1 = {'spoc_id':spoc_id}
+            url_get_spoc = settings.API_BASE_URL + "view_spoc"
+            spoc = getDataFromAPI(login_type, access_token, url_get_spoc, payload1)
+            spoc = spoc['Spoc']
+
+            print(spoc)
+
+            for spoc in spoc:
+                group_id = spoc['group_id']
+                subgroup_id = spoc['subgroup_id']
 
             tour_type = request.POST.get('tour_type', '')
             pickup_city = request.POST.get('pickup_city', '')
@@ -272,12 +283,12 @@ def add_taxi_booking(request,id):
             no_of_days = request.POST.get('no_of_days', '')
 
             reason_booking = request.POST.get('reason_booking', '')
-            no_of_seats = request.POST.get('no_of_seats', '')
+            no_of_seats = 1
 
             employees = []
             no_of_emp = int(no_of_seats) + 1
             for i in range(1,no_of_emp):
-                employees.append(request.POST.get('employee_id_'+str(i), ''))
+                employees.append(request.POST.get('employee_id', ''))
                 print(employees)
 
             pickup_details = [x.strip() for x in pickup_city.split(',')]
@@ -304,25 +315,24 @@ def add_taxi_booking(request,id):
             for conty_id in city_id['id']:
                 actual_city_id = conty_id['id']
 
-            payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
+            payload = {'login_type':login_type,'user_id':employee_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,
                        'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
                        'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees}
-            print(payload)
 
-            url_taxi_booking = settings.API_BASE_URL + "spoc_add_taxi_booking"
+            url_taxi_booking = settings.API_BASE_URL + "employee_add_taxi_booking"
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                url = settings.API_BASE_URL + "view_taxi_bookings"
+                url = settings.API_BASE_URL + "employee_taxi_bookings"
                 payload = {'spoc_id': id}
                 company = getDataFromAPI(login_type, access_token, url, payload)
 
                 if company['success'] == 1:
                     booking = company['Bookings']
-                    return render(request, "Company/Spoc/view_taxi_booking.html", {'bookings': booking})
+                    return render(request, "Company/Employee/view_taxi_booking.html", {'bookings': booking})
                 else:
-                    return render(request, "Company/Spoc/view_taxi_booking.html", {'group': {}})
+                    return render(request, "Company/Employee/view_taxi_booking.html", {'group': {}})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -344,12 +354,16 @@ def add_taxi_booking(request,id):
 
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
-            taxies = taxies['Taxies']
+            taxies = taxies['taxi_types']
+
+            package = settings.API_BASE_URL + "corporate_package"
+            package = getDataFromAPI(login_type, access_token, package, payload)
+            packages = package['Package']
 
             if id:
-                return render(request, 'Company/Spoc/add-taxi-booking.html', {'employees':employees,'cities':cities,'taxies':taxies})
+                return render(request, 'Company/Employee/add-taxi-booking.html', {'employees':employees,'cities':cities,'taxies':taxies,'packages':packages})
             else:
-                return render(request, 'Company/Spoc/add-taxi-booking.html', {})
+                return render(request, 'Company/Employee/add-taxi-booking.html', {})
         else:
             return HttpResponseRedirect("/login")
 

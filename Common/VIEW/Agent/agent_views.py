@@ -1896,6 +1896,8 @@ def add_taxi_booking(request,id):
             login_type = request.session['login_type']
             access_token = request.session['access_token']
 
+            user_id = request.POST.get('user_id', '')
+
             corporate_id = request.POST.get('corporate_id', '')
             spoc_id = request.POST.get('spoc_id', '')
             spoc_details = [x.strip() for x in spoc_id.split(',')]
@@ -1946,7 +1948,7 @@ def add_taxi_booking(request,id):
             for conty_id in city_id['id']:
                 actual_city_id = conty_id['id']
 
-            payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
+            payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,
                        'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
                        'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees}

@@ -574,6 +574,8 @@ def spoc_add_taxi_booking(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
 
+    user_id = request.POST.get('user_id', '')
+
     corporate_id = request.POST.get('corporate_id', '')
     spoc_id = request.POST.get('spoc_id', '')
     group_id = request.POST.get('group_id', '')
@@ -618,7 +620,7 @@ def spoc_add_taxi_booking(request):
                 cursor = connection.cursor()
                 try:
 
-                    cursor.callproc('addTaxiBooking', [user_type,spoc_id,corporate_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
+                    cursor.callproc('addTaxiBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
                                                              taxi_type,package_id,no_of_days,reason_booking,no_of_seats])
                     booking_id = dictfetchall(cursor)
                     cursor.close()
