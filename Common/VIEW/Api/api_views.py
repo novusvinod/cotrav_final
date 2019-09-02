@@ -33,7 +33,6 @@ def login(request):
     cursor.callproc('getLoginDetails', [user_name,user_type])
     user = dictfetchall(cursor)
     if user:
-        print(user[0]['id'])
         password = check_password(user_password, user[0]['password'])
         if password:
             data = {'success': 1,'access_token':user[0]['access_token'], 'User': user}
@@ -48,11 +47,10 @@ def companies(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
     user ={}
-    print(user_type)
     if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+            
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -76,11 +74,9 @@ def view_company(request):
     user_type = request.META['HTTP_USERTYPE']
     corporate_id = request.POST.get('corporate_id', '')
     user ={}
-    print(user_type)
     if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -618,6 +614,35 @@ def corporate_package(request):
         return JsonResponse(data)
 
 
+def get_assessment_code(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    if corporate_id:
+        corporate_id = corporate_id
+    else:
+        corporate_id = '0'
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            print("ACCESS TOKEN : " + user_token[1])
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllAssessmentCodes', [corporate_id])
+                cities = dictfetchall(cursor)
+                data = {'success': 1, 'AssCodes': cities}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 def cities(request):
@@ -2100,6 +2125,7 @@ def add_employee(request):
     user_id = request.POST.get('user_id', '')
 
     spoc_id = request.POST.get('spoc_id')
+    billing_entity_id = request.POST.get('billing_entity_id', '')
     core_employee_id = request.POST.get('core_employee_id', '')
     employee_cid = request.POST.get('employee_cid', '')
 
@@ -2147,7 +2173,7 @@ def add_employee(request):
                 try:
                     result = cursor.callproc('addNewCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
-                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id])
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,billing_entity_id])
 
                     print(result)
 
@@ -2176,6 +2202,7 @@ def update_employee(request):
     user_id = request.POST.get('user_id', '')
 
     spoc_id = request.POST.get('spoc_id')
+    billing_entity_id = request.POST.get('billing_entity_id', '')
     core_employee_id = request.POST.get('core_employee_id', '')
     employee_cid = request.POST.get('employee_cid', '')
 
@@ -2210,7 +2237,7 @@ def update_employee(request):
                 try:
                     result = cursor.callproc('updateCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
-                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id])
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,billing_entity_id])
                     print(result)
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
@@ -2699,6 +2726,33 @@ def view_taxi_booking(request):
         return JsonResponse(data)
 
 
+def view_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    booking_id = request.POST.get('booking_id', '')
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewBusBooking', [booking_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
 def add_city_name(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
@@ -2806,6 +2860,161 @@ def add_country_name(request):
         return JsonResponse(data)
 
 
+def add_taxi_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    entity_id = request.POST.get('entity_id', '')
+    spoc_id = request.POST.get('spoc_id', '')
+    group_id = request.POST.get('group_id', '')
+    subgroup_id = request.POST.get('subgroup_id', '')
+
+    tour_type = request.POST.get('tour_type', '')
+    pickup_city = request.POST.get('pickup_city', '')
+    pickup_location = request.POST.get('pickup_location', '')
+    drop_location = request.POST.get('drop_location', '')
+    pickup_datetime = request.POST.get('pickup_datetime', '')
+    pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
+    taxi_type = request.POST.get('taxi_type')
+    package_id = request.POST.get('package_id')
+    no_of_days = request.POST.get('no_of_days', '')
+    assessment_code = request.POST.get('assessment_code', '')
+    assessment_city_id = request.POST.get('assessment_city_id', '')
+
+
+    if taxi_type:
+        taxi_type = taxi_type
+    else:
+        taxi_type = 0
+
+    if package_id:
+        package_id = package_id
+    else:
+        package_id = 0
+
+    if no_of_days:
+        no_of_days = no_of_days
+    else:
+        no_of_days = 0
+
+    reason_booking = request.POST.get('reason_booking', '')
+    no_of_seats = request.POST.get('no_of_seats', '')
+
+    employees = request.POST.getlist('employees', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+
+                    cursor.callproc('addTaxiBooking', [user_type,user_id,entity_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
+                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                    booking_id = dictfetchall(cursor)
+                    print(booking_id)
+                    cursor.close()
+                    for id in booking_id:
+                        for e in employees:
+                            cursor = connection.cursor()
+                            cursor.callproc('addEmployeeTaxiBooking',[id['id'],e])
+                            cursor.close()
+                            data = {'success': 1, 'message': "Insert Successfully"}
+                            return JsonResponse(data)
+                    else:
+                        data = {'success': 0, 'message': "Error in Data Insert"}
+                        return JsonResponse(data)
+
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    spoc_id = request.POST.get('spoc_id', '')
+    group_id = request.POST.get('group_id', '')
+    subgroup_id = request.POST.get('subgroup_id', '')
+
+    from_location = request.POST.get('from', '')
+    to_location = request.POST.get('to', '')
+    bus_type = request.POST.get('bus_type', '')
+    booking_datetime = request.POST.get('booking_datetime', '')
+    booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+    journey_datetime = request.POST.get('journey_datetime', '')
+    journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
+    entity_id = request.POST.get('entity_id', '')
+    preferred_bus = request.POST.get('preferred_bus', '')
+    assessment_code = request.POST.get('assessment_code', '')
+    assessment_city_id = request.POST.get('assessment_city_id', '')
+
+    reason_booking = request.POST.get('reason_booking', '')
+    no_of_seats = request.POST.get('no_of_seats', '')
+
+    employees = request.POST.getlist('employees', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+
+                    cursor.callproc('addBusBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
+                                                      to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,
+                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                    booking_id = dictfetchall(cursor)
+                    print(booking_id)
+                    cursor.close()
+                    for id in booking_id:
+                        for e in employees:
+                            cursor = connection.cursor()
+                            cursor.callproc('addEmployeeBusBooking',[id['id'],e])
+                            booking_id = dictfetchall(cursor)
+
+                            cursor.close()
+                            data = {'success': 1, 'message': "Insert Success"}
+                            return JsonResponse(data)
+                    else:
+                        data = {'success': 0, 'message': "Error in Data Insert"}
+                        return JsonResponse(data)
+
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 

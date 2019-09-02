@@ -26,9 +26,61 @@ def operators(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllOperators', [])
+                cursor.callproc('getAllOperators', [])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Operators': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def operator_contacts(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    operator_id = request.POST.get('operator_id', '')
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllOperatorContacts', [operator_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'OperatorContacts': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def operator_banks(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    operator_id = request.POST.get('operator_id', '')
+    user = {}
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllOperatorBanks', [operator_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'OperatorBanks': emp}
                 return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
@@ -219,7 +271,7 @@ def operator_rates(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllOperatorRates', [])
+                cursor.callproc('getAllOperatorRates', [])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Rates': emp}
                 return JsonResponse(data)
@@ -390,7 +442,7 @@ def operator_drivers(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllOperatorDrivers', [])
+                cursor.callproc('getAllOperatorDrivers', [])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Drivers': emp}
                 return JsonResponse(data)
@@ -555,7 +607,7 @@ def spoc_taxi_bookings(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllTaxiBookings', [])
+                cursor.callproc('getAllTaxiBookings', [])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
@@ -740,10 +792,133 @@ def assign_taxi_booking(request):
         data = {'success': 0, 'error': "Access Token Empty"}
         return JsonResponse(data)
 
+################################################### BUS #############################
+
+
+def agent_bus_bookings(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllAgentBusBookings', [])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 
 
+def accept_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('acceptBusBooking', [booking_id,user_id,user_type])
+                data = {'success': 1}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def reject_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('rejectBusBooking', [booking_id,user_id,user_type])
+                data = {'success': 1}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def assign_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+
+    ticket_no = request.POST.get('ticket_no', '')
+    pnr_no = request.POST.get('pnr_no', '')
+    assign_bus_type_id = request.POST.get('assign_bus_type_id', '')
+    seat_no = request.POST.get('seat_no', '')
+    portal_used = request.POST.get('portal_used', '')
+    operator_name = request.POST.get('operator_name', '')
+    operator_contact = request.POST.get('operator_contact', '')
+    boarding_point = request.POST.get('boarding_point', '')
+    boarding_datetime = request.POST.get('boarding_datetime', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('assignBusBooking', [ticket_no,pnr_no,assign_bus_type_id,seat_no,portal_used,operator_name,operator_contact,boarding_point,boarding_datetime,booking_id,user_id,user_type])
+                data = {'success': 1}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 

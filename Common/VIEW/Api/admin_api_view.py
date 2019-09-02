@@ -27,7 +27,7 @@ def admin_taxi_bookings(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllAdminTaxiBookings', [corporate_id])
+                cursor.callproc('getAllAdminTaxiBookings', [corporate_id])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
@@ -55,7 +55,7 @@ def admin_accept_taxi_booking(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AdminAcceptTaxiBookings', [user_id,user_type,booking_id])
+                cursor.callproc('acceptAdminTaxiBookings', [user_id,user_type,booking_id])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
@@ -83,7 +83,7 @@ def admin_reject_taxi_booking(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AdminRejectTaxiBookings', [user_id,user_type,booking_id])
+                cursor.callproc('rejectTaxiBookings', [user_id,user_type,booking_id])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
@@ -98,7 +98,87 @@ def admin_reject_taxi_booking(request):
         return JsonResponse(data)
 
 
+def admin_bus_bookings(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    corporate_id = request.POST.get('corporate_id', '')
+    user = {}
 
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllAdminBusBookings', [corporate_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def admin_accept_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('acceptAdminBusBookings', [user_id,user_type,booking_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def admin_reject_bus_booking(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    booking_id = request.POST.get('booking_id', '')
+    user_id = request.POST.get('user_id', '')
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('rejectAdminBusBookings', [user_id,user_type,booking_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
 
 
 

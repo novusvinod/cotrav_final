@@ -1,8 +1,4 @@
 {% include "Agent/layout/header.html" %}
- <style type="text/css">
-        .ui-helper-hidden-accessible { position: absolute; left: -9999px; }
-    </style>
-
 {% include "Agent/layout/menu_bar_layout.html" %}
 
 
@@ -12,12 +8,12 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <form method="post" action="/agents/add-taxi-booking/{{user.id}}">
+        <form method="post" action="/agents/add-bus-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
             <input type="hidden" name="subgroup_id" id="subgroup_id">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>Booking Details</header>
@@ -30,10 +26,9 @@
                     <div class="card-body ">
 
 
-
                               <div class="form-group row">
                                     <label class="col-sm-4" >Select Company</label>
-                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 ">
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8">
                                          <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -43,57 +38,42 @@
 
 
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type">
-                                      <option value="">Select Tour Type </option>
-                                      <option value="1">Radio </option>
-                                      <option value="2">Local </option>
-                                      <option value="3">Outstation </option>
+                              <div class="form-group row">
+                                <label class="col-sm-4" >From*</label>
+                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >To*</label>
+                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Bus Type*</label>
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type">
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
                                   </select>
                             </div>
 
-
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Pickup City*</label>
-                                 <input type="text" class="form-control col-sm-8" name="pickup_city" id="pickup_city" placeholder="Pickup City" required>
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Preferred Bus*</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
                             </div>
 
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Pickup Location*</label>
-                                 <input type="text" class="form-control col-sm-8" name="pickup_location" id="pickup_location" placeholder="Pickup Location" required>
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Booking Date*</label>
+                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="min-date"  placeholder="Booking Date/Time" required>
                             </div>
 
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Drop Location*</label>
-                                 <input type="text" class="form-control col-sm-8" name="drop_location" id="drop_location" placeholder="Drop Location" required>
-                            </div>
 
                                <div class="form-group row">
-                                <label class="col-sm-4" >Pickup DateTime*</label>
-                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date" id="" placeholder="Pickup Date/Time" required>
+                                <label class="col-sm-4" >Date of Journey*</label>
+                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
                             </div>
 
-                              <div class="form-group row" id="tr_taxi_type" style="display: none">
-                                    <label class="col-sm-4" >Taxi Type</label>
-                                     <select name="taxi_type" class="form-control col-sm-8">
-                                        {% for taxi in taxies %}
-                                        <option value="{{taxi.id}}">{{taxi.name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-
-                             <div class="form-group row" id="tr_package" style="display: none">
-                                    <label class="col-sm-4" >Select Package</label>
-                                     <select name="package_id" id="package_id" class="form-control col-sm-8">
-
-                                    </select>
-                                </div>
-
-                              <div class="form-group row" id="tr_no_of_days" style="display: none">
-                                    <label class="col-sm-4" >No of Days</label>
-                                      <input type="text" class="form-control col-sm-8" name="no_of_days" id="id_no_of_days" placeholder="No of Days">
-                            </div>
 
 
 
@@ -124,6 +104,14 @@
 
 
 
+
+
+
+
+
+
+
+
                         </div>
 
 
@@ -138,7 +126,7 @@
 
 
 
-            <div class="col-md-6">
+            <div class="col-md-4">
              <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>SPOC and Passanger Details</header>
@@ -262,11 +250,11 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
- $(function() {
 
-    $('#tr_taxi_type').hide();
-    $('#tr_package').hide();
-    $('#tr_no_of_days').hide();
+$(document).ready(function() {
+$(".js-example-basic-single").select2();
+});
+
     $('#emp_row_2').hide();
     $('#emp_row_3').hide();
     $('#emp_row_4').hide();
@@ -288,35 +276,6 @@ $(".no_of_seats").change(function()
 				$('#emp_row_'+j).hide();
 
 			}
-    	}
-    });
-
-$("#tour_type").change(function()
-    {
-    	var tour_type = $(this).val();
-
-    	switch(tour_type){
-           case '1':
-              {
-                $('#tr_taxi_type').hide();
-                $('#tr_package').hide();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '2':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '3':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').show();
-                break;
-              }
     	}
     });
 
@@ -403,8 +362,6 @@ $("#corporate_id").change(function(){
 
   <!--        For Package    -->
     var_url_spoc = '{{ API_BASE_URL }}'+'corporate_package'
-    var city = '{{cities}}'
-    alert(city)
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
       {
@@ -423,29 +380,17 @@ $("#corporate_id").change(function(){
 });
 
 
+  <!--        For GET All Cities    -->
+  var city_Names = [];
+
+    {% for city in cities %}
+        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
+    {% endfor %}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $( "#pickup_city" ).autocomplete({
+      source: city_Names
+    });
 
 
 var pickup_city = document.getElementById('pickup_city');
@@ -461,14 +406,6 @@ var options = {
    var auto3 = new google.maps.places.Autocomplete(drop_location, options);
 
 
-
-
-
-
-
-
-
- });
 </script>
 
 

@@ -3,6 +3,8 @@ from Common.VIEW.Api import agent_api_view
 
 urlpatterns = [
     path('api/operators', agent_api_view.operators),
+    path('api/operator_contacts', agent_api_view.operator_contacts),
+    path('api/operator_banks', agent_api_view.operator_banks),
     path('api/view_operator', agent_api_view.view_operator),
     path('api/add_operator', agent_api_view.add_operator),
     path('api/update_operator', agent_api_view.update_operator),
@@ -27,6 +29,10 @@ urlpatterns = [
     path('api/reject_taxi_booking', agent_api_view.reject_taxi_booking),
     path('api/assign_taxi_booking', agent_api_view.assign_taxi_booking),
 
+    path('api/agent_bus_bookings', agent_api_view.agent_bus_bookings),
+    path('api/accept_bus_booking', agent_api_view.accept_bus_booking),
+    path('api/reject_bus_booking', agent_api_view.reject_bus_booking),
+    path('api/assign_bus_booking', agent_api_view.assign_bus_booking),
 
 
 ]

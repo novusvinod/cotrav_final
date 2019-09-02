@@ -17,4 +17,9 @@ urlpatterns = [
     path('Corporate/Approver_1/view-taxi-booking/<int:id>', approves_1_views.view_taxi_booking),
     path('Corporate/Approver_1/accept-taxi-booking/<int:id>', approves_1_views.accept_taxi_booking),
     path('Corporate/Approver_1/reject-taxi-booking/<int:id>', approves_1_views.reject_taxi_booking),
+
+    path('Corporate/Approver_1/bus-bookings/<int:id>', approves_1_views.bus_bookings),
+    path('Corporate/Approver_1/view-bus-booking/<int:id>', approves_1_views.view_bus_booking),
+    path('Corporate/Approver_1/accept-bus-booking/<int:id>', approves_1_views.accept_bus_booking),
+    path('Corporate/Approver_1/reject-bus-booking/<int:id>', approves_1_views.reject_bus_booking),
 ]

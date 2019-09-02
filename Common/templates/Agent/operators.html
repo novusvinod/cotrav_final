@@ -62,15 +62,20 @@
                                     <table id="example1" class="display full-width table-striped">
                                         <thead>
                                             <tr>
+                                                <th>ID</th>
+                                                <th>Service Type</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Contact No</th>
-                                                <th>Contact Name</th>
-                                                <th>Contact Email</th>
-                                                <th>Contact Person No</th>
-                                                <th>Beneficiary Name</th>
-                                                <th>Beneficiary Account No</th>
-                                                <th>Bank Name</th>
+                                                <th>Website</th>
+
+                                                <th>Is TAX Applicable</th>
+                                                <th>Tax No</th>
+                                                <th>TDS Rate</th>
+                                                <th>GST No</th>
+                                                <th>PAN No</th>
+                                                <th>Contacts</th>
+                                                <th>Bank Accounts</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -78,16 +83,24 @@
                                             <tbody>
                                         {% for operator in operators %}
                                             <tr>
+                                                <td>{{ operator.id }}</td>
+                                                <td>{{ operator.service_name }}</td>
                                                 <td>{{ operator.operator_name }}</td>
                                                 <td>{{ operator.operator_email }}</td>
                                                 <td>{{ operator.operator_contact }}</td>
-                                                <td>{{ operator.contact_name }}</td>
-                                                <td>{{ operator.contact_email }}</td>
-                                                <td>{{ operator.contact_no }}</td>
-                                                <td>{{ operator.beneficiary_name }}</td>
-                                                <td>{{ operator.beneficiary_account_no }}</td>
-                                                <td>{{ operator.bank_name }}</td>
+                                                <td>{{ operator.website }}</td>
 
+                                                <td>{{ operator.is_service_tax_applicable }}</td>
+                                                <td>{{ operator.service_tax_number }}</td>
+                                                <td>{{ operator.tds_rate }}</td>
+                                                <td>{{ operator.gst_id }}</td>
+                                                <td>{{ operator.pan_no }}</td>
+                                                <td><a href="/agents/operator_contacts/{{ operator.id }}" class="btn btn-tbl-edit btn-xs">
+                                                        <i class="fa fa-search"></i>
+                                                    </a></td>
+                                                <td><a href="/agents/operator_banks/{{ operator.id }}" class="btn btn-tbl-edit btn-xs">
+                                                        <i class="fa fa-search"></i>
+                                                    </a></td>
                                                  <td>
                                                     <a href="/agents/add-operator/{{ operator.id }}" class="btn btn-tbl-edit btn-xs">
                                                         <i class="fa fa-pencil"></i>

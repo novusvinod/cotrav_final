@@ -36,4 +36,9 @@ urlpatterns = [
     path('Corporate/Admin/view-taxi-booking/<int:id>', admin_views.view_taxi_booking),
     path('Corporate/Admin/accept-taxi-booking/<int:id>', admin_views.accept_taxi_booking),
     path('Corporate/Admin/reject-taxi-booking/<int:id>', admin_views.reject_taxi_booking),
+
+    path('Corporate/Admin/bus-bookings/<int:id>', admin_views.bus_bookings),
+    path('Corporate/Admin/view-bus-booking/<int:id>', admin_views.view_bus_booking),
+    path('Corporate/Admin/accept-bus-booking/<int:id>', admin_views.accept_bus_booking),
+    path('Corporate/Admin/reject-bus-booking/<int:id>', admin_views.reject_bus_booking),
 ]

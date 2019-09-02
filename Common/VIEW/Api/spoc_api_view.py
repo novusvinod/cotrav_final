@@ -27,7 +27,7 @@ def spoc_taxi_bookings(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('AllSPOCTaxiBookings', [spoc_id])
+                cursor.callproc('getAllSPOCTaxiBookings', [spoc_id])
                 emp = dictfetchall(cursor)
                 print(emp)
                 data = {'success': 1, 'Bookings': emp}
@@ -43,73 +43,23 @@ def spoc_taxi_bookings(request):
         return JsonResponse(data)
 
 
-def spoc_add_taxi_booking(request):
+def spoc_bus_bookings(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
-
-    corporate_id = request.POST.get('corporate_id', '')
     spoc_id = request.POST.get('spoc_id', '')
-    group_id = request.POST.get('group_id', '')
-    subgroup_id = request.POST.get('subgroup_id', '')
-
-    tour_type = request.POST.get('tour_type', '')
-    pickup_city = request.POST.get('pickup_city', '')
-    pickup_location = request.POST.get('pickup_location', '')
-    drop_location = request.POST.get('drop_location', '')
-    pickup_datetime = request.POST.get('pickup_datetime', '')
-    pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
-    taxi_type = request.POST.get('taxi_type')
-    package_id = request.POST.get('package_id')
-    no_of_days = request.POST.get('no_of_days', '')
-
-    if taxi_type:
-        taxi_type = taxi_type
-    else:
-        taxi_type = 0
-
-    if package_id:
-        package_id = package_id
-    else:
-        package_id = 0
-
-    if no_of_days:
-        no_of_days = no_of_days
-    else:
-        no_of_days = 0
-
-    reason_booking = request.POST.get('reason_booking', '')
-    no_of_seats = request.POST.get('no_of_seats', '')
-
-    employees = request.POST.getlist('employees', '')
+    user = {}
 
     if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = {}
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                try:
-
-                    cursor.callproc('addTaxiBooking', [user_type,spoc_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
-                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats])
-                    booking_id = dictfetchall(cursor)
-                    print(booking_id)
-                    cursor.close()
-                    for id in booking_id:
-                        for e in employees:
-                            cursor = connection.cursor()
-                            cursor.callproc('addEmployeeTaxiBooking',[id['id'],e])
-                            cursor.close()
-                    else:
-                        data = {'success': 1, 'message': "Error in Data Insert"}
-                        return JsonResponse(data)
-
-                except Exception as e:
-                    print(e)
-                    data = {'success': 1, 'message': "Error in Data Insert"}
-                    return JsonResponse(data)
-
+                cursor.callproc('getAllSPOCBusBookings', [spoc_id])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -119,10 +69,6 @@ def spoc_add_taxi_booking(request):
     else:
         data = {'success': 0, 'error': "Access Token Empty"}
         return JsonResponse(data)
-
-
-
-
 
 
 

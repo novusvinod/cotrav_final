@@ -18,6 +18,8 @@ urlpatterns = [
     path('api/add_city_name', api_views.add_city_name),
     path('api/add_state_name', api_views.add_state_name),
     path('api/add_country_name', api_views.add_country_name),
+    path('api/get_assessment_code', api_views.get_assessment_code),
+
 
     path('api/corporate_package', api_views.corporate_package),
 
@@ -102,5 +104,8 @@ urlpatterns = [
     ######### TAXI BOOKING API #####################
 
     path('api/view_taxi_booking', api_views.view_taxi_booking),
+    path('api/view_bus_booking', api_views.view_bus_booking),
 
+    path('api/add_taxi_booking', api_views.add_taxi_booking),
+    path('api/add_bus_booking', api_views.add_bus_booking),
 ]

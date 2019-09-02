@@ -101,6 +101,7 @@ class Corporate_Spoc_Login(models.Model):
 
 class Corporate_Employee_Login(models.Model):
     spoc_id = models.CharField(default=True, max_length=10)
+    billing_entity_id = models.CharField(default=True, max_length=10)
     corporate_id = models.CharField(default=True, max_length=10)
     employee_name = models.CharField(max_length=200)
     employee_email = models.CharField(max_length=200)

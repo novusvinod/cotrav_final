@@ -707,9 +707,9 @@ def add_spocs(request, id):
             subgroups = company_sub['Subgroups']
 
             if id:
-                return render(request, 'Company/Admin/add-spoc.html', {'groups': groups, 'subgroups': subgroups, 'spoc':spocs})
+                return render(request, 'Company/Admin/add_spoc.html', {'groups': groups, 'subgroups': subgroups, 'spoc':spocs})
             else:
-                return render(request, 'Company/Admin/add-spoc.html', {'groups': groups, 'subgroups': subgroups})
+                return render(request, 'Company/Admin/add_spoc.html', {'groups': groups, 'subgroups': subgroups})
         else:
             return HttpResponseRedirect("/login")
 
@@ -726,6 +726,7 @@ def add_employee(request, id):
             access_token = request.session['access_token']
 
             spoc_id = request.POST.get('spoc_id', '')
+            billing_entity_id = request.POST.get('billing_entity_id', '')
             core_employee_id = request.POST.get('core_employee_id', '')
             employee_cid = request.POST.get('employee_cid', '')
 
@@ -762,7 +763,7 @@ def add_employee(request, id):
                        'employee_contact':employee_contact,'age':age,'gender':gender,'id_proof_type':id_proof_type,'id_proof_no':id_proof_no,
                        'is_active':is_active,'has_dummy_email':has_dummy_email,'fcm_regid':fcm_regid,'is_cxo':is_cxo,'employee_id': employee_id,
                        'designation':designation,'home_city':home_city,'home_address':home_address,'assistant_id':assistant_id,'date_of_birth':date_of_birth,
-                       'delete_id': delete_id, 'password': password}
+                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id}
 
             url = ""
             print(payload)
@@ -803,10 +804,16 @@ def add_employee(request, id):
             company_spoc = getDataFromAPI(login_type, access_token, url_spoc, payload_spoc)
             spocs = company_spoc['Spocs']
 
+            url_entity = settings.API_BASE_URL + "billing_entities"
+            payload_entity = {'corporate_id': request.user.corporate_id}
+            company_entity = getDataFromAPI(login_type, access_token, url_entity, payload_entity)
+            entitys1 = company_entity['Entitys']
+            print(entitys1)
+
             if id:
-                return render(request, 'Company/Admin/add-employee.html', {'employee':employees,'spocs':spocs})
+                return render(request, 'Company/Admin/add_employee.html', {'employee':employees,'spocs':spocs,'entitys':entitys1})
             else:
-                return render(request, 'Company/Admin/add-employee.html', {'spocs':spocs})
+                return render(request, 'Company/Admin/add_employee.html', {'spocs':spocs,'entitys':entitys1})
         else:
             return HttpResponseRedirect("/login")
 
@@ -861,6 +868,7 @@ def view_company_subgroup(request, id):
     else:
         return HttpResponseRedirect("/login")
 
+# #####################   TAXI ###########################################
 
 def taxi_bookings(request,id):
     request = get_request()
@@ -948,6 +956,98 @@ def reject_taxi_booking(request,id):
             return render(request, "Company/Admin/taxi_bookings.html",{})
     else:
         return HttpResponseRedirect("/login")
+
+#####################################  BUS  #####################################
+
+
+def bus_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "admin_bus_bookings"
+        payload = {'corporate_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/bus_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/bus_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_bus_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_bus_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/view_bus_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/view_bus_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def accept_bus_booking(request,id):
+    request = get_request()
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_accept_bus_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "admin_bus_bookings"
+            payload = {'corporate_id': request.user.corporate_id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Admin/bus_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/bus_bookings.html",{})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reject_bus_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_reject_bus_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "admin_bus_bookings"
+            payload = {'corporate_id': request.user.corporate_id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Admin/bus_bookings.html", {'bookings': booking})
+        else:
+            return render(request, "Company/Admin/bus_bookings.html",{})
+    else:
+        return HttpResponseRedirect("/login")
+
+
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

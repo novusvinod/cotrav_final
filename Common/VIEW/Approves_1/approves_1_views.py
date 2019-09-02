@@ -209,6 +209,7 @@ def view_company_subgroup(request, id):
     else:
         return redirect('/login')
 
+#################################### TAXI #############################################
 
 def taxi_bookings(request,id):
     request = get_request()
@@ -295,6 +296,97 @@ def reject_taxi_booking(request,id):
             return render(request, "Company/Approves_1/taxi_bookings.html", {'bookings': booking})
         else:
             return render(request, "Company/Approves_1/taxi_bookings.html",{})
+    else:
+        return redirect('/login')
+
+############################################## BUS ############################################
+
+
+def bus_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "approver_1_bus_bookings"
+        payload = {'approver_1_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Approves_1/bus_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Approves_1/bus_bookings.html", {'': {}})
+    else:
+        return redirect('/login')
+
+
+def view_bus_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_bus_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Approves_1/view_bus_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Approves_1/view_bus_booking.html", {'': {}})
+    else:
+        return redirect('/login')
+
+
+def accept_bus_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "approver_1_accept_bus_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "approver_1_bus_bookings"
+            payload = {'approver_1_id': request.user.id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Approves_1/bus_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Approves_1/bus_bookings.html",{})
+    else:
+        return redirect('/login')
+
+
+def reject_bus_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "approver_1_reject_bus_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            url = settings.API_BASE_URL + "approver_1_bus_bookings"
+            payload = {'approver_1_id': user_id}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            booking = company['Bookings']
+            return render(request, "Company/Approves_1/bus_bookings.html", {'bookings': booking})
+        else:
+            return render(request, "Company/Approves_1/bus_bookings.html",{})
     else:
         return redirect('/login')
 

@@ -1,0 +1,187 @@
+{% include "Company/Employee/layout/header.html" %}
+{% include "Company/Employee/layout/menu_bar_layout.html" %}
+
+
+{% if user %}
+<!-- start page content -->
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <form method="post" action="/Corporate/Employee/add-taxi-booking/{{user.corporate_id}}">
+            <input type="hidden" name="employee_id_1" value="{{user.id}}">
+            <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
+            <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
+            <input type="hidden" name="no_of_seats" value="1">
+            <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ADD BUS BOOKING</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+                     <div class="row">
+                         <div class="col-md-12 col-sm-12">
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >From*</label>
+                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >To*</label>
+                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Bus Type*</label>
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type">
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
+                                  </select>
+                            </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Preferred Bus*</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Booking Date*</label>
+                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="min-date"  placeholder="Booking Date/Time" required>
+                            </div>
+
+
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Date of Journey*</label>
+                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
+                            </div>
+
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Assessment Code*</label>
+                                   <select name="assessment_code" class="form-control col-sm-8">
+                                        {% for assessment in assessments %}
+                                        <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
+                                        {% endfor %}
+                                    </select>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Assessment City*</label>
+                                   <select name="assessment_city_id" class="form-control col-sm-8">
+                                        {% for city in cities %}
+                                        <option value="{{city.id}}">{{city.city_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                            </div>
+
+
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
+                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                            </div>
+
+
+
+
+                        </div>
+
+
+                     </div>
+
+
+
+
+                     </div>
+                      <div class="form-group">
+                    <div class="offset-md-3 col-md-9">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="button" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<!-- end page content -->
+
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+{% include "Company/Employee/layout/footer.html" %}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+
+<script type="text/javascript">
+ $(function() {
+
+$("#tour_type").change(function()
+    {
+    	var tour_type = $(this).val();
+
+    	switch(tour_type){
+           case '1':
+              {
+                $('#tr_taxi_type').hide();
+                $('#tr_package').hide();
+                $('#tr_no_of_days').hide();
+                break;
+              }
+           case '2':
+              {
+                $('#tr_taxi_type').show();
+                $('#tr_package').show();
+                $('#tr_no_of_days').hide();
+                break;
+              }
+           case '3':
+              {
+                $('#tr_taxi_type').show();
+                $('#tr_package').show();
+                $('#tr_no_of_days').show();
+                break;
+              }
+    	}
+    });
+
+  <!--        For GET All Cities    -->
+  var city_Names = [];
+
+    {% for city in cities %}
+        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
+    {% endfor %}
+
+
+    $( "#pickup_city" ).autocomplete({
+      source: city_Names
+    });
+
+var pickup_city = document.getElementById('pickup_city');
+var pickup_location = document.getElementById('pickup_location');
+var drop_location = document.getElementById('drop_location');
+var options = {
+ types: ['(cities)'],
+ componentRestrictions: {country: 'in'}
+};
+
+   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
+   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
+   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
+ });
+</script>
