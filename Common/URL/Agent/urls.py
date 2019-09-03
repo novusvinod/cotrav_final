@@ -52,6 +52,7 @@ urlpatterns = [
     path('agents/operator_banks/<int:id>', agent_views.operator_banks),
     path('agents/add-operator/<int:id>', agent_views.add_operator),
     path('agents/delete-operator/<int:id>', agent_views.delete_operator),
+
     path('agents/operator-rates', agent_views.operator_rates),
     path('agents/add-operator-rate/<int:id>', agent_views.add_operator_rate),
     path('agents/delete-operator-rate/<int:id>', agent_views.delete_operator_rate),

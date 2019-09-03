@@ -24,6 +24,7 @@ def spoc_taxi_bookings(request):
     if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -103,6 +104,7 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
         present = datetime.now()
 
         if user.expiry_date.date() < present.date():
+            print("expier")
             return None
         else:
 
@@ -115,6 +117,7 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
                 user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
             elif user_type == '4':
                 user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
+                print(user_info)
             elif user_type == '10':
                 user_info = Corporate_Agent.objects.get(id=user.agent_id)
             else:

@@ -129,17 +129,8 @@ def add_operator(request):
     password = request.POST.get('password', '')
     operator_name = request.POST.get('operator_name', '')
     operator_email = request.POST.get('operator_email', '')
-
     operator_contact = request.POST.get('operator_contact', '')
     website = request.POST.get('website', '')
-    operator_address = request.POST.get('operator_address', '')
-    contact_name = request.POST.get('contact_name', '')
-    contact_email = request.POST.get('contact_email', '')
-    contact_no = request.POST.get('contact_no', '')
-    beneficiary_name = request.POST.get('beneficiary_name', '')
-    beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
-    bank_name = request.POST.get('bank_name', '')
-    ifsc_code = request.POST.get('ifsc_code', '')
 
     is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
     service_tax_number = request.POST.get('service_tax_number', '')
@@ -157,9 +148,77 @@ def add_operator(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('addOperator', [type,username,password,operator_name,operator_email,operator_contact,website,operator_address,contact_name,contact_email,
-                                                contact_no,beneficiary_name,beneficiary_account_no,bank_name,ifsc_code,is_service_tax_applicable,service_tax_number,
+                cursor.callproc('addOperator', [type,username,password,operator_name,operator_email,operator_contact,website,is_service_tax_applicable,service_tax_number,
                                                 night_start_time,night_end_time,tds_rate,gst_id,pan_no,user_id,user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_operator_contact(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    operator_id = request.POST.get('operator_id', '')
+    operator_address = request.POST.get('operator_address', '')
+    contact_name = request.POST.get('contact_name', '')
+    contact_email = request.POST.get('contact_email', '')
+    contact_no = request.POST.get('contact_no', '')
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addOperatorContact',
+                                [operator_id, contact_name, contact_email, contact_no, operator_address, user_id, user_type])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_operator_bank(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    operator_id = request.POST.get('operator_id', '')
+    beneficiary_name = request.POST.get('beneficiary_name', '')
+    beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+    bank_name = request.POST.get('bank_name', '')
+    ifsc_code = request.POST.get('ifsc_code', '')
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addOperatorBankAccount', [operator_id,beneficiary_name, beneficiary_account_no, bank_name, ifsc_code, user_id, user_type])
                 emp = dictfetchall(cursor)
                 print(emp)
                 data = {'success': 1, 'Bookings': emp}
@@ -188,14 +247,6 @@ def update_operator(request):
 
     operator_contact = request.POST.get('operator_contact', '')
     website = request.POST.get('website', '')
-    operator_address = request.POST.get('operator_address', '')
-    contact_name = request.POST.get('contact_name', '')
-    contact_email = request.POST.get('contact_email', '')
-    contact_no = request.POST.get('contact_no', '')
-    beneficiary_name = request.POST.get('beneficiary_name', '')
-    beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
-    bank_name = request.POST.get('bank_name', '')
-    ifsc_code = request.POST.get('ifsc_code', '')
 
     is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
     service_tax_number = request.POST.get('service_tax_number', '')
@@ -215,10 +266,81 @@ def update_operator(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('updateOperator', [type,username,operator_name,operator_email,operator_contact,website,operator_address,contact_name,contact_email,
-                                                contact_no,beneficiary_name,beneficiary_account_no,bank_name,ifsc_code,is_service_tax_applicable,service_tax_number,
+                cursor.callproc('updateOperator', [type,username,operator_name,operator_email,operator_contact,website,is_service_tax_applicable,service_tax_number,
                                                 night_start_time,night_end_time,tds_rate,gst_id,pan_no,operator_id,user_id,user_type])
                 emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_operator_contact(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    operator_id = request.POST.get('operator_id', '')
+
+    contact_id = request.POST.get('contact_id')
+    operator_address = request.POST.get('operator_address', '')
+    contact_name = request.POST.get('contact_name', '')
+    contact_email = request.POST.get('contact_email', '')
+    contact_no = request.POST.get('contact_no', '')
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateOperatorContact',[operator_id, contact_name, contact_email, contact_no, operator_address, user_id, user_type, contact_id])
+                emp = dictfetchall(cursor)
+                print(emp)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_operator_bank(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    bank_id = request.POST.get('bank_id', '')
+    beneficiary_name = request.POST.get('beneficiary_name', '')
+    beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+    bank_name = request.POST.get('bank_name', '')
+    ifsc_code = request.POST.get('ifsc_code', '')
+
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateOperatorBankAccount', [beneficiary_name, beneficiary_account_no, bank_name, ifsc_code, user_id, user_type, bank_id])
+                emp = dictfetchall(cursor)
+                print(emp)
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
             else:
@@ -246,6 +368,62 @@ def delete_operator(request):
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('deleteOperators', [operator_id,user_id,user_type])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Operators': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_operator_contact(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user = {}
+    user_id = request.POST.get('user_id', '')
+    contact_id = request.POST.get('contact_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteOperatorContact', [contact_id,user_id,user_type])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Operators': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_operator_bank(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user = {}
+    user_id = request.POST.get('user_id', '')
+    bank_id = request.POST.get('bank_id', '')
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteOperatorBankAccount', [bank_id,user_id,user_type])
                 emp = dictfetchall(cursor)
                 data = {'success': 1, 'Operators': emp}
                 return JsonResponse(data)

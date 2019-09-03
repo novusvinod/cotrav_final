@@ -1482,41 +1482,127 @@ def operators(request):
         return HttpResponseRedirect("/agents/login")
 
 
-def operator_contacts(request,id):
-    request = get_request()
-
+def operator_contacts(request, id):
     if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+        if request.method == 'POST':
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
 
-        url = settings.API_BASE_URL+"operator_contacts"
-        payload = {'operator_id':id}
-        operator_contacts = getDataFromAPI(login_type, access_token, url, payload)
+            operator_id = request.POST.get('operator_id', '')
+            operator_address = request.POST.get('operator_address', '')
+            contact_name = request.POST.get('contact_name', '')
+            contact_email = request.POST.get('contact_email', '')
+            contact_no = request.POST.get('contact_no', '')
 
-        if operator_contacts['success'] == 1:
-            operator_contacts = operator_contacts['OperatorContacts']
-            return render(request,"Agent/operator_contacts.html",{'operator_contacts':operator_contacts})
+            contact_id = request.POST.get('contact_id', '')
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+            url = ""
+            payload = {}
+
+            if contact_id:
+                if delete_id == '1':
+                    print("in delete")
+                    url = settings.API_BASE_URL + "delete_operator_contact"
+                    payload = {'contact_id':contact_id,'user_id':user_id,'user_type':user_type}
+                else:
+                    print("in edit")
+                    url = settings.API_BASE_URL + "update_operator_contact"
+                    payload = {'contact_id':contact_id,'operator_id':operator_id,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,
+                               'contact_no':contact_no,'user_id':user_id,'user_type':user_type}
+            else:
+                url = settings.API_BASE_URL + "add_operator_contact"
+                payload = {'operator_id':operator_id,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,
+                               'contact_no':contact_no,'user_id':user_id,'user_type':user_type}
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+            if taxi['success'] == 1:
+                url = settings.API_BASE_URL + "operator_contacts"
+                payload = {'operator_id': operator_id}
+                operator_contacts = getDataFromAPI(user_type, access_token, url, payload)
+                if operator_contacts['success'] == 1:
+                    operator_contacts = operator_contacts['OperatorContacts']
+                    return render(request, "Agent/operator_contacts.html", {'operator_contacts': operator_contacts})
+                else:
+                    return render(request, "Agent/operator_contacts.html", {'operator_contacts': {}})
         else:
-            return render(request,"Agent/operator_contacts.html",{'operator_contacts':{}})
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            url = settings.API_BASE_URL+"operator_contacts"
+            payload = {'operator_id':id}
+            operator_contacts = getDataFromAPI(login_type, access_token, url, payload)
+
+            if operator_contacts['success'] == 1:
+                operator_contacts = operator_contacts['OperatorContacts']
+                return render(request,"Agent/operator_contacts.html",{'operator_contacts':operator_contacts,'operator_id':id})
+            else:
+                return render(request,"Agent/operator_contacts.html",{'operator_contacts':{}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
 def operator_banks(request,id):
-    request = get_request()
-
     if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+        if request.method == 'POST':
+            user_type = request.session['login_type']
+            access_token = request.session['access_token']
 
-        url = settings.API_BASE_URL+"operator_banks"
-        payload = {'operator_id':id}
-        operator_banks = getDataFromAPI(login_type, access_token, url, payload)
-        if operator_banks['success'] == 1:
-            operator_banks = operator_banks['OperatorBanks']
-            return render(request,"Agent/operator_banks.html",{'operator_banks':operator_banks})
+            operator_id = request.POST.get('operator_id', '')
+            beneficiary_name = request.POST.get('beneficiary_name', '')
+            beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+            bank_name = request.POST.get('bank_name', '')
+            ifsc_code = request.POST.get('ifsc_code', '')
+
+            bank_id = request.POST.get('bank_id', '')
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+
+            url = ""
+            payload = {}
+
+            if bank_id:
+                if delete_id == '1':
+                    print("in delete")
+                    url = settings.API_BASE_URL + "delete_operator_bank"
+                    payload = {'bank_id': bank_id, 'user_id': user_id, 'user_type': user_type}
+                else:
+                    print("in edit")
+                    url = settings.API_BASE_URL + "update_operator_bank"
+                    payload = {'bank_id': bank_id, 'operator_id': operator_id,'beneficiary_name':beneficiary_name,
+                               'beneficiary_account_no':beneficiary_account_no,'bank_name':bank_name,'ifsc_code':ifsc_code,
+                               'user_id': user_id, 'user_type': user_type}
+            else:
+                url = settings.API_BASE_URL + "add_operator_bank"
+                payload = {'operator_id': operator_id,'beneficiary_name':beneficiary_name,'beneficiary_account_no':beneficiary_account_no,'bank_name':bank_name,'ifsc_code':ifsc_code,
+                           'user_id': user_id, 'user_type': user_type}
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+            if taxi['success'] == 1:
+                url = settings.API_BASE_URL + "operator_banks"
+                payload = {'operator_id': id}
+                operator_banks = getDataFromAPI(user_type, access_token, url, payload)
+                if operator_banks['success'] == 1:
+                    operator_banks = operator_banks['OperatorBanks']
+                    return render(request, "Agent/operator_banks.html",
+                                  {'operator_banks': operator_banks, 'operator_id': id})
+                else:
+                    return render(request, "Agent/operator_banks.html", {'operator_contacts': {}})
+
         else:
-            return render(request,"Agent/operator_banks.html",{'operator_contacts':{}})
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            url = settings.API_BASE_URL + "operator_banks"
+            payload = {'operator_id': id}
+            operator_banks = getDataFromAPI(login_type, access_token, url, payload)
+            if operator_banks['success'] == 1:
+                operator_banks = operator_banks['OperatorBanks']
+                return render(request, "Agent/operator_banks.html", {'operator_banks': operator_banks,'operator_id':id})
+            else:
+                return render(request, "Agent/operator_banks.html", {'operator_contacts': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
@@ -1542,6 +1628,8 @@ def delete_operator(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
+
+
 def add_operator(request,id):
     if request.method == 'POST':
         if 'login_type' in request.session:
@@ -1556,14 +1644,6 @@ def add_operator(request,id):
 
             operator_contact = request.POST.get('operator_contact', '')
             website = request.POST.get('website', '')
-            operator_address = request.POST.get('operator_address', '')
-            contact_name = request.POST.get('contact_name', '')
-            contact_email = request.POST.get('contact_email', '')
-            contact_no = request.POST.get('contact_no', '')
-            beneficiary_name = request.POST.get('beneficiary_name', '')
-            beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
-            bank_name = request.POST.get('bank_name', '')
-            ifsc_code = request.POST.get('ifsc_code', '')
 
             is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
             service_tax_number = request.POST.get('service_tax_number', '')
@@ -1583,8 +1663,7 @@ def add_operator(request,id):
                 operator_id = 0
 
             payload = {'type':type,'username':username,'password':password,'operator_name':operator_name,'operator_email':operator_email,'operator_contact':operator_contact,
-                       'website':website,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,'contact_no':contact_no,
-                       'beneficiary_name':beneficiary_name,'beneficiary_account_no':beneficiary_account_no,'bank_name':bank_name,'ifsc_code':ifsc_code,
+                       'website':website,
                        'is_service_tax_applicable':is_service_tax_applicable,'service_tax_number':service_tax_number,'night_start_time':night_start_time,
                        'night_end_time':night_end_time,'tds_rate':tds_rate,'gst_id':gst_id,'pan_no':pan_no,'operator_id':operator_id,'user_id':cotrav_agent_id,'user_type':login_type}
 
@@ -1621,6 +1700,7 @@ def add_operator(request,id):
                 return render(request, 'Agent/add_operator.html', {})
         else:
             return HttpResponseRedirect("/agents/login")
+
 
 
 def operator_rates(request):
@@ -1697,6 +1777,7 @@ def add_operator_rate(request,id):
                 url_taxi_type = settings.API_BASE_URL + "taxi_types"
                 taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
                 taxi_types = taxi_types['taxi_types']
+
                 return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types})
         else:
             return HttpResponseRedirect("/agents/login")
@@ -1771,6 +1852,9 @@ def delete_operator_rate(request,id):
             return render(request,"Agent/operators.html",{'operators':{}})
     else:
         return HttpResponseRedirect("/agents/login")
+
+
+
 
 
 def operator_drivers(request):
