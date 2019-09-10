@@ -29,7 +29,7 @@ def login_action(request):
 
         if user is not None:
             if user:
-                request.session.set_expiry(86400)  # sets the exp. value of the session
+                request.session.set_expiry(7200)  # sets the exp. value of the session
                 print("without login")
                 user_info = {}
                 cursor = connection.cursor()

@@ -28,7 +28,7 @@
 
                               <div class="form-group row">
                                     <label class="col-sm-4" >Select Company</label>
-                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8">
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 myselect" required>
                                          <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -50,7 +50,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Bus Type*</label>
-                                 <select name="bus_type" class="form-control col-sm-8 tour_type">
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
                                       <option value="1">AC Seater</option>
                                       <option value="2">AC Sleeper</option>
                                       <option value="3">NON AC Seater</option>
@@ -79,7 +79,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Select Billing Entity*</label>
-                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 tour_type">
+                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 myselect" required>
                                       <option value="">Select Billing Entity </option>
 
                                   </select>
@@ -140,7 +140,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Select Spoc*</label>
-                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 tour_type">
+                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 myselect" required>
                                       <option value="">Select Spoc </option>
                                   </select>
                             </div>
@@ -153,7 +153,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Number Of Employees*</label>
-                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats">
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats myselect" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -165,7 +165,7 @@
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-4" >Employee 1</label>
-                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8">
+                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -174,7 +174,7 @@
 
                               <div class="form-group row" id="emp_row_2">
                                     <label class="col-sm-4" >Employee 2</label>
-                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8">
+                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -183,7 +183,7 @@
 
                               <div class="form-group row"  id="emp_row_3">
                                     <label class="col-sm-4" >Employee 3</label>
-                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8">
+                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -192,7 +192,7 @@
 
                               <div class="form-group row"  id="emp_row_4" >
                                     <label class="col-sm-4" >Employee 4</label>
-                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8">
+                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -201,7 +201,7 @@
 
                                <div class="form-group row"  id="emp_row_5" style="display: none">
                                     <label class="col-sm-4" >Employee 5</label>
-                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8">
+                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -210,7 +210,7 @@
 
                                <div class="form-group row"  id="emp_row_6" style="display: none">
                                     <label class="col-sm-4" >Employee 6</label>
-                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8">
+                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}

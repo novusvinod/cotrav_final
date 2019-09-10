@@ -16,7 +16,7 @@
                 <button class="close" data-dismiss="modal" type="button">&times;</button>
             </div>
 
-            <form action="/Corporate/add-company-admins/{{user.corporate_id}}" enctype="multipart/form-data" method="post">
+            <form action="/Corporate/Admin/add-company-admins/{{user.corporate_id}}" enctype="multipart/form-data" method="post">
 
                 <input id="set_admin_id" name="admin_id" type="hidden">
                 <input name="user_id" type="hidden" value="{{user.id}}">
@@ -29,7 +29,7 @@
                     <div class="form-group row" id="name1">
                         <label class="col-sm-5 control-label">Admin Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name"
+                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name" required
                                    type="text">
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="form-group row" id="email1">
                         <label class="col-sm-5 control-label">Admin Email</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email"
+                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email" required
                                    type="email">
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                     <div class="form-group row" id="contact_no1">
                         <label class="col-sm-5 control-label">Contact</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact"
+                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact" required
                                    type="text">
                         </div>
                     </div>

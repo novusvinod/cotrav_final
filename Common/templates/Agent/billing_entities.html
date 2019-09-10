@@ -26,7 +26,7 @@
                      <div class="form-group row" id="corporate_id1">
                         <label class="col-sm-3 control-label">Company Name</label>
                         <div class="col-sm-9">
-                            <select class="form-control select2" name="corporate_id" id="corporate_id">
+                            <select class="form-control myselect" name="corporate_id" id="corporate_id" style="width:100%;" required>
                                 <option value="">Select Company</option>
                                {% for company in companies %}
                                 <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -39,17 +39,17 @@
                     <div class="form-group row" id="entity_name1">
                         <label class="col-sm-3 control-label">Entity Name</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="entity_name" id="entity_name" placeholder="Entity Name">
+                            <input type="text" class="form-control" name="entity_name" id="entity_name" placeholder="Entity Name" required>
                         </div>
                     </div>
 
                     <div class="form-group row" id="billing_city_id1">
                         <label class="col-sm-3 control-label">Billing City</label>
                         <div class="col-sm-9">
-                            <select class="form-control" name="billing_city_id" id="billing_city_id">
+                            <select class="form-control myselect" name="billing_city_id" id="billing_city_id" style="width:100%;" required>
                                 <option value="">Select City</option>
                                 {% for city in cities %}
-                                <option value="{{city.id}}">{{city.name}}</option>
+                                <option value="{{city.id}}">{{city.city_name}}</option>
                                 {% endfor %}
                             </select>
 
@@ -59,7 +59,7 @@
                     <div class="form-group row" id="contact_person_name1">
                         <label class="col-sm-3 control-label">Contact Name</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="contact_person_name" id="contact_person_name"
+                            <input type="text" class="form-control" name="contact_person_name" id="contact_person_name" required
                                    placeholder="Contact Name">
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                     <div class="form-group row" id="contact_person_email1">
                         <label class="col-sm-3 control-label">Contact Email</label>
                         <div class="col-sm-9">
-                            <input type="email" class="form-control" name="contact_person_email" id="contact_person_email"
+                            <input type="email" class="form-control" name="contact_person_email" id="contact_person_email" required
                                    placeholder="Contact Email">
                         </div>
                     </div>
@@ -194,7 +194,7 @@
                                     <td>{{ be.contact_person_name|default:'' }}</td>
                                     <td>{{ be.contact_person_email|default:'' }}</td>
                                     <td>{{ be.contact_person_no|default:'' }}</td>
-                                    <td>{{ be.address_line_1|default:'' }} hrs</td>
+                                    <td>{{ be.address_line_1|default:'' }}</td>
                                     <td>{{ be.address_line_2|default:'' }}</td>
                                     <td>{{ be.address_line_3|default:'' }}</td>
                                     <td>{{ be.gst_id|default:'' }}</td>

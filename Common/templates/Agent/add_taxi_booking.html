@@ -28,7 +28,7 @@
 
                               <div class="form-group row">
                                     <label class="col-sm-4" >Select Company</label>
-                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8">
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 Select2 " required>
                                          <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -40,7 +40,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type ">
+                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 myselect2" required>
                                       <option value="">Select Tour Type </option>
                                       <option value="1">Radio </option>
                                       <option value="2">Local </option>
@@ -71,7 +71,7 @@
 
                               <div class="form-group row" id="tr_taxi_type" style="display: none">
                                     <label class="col-sm-4" >Taxi Type</label>
-                                     <select name="taxi_type" class="form-control col-sm-8">
+                                     <select name="taxi_type" class="form-control col-sm-8 myselect" >
                                         {% for taxi in taxies %}
                                         <option value="{{taxi.id}}">{{taxi.name}}</option>
                                         {% endfor %}
@@ -80,7 +80,7 @@
 
                              <div class="form-group row" id="tr_package" style="display: none">
                                     <label class="col-sm-4" >Select Package</label>
-                                     <select name="package_id" id="package_id" class="form-control col-sm-8">
+                                     <select name="package_id" id="package_id" class="form-control col-sm-8 myselect">
 
                                     </select>
                                 </div>
@@ -94,7 +94,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Select Billing Entity*</label>
-                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 tour_type">
+                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 myselect" required>
                                       <option value="">Select Billing Entity </option>
 
                                   </select>
@@ -147,7 +147,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Select Spoc*</label>
-                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 tour_type">
+                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 myselect" required>
                                       <option value="">Select Spoc </option>
                                   </select>
                             </div>
@@ -160,7 +160,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Number Of Employees*</label>
-                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats">
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats myselect" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -172,7 +172,7 @@
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-4" >Employee 1</label>
-                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8">
+                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -181,7 +181,7 @@
 
                               <div class="form-group row" id="emp_row_2">
                                     <label class="col-sm-4" >Employee 2</label>
-                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8">
+                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -190,7 +190,7 @@
 
                               <div class="form-group row"  id="emp_row_3">
                                     <label class="col-sm-4" >Employee 3</label>
-                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8">
+                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -199,7 +199,7 @@
 
                               <div class="form-group row"  id="emp_row_4" >
                                     <label class="col-sm-4" >Employee 4</label>
-                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8">
+                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -208,7 +208,7 @@
 
                                <div class="form-group row"  id="emp_row_5" style="display: none">
                                     <label class="col-sm-4" >Employee 5</label>
-                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8">
+                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -217,7 +217,7 @@
 
                                <div class="form-group row"  id="emp_row_6" style="display: none">
                                     <label class="col-sm-4" >Employee 6</label>
-                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8">
+                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -254,14 +254,11 @@
 {% endif %}
 
 {% include "Agent/layout/footer.html" %}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
 
 <script type="text/javascript">
 
-$(document).ready(function() {
-$(".js-example-basic-single").select2();
-});
-
+$(function() {
     $('#tr_taxi_type').hide();
     $('#tr_package').hide();
     $('#tr_no_of_days').hide();
@@ -269,9 +266,9 @@ $(".js-example-basic-single").select2();
     $('#emp_row_3').hide();
     $('#emp_row_4').hide();
 
-
 $(".no_of_seats").change(function()
     {
+    alert('ok')
     	var no_of_seats = $(this).val();
 
     	if(no_of_seats > 0){
@@ -291,6 +288,7 @@ $(".no_of_seats").change(function()
 
 $("#tour_type").change(function()
     {
+    alert('ok')
     	var tour_type = $(this).val();
 
     	switch(tour_type){
@@ -319,7 +317,7 @@ $("#tour_type").change(function()
     });
 
 $("#corporate_id").change(function(){
-
+    alert('ok')
   $('#city_id').empty();
   $('#taxi_type_id').empty();
   $('#spoc_id').empty();
@@ -415,8 +413,9 @@ $("#corporate_id").change(function(){
        }
        });
 
-
 });
+
+
 
 
   <!--        For GET All Cities    -->
@@ -432,6 +431,7 @@ $("#corporate_id").change(function(){
     });
 
 
+
 var pickup_city = document.getElementById('pickup_city');
 var pickup_location = document.getElementById('pickup_location');
 var drop_location = document.getElementById('drop_location');
@@ -444,7 +444,7 @@ var options = {
    var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
    var auto3 = new google.maps.places.Autocomplete(drop_location, options);
 
-
+});
 </script>
 
 

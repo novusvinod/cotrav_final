@@ -44,6 +44,11 @@ urlpatterns = [
     path('agents/employees/<int:id>', agent_views.company_employees),
     path('agents/add-employee/<int:id>', agent_views.add_employee),
 
+    path('agents/assessment_cities/<int:id>', agent_views.assessment_cities),
+    path('agents/delete-assessment_cities/<int:id>', agent_views.delete_assessment_cities),
+    path('agents/assessment_codes/<int:id>', agent_views.assessment_codes),
+    path('agents/delete-assessment_codes/<int:id>', agent_views.delete_assessment_codes),
+
     path('agents/agents', agent_views.view_agents),
     path('agents/add-agent/<int:id>', agent_views.add_agent),
 
@@ -73,4 +78,5 @@ urlpatterns = [
     path('agents/accept-bus-booking', agent_views.accept_bus_booking),
     path('agents/assign-bus-booking/<int:id>', agent_views.assign_bus_booking),
 
+    path('agents/add-flight-booking/<int:id>', agent_views.add_flight_booking),
 ]

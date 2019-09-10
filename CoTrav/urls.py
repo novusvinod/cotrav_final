@@ -33,8 +33,8 @@ urlpatterns = [
     path('', include('Common.URL.Admin.urls')),
     path('', include('Common.URL.Spoc.urls')),
     path('', include('Common.URL.Employee.urls')),
-    path('', include('Common.URL.Approves_1.urls')),
-    path('', include('Common.URL.Approves_2.urls')),
+    path('', include('Common.URL.Approver_1.urls')),
+    path('', include('Common.URL.Approver_2.urls')),
 ######################### END CORPORATE URLS ####################
 
 

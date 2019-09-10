@@ -24,9 +24,9 @@ urlpatterns = [
     path('Corporate/Admin/add-company-subgroup-auth/<int:id>', admin_views.add_company_subgroup_auth),
 
     path('Corporate/Admin/company-admins/<int:id>', admin_views.company_admins),
-    path('add-company-admins/<int:id>', admin_views.add_company_admins),
+    path('Corporate/Admin/add-company-admins/<int:id>', admin_views.add_company_admins),
 
-    path('Corporate/Admin/company-admins/<int:id>', admin_views.company_spocs),
+    path('Corporate/Admin/company-spoc/<int:id>', admin_views.company_spocs),
     path('Corporate/Admin/add-spoc/<int:id>', admin_views.add_spocs),
 
     path('Corporate/Admin/company-employees/<int:id>', admin_views.company_employees),

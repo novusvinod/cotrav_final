@@ -140,6 +140,11 @@ def add_operator(request):
     gst_id = request.POST.get('gst_id', '')
     pan_no = request.POST.get('pan_no', '')
 
+    if tds_rate:
+        tds_rate = tds_rate
+    else:
+        tds_rate=0
+
     user = {}
 
     if req_token:
@@ -508,7 +513,12 @@ def add_operator_rate(request):
     hour_rate = request.POST.get('hour_rate', '')
     base_rate = request.POST.get('base_rate', '')
     night_rate = request.POST.get('night_rate', '')
-    fuel_rate = request.POST.get('fuel_rate', '')
+    fuel_rate = request.POST.get('fuel_rate')
+
+    if fuel_rate:
+        fuel_rate=fuel_rate
+    else:
+        fuel_rate=0
 
     user = {}
 

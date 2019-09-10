@@ -51,8 +51,7 @@ def company_billing_entities(request, id):
         if company['success'] == 1:
             entities = company['Entitys']
             cities = cities["Cities"]
-            return render(request, "Company/Employee/billing_entities.html",
-                          {'billing_entities': entities, "cities": cities, })
+            return render(request, "Company/Employee/billing_entities.html",{'billing_entities': entities, "cities": cities, })
         else:
             return render(request, "Company/Employee/billing_entities.html", {'entities': {}})
     else:
@@ -328,15 +327,7 @@ def add_taxi_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                url = settings.API_BASE_URL + "employee_taxi_bookings"
-                payload = {'spoc_id': id}
-                company = getDataFromAPI(login_type, access_token, url, payload)
-
-                if company['success'] == 1:
-                    booking = company['Bookings']
-                    return render(request, "Company/Employee/view_taxi_booking.html", {'bookings': booking})
-                else:
-                    return render(request, "Company/Employee/view_taxi_booking.html", {'group': {}})
+                return HttpResponseRedirect("/Corporate/Employee/taxi-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -472,15 +463,7 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                url = settings.API_BASE_URL + "employee_bus_bookings"
-                payload = {'spoc_id': id}
-                company = getDataFromAPI(login_type, access_token, url, payload)
-
-                if company['success'] == 1:
-                    booking = company['Bookings']
-                    return render(request, "Company/Employee/view_bus_booking.html", {'bookings': booking})
-                else:
-                    return render(request, "Company/Employee/view_bus_booking.html", {'group': {}})
+                return HttpResponseRedirect("/Corporate/Employee/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:

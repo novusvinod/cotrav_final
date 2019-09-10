@@ -39,7 +39,7 @@
                                     <th>No Of Seats</th>
                                     <th>Reason</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+
                                     <th>Details</th>
 
                                 </tr>
@@ -64,15 +64,6 @@
                                     <td>{{ booking.no_of_seats }}</td>
                                     <td>{{ booking.reason_booking }}</td>
                                     <td>{{ booking.booking_status }}</td>
-
-                                    <td>
-                                        <a href="/Corporate/Admin/accept-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-check"></i>
-                                        </a>
-                                         <a href="/Corporate/Admin/reject-taxi-booking/{{ booking.id }}" class="btn btn-tbl-delete btn-xs">
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
-                                    </td>
 
                                     <td>
                                         <a href="/Corporate/Admin/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">

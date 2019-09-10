@@ -95,6 +95,16 @@ urlpatterns = [
     path('api/update_employee', api_views.update_employee),
     path('api/delete_employee', api_views.delete_employee),
 
+    path('api/assessment_cities', api_views.assessment_cities),
+    path('api/add_assessment_cities', api_views.add_assessment_cities),
+    path('api/update_assessment_cities', api_views.update_assessment_cities),
+    path('api/delete_assessment_cities', api_views.delete_assessment_cities),
+
+    path('api/assessment_codes', api_views.assessment_codes),
+    path('api/add_assessment_codes', api_views.add_assessment_codes),
+    path('api/update_assessment_codes', api_views.update_assessment_codes),
+    path('api/delete_assessment_codes', api_views.delete_assessment_codes),
+
     path('api/agents', api_views.get_agents),
     path('api/view_agent', api_views.view_agent),
     path('api/add_agent', api_views.add_agent),

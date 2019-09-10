@@ -29,7 +29,7 @@
                         <label class="col-sm-5 control-label">Company Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control select2" name="corporate_id" id="corporate_id">
+                            <select class="form-control myselect" name="corporate_id" id="corporate_id" style="width:100%;" required>
                                 <option value="">Select Company</option>
                                {% for company in companies %}
                                 <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -42,7 +42,7 @@
                     <div class="form-group row" id="name1">
                         <label class="col-sm-5 control-label">Admin Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name"
+                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name" required
                                    type="text">
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                     <div class="form-group row" id="email1">
                         <label class="col-sm-5 control-label">Admin Email</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email"
+                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email" required
                                    type="email">
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     <div class="form-group row" id="contact_no1">
                         <label class="col-sm-5 control-label">Contact</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact"
+                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact" required
                                    type="text">
                         </div>
                     </div>

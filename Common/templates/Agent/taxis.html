@@ -25,7 +25,7 @@
                         <label class="col-sm-5 control-label">Taxi Type Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control select2" name="model_id" id="model_id">
+                            <select class="form-control myselect" name="model_id" id="model_id" style="width:100%;" required>
                                 <option value="">Select Taxi Type</option>
                                {% for taxi_model in taxi_models %}
                                 <option value="{{taxi_model.id}}">{{taxi_model.brand_name}}({{taxi_model.model_name}})</option>
@@ -38,14 +38,14 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Taxi Registration No</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="taxi_reg_no" name="taxi_reg_no" placeholder="Taxi Registration No" type="text">
+                                <input class="form-control" id="taxi_reg_no" name="taxi_reg_no" placeholder="Taxi Registration No" type="text" required>
                             </div>
                     </div>
 
                    <div class="form-group row" >
                        <label class="col-sm-5 control-label">Make Year</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="make_year" name="make_year" placeholder="Make Year" type="text">
+                                <input class="form-control" id="make_year" name="make_year" placeholder="Make Year" type="text" required>
                             </div>
                     </div>
 
@@ -186,7 +186,9 @@
     </div>
 </div>
 <!-- end page content -->
-
+<script type="text/javascript">
+   $(".myselect").select2();
+</script>
 
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>

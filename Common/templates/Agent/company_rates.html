@@ -27,7 +27,7 @@
                         <label class="col-sm-5 control-label">Company Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control select2" name="corporate_id" id="corporate_name">
+                            <select class="form-control myselect" name="corporate_id" id="corporate_name" style="width:100%;" required>
                                 <option value="">Select Company</option>
                                {% for company in companies %}
                                 <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -41,17 +41,17 @@
                         <label class="col-sm-5 control-label">Package Name</label>
                         <div class="col-sm-7">
                             <input class="form-control" id="package_name" name="package_name" placeholder="Package Name"
-                                   type="text">
+                                   type="text" required>
                         </div>
                     </div>
 
                      <div class="form-group row" id="city_id1">
                         <label class="col-sm-5 control-label">City Name</label>
                         <div class="col-sm-7">
-                            <select class="form-control select2" name="city_id" id="city_id">
+                            <select class="form-control myselect" name="city_id" id="city_id" style="width:100%;" required>
                                 <option value="">Select City</option>
                                {% for city in cities %}
-                                <option value="{{city.id}}">{{city.name}}</option>
+                                <option value="{{city.id}}">{{city.city_name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -61,7 +61,7 @@
                     <div class="form-group row" id="taxi_type1">
                         <label class="col-sm-5 control-label">Taxi Type</label>
                         <div class="col-sm-7">
-                            <select class="form-control select2" name="taxi_type" id="taxi_type">
+                            <select class="form-control myselect" name="taxi_type" id="taxi_type" style="width:100%;" required>
                                 <option value="">Select Taxi Type</option>
                                {% for taxi_type in taxi_types %}
                                 <option value="{{taxi_type.id}}">{{taxi_type.name}}</option>
@@ -73,7 +73,7 @@
                     <div class="form-group row" id="tour_type1">
                         <label class="col-sm-5 control-label">Tour Type</label>
                         <div class="col-sm-7">
-                            <select class="form-control select5" name="tour_type" id="tour_type">
+                            <select class="form-control myselect" name="tour_type" id="tour_type" style="width:100%;" required>
                                 <option value="">Select Tour Type</option>
                                 <option value="1">Radio</option>
                                  <option value="2">Local</option>
@@ -86,7 +86,7 @@
                     <div class="form-group row" id="kms1">
                         <label class="col-sm-5 control-label">KMS</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="kms" name="kms" placeholder="kms"
+                            <input class="form-control" id="kms" name="kms" placeholder="kms" required
                                    type="text">
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                      <div class="form-group row" id="hours1">
                         <label class="col-sm-5 control-label">Hours</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="hours" name="hours" placeholder="Hours"
+                            <input class="form-control" id="hours" name="hours" placeholder="Hours" required
                                    type="text">
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                      <div class="form-group row" id="km_rate1">
                         <label class="col-sm-5 control-label">Km Rate</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="km_rate" name="km_rate" placeholder="Km Rate"
+                            <input class="form-control" id="km_rate" name="km_rate" placeholder="Km Rate" required
                                    type="text">
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                     <div class="form-group row" id="hour_rate1">
                         <label class="col-sm-5 control-label">Hours Rate</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="hour_rate" name="hour_rate" placeholder="Hours Rate"
+                            <input class="form-control" id="hour_rate" name="hour_rate" placeholder="Hours Rate" required
                                    type="text">
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                      <div class="form-group row" id="base_rate1">
                         <label class="col-sm-5 control-label">Base Rate</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="base_rate" name="base_rate" placeholder="Base Rate"
+                            <input class="form-control" id="base_rate" name="base_rate" placeholder="Base Rate" required
                                    type="text">
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                      <div class="form-group row" id="night_rate1">
                         <label class="col-sm-5 control-label">Night Rate</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="night_rate" name="night_rate" placeholder="Night Rate"
+                            <input class="form-control" id="night_rate" name="night_rate" placeholder="Night Rate" required
                                    type="text">
                         </div>
                     </div>

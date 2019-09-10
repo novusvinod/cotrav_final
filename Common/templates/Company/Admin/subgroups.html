@@ -22,7 +22,7 @@
                 <div class="form-group row" >
                        <label class="col-sm-5 control-label">Select Group</label>
                             <div class="col-sm-7">
-                                <select class="form-control" name="group_id" >
+                                <select class="form-control myselect" name="group_id" style="width:100%" required>
                                 <option value="">Select Group</option>
                                 {% for group in groups %}
                                 <option value="{{group.id}}">{{group.group_name}}</option>
@@ -34,7 +34,7 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">SubGroup Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name" type="text">
+                                <input class="form-control" name="group_name" placeholder="Group Name" type="text" required>
                             </div>
                     </div>
 
@@ -150,7 +150,9 @@
     </div>
 </div>
 <!-- end page content -->
-
+<script type="text/javascript">
+   $(".myselect").select2();
+</script>
 
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>

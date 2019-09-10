@@ -35,11 +35,11 @@ def login(request):
     if user:
         password = check_password(user_password, user[0]['password'])
         if password:
-            data = {'success': 1,'access_token':user[0]['access_token'], 'User': user}
+            data = {'success': 1,'access_token':user[0]['access_token'], 'message': 'Login Successfully', 'User': user}
         else:
-            data = {'success': 1, 'message': 'Invalide User Name Or Password'}
+            data = {'success': 1, 'message': 'Invalid User Name Or Password', 'User': ''}
     else:
-        data = {'success': 0, 'User': ''}
+        data = {'success': 0, 'message': 'Invalid User Name Or Password', 'User': ''}
     return JsonResponse(data)
 
 
@@ -557,7 +557,8 @@ def employee(request):
     if corporate_id:
         corporate_id = corporate_id
     else:
-        corporate_id = '0'
+        corporate_id = 0
+
     user ={}
     print(user_type)
     if req_token:
@@ -673,11 +674,6 @@ def cities(request):
 def taxi_types(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
 
     if req_token:
         user_token = req_token.split()
@@ -686,7 +682,7 @@ def taxi_types(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllTaxiTypes', [corporate_id])
+                cursor.callproc('getAllTaxiTypes', [])
                 cities = dictfetchall(cursor)
                 data = {'success': 1, 'taxi_types': cities}
                 return JsonResponse(data)
@@ -706,13 +702,7 @@ def add_taxi_type(request):
     user_type = request.META['HTTP_USERTYPE']
     user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
     type_name = request.POST.get('type_name', '')
-
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
 
     if req_token:
         user_token = req_token.split()
@@ -721,7 +711,7 @@ def add_taxi_type(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('addTaxiTypes', [corporate_id,type_name,user_id,user_type])
+                cursor.callproc('addTaxiTypes', [type_name,user_id,user_type])
                 cities = dictfetchall(cursor)
                 data = {'success': 1, 'taxi_types': cities}
                 return JsonResponse(data)
@@ -741,14 +731,8 @@ def update_taxi_type(request):
     user_type = request.META['HTTP_USERTYPE']
     user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
     type_name = request.POST.get('type_name', '')
     taxitype_id = request.POST.get('taxitype_id', '')
-
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
 
     if req_token:
         user_token = req_token.split()
@@ -757,7 +741,7 @@ def update_taxi_type(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('updateTaxiTypes', [corporate_id,type_name,taxitype_id,user_id,user_type])
+                cursor.callproc('updateTaxiTypes', [type_name,taxitype_id,user_id,user_type])
                 cities = dictfetchall(cursor)
                 data = {'success': 1, 'taxi_types': cities}
                 return JsonResponse(data)
@@ -1957,16 +1941,16 @@ def add_spoc(request):
     budget = request.POST.get('budget')
     expense = request.POST.get('expense')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+    is_radio = request.POST.get('is_radio')
+    is_local = request.POST.get('is_local')
+    is_outstation = request.POST.get('is_outstation')
+    is_bus = request.POST.get('is_bus')
+    is_train = request.POST.get('is_train')
+    is_hotel = request.POST.get('is_hotel')
+    is_meal = request.POST.get('is_meal')
+    is_flight = request.POST.get('is_flight')
+    is_water_bottles = request.POST.get('is_water_bottles')
+    is_reverse_logistics = request.POST.get('is_reverse_logistics')
 
     is_delete = request.POST.get('delete_id')
     access_token = request.POST.get('access_token_auth','')
@@ -1976,17 +1960,22 @@ def add_spoc(request):
     if corporate_id:
         corporate_id = corporate_id
     else:
-        corporate_id = '0'
+        corporate_id = 0
 
-    if spoc_id:
-        admin_id = spoc_id
+    if budget:
+        budget = budget
     else:
-        admin_id = '0'
+        budget = 0
+
+    if expense:
+        expense=expense
+    else:
+        expense=0
 
     if is_delete:
         is_delete = is_delete
     else:
-        is_delete = '0'
+        is_delete = 0
 
     if req_token:
         user_token = req_token.split()
@@ -2146,6 +2135,10 @@ def add_employee(request):
     home_address = request.POST.get('home_address', '')
     assistant_id = request.POST.get('assistant_id', '')
     date_of_birth = request.POST.get('date_of_birth', '')
+    if date_of_birth:
+        date_of_birth = datetime.strptime(date_of_birth, '%d/%m/%Y %H:%M:%S')
+    else:
+        date_of_birth = None
 
     is_delete = request.POST.get('delete_id')
     password = request.POST.get('password','')
@@ -2161,7 +2154,15 @@ def add_employee(request):
     else:
         is_delete = '0'
 
+    if assistant_id:
+        assistant_id=assistant_id
+    else:
+        assistant_id=0
 
+    if age:
+        age:age
+    else:
+        age = 0
 
     if req_token:
         user_token = req_token.split()
@@ -2173,10 +2174,10 @@ def add_employee(request):
                 try:
                     result = cursor.callproc('addNewCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
-                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,billing_entity_id])
-
-                    print(result)
-
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,billing_entity_id,corporate_id])
+                    print("resut")
+                    company = dictfetchall(cursor)
+                    print(company)
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2209,22 +2210,22 @@ def update_employee(request):
     employee_name = request.POST.get('employee_name', '')
     employee_email = request.POST.get('employee_email', '')
     employee_contact = request.POST.get('employee_contact', '')
-    age = request.POST.get('age', '')
+    age = request.POST.get('age')
     gender = request.POST.get('gender')
     id_proof_type = request.POST.get('id_proof_type')
 
     id_proof_no = request.POST.get('id_proof_no', '')
-    is_active = request.POST.get('is_active', '')
-    has_dummy_email = request.POST.get('has_dummy_email', '')
-    fcm_regid = request.POST.get('fcm_regid', '')
-    is_cxo = request.POST.get('is_cxo', '')
+    is_active = request.POST.get('is_active')
+    has_dummy_email = request.POST.get('has_dummy_email')
+    fcm_regid = request.POST.get('fcm_regid')
+    is_cxo = request.POST.get('is_cxo')
     designation = request.POST.get('designation', '')
     home_city = request.POST.get('home_city', '')
     home_address = request.POST.get('home_address', '')
     assistant_id = request.POST.get('assistant_id', '')
     date_of_birth = request.POST.get('date_of_birth', '')
+    date_of_birth = datetime.strptime(date_of_birth, '')
 
-    is_delete = request.POST.get('delete_id')
     employee_id = request.POST.get('employee_id')
 
     if req_token:
@@ -2237,7 +2238,7 @@ def update_employee(request):
                 try:
                     result = cursor.callproc('updateCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
-                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,billing_entity_id])
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,employee_id,billing_entity_id])
                     print(result)
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
@@ -2670,6 +2671,276 @@ def view_agent(request):
         return JsonResponse(data)
 
 
+def assessment_codes(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    corporate_id = request.POST.get('corporate_id', '')
+    if corporate_id:
+        corporate_id= corporate_id;
+    else:
+        corporate_id =0 ;
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Codes': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_assessment_codes(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    assessment_code = request.POST.get('assessment_code', '')
+    code_desc = request.POST.get('code_desc', '')
+    from_date = request.POST.get('from_date', '')
+    from_date = datetime.strptime(from_date, '%d/%m/%Y')
+    to_date = request.POST.get('to_date', '')
+    to_date = datetime.strptime(to_date, '%d/%m/%Y')
+
+    if from_date:
+        from_date = from_date
+    else:
+        from_date=None
+
+    if to_date:
+        to_date =to_date
+    else:
+        to_date =None
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,user_id,user_type])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Codes': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_assessment_codes(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    assessment_code = request.POST.get('assessment_code', '')
+    code_desc = request.POST.get('code_desc', '')
+    from_date = request.POST.get('from_date', '')
+    from_date = datetime.strptime(from_date, '%d/%m/%Y')
+    to_date = request.POST.get('to_date', '')
+    to_date = datetime.strptime(to_date, '%d/%m/%Y')
+    code_id = request.POST.get('code_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,code_id,user_id,user_type])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Codes': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_assessment_codes(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    code_id = request.POST.get('code_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteCorporateAssessmentCodes', [code_id,user_id,user_type])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Codes': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def assessment_cities(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+
+    corporate_id = request.POST.get('corporate_id', '')
+    if corporate_id:
+        corporate_id= corporate_id;
+    else:
+        corporate_id =0 ;
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllCorporateAssessmentCities', [corporate_id])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Cities': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def add_assessment_cities(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    city_name = request.POST.get('city_name', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('addCorporateAssessmentCity', [corporate_id,city_name,user_id,user_type])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Codes': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def update_assessment_cities(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    corporate_id = request.POST.get('corporate_id', '')
+    city_name = request.POST.get('city_name', '')
+    city_id = request.POST.get('city_id')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('updateCorporateAssessmentCity', [corporate_id,city_name,city_id,user_id,user_type])
+                agent = dictfetchall(cursor)
+                data = {'success': 1, 'Codes': agent}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
+
+def delete_assessment_cities(request):
+    req_token = request.META['HTTP_AUTHORIZATION']
+    user_type = request.META['HTTP_USERTYPE']
+    user_id = request.POST.get('user_id', '')
+
+    city_id = request.POST.get('city_id', '')
+
+    user = {}
+
+    if req_token:
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('deleteCorporateAssessmentCity', [city_id,user_id,user_type])
+
+                data = {'success': 1, 'message': 'Operation Success'}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Access Token Empty"}
+        return JsonResponse(data)
+
 def get_agents(request):
     req_token = request.META['HTTP_AUTHORIZATION']
     user_type = request.META['HTTP_USERTYPE']
@@ -2760,6 +3031,9 @@ def add_city_name(request):
     city_name = request.POST.get('city_name', '')
     state_id = request.POST.get('state_id', '')
 
+    print(city_name)
+    print(state_id)
+
     if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -2771,6 +3045,7 @@ def add_city_name(request):
 
                     cursor.callproc('addCities', [city_name,state_id])
                     result = dictfetchall(cursor)
+                    print(result)
                     data = {'success': 1, 'message': "Data Insert Successfully",'id':result}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2926,7 +3201,7 @@ def add_taxi_booking(request):
                             data = {'success': 1, 'message': "Insert Successfully"}
                             return JsonResponse(data)
                     else:
-                        data = {'success': 0, 'message': "Error in Data Insert"}
+                        data = {'success': 1, 'message': "Insert Successfully"}
                         return JsonResponse(data)
 
                 except Exception as e:
@@ -2960,9 +3235,12 @@ def add_bus_booking(request):
     to_location = request.POST.get('to', '')
     bus_type = request.POST.get('bus_type', '')
     booking_datetime = request.POST.get('booking_datetime', '')
+    print(booking_datetime)
     booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+
     journey_datetime = request.POST.get('journey_datetime', '')
     journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
+    print(journey_datetime)
     entity_id = request.POST.get('entity_id', '')
     preferred_bus = request.POST.get('preferred_bus', '')
     assessment_code = request.POST.get('assessment_code', '')
@@ -2972,6 +3250,8 @@ def add_bus_booking(request):
     no_of_seats = request.POST.get('no_of_seats', '')
 
     employees = request.POST.getlist('employees', '')
+
+    print(employees)
 
     if req_token:
         user_token = req_token.split()
@@ -2986,6 +3266,7 @@ def add_bus_booking(request):
                                                       to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,
                                                              entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id])
                     booking_id = dictfetchall(cursor)
+                    print("response")
                     print(booking_id)
                     cursor.close()
                     for id in booking_id:
@@ -2998,7 +3279,7 @@ def add_bus_booking(request):
                             data = {'success': 1, 'message': "Insert Success"}
                             return JsonResponse(data)
                     else:
-                        data = {'success': 0, 'message': "Error in Data Insert"}
+                        data = {'success': 1, 'message': "Insert Success"}
                         return JsonResponse(data)
 
                 except Exception as e:
@@ -3066,13 +3347,6 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
     except Exception as e:
         print(e)
         return None
-
-
-
-
-
-
-
 
 
 def dictfetchall(cursor):
