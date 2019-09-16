@@ -16,13 +16,13 @@ pip install mysqlclient
 
 #Django middleware that keep request instance for every thread.
 REQUIRED PYTHON_3
-pip3.6 install django-middleware-global-request
+pip3.7 install django-middleware-global-request
 
 #Django REST framework is a powerful and flexible toolkit for building Web APIs.
-pip3.6 install djangorestframework
+pip3.7 install djangorestframework
 
 # Django REST framework CALL Internal API
-pip3.6 install requests
+pip3.7 install requests
 
 #For MYSQL _
 wget http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
@@ -31,7 +31,7 @@ yum install mysql-community-server mysql-community-devel
 
 Apache restrat show error log
 /usr/local/apache/bin/httpd -k restart
-
+sudo nano /etc/hosts
 
  sudo chown -R root /home/cotrav/public_html
  chmod go-rwx /home/cotrav/public_html

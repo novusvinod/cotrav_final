@@ -504,6 +504,139 @@ def add_bus_booking(request,id):
 
 
 
+############################################## Train ##########################################
+
+
+def train_bookings(request,id):
+
+    if 'login_type' in request.session:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "employee_train_bookings"
+        payload = {'spoc_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Employee/train_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Employee/train_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_train_booking(request,id):
+
+    if 'login_type' in request.session:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_train_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Employee/view_train_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Employee/view_train_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def add_train_booking(request,id):
+    if request.method == 'POST':
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            employee_id = request.POST.get('employee_id', '')
+
+            corporate_id = request.POST.get('corporate_id', '')
+            spoc_id = request.POST.get('spoc_id', '')
+
+            payload1 = {'spoc_id':spoc_id}
+            url_get_spoc = settings.API_BASE_URL + "view_spoc"
+            spoc = getDataFromAPI(login_type, access_token, url_get_spoc, payload1)
+            spoc = spoc['Spoc']
+
+            for spoc in spoc:
+                group_id = spoc['group_id']
+                subgroup_id = spoc['subgroup_id']
+
+            from_location = request.POST.get('from', '')
+            to_location = request.POST.get('to', '')
+            train_type = request.POST.get('train_type', '')
+            booking_datetime = request.POST.get('booking_datetime', '')
+            journey_datetime = request.POST.get('journey_datetime', '')
+            entity_id = request.POST.get('entity_id', '')
+            preferred_bus = request.POST.get('preferred_bus', '')
+            assessment_code = request.POST.get('assessment_code', '')
+            assessment_city_id = request.POST.get('assessment_city_id', '')
+
+            reason_booking = request.POST.get('reason_booking', '')
+            no_of_seats = 1
+
+            employees = []
+            no_of_emp = int(no_of_seats) + 1
+            for i in range(1,no_of_emp):
+                employees.append(request.POST.get('employee_id', ''))
+                print(employees)
+
+            payload = {'login_type': login_type, 'user_id': employee_id, 'access_token': access_token,
+                       'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
+                       'subgroup_id': subgroup_id, 'from': from_location, 'to': to_location,
+                       'train_type': train_type, 'booking_datetime': booking_datetime, 'journey_datetime': journey_datetime,
+                       'entity_id': entity_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
+                       'preferred_bus': preferred_bus, 'reason_booking': reason_booking, 'no_of_seats': no_of_seats,
+                       'employees': employees}
+
+            url_taxi_booking = settings.API_BASE_URL + "add_train_booking"
+            booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
+
+            if booking['success'] == 1:
+                return HttpResponseRedirect("/Corporate/Employee/train-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/login")
+    else:
+        if 'login_type' in request.session:
+            request = get_request()
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+
+            url_emp = settings.API_BASE_URL + "employees"
+            payload = {'corporate_id': id}
+            r = requests.post(url_emp, data=payload, headers=headers)
+            company_emp = json.loads(r.text)
+            employees = company_emp['Employees']
+
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['Cities']
+
+            url_taxi = settings.API_BASE_URL + "taxi_types"
+            taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
+            taxies = taxies['taxi_types']
+
+            package = settings.API_BASE_URL + "corporate_package"
+            package = getDataFromAPI(login_type, access_token, package, payload)
+            packages = package['Package']
+
+            url_ass_code = settings.API_BASE_URL + "get_assessment_code"
+            ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
+            ass_code = ass_code['AssCodes']
+
+            if id:
+                return render(request, 'Company/Employee/add_train_booking.html', {'employees':employees,'cities':cities,'taxies':taxies,'packages':packages,'assessments':ass_code})
+            else:
+                return render(request, 'Company/Employee/add_train_booking.html', {})
+        else:
+            return HttpResponseRedirect("/login")
+
 
 
 

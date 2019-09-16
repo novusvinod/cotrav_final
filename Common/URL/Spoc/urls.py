@@ -21,4 +21,7 @@ urlpatterns = [
     path('Corporate/Spoc/add-bus-booking/<int:id>', spoc_views.add_bus_booking),
     path('Corporate/Spoc/view-bus-booking/<int:id>', spoc_views.view_bus_booking),
 
+    path('Corporate/Spoc/train-bookings/<int:id>', spoc_views.train_bookings),
+    path('Corporate/Spoc/add-train-booking/<int:id>', spoc_views.add_train_booking),
+    path('Corporate/Spoc/view-train-booking/<int:id>', spoc_views.view_train_booking),
 ]

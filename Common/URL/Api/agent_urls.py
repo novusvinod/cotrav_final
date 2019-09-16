@@ -29,8 +29,8 @@ urlpatterns = [
     path('api/delete_operator_driver', agent_api_view.delete_operator_driver),
 
 
-    path('api/agent_taxi_bookings', agent_api_view.spoc_taxi_bookings),
-    path('api/agent_add_taxi_booking', agent_api_view.spoc_add_taxi_booking),
+    path('api/agent_taxi_bookings', agent_api_view.agent_taxi_bookings),
+    path('api/agent_add_taxi_booking', agent_api_view.agent_add_taxi_booking),
     path('api/accept_taxi_booking', agent_api_view.accept_taxi_booking),
     path('api/reject_taxi_booking', agent_api_view.reject_taxi_booking),
     path('api/assign_taxi_booking', agent_api_view.assign_taxi_booking),
@@ -39,6 +39,11 @@ urlpatterns = [
     path('api/accept_bus_booking', agent_api_view.accept_bus_booking),
     path('api/reject_bus_booking', agent_api_view.reject_bus_booking),
     path('api/assign_bus_booking', agent_api_view.assign_bus_booking),
+
+    path('api/agent_train_bookings', agent_api_view.agent_train_bookings),
+    path('api/accept_train_booking', agent_api_view.accept_train_booking),
+    path('api/reject_train_booking', agent_api_view.reject_train_booking),
+    path('api/assign_train_booking', agent_api_view.assign_train_booking),
 
 
 ]

@@ -21,4 +21,8 @@ urlpatterns = [
     path('Corporate/Employee/add-bus-booking/<int:id>', employee_views.add_bus_booking),
     path('Corporate/Employee/view-bus-booking/<int:id>', employee_views.view_bus_booking),
 
+    path('Corporate/Employee/train-bookings/<int:id>', employee_views.train_bookings),
+    path('Corporate/Employee/add-train-booking/<int:id>', employee_views.add_train_booking),
+    path('Corporate/Employee/view-train-booking/<int:id>', employee_views.view_train_booking),
+
 ]

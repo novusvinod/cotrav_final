@@ -1,4 +1,6 @@
 from datetime import datetime
+import string
+import random
 
 from django.http import JsonResponse
 from django.db import connection
@@ -22,32 +24,72 @@ def login(request):
     user_name = request.POST.get('user_name', '')
     user_password = request.POST.get('user_password', '')
     user_type = request.POST.get('user_type', '')
-    user_type = int(user_type)
+    user_info = request.META['HTTP_USER_AGENT']
 
-    if user_type:
-        user_type=user_type
-    else:
-        user_type=10
+    if user_name and user_password and user_type:
+        cursor = connection.cursor()
+        cursor.callproc('getLoginDetails', [user_name,user_type])
+        user = dictfetchall(cursor)
+        if user:
+            password = check_password(user_password, user[0]['password'])
+            if password:
+                gen_access_token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
 
-    cursor = connection.cursor()
-    cursor.callproc('getLoginDetails', [user_name,user_type])
-    user = dictfetchall(cursor)
-    if user:
-        password = check_password(user_password, user[0]['password'])
-        if password:
-            data = {'success': 1,'access_token':user[0]['access_token'], 'message': 'Login Successfully', 'User': user}
+                if user_type == '1':
+                    insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user[0]['corporate_id'], access_token=gen_access_token,user_agent=user_info)
+                elif user_type == '2':
+                    insert_data = Corporate_Approves_1_Login_Access_Token.objects.create(subgroup_authenticater_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+                    print(insert_data)
+                elif user_type == '3':
+                    insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user[0]['id'], access_token=gen_access_token,user_agent=user_info)
+                elif user_type == '4':
+                    insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user[0]['id'],access_token=gen_access_token,user_agent=user_info)
+                elif user_type == '6':
+                    insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+                elif user_type == '10':
+                    insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+
+                data = {'success': 1,'access_token':gen_access_token, 'message': 'Login Successfully', 'User': user}
+            else:
+                data = {'success': 0, 'message': 'Invalid User Name Or Password'}
         else:
-            data = {'success': 1, 'message': 'Invalid User Name Or Password', 'User': ''}
+            data = {'success': 0, 'message': 'Invalid User Name Or Password'}
     else:
-        data = {'success': 0, 'message': 'Invalid User Name Or Password', 'User': ''}
+        print("in else")
+        data = {'success': 0, 'message': 'Please Enter Valid Inputs...'}
+    return JsonResponse(data)
+
+
+def logout(request):
+    access_token = request.META['HTTP_AUTHORIZATION']
+    login_type = request.META['HTTP_USERTYPE']
+
+    if login_type == '1':
+        user = Corporate_Login_Access_Token.objects.get(access_token=access_token)
+    elif login_type == '2':
+        user = Corporate_Approves_1_Login_Access_Token.objects.get(access_token=access_token)
+    elif login_type == '3':
+        user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=access_token)
+    elif login_type == '4':
+        user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=access_token)
+    elif login_type == '6':
+        user = Corporate_Employee_Login_Access_Token.objects.get(access_token=access_token)
+    elif login_type == '10':
+        user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
+    else:
+        return None
+
+    user.expiry_date = datetime.now()  # change field
+    user.save()  # this will update only
+    data = {'success': 1, 'message': 'User Logout Successfully'}
     return JsonResponse(data)
 
 
 def companies(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user ={}
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             
@@ -65,16 +107,16 @@ def companies(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_company(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user ={}
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -91,48 +133,47 @@ def view_company(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_companies(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_name = request.POST.get('corporate_name', '')
-    corporate_code = request.POST.get('corporate_code', '')
-    contact_person_name = request.POST.get('contact_person_name', '')
-    contact_person_no = request.POST.get('contact_person_no', '')
-    contact_person_email = request.POST.get('contact_person_email', '')
-    bill_corporate_name = request.POST.get('bill_corporate_name', '')
-    address_line_1 = request.POST.get('address_line_1', '')
-    address_line_2 = request.POST.get('address_line_2', '')
-    address_line_3 = request.POST.get('address_line_3', '')
-    gst_id = request.POST.get('gst_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_name = request.POST.get('corporate_name', '')
+        corporate_code = request.POST.get('corporate_code', '')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
+        bill_corporate_name = request.POST.get('bill_corporate_name', '')
+        address_line_1 = request.POST.get('address_line_1', '')
+        address_line_2 = request.POST.get('address_line_2', '')
+        address_line_3 = request.POST.get('address_line_3', '')
+        gst_id = request.POST.get('gst_id', '')
 
-    has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
-    has_auth_level = request.POST.get('has_auth_level', '')
-    no_of_auth_level = request.POST.get('no_of_auth_level', '')
-    has_assessment_codes = request.POST.get('has_assessment_codes', '')
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
-    is_spoc = request.POST.get('is_spoc', '')
+        has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+        has_auth_level = request.POST.get('has_auth_level', '')
+        no_of_auth_level = request.POST.get('no_of_auth_level', '')
+        has_assessment_codes = request.POST.get('has_assessment_codes', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_spoc = request.POST.get('is_spoc', '')
 
-    cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
-    user_type = request.POST.get('user_type', '')
-    password = request.POST.get('password', '')
-
-    if req_token:
+        cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
+        user_type = request.POST.get('user_type', '')
+        password = request.POST.get('password', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -149,42 +190,41 @@ def add_companies(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_company(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_name = request.POST.get('corporate_name', '')
-    corporate_code = request.POST.get('corporate_code', '')
-    contact_person_name = request.POST.get('contact_person_name', '')
-    contact_person_no = request.POST.get('contact_person_no', '')
-    contact_person_email = request.POST.get('contact_person_email', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_name = request.POST.get('corporate_name', '')
+        corporate_code = request.POST.get('corporate_code', '')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
 
-    has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
-    has_auth_level = request.POST.get('has_auth_level', '')
-    no_of_auth_level = request.POST.get('no_of_auth_level', '')
-    has_assessment_codes = request.POST.get('has_assessment_codes', '')
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+        has_auth_level = request.POST.get('has_auth_level', '')
+        no_of_auth_level = request.POST.get('no_of_auth_level', '')
+        has_assessment_codes = request.POST.get('has_assessment_codes', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    user_id = request.POST.get('user_id', '')
-    corporate_id = request.POST.get('corporate_id', '')
-    user_type = request.POST.get('user_type', '')
-
-    if req_token:
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        user_type = request.POST.get('user_type', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -201,21 +241,20 @@ def update_company(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_company(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    user_id = request.POST.get('user_id', '')
-    corporate_id = request.POST.get('corporate_id', '')
-
-    if req_token:
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -230,39 +269,38 @@ def delete_company(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_company_rates(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    package_name = request.POST.get('package_name', '')
-    city_id = request.POST.get('city_id')
-    taxi_type = request.POST.get('taxi_type', '')
-    tour_type = request.POST.get('tour_type', '')
-    kms = request.POST.get('kms', '')
-    hours = request.POST.get('hours', '')
-    km_rate = request.POST.get('km_rate', '')
-    hour_rate = request.POST.get('hour_rate', '')
-    base_rate = request.POST.get('base_rate', '')
-    night_rate = request.POST.get('night_rate', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        package_name = request.POST.get('package_name', '')
+        city_id = request.POST.get('city_id')
+        taxi_type = request.POST.get('taxi_type', '')
+        tour_type = request.POST.get('tour_type', '')
+        kms = request.POST.get('kms', '')
+        hours = request.POST.get('hours', '')
+        km_rate = request.POST.get('km_rate', '')
+        hour_rate = request.POST.get('hour_rate', '')
+        base_rate = request.POST.get('base_rate', '')
+        night_rate = request.POST.get('night_rate', '')
 
-    rate_id = request.POST.get('rate_id')
+        rate_id = request.POST.get('rate_id')
 
-    if rate_id:
-        pass
-    else:
-        rate_id=0
-
-    if req_token:
+        if rate_id:
+            pass
+        else:
+            rate_id = 0
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -278,34 +316,33 @@ def add_company_rates(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_company_rates(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    package_name = request.POST.get('package_name', '')
-    city_id = request.POST.get('city_id')
-    taxi_type = request.POST.get('taxi_type', '')
-    tour_type = request.POST.get('tour_type', '')
-    kms = request.POST.get('kms', '')
-    hours = request.POST.get('hours', '')
-    km_rate = request.POST.get('km_rate', '')
-    hour_rate = request.POST.get('hour_rate', '')
-    base_rate = request.POST.get('base_rate', '')
-    night_rate = request.POST.get('night_rate', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        package_name = request.POST.get('package_name', '')
+        city_id = request.POST.get('city_id')
+        taxi_type = request.POST.get('taxi_type', '')
+        tour_type = request.POST.get('tour_type', '')
+        kms = request.POST.get('kms', '')
+        hours = request.POST.get('hours', '')
+        km_rate = request.POST.get('km_rate', '')
+        hour_rate = request.POST.get('hour_rate', '')
+        base_rate = request.POST.get('base_rate', '')
+        night_rate = request.POST.get('night_rate', '')
 
-    rate_id = request.POST.get('rate_id')
-
-    if req_token:
+        rate_id = request.POST.get('rate_id')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -321,21 +358,21 @@ def update_company_rates(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_company_rates(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    user_id = request.POST.get('user_id', '')
-    rate_id = request.POST.get('rate_id', '')
+        user_id = request.POST.get('user_id', '')
+        rate_id = request.POST.get('rate_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -350,24 +387,23 @@ def delete_company_rates(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def company_rates(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
-    user ={}
-    print(user_type)
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -382,26 +418,23 @@ def company_rates(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
-
-
 def billing_entities(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
-    user ={}
-    print(user_type)
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -417,31 +450,31 @@ def billing_entities(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def admins(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    user ={}
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('getAllCorporateAdminsDetails', [corporate_id])
                 admin = dictfetchall(cursor)
-                print(admin)
+
                 data = {'success': 1, 'Admins': admin}
                 return JsonResponse(data)
             else:
@@ -451,21 +484,21 @@ def admins(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def groups(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
-    user ={}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -482,24 +515,23 @@ def groups(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def subgroups(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
-    user ={}
-    print(user_type)
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -514,24 +546,23 @@ def subgroups(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def spocs(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
-    user ={}
-    print(user_type)
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -546,25 +577,24 @@ def spocs(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def employee(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = 0
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = 0
 
-    user ={}
-    print(user_type)
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -579,24 +609,23 @@ def employee(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def corporate_package(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
-    user ={}
-    print(user_type)
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : "+user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -611,23 +640,23 @@ def corporate_package(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def get_assessment_code(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -642,17 +671,48 @@ def get_assessment_code(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_assessment_city(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllAssessmentCity', [corporate_id])
+                cities = dictfetchall(cursor)
+                data = {'success': 1, 'AssCity': cities}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def cities(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -667,18 +727,17 @@ def cities(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def taxi_types(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -693,21 +752,20 @@ def taxi_types(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_taxi_type(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+        type_name = request.POST.get('type_name', '')
 
-    type_name = request.POST.get('type_name', '')
-
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -722,22 +780,22 @@ def add_taxi_type(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_taxi_type(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    type_name = request.POST.get('type_name', '')
-    taxitype_id = request.POST.get('taxitype_id', '')
+        type_name = request.POST.get('type_name', '')
+        taxitype_id = request.POST.get('taxitype_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -752,20 +810,20 @@ def update_taxi_type(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_taxi_type(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    taxitype_id = request.POST.get('taxitype_id', '')
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        taxitype_id = request.POST.get('taxitype_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -780,24 +838,23 @@ def delete_taxi_type(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_taxi_model(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    brand_name = request.POST.get('brand_name', '')
-    model_name = request.POST.get('model_name', '')
-    taxi_type_id = request.POST.get('taxitype_id', '')
-    no_of_seats = request.POST.get('no_of_seats', '')
-
-    if req_token:
+        brand_name = request.POST.get('brand_name', '')
+        model_name = request.POST.get('model_name', '')
+        taxi_type_id = request.POST.get('taxitype_id', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -812,26 +869,24 @@ def add_taxi_model(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_taxi_model(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    brand_name = request.POST.get('brand_name', '')
-    model_name = request.POST.get('model_name', '')
-    taxi_type_id = request.POST.get('taxitype_id', '')
-    no_of_seats = request.POST.get('no_of_seats', '')
-
-    model_id = request.POST.get('model_id', '')
-
-    if req_token:
+        brand_name = request.POST.get('brand_name', '')
+        model_name = request.POST.get('model_name', '')
+        taxi_type_id = request.POST.get('taxitype_id', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+        model_id = request.POST.get('model_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -846,20 +901,20 @@ def update_taxi_model(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_taxi_model(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    model_id = request.POST.get('model_id', '')
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        model_id = request.POST.get('model_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -874,18 +929,18 @@ def delete_taxi_model(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def taxis(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -900,30 +955,30 @@ def taxis(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_taxi(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    model_id = request.POST.get('model_id', '')
-    taxi_reg_no = request.POST.get('taxi_reg_no', '')
-    make_year = request.POST.get('make_year', '')
-    garage_location = request.POST.get('garage_location', '')
-    garage_distance = request.POST.get('garage_distance', '')
+        model_id = request.POST.get('model_id', '')
+        taxi_reg_no = request.POST.get('taxi_reg_no', '')
+        make_year = request.POST.get('make_year', '')
+        garage_location = request.POST.get('garage_location', '')
+        garage_distance = request.POST.get('garage_distance', '')
 
-    if garage_distance:
-        garage_distance = float(garage_distance)
-    else:
-        garage_distance=0
+        if garage_distance:
+            garage_distance = float(garage_distance)
+        else:
+            garage_distance = 0
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -938,32 +993,32 @@ def add_taxi(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_taxi(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    model_id = request.POST.get('model_id', '')
-    taxi_reg_no = request.POST.get('taxi_reg_no', '')
-    make_year = request.POST.get('make_year', '')
-    garage_location = request.POST.get('garage_location', '')
-    garage_distance = request.POST.get('garage_distance', '')
+        model_id = request.POST.get('model_id', '')
+        taxi_reg_no = request.POST.get('taxi_reg_no', '')
+        make_year = request.POST.get('make_year', '')
+        garage_location = request.POST.get('garage_location', '')
+        garage_distance = request.POST.get('garage_distance', '')
 
-    if garage_distance:
-        garage_distance = float(garage_distance)
-    else:
-        garage_distance=0
+        if garage_distance:
+            garage_distance = float(garage_distance)
+        else:
+            garage_distance = 0
 
-    taxi_id = request.POST.get('taxi_id', '')
+        taxi_id = request.POST.get('taxi_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -978,20 +1033,19 @@ def update_taxi(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_taxi(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    taxi_id = request.POST.get('taxi_id', '')
-    user_id = request.POST.get('user_id', '')
-
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        taxi_id = request.POST.get('taxi_id', '')
+        user_id = request.POST.get('user_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -1006,18 +1060,18 @@ def delete_taxi(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def taxi_models(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            print("ACCESS TOKEN : " + user_token[1])
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
@@ -1032,46 +1086,45 @@ def taxi_models(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_billing_entity(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
-    entity_name = request.POST.get('entity_name', '')
-    billing_city_id = request.POST.get('billing_city_id')
-    contact_person_name = request.POST.get('contact_person_name', '')
-    contact_person_email = request.POST.get('contact_person_email', '')
-    contact_person_no = request.POST.get('contact_person_no', '')
-    address_line_1 = request.POST.get('address_line_1', '')
-    address_line_2 = request.POST.get('address_line_2', '')
-    address_line_3 = request.POST.get('address_line_3', '')
-    gst_id = request.POST.get('gst_id', '')
-    pan_no = request.POST.get('pan_no', '')
+        user_id = request.POST.get('user_id', '')
+        entity_name = request.POST.get('entity_name', '')
+        billing_city_id = request.POST.get('billing_city_id')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        address_line_1 = request.POST.get('address_line_1', '')
+        address_line_2 = request.POST.get('address_line_2', '')
+        address_line_3 = request.POST.get('address_line_3', '')
+        gst_id = request.POST.get('gst_id', '')
+        pan_no = request.POST.get('pan_no', '')
 
-    entity_id = request.POST.get('entity_id')
-    is_delete = request.POST.get('is_delete')
+        entity_id = request.POST.get('entity_id')
+        is_delete = request.POST.get('is_delete')
 
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    if entity_id:
-        entity_id = entity_id
-    else:
-        entity_id = '0'
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = '0'
-
-    if req_token:
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1098,40 +1151,39 @@ def add_billing_entity(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_billing_entity(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
-    entity_name = request.POST.get('entity_name', '')
-    billing_city_id = request.POST.get('billing_city_id')
-    contact_person_name = request.POST.get('contact_person_name', '')
-    contact_person_email = request.POST.get('contact_person_email', '')
-    contact_person_no = request.POST.get('contact_person_no', '')
-    address_line_1 = request.POST.get('address_line_1', '')
-    address_line_2 = request.POST.get('address_line_2', '')
-    address_line_3 = request.POST.get('address_line_3', '')
-    gst_id = request.POST.get('gst_id', '')
-    pan_no = request.POST.get('pan_no', '')
+        user_id = request.POST.get('user_id', '')
+        entity_name = request.POST.get('entity_name', '')
+        billing_city_id = request.POST.get('billing_city_id')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        address_line_1 = request.POST.get('address_line_1', '')
+        address_line_2 = request.POST.get('address_line_2', '')
+        address_line_3 = request.POST.get('address_line_3', '')
+        gst_id = request.POST.get('gst_id', '')
+        pan_no = request.POST.get('pan_no', '')
 
-    entity_id = request.POST.get('entity_id')
+        entity_id = request.POST.get('entity_id')
 
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    if entity_id:
-        entity_id = entity_id
-    else:
-        entity_id = '0'
-
-    if req_token:
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1157,30 +1209,29 @@ def update_billing_entity(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_billing_entity(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    entity_id = request.POST.get('entity_id')
-    is_delete = request.POST.get('is_delete')
+        entity_id = request.POST.get('entity_id')
+        is_delete = request.POST.get('is_delete')
 
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
 
-    if entity_id:
-        entity_id = entity_id
-    else:
-        entity_id = '0'
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = '0'
-
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1205,20 +1256,20 @@ def delete_billing_entity(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_group(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
-    group_name = request.POST.get('group_name', '')
-    zone_name = request.POST.get('zone_name')
+        user_id = request.POST.get('user_id', '')
+        group_name = request.POST.get('group_name', '')
+        zone_name = request.POST.get('zone_name')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1242,25 +1293,24 @@ def add_group(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_group(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    group_id = request.POST.get('group_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('group_id', '')
 
-    user_id = request.POST.get('user_id', '')
-    group_name = request.POST.get('group_name', '')
-    zone_name = request.POST.get('zone_name')
+        user_id = request.POST.get('user_id', '')
+        group_name = request.POST.get('group_name', '')
+        zone_name = request.POST.get('zone_name')
 
-    if group_id:
-        group_id = group_id
-    else:
-        group_id = '0'
-
-    if req_token:
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1284,22 +1334,21 @@ def update_group(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_group(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    group_id = request.POST.get('group_id', '')
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('group_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    if group_id:
-        group_id = group_id
-    else:
-        group_id = '0'
-
-    if req_token:
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1323,20 +1372,20 @@ def delete_group(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_subgroup(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
-    subgroup_name = request.POST.get('subgroup_name', '')
-    group_id = request.POST.get('group_id', '')
+        user_id = request.POST.get('user_id', '')
+        subgroup_name = request.POST.get('subgroup_name', '')
+        group_id = request.POST.get('group_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1360,24 +1409,24 @@ def add_subgroup(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_subgroup(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    group_id = request.POST.get('group_id', '')
-    subgroup_id = request.POST.get('subgroup_id', '')
-    user_id = request.POST.get('user_id', '')
-    subgroup_name = request.POST.get('group_name', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+        user_id = request.POST.get('user_id', '')
+        subgroup_name = request.POST.get('group_name', '')
 
-    if subgroup_id:
-        subgroup_id = subgroup_id
-    else:
-        subgroup_id = '0'
+        if subgroup_id:
+            subgroup_id = subgroup_id
+        else:
+            subgroup_id = '0'
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1401,22 +1450,22 @@ def update_subgroup(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_subgroup(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    subgroup_id = request.POST.get('subgroup_id', '')
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        subgroup_id = request.POST.get('subgroup_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    if subgroup_id:
-        subgroup_id = subgroup_id
-    else:
-        subgroup_id = '0'
+        if subgroup_id:
+            subgroup_id = subgroup_id
+        else:
+            subgroup_id = '0'
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1440,56 +1489,55 @@ def delete_subgroup(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_group_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    name = request.POST.get('name', '')
-    email = request.POST.get('email', '')
-    cid = request.POST.get('cid', '')
-    contact_no = request.POST.get('contact_no', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    group_id = request.POST.get('group_id')
+        group_id = request.POST.get('group_id')
 
-    is_delete = request.POST.get('delete_id')
-    access_token = request.POST.get('access_token_auth','')
-    password = request.POST.get('password','')
-    group_auth_id = request.POST.get('group_auth_id','')
+        is_delete = request.POST.get('delete_id')
+        access_token = request.POST.get('access_token_auth', '')
+        password = request.POST.get('password', '')
+        group_auth_id = request.POST.get('group_auth_id', '')
 
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    if group_id:
-        group_id = group_id
-    else:
-        group_id = '0'
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = '0'
-
-    if req_token:
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1514,34 +1562,33 @@ def add_group_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_group_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user_id = request.POST.get('user_id', '')
-    name = request.POST.get('name', '')
-    email = request.POST.get('email', '')
-    cid = request.POST.get('cid', '')
-    contact_no = request.POST.get('contact_no', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user_id = request.POST.get('user_id', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    group_auth_id = request.POST.get('group_auth_id','')
-
-    if req_token:
+        group_auth_id = request.POST.get('group_auth_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1566,18 +1613,17 @@ def update_group_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_group_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    group_auth_id = request.POST.get('group_auth_id','')
-
-    if req_token:
+        group_auth_id = request.POST.get('group_auth_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1601,56 +1647,55 @@ def delete_group_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_subgroup_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    name = request.POST.get('name', '')
-    email = request.POST.get('email', '')
-    cid = request.POST.get('cid', '')
-    contact_no = request.POST.get('contact_no', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    subgroup_id = request.POST.get('subgroup_id')
+        subgroup_id = request.POST.get('subgroup_id')
 
-    is_delete = request.POST.get('delete_id')
-    access_token = request.POST.get('access_token_auth','')
-    password = request.POST.get('password','')
-    subgroup_auth_id = request.POST.get('subgroup_auth_id','')
+        is_delete = request.POST.get('delete_id')
+        access_token = request.POST.get('access_token_auth', '')
+        password = request.POST.get('password', '')
+        subgroup_auth_id = request.POST.get('subgroup_auth_id', '')
 
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    if subgroup_id:
-        subgroup_id = subgroup_id
-    else:
-        subgroup_id = '0'
+        if subgroup_id:
+            subgroup_id = subgroup_id
+        else:
+            subgroup_id = '0'
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = '0'
-
-    if req_token:
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1675,34 +1720,33 @@ def add_subgroup_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_subgroup_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user_id = request.POST.get('user_id', '')
-    name = request.POST.get('name', '')
-    email = request.POST.get('email', '')
-    cid = request.POST.get('cid', '')
-    contact_no = request.POST.get('contact_no', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user_id = request.POST.get('user_id', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        cid = request.POST.get('cid', '')
+        contact_no = request.POST.get('contact_no', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        subgroup_auth_id = request.POST.get('subgroup_auth_id', '')
 
-    subgroup_auth_id = request.POST.get('subgroup_auth_id','')
-
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1727,18 +1771,17 @@ def update_subgroup_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_subgroup_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    subgroup_auth_id = request.POST.get('subgroup_auth_id','')
-
-    if req_token:
+        subgroup_auth_id = request.POST.get('subgroup_auth_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1762,53 +1805,52 @@ def delete_subgroup_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_admin(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    name = request.POST.get('name', '')
-    email = request.POST.get('email', '')
-    contact_no = request.POST.get('contact_no', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        contact_no = request.POST.get('contact_no', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    is_delete = request.POST.get('delete_id')
-    access_token = request.POST.get('access_token_auth','')
-    password = request.POST.get('password','')
-    admin_id = request.POST.get('admin_id','')
+        is_delete = request.POST.get('delete_id')
+        access_token = request.POST.get('access_token_auth', '')
+        password = request.POST.get('password', '')
+        admin_id = request.POST.get('admin_id', '')
 
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = '0'
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
 
-    if admin_id:
-        admin_id = admin_id
-    else:
-        admin_id = '0'
+        if admin_id:
+            admin_id = admin_id
+        else:
+            admin_id = '0'
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = '0'
-
-    if req_token:
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1833,33 +1875,33 @@ def add_admin(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_admin(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user_id = request.POST.get('user_id', '')
-    name = request.POST.get('name', '')
-    email = request.POST.get('email', '')
-    contact_no = request.POST.get('contact_no', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user_id = request.POST.get('user_id', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        contact_no = request.POST.get('contact_no', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    admin_id = request.POST.get('admin_id','')
+        admin_id = request.POST.get('admin_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1884,18 +1926,18 @@ def update_admin(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_admin(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    admin_id = request.POST.get('admin_id','')
+        admin_id = request.POST.get('admin_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1919,65 +1961,64 @@ def delete_admin(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_spoc(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    group_id = request.POST.get('group_id', '')
-    subgroup_id = request.POST.get('subgroup_id', '')
-    user_cid = request.POST.get('user_cid', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+        user_cid = request.POST.get('user_cid', '')
 
-    user_name = request.POST.get('user_name', '')
-    user_contact = request.POST.get('user_contact', '')
-    email = request.POST.get('email', '')
-    username = request.POST.get('username', '')
-    budget = request.POST.get('budget')
-    expense = request.POST.get('expense')
+        user_name = request.POST.get('user_name', '')
+        user_contact = request.POST.get('user_contact', '')
+        email = request.POST.get('email', '')
+        username = request.POST.get('username', '')
+        budget = request.POST.get('budget')
+        expense = request.POST.get('expense')
 
-    is_radio = request.POST.get('is_radio')
-    is_local = request.POST.get('is_local')
-    is_outstation = request.POST.get('is_outstation')
-    is_bus = request.POST.get('is_bus')
-    is_train = request.POST.get('is_train')
-    is_hotel = request.POST.get('is_hotel')
-    is_meal = request.POST.get('is_meal')
-    is_flight = request.POST.get('is_flight')
-    is_water_bottles = request.POST.get('is_water_bottles')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics')
+        is_radio = request.POST.get('is_radio')
+        is_local = request.POST.get('is_local')
+        is_outstation = request.POST.get('is_outstation')
+        is_bus = request.POST.get('is_bus')
+        is_train = request.POST.get('is_train')
+        is_hotel = request.POST.get('is_hotel')
+        is_meal = request.POST.get('is_meal')
+        is_flight = request.POST.get('is_flight')
+        is_water_bottles = request.POST.get('is_water_bottles')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics')
 
-    is_delete = request.POST.get('delete_id')
-    access_token = request.POST.get('access_token_auth','')
-    password = request.POST.get('password','')
-    spoc_id = request.POST.get('spoc_id')
+        is_delete = request.POST.get('delete_id')
+        access_token = request.POST.get('access_token_auth', '')
+        password = request.POST.get('password', '')
+        spoc_id = request.POST.get('spoc_id')
 
-    if corporate_id:
-        corporate_id = corporate_id
-    else:
-        corporate_id = 0
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = 0
 
-    if budget:
-        budget = budget
-    else:
-        budget = 0
+        if budget:
+            budget = budget
+        else:
+            budget = 0
 
-    if expense:
-        expense=expense
-    else:
-        expense=0
+        if expense:
+            expense = expense
+        else:
+            expense = 0
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = 0
-
-    if req_token:
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = 0
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -1989,7 +2030,7 @@ def add_spoc(request):
                                                             budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
                                                              is_water_bottles,is_reverse_logistics,is_delete,access_token,password,spoc_id])
 
-                    print(result)
+
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
@@ -2005,43 +2046,43 @@ def add_spoc(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_spoc(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    group_id = request.POST.get('group_id', '')
-    subgroup_id = request.POST.get('subgroup_id', '')
-    user_cid = request.POST.get('user_cid', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+        user_cid = request.POST.get('user_cid', '')
 
-    user_name = request.POST.get('user_name', '')
-    user_contact = request.POST.get('user_contact', '')
-    email = request.POST.get('email', '')
-    username = request.POST.get('username', '')
-    budget = request.POST.get('budget', '')
-    expense = request.POST.get('expense', '')
+        user_name = request.POST.get('user_name', '')
+        user_contact = request.POST.get('user_contact', '')
+        email = request.POST.get('email', '')
+        username = request.POST.get('username', '')
+        budget = request.POST.get('budget', '')
+        expense = request.POST.get('expense', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    is_delete = request.POST.get('delete_id')
-    access_token = request.POST.get('access_token_auth','')
-    spoc_id = request.POST.get('spoc_id')
+        is_delete = request.POST.get('delete_id')
+        access_token = request.POST.get('access_token_auth', '')
+        spoc_id = request.POST.get('spoc_id')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2067,18 +2108,17 @@ def update_spoc(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_spoc(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    spoc_id = request.POST.get('spoc_id','')
-
-    if req_token:
+        spoc_id = request.POST.get('spoc_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2087,7 +2127,6 @@ def delete_spoc(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('deleteCorporateSpoc', [spoc_id,user_id,user_type])
-
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2102,69 +2141,68 @@ def delete_spoc(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_employee(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    spoc_id = request.POST.get('spoc_id')
-    billing_entity_id = request.POST.get('billing_entity_id', '')
-    core_employee_id = request.POST.get('core_employee_id', '')
-    employee_cid = request.POST.get('employee_cid', '')
+        spoc_id = request.POST.get('spoc_id')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        core_employee_id = request.POST.get('core_employee_id', '')
+        employee_cid = request.POST.get('employee_cid', '')
 
-    employee_name = request.POST.get('employee_name', '')
-    employee_email = request.POST.get('employee_email', '')
-    employee_contact = request.POST.get('employee_contact', '')
-    age = request.POST.get('age', '')
-    gender = request.POST.get('gender')
-    id_proof_type = request.POST.get('id_proof_type')
+        employee_name = request.POST.get('employee_name', '')
+        employee_email = request.POST.get('employee_email', '')
+        employee_contact = request.POST.get('employee_contact', '')
+        age = request.POST.get('age', '')
+        gender = request.POST.get('gender')
+        id_proof_type = request.POST.get('id_proof_type')
 
-    id_proof_no = request.POST.get('id_proof_no', '')
-    is_active = request.POST.get('is_active', '')
-    has_dummy_email = request.POST.get('has_dummy_email', '')
-    fcm_regid = request.POST.get('fcm_regid', '')
-    is_cxo = request.POST.get('is_cxo', '')
-    designation = request.POST.get('designation', '')
-    home_city = request.POST.get('home_city', '')
-    home_address = request.POST.get('home_address', '')
-    assistant_id = request.POST.get('assistant_id', '')
-    date_of_birth = request.POST.get('date_of_birth', '')
-    if date_of_birth:
-        date_of_birth = datetime.strptime(date_of_birth, '%d/%m/%Y %H:%M:%S')
-    else:
-        date_of_birth = None
+        id_proof_no = request.POST.get('id_proof_no', '')
+        is_active = request.POST.get('is_active', '')
+        has_dummy_email = request.POST.get('has_dummy_email', '')
+        fcm_regid = request.POST.get('fcm_regid', '')
+        is_cxo = request.POST.get('is_cxo', '')
+        designation = request.POST.get('designation', '')
+        home_city = request.POST.get('home_city', '')
+        home_address = request.POST.get('home_address', '')
+        assistant_id = request.POST.get('assistant_id', '')
+        date_of_birth = request.POST.get('date_of_birth', '')
+        if date_of_birth:
+            date_of_birth = datetime.strptime(date_of_birth, '%d/%m/%Y %H:%M:%S')
+        else:
+            date_of_birth = None
 
-    is_delete = request.POST.get('delete_id')
-    password = request.POST.get('password','')
-    employee_id = request.POST.get('employee_id')
+        is_delete = request.POST.get('delete_id')
+        password = request.POST.get('password', '')
+        employee_id = request.POST.get('employee_id')
 
-    if employee_id:
-        employee_id = employee_id
-    else:
-        employee_id = '0'
+        if employee_id:
+            employee_id = employee_id
+        else:
+            employee_id = '0'
 
-    if is_delete:
-        is_delete = is_delete
-    else:
-        is_delete = '0'
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
 
-    if assistant_id:
-        assistant_id=assistant_id
-    else:
-        assistant_id=0
+        if assistant_id:
+            assistant_id = assistant_id
+        else:
+            assistant_id = 0
 
-    if age:
-        age:age
-    else:
-        age = 0
-
-    if req_token:
+        if age:
+            age: age
+        else:
+            age = 0
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2175,9 +2213,9 @@ def add_employee(request):
                     result = cursor.callproc('addNewCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
                     fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,billing_entity_id,corporate_id])
-                    print("resut")
+
                     company = dictfetchall(cursor)
-                    print(company)
+
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2192,43 +2230,42 @@ def add_employee(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_employee(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    spoc_id = request.POST.get('spoc_id')
-    billing_entity_id = request.POST.get('billing_entity_id', '')
-    core_employee_id = request.POST.get('core_employee_id', '')
-    employee_cid = request.POST.get('employee_cid', '')
+        spoc_id = request.POST.get('spoc_id')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        core_employee_id = request.POST.get('core_employee_id', '')
+        employee_cid = request.POST.get('employee_cid', '')
 
-    employee_name = request.POST.get('employee_name', '')
-    employee_email = request.POST.get('employee_email', '')
-    employee_contact = request.POST.get('employee_contact', '')
-    age = request.POST.get('age')
-    gender = request.POST.get('gender')
-    id_proof_type = request.POST.get('id_proof_type')
+        employee_name = request.POST.get('employee_name', '')
+        employee_email = request.POST.get('employee_email', '')
+        employee_contact = request.POST.get('employee_contact', '')
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
+        id_proof_type = request.POST.get('id_proof_type')
 
-    id_proof_no = request.POST.get('id_proof_no', '')
-    is_active = request.POST.get('is_active')
-    has_dummy_email = request.POST.get('has_dummy_email')
-    fcm_regid = request.POST.get('fcm_regid')
-    is_cxo = request.POST.get('is_cxo')
-    designation = request.POST.get('designation', '')
-    home_city = request.POST.get('home_city', '')
-    home_address = request.POST.get('home_address', '')
-    assistant_id = request.POST.get('assistant_id', '')
-    date_of_birth = request.POST.get('date_of_birth', '')
-    date_of_birth = datetime.strptime(date_of_birth, '')
+        id_proof_no = request.POST.get('id_proof_no', '')
+        is_active = request.POST.get('is_active')
+        has_dummy_email = request.POST.get('has_dummy_email')
+        fcm_regid = request.POST.get('fcm_regid')
+        is_cxo = request.POST.get('is_cxo')
+        designation = request.POST.get('designation', '')
+        home_city = request.POST.get('home_city', '')
+        home_address = request.POST.get('home_address', '')
+        assistant_id = request.POST.get('assistant_id', '')
+        date_of_birth = request.POST.get('date_of_birth', '')
+        date_of_birth = datetime.strptime(date_of_birth, '')
 
-    employee_id = request.POST.get('employee_id')
-
-    if req_token:
+        employee_id = request.POST.get('employee_id')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2239,7 +2276,7 @@ def update_employee(request):
                     result = cursor.callproc('updateCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
                     fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,employee_id,billing_entity_id])
-                    print(result)
+
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2254,18 +2291,17 @@ def update_employee(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_employee(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    employee_id = request.POST.get('employee_id','')
-
-    if req_token:
+        employee_id = request.POST.get('employee_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2274,7 +2310,6 @@ def delete_employee(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('deleteCorporateEmployee', [employee_id,user_id,user_type])
-
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2289,38 +2324,37 @@ def delete_employee(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 def add_agent(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    emp_id = request.POST.get('emp_id', '')
-    username = request.POST.get('username', '')
-    contact_no = request.POST.get('contact_no', '')
-    email = request.POST.get('email', '')
+        emp_id = request.POST.get('emp_id', '')
+        username = request.POST.get('username', '')
+        contact_no = request.POST.get('contact_no', '')
+        email = request.POST.get('email', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    has_billing_access = request.POST.get('has_billing_access', '')
-    has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
-    has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
-    is_super_admin = request.POST.get('is_super_admin', '')
+        has_billing_access = request.POST.get('has_billing_access', '')
+        has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
+        has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
+        is_super_admin = request.POST.get('is_super_admin', '')
 
-    password = request.POST.get('password', '')
-
-    if req_token:
+        password = request.POST.get('password', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2333,8 +2367,6 @@ def add_agent(request):
                                                           has_voucher_payment_access,has_voucher_approval_access,is_super_admin,password,user_id,
                                                           user_type])
 
-                    print(result)
-
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2349,39 +2381,39 @@ def add_agent(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_agent(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    emp_id = request.POST.get('emp_id', '')
-    username = request.POST.get('username', '')
-    contact_no = request.POST.get('contact_no', '')
-    email = request.POST.get('email', '')
+        emp_id = request.POST.get('emp_id', '')
+        username = request.POST.get('username', '')
+        contact_no = request.POST.get('contact_no', '')
+        email = request.POST.get('email', '')
 
-    is_radio = request.POST.get('is_radio', '')
-    is_local = request.POST.get('is_local', '')
-    is_outstation = request.POST.get('is_outstation', '')
-    is_bus = request.POST.get('is_bus', '')
-    is_train = request.POST.get('is_train', '')
-    is_hotel = request.POST.get('is_hotel', '')
-    is_meal = request.POST.get('is_meal', '')
-    is_flight = request.POST.get('is_flight', '')
-    is_water_bottles = request.POST.get('is_water_bottles', '')
-    is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_radio = request.POST.get('is_radio', '')
+        is_local = request.POST.get('is_local', '')
+        is_outstation = request.POST.get('is_outstation', '')
+        is_bus = request.POST.get('is_bus', '')
+        is_train = request.POST.get('is_train', '')
+        is_hotel = request.POST.get('is_hotel', '')
+        is_meal = request.POST.get('is_meal', '')
+        is_flight = request.POST.get('is_flight', '')
+        is_water_bottles = request.POST.get('is_water_bottles', '')
+        is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
-    has_billing_access = request.POST.get('has_billing_access', '')
-    has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
-    has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
-    is_super_admin = request.POST.get('is_super_admin', '')
+        has_billing_access = request.POST.get('has_billing_access', '')
+        has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
+        has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
+        is_super_admin = request.POST.get('is_super_admin', '')
 
-    agent_id = request.POST.get('agent_id', '')
+        agent_id = request.POST.get('agent_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2393,7 +2425,7 @@ def update_agent(request):
                                                           is_meal,is_flight,is_water_bottles,is_reverse_logistics,has_billing_access,
                                                           has_voucher_payment_access,has_voucher_approval_access,is_super_admin,user_id,
                                                           user_type,agent_id])
-                    print(result)
+
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2408,18 +2440,17 @@ def update_agent(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_agent(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    agent_id = request.POST.get('agent_id','')
-
-    if req_token:
+        agent_id = request.POST.get('agent_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2428,7 +2459,6 @@ def delete_agent(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('deleteAgent', [user_id,user_type,agent_id])
-
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2443,22 +2473,22 @@ def delete_agent(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_group(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    group_id = request.POST.get('group_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('group_id', '')
 
-    if group_id:
-        group_id = group_id
-    else:
-        group_id = '0'
-    user = {}
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2475,22 +2505,21 @@ def view_group(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_group_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    group_id = request.POST.get('group_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('group_id', '')
 
-    if group_id:
-        group_id = group_id
-    else:
-        group_id = '0'
-    user = {}
-
-    if req_token:
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2507,22 +2536,21 @@ def view_group_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_subgroup(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    subgroup_id = request.POST.get('subgroup_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        subgroup_id = request.POST.get('subgroup_id', '')
 
-    if subgroup_id:
-        subgroup_id = subgroup_id
-    else:
-        subgroup_id = '0'
-    user = {}
-
-    if req_token:
+        if subgroup_id:
+            subgroup_id = subgroup_id
+        else:
+            subgroup_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2539,22 +2567,21 @@ def view_subgroup(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_subgroup_auth(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    subgroup_id = request.POST.get('subgroup_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        subgroup_id = request.POST.get('subgroup_id', '')
 
-    if subgroup_id:
-        subgroup_id = subgroup_id
-    else:
-        subgroup_id = '0'
-    user = {}
-
-    if req_token:
+        if subgroup_id:
+            subgroup_id = subgroup_id
+        else:
+            subgroup_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2571,22 +2598,21 @@ def view_subgroup_auth(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_spoc(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    spoc_id = request.POST.get('spoc_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
 
-    if spoc_id:
-        spoc_id = spoc_id
-    else:
-        spoc_id = '0'
-    user = {}
-
-    if req_token:
+        if spoc_id:
+            spoc_id = spoc_id
+        else:
+            spoc_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2603,22 +2629,21 @@ def view_spoc(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_employee(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    employee_id = request.POST.get('employee_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        employee_id = request.POST.get('employee_id', '')
 
-    if employee_id:
-        employee_id = employee_id
-    else:
-        employee_id = '0'
-    user = {}
-
-    if req_token:
+        if employee_id:
+            employee_id = employee_id
+        else:
+            employee_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2635,22 +2660,21 @@ def view_employee(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_agent(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    agent_id = request.POST.get('agent_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        agent_id = request.POST.get('agent_id', '')
 
-    if agent_id:
-        agent_id = agent_id
-    else:
-        agent_id = '0'
-    user = {}
-
-    if req_token:
+        if agent_id:
+            agent_id = agent_id
+        else:
+            agent_id = '0'
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2667,23 +2691,22 @@ def view_agent(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def assessment_codes(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id= corporate_id;
-    else:
-        corporate_id =0 ;
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id;
+        else:
+            corporate_id = 0;
 
-    user = {}
-
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2700,42 +2723,55 @@ def assessment_codes(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_assessment_codes(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    assessment_code = request.POST.get('assessment_code', '')
-    code_desc = request.POST.get('code_desc', '')
-    from_date = request.POST.get('from_date', '')
-    from_date = datetime.strptime(from_date, '%d/%m/%Y')
-    to_date = request.POST.get('to_date', '')
-    to_date = datetime.strptime(to_date, '%d/%m/%Y')
+        corporate_id = request.POST.get('corporate_id', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        code_desc = request.POST.get('code_desc', '')
+        from_date = request.POST.get('from_date', '')
+        from_date = datetime.strptime(from_date, '%d/%m/%Y')
+        to_date = request.POST.get('to_date', '')
+        to_date = datetime.strptime(to_date, '%d/%m/%Y')
+        service_from = request.POST.get('service_from', '')
+        service_from = datetime.strptime(service_from, '%d/%m/%Y')
+        service_to = request.POST.get('service_to', '')
+        service_to = datetime.strptime(service_to, '%d/%m/%Y')
 
-    if from_date:
-        from_date = from_date
-    else:
-        from_date=None
+        if from_date:
+            pass
+        else:
+            from_date = None
 
-    if to_date:
-        to_date =to_date
-    else:
-        to_date =None
+        if to_date:
+            pass
+        else:
+            to_date = None
 
-    user = {}
+        if service_from:
+            pass
+        else:
+            service_from = None
 
-    if req_token:
+        if service_to:
+            pass
+        else:
+            service_to = None
+
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('addCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,user_id,user_type])
+                cursor.callproc('addCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,user_id,user_type,service_from,service_to])
                 agent = dictfetchall(cursor)
                 data = {'success': 1, 'Codes': agent}
                 return JsonResponse(data)
@@ -2746,33 +2782,55 @@ def add_assessment_codes(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_assessment_codes(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    assessment_code = request.POST.get('assessment_code', '')
-    code_desc = request.POST.get('code_desc', '')
-    from_date = request.POST.get('from_date', '')
-    from_date = datetime.strptime(from_date, '%d/%m/%Y')
-    to_date = request.POST.get('to_date', '')
-    to_date = datetime.strptime(to_date, '%d/%m/%Y')
-    code_id = request.POST.get('code_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        code_desc = request.POST.get('code_desc', '')
+        from_date = request.POST.get('from_date', '')
+        from_date = datetime.strptime(from_date, '%d/%m/%Y')
+        to_date = request.POST.get('to_date', '')
+        to_date = datetime.strptime(to_date, '%d/%m/%Y')
+        code_id = request.POST.get('code_id', '')
+        service_from = request.POST.get('service_from', '')
+        service_from = datetime.strptime(service_from, '%d/%m/%Y')
+        service_to = request.POST.get('service_to', '')
+        service_to = datetime.strptime(service_to, '%d/%m/%Y')
 
-    user = {}
+        if from_date:
+            pass
+        else:
+            from_date = None
 
-    if req_token:
+        if to_date:
+            pass
+        else:
+            to_date = None
+
+        if service_from:
+            pass
+        else:
+            service_from = None
+
+        if service_to:
+            pass
+        else:
+            service_to = None
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('updateCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,code_id,user_id,user_type])
+                cursor.callproc('updateCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,code_id,user_id,user_type,service_from,service_to])
                 agent = dictfetchall(cursor)
                 data = {'success': 1, 'Codes': agent}
                 return JsonResponse(data)
@@ -2783,20 +2841,19 @@ def update_assessment_codes(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_assessment_codes(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    code_id = request.POST.get('code_id', '')
+        code_id = request.POST.get('code_id', '')
 
-    user = {}
-
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2813,22 +2870,21 @@ def delete_assessment_codes(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def assessment_cities(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    corporate_id = request.POST.get('corporate_id', '')
-    if corporate_id:
-        corporate_id= corporate_id;
-    else:
-        corporate_id =0 ;
-    user = {}
-
-    if req_token:
+        corporate_id = request.POST.get('corporate_id', '')
+        if corporate_id:
+            corporate_id = corporate_id;
+        else:
+            corporate_id = 0;
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2845,21 +2901,20 @@ def assessment_cities(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_assessment_cities(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    city_name = request.POST.get('city_name', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        city_name = request.POST.get('city_name', '')
 
-    user = {}
-
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2876,22 +2931,21 @@ def add_assessment_cities(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def update_assessment_cities(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    city_name = request.POST.get('city_name', '')
-    city_id = request.POST.get('city_id')
+        corporate_id = request.POST.get('corporate_id', '')
+        city_name = request.POST.get('city_name', '')
+        city_id = request.POST.get('city_id')
 
-    user = {}
-
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2908,20 +2962,19 @@ def update_assessment_cities(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def delete_assessment_cities(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    city_id = request.POST.get('city_id', '')
+        city_id = request.POST.get('city_id', '')
 
-    user = {}
-
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2938,16 +2991,15 @@ def delete_assessment_cities(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 def get_agents(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    user = {}
-
-    if req_token:
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2964,19 +3016,18 @@ def get_agents(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 ################################## Taxi Booking  ###############################
 
 def view_taxi_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    booking_id = request.POST.get('booking_id', '')
-    user = {}
-
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -2984,6 +3035,13 @@ def view_taxi_booking(request):
                 cursor = connection.cursor()
                 cursor.callproc('viewTaxiBooking', [booking_id])
                 emp = dictfetchall(cursor)
+                cursor.close()
+                cursor1 = connection.cursor()
+                booking_id = emp[0]['id']
+                print(booking_id)
+                cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                passanger = dictfetchall(cursor1)
+                emp[0]['Passangers'] = passanger
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
             else:
@@ -2993,17 +3051,16 @@ def view_taxi_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def view_bus_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    booking_id = request.POST.get('booking_id', '')
-    user = {}
-
-    if req_token:
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -3011,6 +3068,13 @@ def view_bus_booking(request):
                 cursor = connection.cursor()
                 cursor.callproc('viewBusBooking', [booking_id])
                 emp = dictfetchall(cursor)
+                cursor.close()
+                cursor1 = connection.cursor()
+                booking_id = emp[0]['id']
+                print(booking_id)
+                cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                passanger = dictfetchall(cursor1)
+                emp[0]['Passangers'] = passanger
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
             else:
@@ -3020,21 +3084,51 @@ def view_bus_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
+def view_train_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('viewBusBooking', [booking_id])
+                emp = dictfetchall(cursor)
+                cursor.close()
+                cursor1 = connection.cursor()
+                booking_id = emp[0]['id']
+                print(booking_id)
+                cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                passanger = dictfetchall(cursor1)
+                emp[0]['Passangers'] = passanger
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+
 def add_city_name(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    city_name = request.POST.get('city_name', '')
-    state_id = request.POST.get('state_id', '')
-
-    print(city_name)
-    print(state_id)
-
-    if req_token:
+        city_name = request.POST.get('city_name', '')
+        state_id = request.POST.get('state_id', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3045,7 +3139,6 @@ def add_city_name(request):
 
                     cursor.callproc('addCities', [city_name,state_id])
                     result = dictfetchall(cursor)
-                    print(result)
                     data = {'success': 1, 'message': "Data Insert Successfully",'id':result}
                     return JsonResponse(data)
                 except Exception as e:
@@ -3060,18 +3153,18 @@ def add_city_name(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_state_name(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    city_state = request.POST.get('city_state', '')
-    country_id = request.POST.get('country_id', '')
+        city_state = request.POST.get('city_state', '')
+        country_id = request.POST.get('country_id', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3096,17 +3189,17 @@ def add_state_name(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_country_name(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    city_country = request.POST.get('city_country', '')
+        city_country = request.POST.get('city_country', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3131,55 +3224,65 @@ def add_country_name(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_taxi_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    user_id = request.POST.get('user_id', '')
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    entity_id = request.POST.get('entity_id', '')
-    spoc_id = request.POST.get('spoc_id', '')
-    group_id = request.POST.get('group_id', '')
-    subgroup_id = request.POST.get('subgroup_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        entity_id = request.POST.get('entity_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
 
-    tour_type = request.POST.get('tour_type', '')
-    pickup_city = request.POST.get('pickup_city', '')
-    pickup_location = request.POST.get('pickup_location', '')
-    drop_location = request.POST.get('drop_location', '')
-    pickup_datetime = request.POST.get('pickup_datetime', '')
-    pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
-    taxi_type = request.POST.get('taxi_type')
-    package_id = request.POST.get('package_id')
-    no_of_days = request.POST.get('no_of_days', '')
-    assessment_code = request.POST.get('assessment_code', '')
-    assessment_city_id = request.POST.get('assessment_city_id', '')
+        tour_type = request.POST.get('tour_type', '')
+        pickup_city = request.POST.get('pickup_city', '')
+        pickup_location = request.POST.get('pickup_location', '')
+        drop_location = request.POST.get('drop_location', '')
+        pickup_datetime = request.POST.get('pickup_datetime', '')
+        pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
+        taxi_type = request.POST.get('taxi_type')
+        package_id = request.POST.get('package_id')
+        no_of_days = request.POST.get('no_of_days', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
 
+        if taxi_type:
+            taxi_type = taxi_type
+        else:
+            taxi_type = 0
 
-    if taxi_type:
-        taxi_type = taxi_type
-    else:
-        taxi_type = 0
+        if package_id:
+            package_id = package_id
+        else:
+            package_id = 0
 
-    if package_id:
-        package_id = package_id
-    else:
-        package_id = 0
+        if no_of_days:
+            no_of_days = no_of_days
+        else:
+            no_of_days = 0
 
-    if no_of_days:
-        no_of_days = no_of_days
-    else:
-        no_of_days = 0
+        if assessment_code:
+            pass
+        else:
+            assessment_code =0
 
-    reason_booking = request.POST.get('reason_booking', '')
-    no_of_seats = request.POST.get('no_of_seats', '')
+        if assessment_city_id:
+            pass
+        else:
+            assessment_city_id =0
 
-    employees = request.POST.getlist('employees', '')
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
 
-    if req_token:
+        employees = request.POST.getlist('employees', '')
+        print("employss")
+        print(employees)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3216,44 +3319,39 @@ def add_taxi_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def add_bus_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
-    user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', '')
 
-    corporate_id = request.POST.get('corporate_id', '')
-    spoc_id = request.POST.get('spoc_id', '')
-    group_id = request.POST.get('group_id', '')
-    subgroup_id = request.POST.get('subgroup_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
 
-    from_location = request.POST.get('from', '')
-    to_location = request.POST.get('to', '')
-    bus_type = request.POST.get('bus_type', '')
-    booking_datetime = request.POST.get('booking_datetime', '')
-    print(booking_datetime)
-    booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+        from_location = request.POST.get('from', '')
+        to_location = request.POST.get('to', '')
+        bus_type = request.POST.get('bus_type', '')
+        booking_datetime = request.POST.get('booking_datetime', '')
+        booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
 
-    journey_datetime = request.POST.get('journey_datetime', '')
-    journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
-    print(journey_datetime)
-    entity_id = request.POST.get('entity_id', '')
-    preferred_bus = request.POST.get('preferred_bus', '')
-    assessment_code = request.POST.get('assessment_code', '')
-    assessment_city_id = request.POST.get('assessment_city_id', '')
+        journey_datetime = request.POST.get('journey_datetime', '')
+        journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
+        entity_id = request.POST.get('entity_id', '')
+        preferred_bus = request.POST.get('preferred_bus', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
 
-    reason_booking = request.POST.get('reason_booking', '')
-    no_of_seats = request.POST.get('no_of_seats', '')
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
 
-    employees = request.POST.getlist('employees', '')
-
-    print(employees)
-
-    if req_token:
+        employees = request.POST.getlist('employees', '')
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3266,8 +3364,8 @@ def add_bus_booking(request):
                                                       to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,
                                                              entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id])
                     booking_id = dictfetchall(cursor)
-                    print("response")
-                    print(booking_id)
+
+
                     cursor.close()
                     for id in booking_id:
                         for e in employees:
@@ -3294,10 +3392,81 @@ def add_bus_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
+def add_train_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id', '')
+
+        corporate_id = request.POST.get('corporate_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        from_location = request.POST.get('from', '')
+        to_location = request.POST.get('to', '')
+        train_type = request.POST.get('train_type', '')
+        booking_datetime = request.POST.get('booking_datetime', '')
+        booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+
+        journey_datetime = request.POST.get('journey_datetime', '')
+        journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
+        entity_id = request.POST.get('entity_id', '')
+        preferred_bus = request.POST.get('preferred_bus', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+
+        employees = request.POST.getlist('employees', '')
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+
+                    cursor.callproc('addTrainBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
+                                                      to_location,train_type,train_type,train_type,booking_datetime,journey_datetime,
+                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                    booking_id = dictfetchall(cursor)
+
+
+                    cursor.close()
+                    for id in booking_id:
+                        for e in employees:
+                            cursor = connection.cursor()
+                            cursor.callproc('addEmployeeTrainBooking',[id['id'],e])
+                            booking_id = dictfetchall(cursor)
+
+                            cursor.close()
+                            data = {'success': 1, 'message': "Insert Success"}
+                            return JsonResponse(data)
+                    else:
+                        data = {'success': 1, 'message': "Insert Success"}
+                        return JsonResponse(data)
+
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 

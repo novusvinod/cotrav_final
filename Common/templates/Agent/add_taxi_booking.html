@@ -1,6 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends "Agent/layout/header.html" %}
 
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -28,7 +28,7 @@
 
                               <div class="form-group row">
                                     <label class="col-sm-4" >Select Company</label>
-                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 Select2 " required>
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 myselect " required>
                                          <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -40,7 +40,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 myselect2" required>
+                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 myselect" required>
                                       <option value="">Select Tour Type </option>
                                       <option value="1">Radio </option>
                                       <option value="2">Local </option>
@@ -245,7 +245,9 @@
 </div>
 <!-- end page content -->
 
-
+<script type="text/javascript">
+   $(".myselect").select2();
+</script>
 
 
 
@@ -253,8 +255,8 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
 
@@ -337,7 +339,7 @@ $("#corporate_id").change(function(){
 
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token D3J08FSQE6CWL0759W7B748HTHRCJ44MG3R0N7IXUWKOGQ23JW1MP7WWQ2GS",
+                'Authorization': "Token UEDEI1H266EBQVRLSIYK09QCP575EPILV8SQKJ3MWEWLEAEWB3X3C4IV6KN5",
                 'usertype': 10
             }
 
@@ -426,9 +428,7 @@ $("#corporate_id").change(function(){
     {% endfor %}
 
 
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
+  
 
 
 
@@ -448,3 +448,4 @@ var options = {
 </script>
 
 
+{% endblock %}

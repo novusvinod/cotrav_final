@@ -13,13 +13,14 @@ urlpatterns = [
 ######################### END CORPORATE URLS ####################
 
     path('api/login', api_views.login),
+    path('api/logout', api_views.logout),
 
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
     path('api/add_state_name', api_views.add_state_name),
     path('api/add_country_name', api_views.add_country_name),
     path('api/get_assessment_code', api_views.get_assessment_code),
-
+    path('api/get_assessment_city', api_views.get_assessment_city),
 
     path('api/corporate_package', api_views.corporate_package),
 
@@ -118,4 +119,5 @@ urlpatterns = [
 
     path('api/add_taxi_booking', api_views.add_taxi_booking),
     path('api/add_bus_booking', api_views.add_bus_booking),
+    path('api/add_train_booking', api_views.add_train_booking),
 ]

@@ -21,6 +21,8 @@ def login_action(request):
     context = {}
     user_type = ''
     if request.method == 'POST':
+
+
         username = request.POST.get('email', '')
         password = request.POST.get('password', '')
         corporate_login_type = request.POST.get('corporate_login_type', '')
@@ -114,7 +116,7 @@ def logout_action(request):
         user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=access_token)
     elif login_type == '6':
         user = Corporate_Employee_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == 'agent':
+    elif login_type == '10':
         user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
     else:
         return None

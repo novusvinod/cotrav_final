@@ -22,4 +22,9 @@ urlpatterns = [
     path('Corporate/Approver_2/view-bus-booking/<int:id>', approver_2_views.view_bus_booking),
     path('Corporate/Approver_2/accept-bus-booking/<int:id>', approver_2_views.accept_bus_booking),
     path('Corporate/Approver_2/reject-bus-booking/<int:id>', approver_2_views.reject_bus_booking),
+
+    path('Corporate/Approver_2/train-bookings/<int:id>', approver_2_views.train_bookings),
+    path('Corporate/Approver_2/view-train-booking/<int:id>', approver_2_views.view_train_booking),
+    path('Corporate/Approver_2/accept-train-booking/<int:id>', approver_2_views.accept_train_booking),
+    path('Corporate/Approver_2/reject-train-booking/<int:id>', approver_2_views.reject_train_booking),
 ]

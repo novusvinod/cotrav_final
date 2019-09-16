@@ -1030,6 +1030,95 @@ def reject_bus_booking(request,id):
         return HttpResponseRedirect("/login")
 
 
+#####################################  TRAIN  #####################################
+
+
+def train_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "admin_train_bookings"
+        payload = {'corporate_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/train_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/train_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_train_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_train_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/view_train_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/view_train_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def accept_train_booking(request,id):
+    request = get_request()
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_accept_train_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reject_train_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_reject_train_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/train-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/train-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+
+
+
+
+
+
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

@@ -16,12 +16,12 @@ from Common.models import Corporate_Agent_Login_Access_Token
 
 
 def admin_taxi_bookings(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -29,6 +29,15 @@ def admin_taxi_bookings(request):
                 cursor = connection.cursor()
                 cursor.callproc('getAllAdminTaxiBookings', [corporate_id])
                 emp = dictfetchall(cursor)
+                cursor.close()
+                for e in emp:
+                    cursor1 = connection.cursor()
+                    booking_id = e['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    e['Passangers'] = passanger
+                    cursor1.close()
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
             else:
@@ -38,18 +47,18 @@ def admin_taxi_bookings(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def admin_accept_taxi_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    booking_id = request.POST.get('booking_id', '')
-    user_id = request.POST.get('user_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -66,18 +75,18 @@ def admin_accept_taxi_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def admin_reject_taxi_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    booking_id = request.POST.get('booking_id', '')
-    user_id = request.POST.get('user_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -94,17 +103,17 @@ def admin_reject_taxi_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def admin_bus_bookings(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    corporate_id = request.POST.get('corporate_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -112,6 +121,15 @@ def admin_bus_bookings(request):
                 cursor = connection.cursor()
                 cursor.callproc('getAllAdminBusBookings', [corporate_id])
                 emp = dictfetchall(cursor)
+                cursor.close()
+                for e in emp:
+                    cursor1 = connection.cursor()
+                    booking_id = e['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    e['Passangers'] = passanger
+                    cursor1.close()
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
             else:
@@ -121,18 +139,18 @@ def admin_bus_bookings(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def admin_accept_bus_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    booking_id = request.POST.get('booking_id', '')
-    user_id = request.POST.get('user_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -149,18 +167,18 @@ def admin_accept_bus_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def admin_reject_bus_booking(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    booking_id = request.POST.get('booking_id', '')
-    user_id = request.POST.get('user_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        user = {}
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
@@ -177,10 +195,101 @@ def admin_reject_bus_booking(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+############################### TRAIN #################################
+
+def admin_train_bookings(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+        user = {}
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllAdminTrainBookings', [corporate_id])
+                emp = dictfetchall(cursor)
+                cursor.close()
+                for e in emp:
+                    cursor1 = connection.cursor()
+                    booking_id = e['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    e['Passangers'] = passanger
+                    cursor1.close()
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
+def admin_accept_train_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        user = {}
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('acceptAdminTrainBookings', [user_id,user_type,booking_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def admin_reject_train_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        user = {}
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('rejectAdminTrainBookings', [user_id,user_type,booking_id])
+                emp = dictfetchall(cursor)
+                data = {'success': 1, 'Bookings': emp}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 

@@ -41,23 +41,27 @@
                                              {% if operators %}
                                             {% for operator in operators %}
 	                                                 <select class="col-sm-8 form-control myselect" name="type" required>
-	                                                <option value="Taxi" {% if operator.type == 'Taxi' %} selected {%endif%}>Taxi</option>
-	                                                <option value="Bus" {% if operator.type == 'Bus' %} selected {%endif%}>Bus</option>
-                                                    <option value="Train" {% if operator.type == 'Train' %} selected {%endif%}>Train</option>
-                                                    <option value="Hotel" {% if operator.type == 'Hotel' %} selected {%endif%}>Hotel</option>
-                                                    <option value="Flight" {% if operator.type == 'Flight' %} selected {%endif%}>Flight</option>
-                                                    <option value="Meal" {% if operator.type == 'Meal' %} selected {%endif%}>Meal</option>
+	                                                <option value="1" {% if operator.service_type_id == 1 %} selected {%endif%}>Radio</option>
+                                                    <option value="2" {% if operator.service_type_id == 2 %} selected {%endif%}>Local</option>
+                                                    <option value="3" {% if operator.service_type_id == 3 %} selected {%endif%}>Outstation</option>
+	                                                <option value="4" {% if operator.service_type_id == 4 %} selected {%endif%}>Bus</option>
+                                                    <option value="5" {% if operator.service_type_id == 5 %} selected {%endif%}>Train</option>
+                                                    <option value="6" {% if operator.service_type_id == 6 %} selected {%endif%}>Hotel</option>
+                                                    <option value="7" {% if operator.service_type_id == 7 %} selected {%endif%}>Flight</option>
+                                                    <option value="8" {% if operator.service_type_id == 8 %} selected {%endif%}>Meal</option>
 	                                            </select>
                                             {% endfor %}
                                               {% else %}
 
                                                 <select class="col-sm-8 form-control myselect" name="type" required>
-	                                                <option value="Taxi">Taxi</option>
-	                                                <option value="Bus">Bus</option>
-                                                    <option value="Train">Train</option>
-                                                    <option value="Hotel">Hotel</option>
-                                                    <option value="Flight">Flight</option>
-                                                    <option value="Meal">Meal</option>
+	                                                <option value="1">Radio</option>
+                                                    <option value="2">Local</option>
+                                                    <option value="3">Outstation</option>
+	                                                <option value="4">Bus</option>
+                                                    <option value="5">Train</option>
+                                                    <option value="6">Hotel</option>
+                                                    <option value="7">Flight</option>
+                                                    <option value="8">Meal</option>
 
 	                                            </select>
                                              {% endif %}
