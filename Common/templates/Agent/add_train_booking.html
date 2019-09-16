@@ -5,10 +5,9 @@
 {% if user %}
 <!-- start page content -->
 
-
 <div class="page-content-wrapper">
     <div class="page-content">
-        <form method="post" action="/agents/add-bus-booking/{{user.id}}">
+        <form method="post" action="/agents/add-train-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
             <input type="hidden" name="subgroup_id" id="subgroup_id">
@@ -50,17 +49,16 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Train Type*</label>
-                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
-                                      <option value="1">AC Seater</option>
-                                      <option value="2">AC Sleeper</option>
-                                      <option value="3">NON AC Seater</option>
-                                      <option value="4">NON AC Sleeper</option>
+                                 <select name="train_type" class="form-control col-sm-8 myselect">
+                                      {% for type in types %}
+                                        <option value="{{type.id}}">{{type.name}}</option>
+                                        {% endfor %}
                                   </select>
                             </div>
 
                         <div class="form-group row">
-                                <label class="col-sm-4" >Preferred Bus*</label>
-                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
+                                <label class="col-sm-4" >Preferred Train</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_train" placeholder="Preferred Bus" required>
                             </div>
 
                          <div class="form-group row">
@@ -300,7 +298,7 @@ $("#corporate_id").change(function(){
 
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token D3J08FSQE6CWL0759W7B748HTHRCJ44MG3R0N7IXUWKOGQ23JW1MP7WWQ2GS",
+                'Authorization': "Token {{request.session.access_token}}",
                 'usertype': 10
             }
 

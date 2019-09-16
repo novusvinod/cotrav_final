@@ -756,6 +756,31 @@ def taxi_types(request):
         return JsonResponse(data)
 
 
+def train_types(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                cursor.callproc('getAllTrainTypes', [])
+                train = dictfetchall(cursor)
+                data = {'success': 1, 'Types': train}
+                return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def add_taxi_type(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -2714,6 +2739,7 @@ def assessment_codes(request):
                 cursor = connection.cursor()
                 cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id])
                 agent = dictfetchall(cursor)
+                
                 data = {'success': 1, 'Codes': agent}
                 return JsonResponse(data)
             else:
@@ -3348,6 +3374,16 @@ def add_bus_booking(request):
         assessment_code = request.POST.get('assessment_code', '')
         assessment_city_id = request.POST.get('assessment_city_id', '')
 
+        if assessment_code:
+            pass
+        else:
+            assessment_code=0
+
+        if assessment_city_id:
+            pass
+        else:
+            assessment_city_id=0
+
         reason_booking = request.POST.get('reason_booking', '')
         no_of_seats = request.POST.get('no_of_seats', '')
 
@@ -3417,9 +3453,19 @@ def add_train_booking(request):
         journey_datetime = request.POST.get('journey_datetime', '')
         journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
         entity_id = request.POST.get('entity_id', '')
-        preferred_bus = request.POST.get('preferred_bus', '')
+        preferred_train = request.POST.get('preferred_train', '')
         assessment_code = request.POST.get('assessment_code', '')
         assessment_city_id = request.POST.get('assessment_city_id', '')
+
+        if assessment_code:
+            pass
+        else:
+            assessment_code=0
+
+        if assessment_city_id:
+            pass
+        else:
+            assessment_city_id=0
 
         reason_booking = request.POST.get('reason_booking', '')
         no_of_seats = request.POST.get('no_of_seats', '')
@@ -3435,7 +3481,7 @@ def add_train_booking(request):
 
                     cursor.callproc('addTrainBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
                                                       to_location,train_type,train_type,train_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                                                             entity_id,preferred_train,reason_booking,no_of_seats,assessment_code,assessment_city_id])
                     booking_id = dictfetchall(cursor)
 
 

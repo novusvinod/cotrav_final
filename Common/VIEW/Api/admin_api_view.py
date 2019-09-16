@@ -21,13 +21,14 @@ def admin_taxi_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         corporate_id = request.POST.get('corporate_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllAdminTaxiBookings', [corporate_id])
+                cursor.callproc('getAllAdminTaxiBookings', [corporate_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:
@@ -113,13 +114,14 @@ def admin_bus_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         corporate_id = request.POST.get('corporate_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllAdminBusBookings', [corporate_id])
+                cursor.callproc('getAllAdminBusBookings', [corporate_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:
@@ -206,13 +208,14 @@ def admin_train_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         corporate_id = request.POST.get('corporate_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllAdminTrainBookings', [corporate_id])
+                cursor.callproc('getAllAdminTrainBookings', [corporate_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:

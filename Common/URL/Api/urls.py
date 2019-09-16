@@ -24,6 +24,8 @@ urlpatterns = [
 
     path('api/corporate_package', api_views.corporate_package),
 
+    path('api/train_types', api_views.train_types),
+
     path('api/taxi_types', api_views.taxi_types),
     path('api/add_taxi_type', api_views.add_taxi_type),
     path('api/update_taxi_type', api_views.update_taxi_type),

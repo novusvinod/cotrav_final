@@ -23,13 +23,14 @@ def employee_taxi_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         spoc_id = request.POST.get('spoc_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllEmployeeTaxiBookings', [spoc_id])
+                cursor.callproc('getAllEmployeeTaxiBookings', [spoc_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:
@@ -135,13 +136,14 @@ def employee_bus_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         spoc_id = request.POST.get('spoc_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllEmployeeBusBookings', [spoc_id])
+                cursor.callproc('getAllEmployeeBusBookings', [spoc_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:
@@ -248,13 +250,14 @@ def employee_train_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         spoc_id = request.POST.get('spoc_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllEmployeeTrainBookings', [spoc_id])
+                cursor.callproc('getAllEmployeeTrainBookings', [spoc_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:

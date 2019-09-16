@@ -2046,7 +2046,7 @@ def delete_operator_driver(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-def taxi_bookings(request,booking_type):
+def taxi_bookings(request,id):
     request = get_request()
 
     if 'login_type' in request.session:
@@ -2054,7 +2054,7 @@ def taxi_bookings(request,booking_type):
         access_token = request.session['access_token']
 
         url = settings.API_BASE_URL + "agent_taxi_bookings"
-        payload = {'booking_type': booking_type}
+        payload = {'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
@@ -2544,7 +2544,7 @@ def add_train_booking(request,id):
             booking_datetime = request.POST.get('booking_datetime', '')
             journey_datetime = request.POST.get('journey_datetime', '')
             entity_id = request.POST.get('entity_id', '')
-            preferred_bus = request.POST.get('preferred_bus', '')
+            preferred_train = request.POST.get('preferred_train', '')
 
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
@@ -2557,7 +2557,7 @@ def add_train_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'train_type':train_type,'booking_datetime':booking_datetime,
-            'journey_datetime':journey_datetime,'entity_id':entity_id,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'preferred_bus':preferred_bus,'employees':employees}
+            'journey_datetime':journey_datetime,'entity_id':entity_id,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'preferred_train':preferred_train,'employees':employees}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_train_booking"
@@ -2585,10 +2585,14 @@ def add_train_booking(request,id):
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
             cities = cities['Cities']
 
+            url_train = settings.API_BASE_URL + "train_types"
+            trains = getDataFromAPI(login_type, access_token, url_train, payload)
+            types = trains['Types']
+
             if id:
-                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities})
+                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types})
             else:
-                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities})
+                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types})
         else:
             return HttpResponseRedirect("/agents/login")
 

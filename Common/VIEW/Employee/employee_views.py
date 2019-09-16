@@ -217,9 +217,10 @@ def taxi_bookings(request,id):
         request = get_request()
         login_type = request.session['login_type']
         access_token = request.session['access_token']
+        user_id = request.user.id
 
         url = settings.API_BASE_URL + "employee_taxi_bookings"
-        payload = {'spoc_id': id}
+        payload = {'spoc_id': user_id,'booking_type':id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
@@ -376,9 +377,10 @@ def bus_bookings(request,id):
         request = get_request()
         login_type = request.session['login_type']
         access_token = request.session['access_token']
+        user_id = request.user.id
 
         url = settings.API_BASE_URL + "employee_bus_bookings"
-        payload = {'spoc_id': id}
+        payload = {'spoc_id': user_id,'booking_type':id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
@@ -513,9 +515,10 @@ def train_bookings(request,id):
         request = get_request()
         login_type = request.session['login_type']
         access_token = request.session['access_token']
+        user_id = request.user.id
 
         url = settings.API_BASE_URL + "employee_train_bookings"
-        payload = {'spoc_id': id}
+        payload = {'spoc_id': user_id,'booking_type':id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:

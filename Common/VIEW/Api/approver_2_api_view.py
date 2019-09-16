@@ -21,13 +21,14 @@ def approver_2_taxi_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllApprover_2TaxiBookings', [approver_2_id])
+                cursor.callproc('getAllApprover_2TaxiBookings', [approver_2_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:
@@ -111,13 +112,14 @@ def approver_2_bus_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllApprover_2BusBookings', [approver_2_id])
+                cursor.callproc('getAllApprover_2BusBookings', [approver_2_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:
@@ -201,13 +203,14 @@ def approver_2_train_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
+        booking_type = request.POST.get('booking_type', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 cursor = connection.cursor()
-                cursor.callproc('getAllApprover_2TrainBookings', [approver_2_id])
+                cursor.callproc('getAllApprover_2TrainBookings', [approver_2_id,booking_type])
                 emp = dictfetchall(cursor)
                 cursor.close()
                 for e in emp:

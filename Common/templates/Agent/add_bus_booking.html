@@ -300,7 +300,7 @@ $("#corporate_id").change(function(){
 
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token D3J08FSQE6CWL0759W7B748HTHRCJ44MG3R0N7IXUWKOGQ23JW1MP7WWQ2GS",
+                'Authorization': "Token {{request.session.access_token}}",
                 'usertype': 10
             }
 

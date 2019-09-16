@@ -5,40 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38edb318-cd5a-4a39-b6c2-35133688e42a" name="Default Changelist" comment="Add Entity Function">
-      <change afterPath="$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Agent/assign_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Agent/train_bookings.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Agent/view_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Admin/train_bookings.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Admin/view_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Approver_1/train_bookings.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Approver_1/view_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Approver_2/train_bookings.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Approver_2/view_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Employee/add_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Employee/train_bookings.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Employee/view_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Spoc/add_train_booking.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Spoc/train_bookings.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Common/templates/Company/Spoc/view_train_booking.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Admin/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Admin/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Agent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Agent/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Api/admin_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/admin_urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Api/agent_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/agent_urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Api/approver_1_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/approver_1_urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Api/approver_2_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/approver_2_urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Api/employee_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/employee_urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Api/spoc_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/spoc_urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/URL/Api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Api/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Approver_1/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Approver_1/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Approver_2/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Approver_2/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Employee/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Employee/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/URL/Spoc/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/URL/Spoc/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Api/admin_api_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Api/admin_api_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/VIEW/Api/agent_api_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Api/agent_api_view.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Api/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Api/api_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Api/approver_1_api_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Api/approver_1_api_view.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Api/approver_2_api_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Api/approver_2_api_view.py" afterDir="false" />
@@ -48,19 +18,9 @@
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Approver_2/approver_2_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Approver_2/approver_2_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Employee/employee_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Employee/employee_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/VIEW/basic_web_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Common/VIEW/basic_web_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/add_agent.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/add_agent.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/add_operator.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/add_operator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/add_bus_booking.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/add_bus_booking.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/templates/Agent/add_taxi_booking.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/add_taxi_booking.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/assessment_codes.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/assessment_codes.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/layout/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/layout/menu_bar_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/layout/menu_bar_layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Company/Admin/layout/menu_bar_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Company/Admin/layout/menu_bar_layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Company/Approver_1/layout/menu_bar_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Company/Approver_1/layout/menu_bar_layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Company/Approver_2/layout/menu_bar_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Company/Approver_2/layout/menu_bar_layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Company/Employee/layout/menu_bar_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Company/Employee/layout/menu_bar_layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Common/templates/Company/Spoc/layout/menu_bar_layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Company/Spoc/layout/menu_bar_layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Required_Commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Required_Commands.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -70,20 +30,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/templates/Agent/layout/header.html">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/api_views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+            <state relative-caret-position="428">
+              <caret line="2741" column="16" selection-start-line="2741" selection-start-column="16" selection-end-line="2741" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Common/templates/Agent/add_taxi_booking.html">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/employee_api_view.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="430" column="2" selection-start-line="430" selection-start-column="2" selection-end-line="430" selection-end-column="2" />
+            <state relative-caret-position="-3842">
+              <caret line="38" column="79" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/spoc_api_view.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1394">
+              <caret line="31" column="79" selection-start-line="31" selection-start-column="79" selection-end-line="31" selection-end-column="79" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -100,9 +78,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>assis</find>
-      <find>assess</find>
-      <find>code_id_edit</find>
       <find>taxi</find>
       <find>assessment</find>
       <find>billing_entities</find>
@@ -124,12 +99,15 @@
       <find>add_tax</find>
       <find>agent_bus_bookings</find>
       <find>bus_boo</find>
-      <find>bus_bookings</find>
-      <find>agent_taxi_bookings</find>
       <find>admin_bus_bookings</find>
-      <find>train_bookings</find>
       <find>bus</find>
       <find>myselect</find>
+      <find>taxi_types</find>
+      <find>agent_taxi_bookings</find>
+      <find>add_train_booking</find>
+      <find>bus_bookings</find>
+      <find>agent_train_bookings</find>
+      <find>train_bookings</find>
     </findStrings>
     <replaceStrings>
       <replace>Corporate/Spoc/company-employees</replace>
@@ -184,7 +162,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Common/templates/Company/Approves_2/bus_bookings.html" />
         <option value="$PROJECT_DIR$/Common/templates/Agent/operator_contacts.html" />
         <option value="$PROJECT_DIR$/Common/templates/Agent/operator_banks.html" />
         <option value="$PROJECT_DIR$/Common/templates/Agent/taxitypes.html" />
@@ -200,27 +177,18 @@
         <option value="$PROJECT_DIR$/Required_Commands.txt" />
         <option value="$PROJECT_DIR$/Common/URL/Agent/urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Admin/urls.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py" />
         <option value="$PROJECT_DIR$/Common/URL/Approver_1/urls.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Approver_1/approver_1_views.py" />
         <option value="$PROJECT_DIR$/Common/URL/Approver_2/urls.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Approver_2/approver_2_views.py" />
         <option value="$PROJECT_DIR$/Common/URL/Employee/urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Spoc/urls.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Employee/employee_views.py" />
         <option value="$PROJECT_DIR$/Common/URL/Api/admin_urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Api/agent_urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Api/approver_1_urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Api/approver_2_urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Api/employee_urls.py" />
         <option value="$PROJECT_DIR$/Common/URL/Api/spoc_urls.py" />
-        <option value="$PROJECT_DIR$/Common/URL/Api/urls.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Api/admin_api_view.py" />
         <option value="$PROJECT_DIR$/Common/VIEW/Api/agent_api_view.py" />
-        <option value="$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html" />
         <option value="$PROJECT_DIR$/Common/templates/Agent/layout/menu_bar_layout.html" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py" />
         <option value="$PROJECT_DIR$/Common/templates/Company/Admin/layout/menu_bar_layout.html" />
         <option value="$PROJECT_DIR$/Common/templates/Company/Approver_1/layout/menu_bar_layout.html" />
         <option value="$PROJECT_DIR$/Common/templates/Company/Approver_2/layout/menu_bar_layout.html" />
@@ -228,13 +196,23 @@
         <option value="$PROJECT_DIR$/Common/templates/Company/Spoc/layout/menu_bar_layout.html" />
         <option value="$PROJECT_DIR$/Common/templates/Company/Spoc/train_bookings.html" />
         <option value="$PROJECT_DIR$/Common/templates/Company/Employee/train_bookings.html" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Api/approver_1_api_view.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Api/spoc_api_view.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Api/employee_api_view.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Api/approver_2_api_view.py" />
-        <option value="$PROJECT_DIR$/Common/VIEW/Api/api_views.py" />
         <option value="$PROJECT_DIR$/Common/templates/Agent/layout/header.html" />
         <option value="$PROJECT_DIR$/Common/templates/Agent/add_taxi_booking.html" />
+        <option value="$PROJECT_DIR$/Common/templates/Agent/add_bus_booking.html" />
+        <option value="$PROJECT_DIR$/Common/URL/Api/urls.py" />
+        <option value="$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Api/admin_api_view.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Api/approver_1_api_view.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Api/approver_2_api_view.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Api/spoc_api_view.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Approver_1/approver_1_views.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Approver_2/approver_2_views.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Employee/employee_views.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Api/employee_api_view.py" />
+        <option value="$PROJECT_DIR$/Common/VIEW/Api/api_views.py" />
       </list>
     </option>
   </component>
@@ -280,38 +258,6 @@
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
               <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
               <item name="Common" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="Agent" type="462c0819:PsiDirectoryNode" />
-              <item name="layout" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
-              <item name="Common" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="Company" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
-              <item name="Common" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="Company" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
-              <item name="Common" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="Company" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="layout" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
-              <item name="Common" type="462c0819:PsiDirectoryNode" />
               <item name="URL" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -320,6 +266,13 @@
               <item name="Common" type="462c0819:PsiDirectoryNode" />
               <item name="URL" type="462c0819:PsiDirectoryNode" />
               <item name="Agent" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="URL" type="462c0819:PsiDirectoryNode" />
+              <item name="Api" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
@@ -339,7 +292,7 @@
               <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
               <item name="Common" type="462c0819:PsiDirectoryNode" />
               <item name="VIEW" type="462c0819:PsiDirectoryNode" />
-              <item name="Agent" type="462c0819:PsiDirectoryNode" />
+              <item name="Admin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
@@ -347,6 +300,34 @@
               <item name="Common" type="462c0819:PsiDirectoryNode" />
               <item name="VIEW" type="462c0819:PsiDirectoryNode" />
               <item name="Api" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+              <item name="Approver_1" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+              <item name="Approver_2" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+              <item name="Employee" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CoTrav" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="VIEW" type="462c0819:PsiDirectoryNode" />
+              <item name="Spoc" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CoTrav" type="b2602c69:ProjectViewProjectNode" />
@@ -451,7 +432,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25318065" />
@@ -481,56 +462,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Add Entity Function" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="706">
-          <caret line="1122" selection-start-line="1122" selection-end-line="1122" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/URL/Admin/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="39" column="74" selection-start-line="39" selection-start-column="62" selection-end-line="39" selection-end-column="74" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/URL/Approver_1/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="84" selection-start-line="20" selection-start-column="72" selection-end-line="20" selection-end-column="84" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Approver_1/approver_1_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="455" column="68" selection-start-line="455" selection-start-column="68" selection-end-line="455" selection-end-column="68" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Approver_2/approver_2_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="791">
-          <caret line="476" selection-start-line="476" selection-end-line="476" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/URL/Approver_2/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -567,26 +498,6 @@
           <caret line="19" column="56" lean-forward="true" selection-start-line="19" selection-start-column="56" selection-end-line="19" selection-end-column="56" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Employee/employee_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="910">
-          <caret line="591" column="29" selection-start-line="591" selection-start-column="29" selection-end-line="591" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="927">
-          <caret line="596" column="62" selection-start-line="596" selection-start-column="62" selection-end-line="596" selection-end-column="62" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -631,16 +542,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/URL/Api/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="553">
-          <caret line="121" column="53" selection-start-line="121" selection-start-column="53" selection-end-line="121" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/URL/Api/admin_urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -648,13 +549,6 @@
           <folding>
             <element signature="e#0#36#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="51" column="62" selection-start-line="51" selection-start-column="62" selection-end-line="51" selection-end-column="62" />
         </state>
       </provider>
     </entry>
@@ -671,36 +565,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
           <caret line="202" column="82" selection-start-line="202" selection-start-column="82" selection-end-line="202" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/URL/Api/agent_urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="42" column="44" lean-forward="true" selection-start-line="42" selection-start-column="44" selection-end-line="42" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="2302" column="33" lean-forward="true" selection-start-line="2302" selection-start-column="33" selection-end-line="2302" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/URL/Agent/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="80" column="69" selection-start-line="80" selection-start-column="55" selection-end-line="80" selection-end-column="69" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -785,76 +649,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/admin_api_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="740">
-          <caret line="279" column="49" selection-start-line="279" selection-start-column="49" selection-end-line="279" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/spoc_api_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="35" column="40" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/employee_api_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1734">
-          <caret line="261" column="40" selection-start-line="261" selection-start-column="40" selection-end-line="261" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/approver_2_api_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3706">
-          <caret line="34" column="40" selection-start-line="34" selection-start-column="40" selection-end-line="34" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/approver_1_api_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1207">
-          <caret line="33" column="40" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/agent_api_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2382">
-          <caret line="1202" column="16" selection-start-line="1202" selection-start-column="16" selection-end-line="1202" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/api_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="45" column="156" selection-start-line="45" selection-start-column="156" selection-end-line="45" selection-end-column="156" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/templates/Agent/layout/header.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -864,8 +658,189 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Common/templates/Agent/add_taxi_booking.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="430" column="2" selection-start-line="430" selection-start-column="2" selection-end-line="430" selection-end-column="2" />
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Agent/add_train_booking.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1450">
+          <caret line="59" column="72" selection-start-line="59" selection-start-column="72" selection-end-line="59" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Api/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="502">
+          <caret line="123" column="61" selection-start-line="123" selection-start-column="44" selection-end-line="123" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/templates/Agent/add_bus_booking.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4764">
+          <caret line="300" column="17" lean-forward="true" selection-start-line="300" selection-start-column="17" selection-end-line="300" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Api/agent_urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="31" column="70" selection-start-line="31" selection-start-column="51" selection-end-line="31" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/URL/Agent/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="461">
+          <caret line="80" column="69" selection-start-line="80" selection-start-column="55" selection-end-line="80" selection-end-column="69" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/agent_api_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="976" column="59" lean-forward="true" selection-start-line="976" selection-start-column="8" selection-end-line="976" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/approver_2_api_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/admin_api_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="116" column="59" lean-forward="true" selection-start-line="116" selection-start-column="8" selection-end-line="116" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Agent/agent_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="2492" column="32" selection-start-line="2492" selection-start-column="20" selection-end-line="2492" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Admin/admin_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="960" column="48" lean-forward="true" selection-start-line="960" selection-start-column="8" selection-end-line="960" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Approver_1/approver_1_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="387" column="33" selection-start-line="387" selection-start-column="8" selection-end-line="387" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Approver_2/approver_2_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1103">
+          <caret line="394" column="61" selection-start-line="394" selection-start-column="61" selection-end-line="394" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Employee/employee_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1845">
+          <caret line="520" column="55" selection-start-line="520" selection-start-column="55" selection-end-line="520" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Spoc/spoc_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-280">
+          <caret line="492" column="33" lean-forward="true" selection-start-line="492" selection-start-column="8" selection-end-line="492" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/approver_1_api_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/employee_api_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3842">
+          <caret line="38" column="79" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Required_Commands.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="10" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/spoc_api_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1394">
+          <caret line="31" column="79" selection-start-line="31" selection-start-column="79" selection-end-line="31" selection-end-column="79" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/VIEW/Api/api_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="2741" column="16" selection-start-line="2741" selection-start-column="16" selection-end-line="2741" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

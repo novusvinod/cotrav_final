@@ -6,6 +6,7 @@
 <!-- start page content -->
 
 
+
 <div class="page-content-wrapper">
     <div class="page-content">
         <form method="post" action="/agents/add-taxi-booking/{{user.id}}">
@@ -428,7 +429,9 @@ $("#corporate_id").change(function(){
     {% endfor %}
 
 
-  
+    $( "#pickup_city" ).autocomplete({
+      source: city_Names
+    });
 
 
 
