@@ -1,5 +1,6 @@
-{% include "Company/Approver_1/layout/header.html" %}
-{% include "Company/Approver_1/layout/menu_bar_layout.html" %}
+{% extends 'Company/Approver_1/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -71,7 +72,7 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Company/Approver_1/layout/footer.html" %}
+{% endblock %}
 
 
 

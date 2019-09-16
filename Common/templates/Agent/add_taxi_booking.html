@@ -6,7 +6,6 @@
 <!-- start page content -->
 
 
-
 <div class="page-content-wrapper">
     <div class="page-content">
         <form method="post" action="/agents/add-taxi-booking/{{user.id}}">
@@ -70,23 +69,23 @@
                                  <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date" id="" placeholder="Pickup Date/Time" required>
                             </div>
 
-                              <div class="form-group row" id="tr_taxi_type" style="display: none">
+                              <div class="form-group row" id="tr_taxi_type">
                                     <label class="col-sm-4" >Taxi Type</label>
-                                     <select name="taxi_type" class="form-control col-sm-8 myselect" >
+                                     <select name="taxi_type" class="form-control col-sm-8 myselect" id="select_taxi_type" >
                                         {% for taxi in taxies %}
                                         <option value="{{taxi.id}}">{{taxi.name}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
 
-                             <div class="form-group row" id="tr_package" style="display: none">
+                             <div class="form-group row" id="tr_package">
                                     <label class="col-sm-4" >Select Package</label>
                                      <select name="package_id" id="package_id" class="form-control col-sm-8 myselect">
 
                                     </select>
                                 </div>
 
-                              <div class="form-group row" id="tr_no_of_days" style="display: none">
+                              <div class="form-group row" id="tr_no_of_days">
                                     <label class="col-sm-4" >No of Days</label>
                                       <input type="text" class="form-control col-sm-8" name="no_of_days" id="id_no_of_days" placeholder="No of Days">
                             </div>
@@ -257,17 +256,22 @@
 {% endif %}
 
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
-
 <script type="text/javascript">
 
-$(function() {
-    $('#tr_taxi_type').hide();
-    $('#tr_package').hide();
-    $('#tr_no_of_days').hide();
-    $('#emp_row_2').hide();
-    $('#emp_row_3').hide();
-    $('#emp_row_4').hide();
+    $( document ).ready(function() {
+
+        $('#tr_taxi_type').hide();
+        $('#tr_package').hide();
+        $('#tr_no_of_days').hide();
+        $('#emp_row_2').hide();
+        $('#emp_row_3').hide();
+        $('#emp_row_4').hide();
+
+        
+    });
+
+    
+
 
 $(".no_of_seats").change(function()
     {
@@ -316,7 +320,9 @@ $("#tour_type").change(function()
                 $('#tr_no_of_days').show();
                 break;
               }
-    	}
+        }
+        
+       
     });
 
 $("#corporate_id").change(function(){
@@ -345,7 +351,8 @@ $("#corporate_id").change(function(){
             }
 
         });
-<!--   For Entity  -->
+//   For Entity  
+
      $.post(var_url,{ corporate_id: corporate_id },
       function(data)
       {
@@ -360,7 +367,9 @@ $("#corporate_id").change(function(){
        }
        });
 
-<!--        For SPOC    -->
+//       For SPOC    
+
+
     var_url_spoc = '{{ API_BASE_URL }}'+'spocs'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
@@ -377,7 +386,9 @@ $("#corporate_id").change(function(){
        }
        });
 
- <!--        For Employees    -->
+ //       For Employees    
+
+
     var_url_spoc = '{{ API_BASE_URL }}'+'employees'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
@@ -400,7 +411,8 @@ $("#corporate_id").change(function(){
 
 
 
-  <!--        For Package    -->
+  //       For Package    
+
     var_url_spoc = '{{ API_BASE_URL }}'+'corporate_package'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
@@ -421,7 +433,8 @@ $("#corporate_id").change(function(){
 
 
 
-  <!--        For GET All Cities    -->
+  //      For GET All Cities    
+
   var city_Names = [];
 
     {% for city in cities %}
@@ -429,9 +442,7 @@ $("#corporate_id").change(function(){
     {% endfor %}
 
 
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
+  
 
 
 
@@ -447,7 +458,6 @@ var options = {
    var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
    var auto3 = new google.maps.places.Autocomplete(drop_location, options);
 
-});
 </script>
 
 

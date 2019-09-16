@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -149,9 +150,10 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Admin/layout/footer.html" %}
+
 
 <script type="text/javascript">
+
 $(function() {
 
   $('#model_add_new_group').on('show.bs.modal', function (event) {
@@ -186,3 +188,4 @@ $(function() {
 </script>
 
 
+{% endblock %}

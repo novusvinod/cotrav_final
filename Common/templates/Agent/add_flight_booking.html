@@ -1,6 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
 
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -245,7 +245,7 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
+
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
@@ -300,7 +300,7 @@ $("#corporate_id").change(function(){
 
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token OWTTZ71SP6VCTXOKNBNXD475E1O9NU8YXK30TUGSH6PII3MFWU8XWT13JJ5W",
+                'Authorization': "Token {{request.session.access_token}}",
                 'usertype': 10
             }
 
@@ -410,3 +410,4 @@ var options = {
 </script>
 
 
+{% endblock %}

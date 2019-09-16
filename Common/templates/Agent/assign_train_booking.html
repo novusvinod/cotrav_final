@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -337,8 +338,6 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
-
 <script type="text/javascript">
 
 $('#taxi_details').change(function(){
@@ -357,3 +356,6 @@ $('#taxi_details').change(function(){
      }
 });
  </script>
+
+
+ {% endblock %}

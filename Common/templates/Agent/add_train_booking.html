@@ -1,13 +1,15 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
 <!-- start page content -->
 
+
 <div class="page-content-wrapper">
     <div class="page-content">
-        <form method="post" action="/agents/add-train-booking/{{user.id}}">
+        <form method="post" action="/agents/add-bus-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
             <input type="hidden" name="subgroup_id" id="subgroup_id">
@@ -49,16 +51,17 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Train Type*</label>
-                                 <select name="train_type" class="form-control col-sm-8 myselect">
-                                      {% for type in types %}
-                                        <option value="{{type.id}}">{{type.name}}</option>
-                                        {% endfor %}
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
                                   </select>
                             </div>
 
                         <div class="form-group row">
-                                <label class="col-sm-4" >Preferred Train</label>
-                                 <input type="text" class="form-control col-sm-8" name="preferred_train" placeholder="Preferred Bus" required>
+                                <label class="col-sm-4" >Preferred Bus*</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
                             </div>
 
                          <div class="form-group row">
@@ -244,7 +247,7 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
+
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
@@ -407,3 +410,4 @@ var options = {
 </script>
 
 
+{% endblock %}

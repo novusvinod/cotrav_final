@@ -1,6 +1,6 @@
-{% include "Company/Employee/layout/header.html" %}
-{% include "Company/Employee/layout/menu_bar_layout.html" %}
+{% extends 'Company/Employee/layout/header.html' %}
 
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -60,7 +60,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Employee/layout/footer.html" %}
+{% endblock %}
 
 
 

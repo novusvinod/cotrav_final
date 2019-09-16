@@ -2739,7 +2739,6 @@ def assessment_codes(request):
                 cursor = connection.cursor()
                 cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id])
                 agent = dictfetchall(cursor)
-                
                 data = {'success': 1, 'Codes': agent}
                 return JsonResponse(data)
             else:

@@ -1,5 +1,7 @@
-{% include "Company/Spoc/layout/header.html" %}
-{% include "Company/Spoc/layout/menu_bar_layout.html" %}
+{% extends 'Company/Spoc/layout/header.html' %}
+
+{% block content %}
+
 
 {% if user %}
 <!-- start page content -->
@@ -89,7 +91,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Spoc/layout/footer.html" %}
+{% endblock %}
 
 
 

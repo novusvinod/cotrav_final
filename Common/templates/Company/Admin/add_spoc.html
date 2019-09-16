@@ -1,5 +1,7 @@
-{% include "Company/Admin/layout/header.html" %}
-{% include "Company/Admin/layout/menu_bar_layout.html" %}
+{% extends 'Company/Admin/layout/header.html' %}
+
+{% block content %}
+
 
 
 {% if user %}
@@ -416,7 +418,6 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Admin/layout/footer.html" %}
 
 <script type="text/javascript">
  $(function() {
@@ -424,3 +425,6 @@
  });
 
 </script>
+
+
+{% endblock %}
