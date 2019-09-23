@@ -1,11 +1,46 @@
+#mysqlclient For Commulication
+sudo yum install gcc
+yum provides mysql_config
+yum install mariadb-devel
+pip3 install pipenv
+sudo yum install openssl-devel
+sudo yum install libffi-devel
+    yum install python34-devel.x86_64
+    yum groupinstall -y 'development tools'
+    pip3 install mysql-connector
+    pip install mysqlclient
+
+
+---------ubuntu----------
+sudo apt-get install python-dev python3-dev
+sudo apt-get install libmysqlclient-dev
+pip install pymysql
+pip install mysqlclient
+
+pip3 install mysqlclient
+
 #Django middleware that keep request instance for every thread.
-pip install django-middleware-global-request
+REQUIRED PYTHON_3
+pip3 install django-middleware-global-request
 
 #Django REST framework is a powerful and flexible toolkit for building Web APIs.
-pip install djangorestframework
+pip3 install djangorestframework
 
 # Django REST framework CALL Internal API
-pip install requests
+pip3 install requests
 
+#For MYSQL _
+wget http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+yum install mysql57-community-release-el7-9.noarch.rpm
+yum install mysql-community-server mysql-community-devel
 
+Apache restrat show error log
+/usr/local/apache/bin/httpd -k restart
+sudo nano /etc/hosts
 
+ sudo chown -R root /home/cotrav/public_html
+ chmod go-rwx /home/cotrav/public_html
+
+sudo systemctl restart httpd.service
+
+netstat -lnp | grep 80

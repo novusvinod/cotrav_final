@@ -1,5 +1,7 @@
-{% include "Company/Spoc/layout/header.html" %}
-{% include "Company/Spoc/layout/menu_bar_layout.html" %}
+{% extends 'Company/Spoc/layout/header.html' %}
+
+{% block content %}
+
 
 {% if user %}
 <!-- start page content -->
@@ -13,6 +15,13 @@
                     <div class="card-head">
                         <header>ALL CORPORATE BUS BOOKINGS</header>
                              <div class="row p-b-20">
+                                 <div class="row">
+                                     <div class="col-md-6">
+                                            <div class="btn-group">
+                                                <a class="btn btn-info" href="/Corporate/Spoc/add-bus-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
+                                            </div>
+                                        </div>
+                                    </div>
 
                             </div>
                         <div class="tools">
@@ -23,13 +32,6 @@
                     </div>
                     <div class="card-body ">
 
-                        <div class="row">
-                             <div class="col-md-6">
-                                    <div class="btn-group">
-                                        <a class="btn btn-info" href="/Corporate/Spoc/add-bus-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
-                                    </div>
-                                </div>
-                            </div>
 
                         <div class="table-scrollable table-bordered">
 
@@ -66,8 +68,7 @@
 
 
                                     <td>
-                                        <a href="/Corporate/Spoc/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        <a href="/Corporate/Spoc/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -89,7 +90,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Spoc/layout/footer.html" %}
+{% endblock %}
 
 
 

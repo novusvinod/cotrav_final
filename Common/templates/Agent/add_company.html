@@ -1,6 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
 
+{% block content %}
 
 {% if user.status %}
 			<!-- start page content -->
@@ -30,27 +30,27 @@
 
                                           <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Corporate Name</label>
-                                            <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="corporate_name" placeholder="Corporate Name">
+                                            <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="corporate_name" placeholder="Corporate Name" required>
                                         </div>
 
                                         <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Corporate Code</label>
-                                            <input type="text" class="col-sm-8 form-control" name="corporate_code"  placeholder="Corporate Code">
+                                            <input type="text" class="col-sm-8 form-control" name="corporate_code"  placeholder="Corporate Code" required>
                                         </div>
 
                                         <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Contact Name</label>
-                                            <input type="text" class="col-sm-8 form-control" name="contact_person_name" placeholder="Contact Name">
+                                            <input type="text" class="col-sm-8 form-control" name="contact_person_name" placeholder="Contact Name" required>
                                         </div>
 
                                          <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Contact No</label>
-                                            <input type="number" class="col-sm-8 form-control" name="contact_person_no" placeholder="Contact No">
+                                            <input type="number" class="col-sm-8 form-control" name="contact_person_no" placeholder="Contact No" required>
                                         </div>
 
                                         <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Contact Email</label>
-                                            <input type="email" class="col-sm-8 form-control" name="contact_person_email" placeholder="Enter email address">
+                                            <input type="email" class="col-sm-8 form-control" name="contact_person_email" placeholder="Enter email address" required>
                                         </div>
 
                                       <div class="form-group row">
@@ -315,8 +315,6 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
-
 <script type="text/javascript">
  $(function() {
     $("#has_auth_level").on('change',function(){
@@ -331,4 +329,4 @@
 </script>
 
 
-
+{% endblock %}

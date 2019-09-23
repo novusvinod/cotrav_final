@@ -29,7 +29,8 @@ ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static"),
-    '/Python_Project_TaxiVaxi/CoTrav/Common/static/',
+    os.path.join(BASE_DIR,"Common/static/"),
+    os.path.join(BASE_DIR,"landing_style/static"),
 ]
 
 ######################### AUTH ############################
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Common',
+    'landing',
     'django_global_request',
     'rest_framework'
 ]
@@ -88,7 +90,7 @@ ROOT_URLCONF = 'CoTrav.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -159,3 +161,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+

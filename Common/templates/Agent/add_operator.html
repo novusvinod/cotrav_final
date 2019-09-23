@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -40,24 +41,28 @@
                                                 <label class="col-sm-4" for="simpleFormEmail">Operator Type</label>
                                              {% if operators %}
                                             {% for operator in operators %}
-	                                                 <select class="col-sm-8 form-control" name="type">
-	                                                <option value="Taxi" {% if operator.type == 'Taxi' %} selected {%endif%}>Taxi</option>
-	                                                <option value="Bus" {% if operator.type == 'Bus' %} selected {%endif%}>Bus</option>
-                                                    <option value="Train" {% if operator.type == 'Train' %} selected {%endif%}>Train</option>
-                                                    <option value="Hotel" {% if operator.type == 'Hotel' %} selected {%endif%}>Hotel</option>
-                                                    <option value="Flight" {% if operator.type == 'Flight' %} selected {%endif%}>Flight</option>
-                                                    <option value="Meal" {% if operator.type == 'Meal' %} selected {%endif%}>Meal</option>
+	                                                 <select class="col-sm-8 form-control myselect" name="type" required>
+	                                                <option value="1" {% if operator.service_type_id == 1 %} selected {%endif%}>Radio</option>
+                                                    <option value="2" {% if operator.service_type_id == 2 %} selected {%endif%}>Local</option>
+                                                    <option value="3" {% if operator.service_type_id == 3 %} selected {%endif%}>Outstation</option>
+	                                                <option value="4" {% if operator.service_type_id == 4 %} selected {%endif%}>Bus</option>
+                                                    <option value="5" {% if operator.service_type_id == 5 %} selected {%endif%}>Train</option>
+                                                    <option value="6" {% if operator.service_type_id == 6 %} selected {%endif%}>Hotel</option>
+                                                    <option value="7" {% if operator.service_type_id == 7 %} selected {%endif%}>Flight</option>
+                                                    <option value="8" {% if operator.service_type_id == 8 %} selected {%endif%}>Meal</option>
 	                                            </select>
                                             {% endfor %}
                                               {% else %}
 
-                                                <select class="col-sm-8 form-control" name="type">
-	                                                <option value="Taxi">Taxi</option>
-	                                                <option value="Bus">Bus</option>
-                                                    <option value="Train">Train</option>
-                                                    <option value="Hotel">Hotel</option>
-                                                    <option value="Flight">Flight</option>
-                                                    <option value="Meal">Meal</option>
+                                                <select class="col-sm-8 form-control myselect" name="type" required>
+	                                                <option value="1">Radio</option>
+                                                    <option value="2">Local</option>
+                                                    <option value="3">Outstation</option>
+	                                                <option value="4">Bus</option>
+                                                    <option value="5">Train</option>
+                                                    <option value="6">Hotel</option>
+                                                    <option value="7">Flight</option>
+                                                    <option value="8">Meal</option>
 
 	                                            </select>
                                              {% endif %}
@@ -68,10 +73,10 @@
 
                                             {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="username" placeholder="Login User Name" value="{{operator.username}}">
+                                            <input type="text" class="col-sm-8 form-control" name="username" placeholder="Login User Name" value="{{operator.username}}" required>
                                             {% endfor %}
                                               {% else %}
-                                               <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="username" placeholder="Login User Name">
+                                               <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="username" placeholder="Login User Name" required>
                                             {% endif %}
                                         </div>
 
@@ -79,10 +84,10 @@
                                             <label class="col-sm-4" for="simpleFormEmail">Operator Name</label>
                                             {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_name" value="{{operator.operator_name}}">
+                                            <input type="text" class="col-sm-8 form-control" name="operator_name" value="{{operator.operator_name}}" required>
                                             {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_name" placeholder="Operator Name">
+                                            <input type="text" class="col-sm-8 form-control" name="operator_name" placeholder="Operator Name" required>
                                                 {% endif %}
                                         </div>
 
@@ -90,10 +95,10 @@
                                             <label class="col-sm-4" for="simpleFormEmail">Operator Email</label>
                                           {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_email" value="{{operator.operator_email}}">
+                                            <input type="text" class="col-sm-8 form-control" name="operator_email" value="{{operator.operator_email}}" required>
                                             {% endfor %}
                                               {% else %}
-                                            <input type="email" class="col-sm-8 form-control" name="operator_email" placeholder="Operator Email">
+                                            <input type="email" class="col-sm-8 form-control" name="operator_email" placeholder="Operator Email" required>
                                           {% endif %}
                                         </div>
 
@@ -101,10 +106,10 @@
                                             <label class="col-sm-4" for="simpleFormEmail">Operator Contact</label>
                                           {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" value="{{operator.operator_contact}}">
+                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" value="{{operator.operator_contact}}" required>
                                             {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" placeholder="Operator Contact">
+                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" placeholder="Operator Contact" required>
                                           {% endif %}
                                         </div>
 
@@ -141,109 +146,6 @@
                         <div class="col-md-4 col-sm-4">
                             <div class="card card-box">
                                 <div class="card-head">
-                                    <header>Contact Person / Account Details</header>
-                                     <button
-				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
-				                           data-upgraded = ",MaterialButton">
-				                           <i class = "material-icons">more_vert</i>
-				                        </button>
-				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-				                           data-mdl-for = "panel-button">
-				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
-				                        </ul>
-                                </div>
-                                <div class="card-body " >
-
-                                          <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Person Name</label>
-                                              {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="contact_name" value="{{operator.contact_name}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="contact_name" placeholder="Person Name">
-                                              {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Person Email</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="contact_email"value="{{operator.contact_email}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="email" class="col-sm-8 form-control" name="contact_email" placeholder="Person Email">
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Person No</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="contact_no" value="{{operator.contact_no}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="contact_no" placeholder="Person No">
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Beneficiary Name</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="beneficiary_name" value="{{operator.beneficiary_name}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="beneficiary_name" placeholder="Beneficiary Name">
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Beneficiary Account No</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="beneficiary_account_no" value="{{operator.beneficiary_account_no}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="beneficiary_account_no" placeholder="Beneficiary Account No">
-                                         {% endif %}
-                                        </div>
-
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Bank Name</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="bank_name" value="{{operator.bank_name}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="bank_name" placeholder="Bank Name">
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">IFSC Code</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="ifsc_code" value="{{operator.ifsc_code}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="ifsc_code" placeholder="IFSC Code">
-                                         {% endif %}
-                                        </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="col-md-4 col-sm-4">
-                            <div class="card card-box">
-                                <div class="card-head">
                                     <header>Other Details</header>
                                     <button id = "panel-button2"
 				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
@@ -264,7 +166,7 @@
                                          {% if operators %}
                                             {% for operator in operators %}
 
-                                              <select class="col-sm-8 form-control" name="is_service_tax_applicable">
+                                              <select class="col-sm-8 form-control " name="is_service_tax_applicable">
 	                                                <option value="1" {% if operator.is_service_tax_applicable == 1 %} selected {%endif%}>Yes</option>
 	                                                <option value="0" {% if operator.is_service_tax_applicable == 0 %} selected {%endif%}>No</option>
 	                                            </select>
@@ -349,34 +251,44 @@
 
 
 
-                                        <div class="form-group">
-                                            <div class="offset-md-3 col-md-9">
-                                                <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" class="btn btn-default">Cancel</button>
-                                            </div>
-                                        </div>
+
 
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                          <div class="form-group">
+                                            <div class="offset-md-6 col-md-9">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+
+                    </div>
+                </div>
+
  </form>
   </div>
 </div>
 
 <!-- end page content -->
 
-
+<script type="text/javascript">
+   $(".myselect").select2();
+</script>
 
 
 {% else %}
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
-
 <script type="text/javascript">
  $(function() {
 
  });
 </script>
+
+{% endblock %}

@@ -174,10 +174,9 @@ def add_company_rate(request, id):
             payload = {'corporate_id': id}
             company = getDataFromAPI(login_type, access_token, url, payload)
             if company['success'] == 1:
-                company_rates = company['Corporate_Retes']
-                return render(request, "Company/Admin/company_rates.html", {'corporate_rates': company_rates})
+                return HttpResponseRedirect("/Corporate/Admin/company-rates/" + id, {'message': "Added Successfully"})
             else:
-                return render(request, "Company/Admin/company_rates.html", {'entities': {}})
+                return HttpResponseRedirect("/Corporate/Admin/company-rates/" + id, {'message': "Added Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -224,11 +223,9 @@ def add_company_entity(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Admin/company-billing_entities/" + corporate_id,
-                                            {'message': "Added Successfully"})
+                return HttpResponseRedirect("/Corporate/Admin/company-billing_entities/" + corporate_id,{'message': "Added Successfully"})
             else:
-                return HttpResponseRedirect("/Corporate/Admin/company-billing_entities/" + corporate_id,
-                                            {'message': "Record Not Added"})
+                return HttpResponseRedirect("/Corporate/Admin/company-billing_entities/" + corporate_id,{'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
 
@@ -340,11 +337,9 @@ def update_company_subgroup(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + str(id),
-                                            {'message': "Update Successfully"})
+                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + str(id), {'message': "Update Successfully"})
             else:
-                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + str(id),
-                                            {'message': "Record Not Updated"})
+                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + str(id), {'message': "Record Not Updated"})
         else:
             return HttpResponseRedirect("/login")
 
@@ -532,11 +527,9 @@ def add_company_subgroup_auth(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id,
-                                            {'message': "Added Successfully"})
+                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id,{'message': "Added Successfully"})
             else:
-                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id,
-                                            {'message': "Record Not Added"})
+                return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
 
@@ -675,9 +668,9 @@ def add_spocs(request, id):
             print(url)
             print(company)
             if company['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Admin/company-admins/" + str(id), {'message': "Added Successfully"})
+                return HttpResponseRedirect("/Corporate/Admin/company-spoc/" + str(id), {'message': "Added Successfully"})
             else:
-                return HttpResponseRedirect("/Corporate/company-spocs/" + str(id), {'message': "Record Not Added"})
+                return HttpResponseRedirect("/Corporate/Admin/company-spoc/" + str(id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -699,9 +692,10 @@ def add_spocs(request, id):
                 corporate_id = spoc['corporate_id']
 
             url = settings.API_BASE_URL + "groups"
-            payload = {'corporate_id': corporate_id}
+            payload = {'corporate_id': request.user.corporate_id}
             company = getDataFromAPI(login_type, access_token, url, payload)
             groups = company['Groups']
+
             url_subgroup = settings.API_BASE_URL + "subgroups"
             company_sub = getDataFromAPI(login_type, access_token, url_subgroup, payload)
             subgroups = company_sub['Subgroups']
@@ -781,9 +775,9 @@ def add_employee(request, id):
             print(url)
             print(company)
             if company['success'] == 1:
-                return HttpResponseRedirect("/Corporate/company-employees/" + str(id), {'message': "Added Successfully"})
+                return HttpResponseRedirect("/Corporate/Admin/company-employees/" + str(id), {'message': "Added Successfully"})
             else:
-                return HttpResponseRedirect("/Corporate/company-employees/" + str(id), {'message': "Record Not Added"})
+                return HttpResponseRedirect("/Corporate/Admin/company-employees/" + str(id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -877,8 +871,10 @@ def taxi_bookings(request,id):
         login_type = request.session['login_type']
         access_token = request.session['access_token']
 
+        corporate_id = request.user.corporate_id
+
         url = settings.API_BASE_URL + "admin_taxi_bookings"
-        payload = {'corporate_id': id}
+        payload = {'booking_type': id,'corporate_id':corporate_id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
@@ -923,13 +919,9 @@ def accept_taxi_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            url = settings.API_BASE_URL + "admin_taxi_bookings"
-            payload = {'corporate_id': request.user.corporate_id}
-            company = getDataFromAPI(login_type, access_token, url, payload)
-            booking = company['Bookings']
-            return render(request, "Company/Admin/taxi_bookings.html",{'bookings': booking})
+            return HttpResponseRedirect("/Corporate/Admin/taxi-bookings/1", {'message': "Operation Successfully"})
         else:
-            return render(request, "Company/Admin/taxi_bookings.html",{})
+            return HttpResponseRedirect("/Corporate/Admin/taxi-bookings/1", {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
 
@@ -951,9 +943,9 @@ def reject_taxi_booking(request,id):
             payload = {'corporate_id': request.user.corporate_id}
             company = getDataFromAPI(login_type, access_token, url, payload)
             booking = company['Bookings']
-            return render(request, "Company/Admin/taxi_bookings.html", {'bookings': booking})
+            return HttpResponseRedirect("/Corporate/Admin/taxi-bookings/1", {'message': "Operation Successfully"})
         else:
-            return render(request, "Company/Admin/taxi_bookings.html",{})
+            return HttpResponseRedirect("/Corporate/Admin/taxi-bookings/1", {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
 
@@ -966,9 +958,10 @@ def bus_bookings(request,id):
     if 'login_type' in request.session:
         login_type = request.session['login_type']
         access_token = request.session['access_token']
+        corporate_id = request.user.corporate_id
 
         url = settings.API_BASE_URL + "admin_bus_bookings"
-        payload = {'corporate_id': id}
+        payload = {'corporate_id': corporate_id,'booking_type':id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
@@ -1013,13 +1006,9 @@ def accept_bus_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            url = settings.API_BASE_URL + "admin_bus_bookings"
-            payload = {'corporate_id': request.user.corporate_id}
-            company = getDataFromAPI(login_type, access_token, url, payload)
-            booking = company['Bookings']
-            return render(request, "Company/Admin/bus_bookings.html",{'bookings': booking})
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/1", {'message': "Operation Successfully"})
         else:
-            return render(request, "Company/Admin/bus_bookings.html",{})
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/1", {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
 
@@ -1037,15 +1026,268 @@ def reject_bus_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            url = settings.API_BASE_URL + "admin_bus_bookings"
-            payload = {'corporate_id': request.user.corporate_id}
-            company = getDataFromAPI(login_type, access_token, url, payload)
-            booking = company['Bookings']
-            return render(request, "Company/Admin/bus_bookings.html", {'bookings': booking})
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/1", {'message': "Operation Successfully"})
         else:
-            return render(request, "Company/Admin/bus_bookings.html",{})
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/1" , {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
+
+
+#####################################  TRAIN  #####################################
+
+
+def train_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        corporate_id = request.user.corporate_id
+
+        url = settings.API_BASE_URL + "admin_train_bookings"
+        payload = {'corporate_id':corporate_id,'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/train_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/train_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_train_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_train_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/view_train_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/view_train_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def accept_train_booking(request,id):
+    request = get_request()
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_accept_train_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/1", {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/bus-bookings/1", {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reject_train_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_reject_train_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/train-bookings/1", {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/train-bookings/1", {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+#####################################  Hotels  #####################################
+
+
+def hotel_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        corporate_id = request.user.corporate_id
+
+        url = settings.API_BASE_URL + "admin_hotel_bookings"
+        payload = {'corporate_id':corporate_id,'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/hotel_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/hotel_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_hotel_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_hotel_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/view_hotel_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/view_hotel_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def accept_hotel_booking(request,id):
+    request = get_request()
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_accept_hotel_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/hotel-bookings/1", {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/hotel-bookings/1", {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reject_hotel_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_reject_hotel_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/hotel-bookings/1", {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/hotel-bookings/1", {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+#####################################  FLIGHT  #####################################
+
+
+def flight_bookings(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        corporate_id = request.user.corporate_id
+
+        url = settings.API_BASE_URL + "admin_flight_bookings"
+        payload = {'corporate_id':corporate_id,'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/flight_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/flight_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_flight_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_flight_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/view_flight_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Admin/view_flight_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def accept_flight_booking(request,id):
+    request = get_request()
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_accept_flight_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/flight-bookings/1", {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/flight-bookings/1", {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reject_flight_booking(request,id):
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "admin_reject_flight_booking"
+        payload = {'booking_id': id,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            return HttpResponseRedirect("/Corporate/Admin/flight-bookings/1", {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/flight-bookings/1", {'message': "Operation Successfully"})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+
+
+
 
 
 

@@ -21,4 +21,15 @@ urlpatterns = [
     path('Corporate/Spoc/add-bus-booking/<int:id>', spoc_views.add_bus_booking),
     path('Corporate/Spoc/view-bus-booking/<int:id>', spoc_views.view_bus_booking),
 
+    path('Corporate/Spoc/train-bookings/<int:id>', spoc_views.train_bookings),
+    path('Corporate/Spoc/add-train-booking/<int:id>', spoc_views.add_train_booking),
+    path('Corporate/Spoc/view-train-booking/<int:id>', spoc_views.view_train_booking),
+
+    path('Corporate/Spoc/hotel-bookings/<int:id>', spoc_views.hotel_bookings),
+    path('Corporate/Spoc/add-hotel-booking/<int:id>', spoc_views.add_hotel_booking),
+    path('Corporate/Spoc/view-hotel-booking/<int:id>', spoc_views.view_hotel_booking),
+
+    path('Corporate/Spoc/flight-bookings/<int:id>', spoc_views.flight_bookings),
+    path('Corporate/Spoc/add-flight-booking/<int:id>', spoc_views.add_flight_booking),
+    path('Corporate/Spoc/view-flight-booking/<int:id>', spoc_views.view_flight_booking),
 ]

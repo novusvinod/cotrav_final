@@ -1,0 +1,362 @@
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
+
+{% if user %}
+<!-- start page content -->
+{% for booking in bookings %}
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Onward Flight Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+<form method="post" action="/agents/assign-flight-booking/{{booking.id}}">
+    <input type="hidden" name="booking_id" value="{{booking.id}}">
+    <input type="hidden" name="user_id" value="{{user.id}}">
+    <input type="hidden" name="no_of_passanger" value="{{booking.no_of_seats}}">
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Flight Type</label>
+                            <div class="col-sm-7">
+                            <select name="flight_type" id="flight_type" class="form-control myselect" required>
+                                    <option value="Domestic">Domestic</option>
+                                    <option value="International">International</option>
+                               </select>
+                            </div>   
+                        </div>
+
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Seat Type</label>
+                            <div class="col-sm-7">
+
+                                <select name="seat_type" id="seat_type" class="form-control myselect" required>
+                                   <option value="Economy" >Economy</option>
+                                   <option value="Corporate Economy" >Corporate Economy</option>
+                                   <option value="Premium Economy" >Premium Economy</option>
+                                   <option value="Business" >Business</option>
+                               </select>
+
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Trip Type</label>
+                            <div class="col-sm-7">
+                                    <select name="trip_type" id="trip_type" class="form-control myselect" required>
+                                           <option value="One Way" >One Way</option>
+                                           <option value="Round Trip" >Round Trip</option>
+                                       </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Fare Type</label>
+                            <div class="col-sm-7">
+                                    <select name="fare_type" id="fare_type" class="form-control myselect" required>
+                                           <option value="Refundable" >Refundable</option>
+                                           <option value="Non Refundable" >Non Refundable</option>
+                                           <option value="Partially Refundable">Partial Refundable</option>
+                                       </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Is Meal Included</label>
+                            <div class="col-sm-7">
+                                    <select name="meal_is_include" id="meal_is_include" class="form-control myselect" required>
+                                           <option value="1" >Yes</option>
+                                           <option value="0">No</option>
+                                    </select>        
+                            </div>
+                        </div>
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">No. Of Stops</label>
+                            <div class="col-sm-7">
+                                    <select name="no_of_stops" id="no_of_stop" class="form-control myselect" required>
+                                        <option value="0">no stop</option>
+                                            <option value="1">1 stop</option>
+                                            <option value="2" >2 stop</option>
+                                           <option value="3">3 stop</option>
+                                    </select> 
+                            </div>
+                        </div>
+
+                        {% for employee in booking.Passangers %}
+                        <input type="hidden" name="employee_booking_id[]" value="{{employee.id}}">
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Ticket Number : {{employee.employee_name}} </label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="ticket_number[]" placeholder="ticket number" type="text" value="">
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">From</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="from" placeholder="Flight From" type="text" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-5 control-label">To</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name="to" placeholder="Flight To" type="text" value="">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                    <label class="col-sm-5 control-label">Departure Time</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" name="departure_time" type="datetime-local" value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 control-label">Arrival Time</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" name="arival_time" type="datetime-local" value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 control-label">Flight Name</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" name="flight_name" placeholder="Flight Name" type="text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 control-label">Flight No.</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" name="flight_no" placeholder="Flight No." type="text" value="">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 control-label">PNR Number</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" name="pnr_number" placeholder="PNR Number" type="text" value="">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                        <div class="col-sm-3">
+
+                                        </div>
+                                        <div class="col-sm-3" style="text-align: center;">
+                                            <span class="stop-head stop1" style="font-size: 2.2em">Stop 1</span>
+                                        </div>
+                                        <div class="col-sm-3" style="text-align: center;">
+                                            <span class="stop-head stop2" style="font-size: 2.2em">Stop 2</span>
+                                        </div>
+                                        <div class="col-sm-3" style="text-align: center;">
+                                            <span class="stop-head stop3" style="font-size: 2.2em">Stop 3</span>
+                                        </div>
+
+                                </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-3 control-label stop1">From</label>
+                                            <div class="col-sm-3 stop1">
+                                                    <input class="form-control" name="from" placeholder="From"
+                                                           type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop2">
+                                                        <input class="form-control" name="from" placeholder="From"
+                                                               type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop3">
+                                                        <input class="form-control" name="from" placeholder="From"
+                                                               type="text" value="">
+                                                </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-3 control-label stop1">To</label>
+                                            <div class="col-sm-3 stop1">
+                                                    <input class="form-control" name="to" placeholder="To"
+                                                           type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop2">
+                                                        <input class="form-control" name="to" placeholder="To"
+                                                               type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop3">
+                                                        <input class="form-control" name="to[]" placeholder="To"
+                                                               type="text" value="">
+                                                </div>
+                                    </div>
+
+                                <div class="form-group row">
+                                        <label class="col-sm-3 control-label stop1">Arrival Time</label>
+                                        <div class="col-sm-3 stop1">
+                                            <input class="form-control " name="arival_time" placeholder="arival_time"
+                                                   type="datetime-local" value="">
+                                        </div>
+                                        <div class="col-sm-3 stop2">
+                                                <input class="form-control " name="arival_time" placeholder="arival_time"
+                                                       type="datetime-local" value="">
+                                        </div>
+                                        <div class="col-sm-3 stop3">
+                                                <input class="form-control " name="arival_time" placeholder="arival_time"
+                                                       type="datetime-local" value="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label stop1">Departure Time</label>
+                                        <div class="col-sm-3 stop1">
+                                            <input class="form-control " name="departure_time" placeholder="Departure Time"
+                                                   type="datetime-local" value="">
+                                        </div>
+                                        <div class="col-sm-3 stop2">
+                                                <input class="form-control " name="departure_time" placeholder="Departure Time"
+                                                       type="datetime-local" value="">
+                                        </div>
+                                        <div class="col-sm-3 stop3">
+                                                <input class="form-control " name="departure_time" placeholder="Departure Time"
+                                                       type="datetime-local" value="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-3 control-label stop1">Flight Name</label>
+                                            <div class="col-sm-3 stop1">
+                                                    <input class="form-control" name="flight_name" placeholder="Flight Name"
+                                                           type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop2">
+                                                        <input class="form-control" name="flight_name" placeholder="Flight Name"
+                                                               type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop3">
+                                                        <input class="form-control" name="flight_name" placeholder="Flight Name"
+                                                               type="text" value="">
+                                                </div>
+                                    </div>  
+                                    
+                                    <div class="form-group row">
+                                            <label class="col-sm-3 control-label stop1">Flight No.</label>
+                                            <div class="col-sm-3 stop1">
+                                                    <input class="form-control" name="flight_no" placeholder="Flight No."
+                                                           type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop2">
+                                                        <input class="form-control" name="flight_no" placeholder="Flight No."
+                                                               type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop3">
+                                                        <input class="form-control" name="flight_no" placeholder="Flight No."
+                                                               type="text" value="">
+                                                </div>
+                                    </div>  
+
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-3 control-label stop1">PNR Number</label>
+                                            <div class="col-sm-3 stop1">
+                                                    <input class="form-control" name="pnr_number" placeholder="PNR Number"
+                                                           type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop2">
+                                                        <input class="form-control" name="pnr_number" placeholder="PNR Number"
+                                                               type="text" value="">
+                                                </div>
+                                                <div class="col-sm-3 stop3">
+                                                        <input class="form-control" name="pnr_number" placeholder="PNR Number"
+                                                               type="text" value="">
+                                                </div>
+                                    </div>  
+
+
+
+
+                                    <div class="form-group">
+                                            <div class="offset-md-3 col-md-9">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+<!-- end page content -->
+{% endfor %}
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+<script type="text/javascript">
+
+  $('.stop2').hide();
+  $('.stop1').hide();
+  $('.stop3').hide();
+
+
+$('#no_of_stop').change(function(){
+
+  
+  // var option = $('option:selected', this).attr('room-type');
+
+  var option = $('option:selected', this).attr('value');
+
+if(option == 0){
+  $('.stop2').hide();
+  $('.stop1').hide();
+  $('.stop3').hide();
+}
+
+  if(option == 1  || option == 2 || option == 3)
+  {
+    $('.stop1').show();
+  }
+
+  if(option == 2 || option == 3)
+  {
+    $('.stop2').show();
+  }
+  else {
+    $('.stop2').hide();
+  }
+  if(option == 3)
+  {
+    $('.stop3').show();
+  }
+  else{
+    $('.stop3').hide();
+  }
+
+  
+});
+ </script>
+
+
+ {% endblock %}

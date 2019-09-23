@@ -1,7 +1,7 @@
 Login Type
 1. Corporate Admin
-2. Corporate Approves_1
-3. Corporate Approves_2
+2. Corporate Approver_1
+3. Corporate Approver_2
 4. Corporate Spocs
 
 10. Agents

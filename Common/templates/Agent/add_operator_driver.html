@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -40,7 +41,8 @@
                                                 <label class="col-sm-4">Operator</label>
                                              {% if operator_drivers %}
                                             {% for driver in operator_drivers %}
-	                                                 <select class="col-sm-8 form-control" name="operator_id">
+	                                                 <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                                         <option value="">Select Operator</option>
                                                     {% for operator in operators %}
                                                      <option value="{{operator.id}}" {%if driver.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
                                                     {% endfor %}
@@ -48,7 +50,8 @@
                                             {% endfor %}
                                               {% else %}
 
-                                                <select class="col-sm-8 form-control" name="operator_id">
+                                                <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                                    <option value="">Select Operator</option>
 	                                                {% for operator in operators %}
                                                      <option value="{{operator.id}}" >{{operator.operator_name}}</option>
                                                     {% endfor %}
@@ -62,10 +65,10 @@
                                             <label class="col-sm-4" >Driver Name</label>
                                          {% if operator_drivers %}
                                             {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_name"  value="{{driver.driver_name}}">
+                                            <input type="text" class="col-sm-8 form-control" name="driver_name"  value="{{driver.driver_name}}" required>
                                             {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_name" placeholder="Driver Name">
+                                            <input type="text" class="col-sm-8 form-control" name="driver_name" placeholder="Driver Name" required>
                                          {% endif %}
                                         </div>
 
@@ -73,10 +76,10 @@
                                             <label class="col-sm-4" >Driver Contact</label>
                                          {% if operator_drivers %}
                                             {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_contact"  value="{{driver.driver_contact}}">
+                                            <input type="text" class="col-sm-8 form-control" name="driver_contact"  value="{{driver.driver_contact}}" required>
                                             {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_contact" placeholder="Driver Contact">
+                                            <input type="text" class="col-sm-8 form-control" name="driver_contact" placeholder="Driver Contact" required>
                                          {% endif %}
                                         </div>
 
@@ -145,10 +148,10 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
-
 <script type="text/javascript">
  $(function() {
 
  });
 </script>
+
+{% endblock %}

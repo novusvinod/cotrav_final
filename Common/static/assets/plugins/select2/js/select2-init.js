@@ -4,7 +4,7 @@ function format(state) {
 }
 
 var placeholder = "Select a State";
-$('.select2, .select2-multiple').select2({
+$('.select2').select2({
 	theme: "bootstrap",
     placeholder: placeholder,
 });

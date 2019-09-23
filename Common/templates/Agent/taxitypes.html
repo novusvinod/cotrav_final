@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -20,24 +21,12 @@
                 <input type="hidden" name="taxitype_id" id="taxitype_id_add">
                 <input type="hidden" name="user_id" value="{{user.id}}">
 
-                <div class="form-group row" id="corporate_id1">
-                        <label class="col-sm-5 control-label">Company Name</label>
-                        <div class="col-sm-7">
 
-                            <select class="form-control select2" name="corporate_id" id="corporate_id">
-                                <option value="">Select Company</option>
-                               {% for company in companies %}
-                                <option value="{{company.id}}">{{company.corporate_name}}</option>
-                                {% endfor %}
-                            </select>
-
-                        </div>
-                    </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Taxi Type Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="type_name" name="type_name" placeholder="Taxi Type Name" type="text">
+                                <input class="form-control" id="type_name" name="type_name" placeholder="Taxi Type Name" type="text" required>
                             </div>
                     </div>
 
@@ -114,7 +103,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Company Name</th>
+
                                     <th>Taxi Type Name</th>
 
                                     <th>Action</th>
@@ -125,13 +114,13 @@
                                 {% for type in types %}
                                 <tr>
                                     <td>{{ type.id }}</td>
-                                    <td>{{ type.corporate_name }}</td>
+
                                     <td>{{ type.name }}</td>
 
                                     <td>
 
                                         <a class="btn btn-tbl-edit btn-xs" data-target="#add_taxi_model"
-                                           data-id="{{type.id}}" data-taxi_corporate_id="{{type.corporate_id}}" data-type="{{type.name}}" data-toggle="modal" href="#">
+                                           data-id="{{type.id}}" data-type="{{type.name}}" data-toggle="modal" href="#">
                                             <i class="fa fa-pencil "></i>
                                         </a>
 
@@ -153,15 +142,18 @@
     </div>
 </div>
 <!-- end page content -->
-
+<script type="text/javascript">
+   $(".myselect").select2();
+</script>
 
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Admin/layout/footer.html" %}
+
 
 <script type="text/javascript">
+
 $(function() {
 
   $('#model_add_new_group').on('show.bs.modal', function (event) {
@@ -179,12 +171,12 @@ $(function() {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('id'); // Extract info from data-* attributes
     var type = button.data('type');
-    var taxi_corporate_id = button.data('taxi_corporate_id');
+
 
     var modal = $(this);
     modal.find('#taxitype_id_add').val(id);
     modal.find('#type_name').val(type);
-    modal.find('#corporate_id').val(taxi_corporate_id).trigger('change');
+
 
     });
 
@@ -196,3 +188,4 @@ $(function() {
 </script>
 
 
+{% endblock %}

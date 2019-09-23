@@ -44,6 +44,11 @@ urlpatterns = [
     path('agents/employees/<int:id>', agent_views.company_employees),
     path('agents/add-employee/<int:id>', agent_views.add_employee),
 
+    path('agents/assessment_cities/<int:id>', agent_views.assessment_cities),
+    path('agents/delete-assessment_cities/<int:id>', agent_views.delete_assessment_cities),
+    path('agents/assessment_codes/<int:id>', agent_views.assessment_codes),
+    path('agents/delete-assessment_codes/<int:id>', agent_views.delete_assessment_codes),
+
     path('agents/agents', agent_views.view_agents),
     path('agents/add-agent/<int:id>', agent_views.add_agent),
 
@@ -52,6 +57,7 @@ urlpatterns = [
     path('agents/operator_banks/<int:id>', agent_views.operator_banks),
     path('agents/add-operator/<int:id>', agent_views.add_operator),
     path('agents/delete-operator/<int:id>', agent_views.delete_operator),
+
     path('agents/operator-rates', agent_views.operator_rates),
     path('agents/add-operator-rate/<int:id>', agent_views.add_operator_rate),
     path('agents/delete-operator-rate/<int:id>', agent_views.delete_operator_rate),
@@ -71,5 +77,23 @@ urlpatterns = [
     path('agents/view-bus-booking/<int:id>', agent_views.view_bus_booking),
     path('agents/accept-bus-booking', agent_views.accept_bus_booking),
     path('agents/assign-bus-booking/<int:id>', agent_views.assign_bus_booking),
+
+    path('agents/train-bookings/<int:id>', agent_views.train_bookings),
+    path('agents/add-train-booking/<int:id>', agent_views.add_train_booking),
+    path('agents/view-train-booking/<int:id>', agent_views.view_train_booking),
+    path('agents/accept-train-booking', agent_views.accept_train_booking),
+    path('agents/assign-train-booking/<int:id>', agent_views.assign_train_booking),
+
+    path('agents/hotel-bookings/<int:id>', agent_views.hotel_bookings),
+    path('agents/add-hotel-booking/<int:id>', agent_views.add_hotel_booking),
+    path('agents/view-hotel-booking/<int:id>', agent_views.view_hotel_booking),
+    path('agents/accept-hotel-booking', agent_views.accept_hotel_booking),
+    path('agents/assign-hotel-booking/<int:id>', agent_views.assign_hotel_booking),
+
+    path('agents/flight-bookings/<int:id>', agent_views.flight_bookings),
+    path('agents/add-flight-booking/<int:id>', agent_views.add_flight_booking),
+    path('agents/view-flight-booking/<int:id>', agent_views.view_flight_booking),
+    path('agents/accept-flight-booking', agent_views.accept_flight_booking),
+    path('agents/assign-flight-booking/<int:id>', agent_views.assign_flight_booking),
 
 ]

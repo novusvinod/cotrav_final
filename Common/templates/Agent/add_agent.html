@@ -1,6 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends "Agent/layout/header.html" %}
 
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -29,11 +29,11 @@
                                 <label class="col-sm-4" >Employee ID</label>
                                 {% if agent %}
                                 {% for agent in agent %}
-                                <input type="text" class="col-sm-8 form-control" name="emp_id" value="{{agent.emp_id|default:''}}"
+                                <input type="text" class="col-sm-8 form-control" name="emp_id" value="{{agent.emp_id|default:''}}" required
                                        placeholder="Employee ID">
                                 {% endfor %}
                                 {% else %}
-                                    <input type="text" class="col-sm-8 form-control" name="emp_id"
+                                    <input type="text" class="col-sm-8 form-control" name="emp_id" required
                                        placeholder="Employee ID">
                                 {% endif %}
                             </div>
@@ -42,11 +42,11 @@
                                 <label class="col-sm-4" >User Name</label>
                                 {% if agent %}
                                 {% for agent in agent %}
-                                <input type="text" class="col-sm-8 form-control" name="username" value="{{agent.username|default:''}}"
+                                <input type="text" class="col-sm-8 form-control" name="username" value="{{agent.username|default:''}}" required
                                        placeholder="User Name">
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="username"
+                                <input type="text" class="col-sm-8 form-control" name="username" required
                                        placeholder="User Name">
                                 {% endif %}
                             </div>
@@ -69,11 +69,11 @@
                                 <label class="col-sm-4" >Login User Email</label>
                                 {% if agent %}
                                 {% for agent in agent %}
-                                <input type="email" class="col-sm-8 form-control" name="email" value="{{agent.email|default:''}}"
+                                <input type="email" class="col-sm-8 form-control" name="email" value="{{agent.email|default:''}}" required
                                        placeholder="Login User Email">
                                 {% endfor %}
                                 {% else %}
-                                <input type="email" class="col-sm-8 form-control" name="email"
+                                <input type="email" class="col-sm-8 form-control" name="email" required
                                        placeholder="Login User Email">
                                   {% endif %}
                             </div>
@@ -377,11 +377,12 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
-
 <script type="text/javascript">
  $(function() {
 
  });
 
 </script>
+
+
+{% endblock %}

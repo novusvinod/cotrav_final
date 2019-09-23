@@ -13,15 +13,23 @@ urlpatterns = [
 ######################### END CORPORATE URLS ####################
 
     path('api/login', api_views.login),
+    path('api/logout', api_views.logout),
 
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
     path('api/add_state_name', api_views.add_state_name),
     path('api/add_country_name', api_views.add_country_name),
     path('api/get_assessment_code', api_views.get_assessment_code),
-
+    path('api/get_assessment_city', api_views.get_assessment_city),
 
     path('api/corporate_package', api_views.corporate_package),
+
+    path('api/train_types', api_views.train_types),
+    path('api/bus_types', api_views.bus_types),
+    path('api/irctc_accounts', api_views.irctc_accounts),
+    path('api/hotel_types', api_views.hotel_types),
+    path('api/hotel_booking_portals', api_views.hotel_booking_portals),
+    path('api/room_types', api_views.room_types),
 
     path('api/taxi_types', api_views.taxi_types),
     path('api/add_taxi_type', api_views.add_taxi_type),
@@ -95,6 +103,16 @@ urlpatterns = [
     path('api/update_employee', api_views.update_employee),
     path('api/delete_employee', api_views.delete_employee),
 
+    path('api/assessment_cities', api_views.assessment_cities),
+    path('api/add_assessment_cities', api_views.add_assessment_cities),
+    path('api/update_assessment_cities', api_views.update_assessment_cities),
+    path('api/delete_assessment_cities', api_views.delete_assessment_cities),
+
+    path('api/assessment_codes', api_views.assessment_codes),
+    path('api/add_assessment_codes', api_views.add_assessment_codes),
+    path('api/update_assessment_codes', api_views.update_assessment_codes),
+    path('api/delete_assessment_codes', api_views.delete_assessment_codes),
+
     path('api/agents', api_views.get_agents),
     path('api/view_agent', api_views.view_agent),
     path('api/add_agent', api_views.add_agent),
@@ -105,7 +123,13 @@ urlpatterns = [
 
     path('api/view_taxi_booking', api_views.view_taxi_booking),
     path('api/view_bus_booking', api_views.view_bus_booking),
+    path('api/view_train_booking', api_views.view_train_booking),
+    path('api/view_hotel_booking', api_views.view_hotel_booking),
+    path('api/view_flight_booking', api_views.view_flight_booking),
 
     path('api/add_taxi_booking', api_views.add_taxi_booking),
     path('api/add_bus_booking', api_views.add_bus_booking),
+    path('api/add_train_booking', api_views.add_train_booking),
+    path('api/add_hotel_booking', api_views.add_hotel_booking),
+    path('api/add_flight_booking', api_views.add_flight_booking),
 ]

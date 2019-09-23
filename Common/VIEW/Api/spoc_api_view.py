@@ -16,22 +16,35 @@ from Common.models import Corporate_Agent_Login_Access_Token
 
 
 def spoc_taxi_bookings(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    spoc_id = request.POST.get('spoc_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
+        user = {}
+        booking_type = request.POST.get('booking_type', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
+
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllSPOCTaxiBookings', [spoc_id])
-                emp = dictfetchall(cursor)
-                print(emp)
-                data = {'success': 1, 'Bookings': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllSPOCTaxiBookings', [spoc_id,booking_type])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    for e in emp:
+                        cursor1 = connection.cursor()
+                        booking_id = e['id']
+                        cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                        passanger = dictfetchall(cursor1)
+                        e['Passangers'] = passanger
+                        cursor1.close()
+                    data = {'success': 1, 'Bookings': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -39,27 +52,39 @@ def spoc_taxi_bookings(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 def spoc_bus_bookings(request):
-    req_token = request.META['HTTP_AUTHORIZATION']
-    user_type = request.META['HTTP_USERTYPE']
-    spoc_id = request.POST.get('spoc_id', '')
-    user = {}
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
+        user = {}
+        booking_type = request.POST.get('booking_type', '')
 
-    if req_token:
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllSPOCBusBookings', [spoc_id])
-                emp = dictfetchall(cursor)
-                print(emp)
-                data = {'success': 1, 'Bookings': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllSPOCBusBookings', [spoc_id,booking_type])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    for e in emp:
+                        cursor1 = connection.cursor()
+                        booking_id = e['id']
+                        cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                        passanger = dictfetchall(cursor1)
+                        e['Passangers'] = passanger
+                        cursor1.close()
+                    data = {'success': 1, 'Bookings': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -67,15 +92,129 @@ def spoc_bus_bookings(request):
             data = {'success': 0, 'Corporates': "Token Not Found"}
             return JsonResponse(data)
     else:
-        data = {'success': 0, 'error': "Access Token Empty"}
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def spoc_train_bookings(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
+        user = {}
+        booking_type = request.POST.get('booking_type', '')
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllSPOCTrainBookings', [spoc_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    for e in emp:
+                        cursor1 = connection.cursor()
+                        booking_id = e['id']
+                        cursor1.callproc('getAllTrainBookingPassangers', [booking_id,booking_type])
+                        passanger = dictfetchall(cursor1)
+                        e['Passangers'] = passanger
+                        cursor1.close()
+                    data = {'success': 1, 'Bookings': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def spoc_hotel_bookings(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
+        user = {}
+        booking_type = request.POST.get('booking_type', '')
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllSPOCHotelBookings', [spoc_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    for e in emp:
+                        cursor1 = connection.cursor()
+                        booking_id = e['id']
+                        cursor1.callproc('getAllHotelBookingPassangers', [booking_id,booking_type])
+                        passanger = dictfetchall(cursor1)
+                        e['Passangers'] = passanger
+                        cursor1.close()
+                    data = {'success': 1, 'Bookings': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
 
+def spoc_flight_bookings(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
+        user = {}
+        booking_type = request.POST.get('booking_type', '')
 
-
-
-
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllSPOCFlightBookings', [spoc_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    for e in emp:
+                        cursor1 = connection.cursor()
+                        booking_id = e['id']
+                        cursor1.callproc('getAllFlightBookingPassangers', [booking_id,booking_type])
+                        passanger = dictfetchall(cursor1)
+                        e['Passangers'] = passanger
+                        cursor1.close()
+                    data = {'success': 1, 'Bookings': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 
@@ -103,6 +242,7 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
         present = datetime.now()
 
         if user.expiry_date.date() < present.date():
+            print("expier")
             return None
         else:
 
@@ -115,6 +255,7 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
                 user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
             elif user_type == '4':
                 user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
+                print(user_info)
             elif user_type == '10':
                 user_info = Corporate_Agent.objects.get(id=user.agent_id)
             else:

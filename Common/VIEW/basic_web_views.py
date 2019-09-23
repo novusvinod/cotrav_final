@@ -12,6 +12,11 @@ from Common.models import Corporate_Agent_Login_Access_Token
 from django.db import connection
 
 
+def login2(request):
+    form = Corporate_Login_Form()
+    return render(request, 'corporate_login_new.html')
+
+
 def login(request):
     form = Corporate_Login_Form()
     return render(request, 'corporate_login.html', {'form': form})
@@ -21,6 +26,8 @@ def login_action(request):
     context = {}
     user_type = ''
     if request.method == 'POST':
+
+
         username = request.POST.get('email', '')
         password = request.POST.get('password', '')
         corporate_login_type = request.POST.get('corporate_login_type', '')
@@ -29,7 +36,7 @@ def login_action(request):
 
         if user is not None:
             if user:
-                request.session.set_expiry(86400)  # sets the exp. value of the session
+                request.session.set_expiry(7200)  # sets the exp. value of the session
                 print("without login")
                 user_info = {}
                 cursor = connection.cursor()
@@ -114,7 +121,7 @@ def logout_action(request):
         user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=access_token)
     elif login_type == '6':
         user = Corporate_Employee_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == 'agent':
+    elif login_type == '10':
         user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
     else:
         return None

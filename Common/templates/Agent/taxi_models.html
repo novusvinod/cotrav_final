@@ -1,6 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
 
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -24,14 +24,14 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Brand Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="brand_name" name="brand_name" placeholder="Brand Name" type="text">
+                                <input class="form-control" id="brand_name" name="brand_name" placeholder="Brand Name" type="text" required>
                             </div>
                     </div>
 
                    <div class="form-group row" >
                        <label class="col-sm-5 control-label">Model Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="model_name" name="model_name" placeholder="Model Name" type="text">
+                                <input class="form-control" id="model_name" name="model_name" placeholder="Model Name" type="text" required>
                             </div>
                     </div>
 
@@ -40,7 +40,7 @@
                         <label class="col-sm-5 control-label">Taxi Type Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control select2" name="taxitype_id" id="taxi_type_id">
+                            <select class="form-control myselect" name="taxitype_id" id="taxi_type_id" style="width:100%;" required>
                                 <option value="">Select Taxi Type</option>
                                {% for type in types %}
                                 <option value="{{type.id}}">{{type.name}}</option>
@@ -53,7 +53,7 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">No Of Seats</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="no_of_seats" name="no_of_seats" placeholder="No Of Seats" type="text">
+                                <input class="form-control" id="no_of_seats" name="no_of_seats" placeholder="No Of Seats" type="text" required>
                             </div>
                     </div>
 
@@ -174,13 +174,15 @@
     </div>
 </div>
 <!-- end page content -->
-
+<script type="text/javascript">
+   $(".myselect").select2();
+</script>
 
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Admin/layout/footer.html" %}
+
 
 <script type="text/javascript">
 $(function() {
@@ -219,3 +221,6 @@ $(function() {
 
 
 </script>
+
+
+{% endblock %}

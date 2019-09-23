@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -30,12 +31,33 @@
                         <div class="card-body " id="bar-parent">
 
 
+                             <div class="form-group row">
+                                <label class="col-sm-4" >Company Name</label>
+                                {% if employee %}
+                                {% for employee in employee %}
+                                    <select class="col-sm-8 form-control myselect" name="corporate_id" required>
+                                        <option value="">Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{company.id}}" {% if employee.spoc_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endfor %}
+                                {% else %}
+                                     <select class="col-sm-8 form-control myselect" name="corporate_id" required>
+                                        <option value="">Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{company.id}}">{{company.corporate_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Spoc id</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control" name="spoc_id" required>
+                                    <select class="col-sm-8 form-control myselect" name="spoc_id" required>
                                         <option value="">Select Spoc</option>
                                         {% for spoc in spocs %}
                                         <option value="{{spoc.id}}" {% if employee.spoc_id == spoc.id %} selected {%endif%}>{{spoc.user_name}}</option>
@@ -43,7 +65,7 @@
                                     </select>
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control" name="spoc_id" >
+                                     <select class="col-sm-8 form-control myselect" name="spoc_id" required>
                                         <option value="">Select Spoc</option>
                                         {% for spoc in spocs %}
                                         <option value="{{spoc.id}}">{{spoc.user_name}}</option>
@@ -57,15 +79,15 @@
                                 <label class="col-sm-4" >Billing Entity</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control" name="billing_entity_id" >
+                                    <select class="col-sm-8 form-control myselect" name="billing_entity_id" required >
                                         <option value="">Billing Entity</option>
                                         {% for entity in entitys %}
-                                        <option value="{{entity.id}}" {% if entity.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
+                                        <option value="{{entity.id}}" {% if employee.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
                                         {% endfor %}
                                     </select>
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control" name="billing_entity_id" >
+                                     <select class="col-sm-8 form-control myselect" name="billing_entity_id" required>
                                         <option value="">Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
@@ -105,11 +127,11 @@
                                 <label class="col-sm-4" >Employee Name</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_name" value="{{employee.employee_name|default:''}}"
+                                <input type="text" class="col-sm-8 form-control" name="employee_name" value="{{employee.employee_name|default:''}}" required
                                        placeholder="Employee Name">
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_name"
+                                <input type="text" class="col-sm-8 form-control" name="employee_name" required
                                        placeholder="Employee Name">
                                 {% endif %}
                             </div>
@@ -118,11 +140,11 @@
                                 <label class="col-sm-4" >Employee Email</label>
                                  {% if employee %}
                                 {% for employee in employee %}
-                                <input type="email" class="col-sm-8 form-control" name="employee_email" value="{{employee.employee_email|default:''}}"
+                                <input type="email" class="col-sm-8 form-control" name="employee_email" value="{{employee.employee_email|default:''}}" required
                                        placeholder="Employee Email">
                                  {% endfor %}
                                 {% else %}
-                                 <input type="email" class="col-sm-8 form-control" name="employee_email"
+                                 <input type="email" class="col-sm-8 form-control" name="employee_email" required
                                        placeholder="Employee Email">
                                   {% endif %}
                             </div>
@@ -131,11 +153,11 @@
                                 <label class="col-sm-4" >Employee Contact</label>
                                  {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_contact" value="{{employee.employee_contact|default:''}}"
+                                <input type="text" class="col-sm-8 form-control" name="employee_contact" value="{{employee.employee_contact|default:''}}" required
                                        placeholder="Employee Contact">
                                  {% endfor %}
                                 {% else %}
-                                 <input type="text" class="col-sm-8 form-control" name="employee_contact"
+                                 <input type="text" class="col-sm-8 form-control" name="employee_contact" required
                                        placeholder="Employee Contact">
                                   {% endif %}
                             </div>
@@ -388,7 +410,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
+
 
 <script type="text/javascript">
  $(function() {
@@ -396,3 +418,5 @@
  });
 
 </script>
+
+{% endblock %}

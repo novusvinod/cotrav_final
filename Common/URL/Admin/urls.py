@@ -24,9 +24,9 @@ urlpatterns = [
     path('Corporate/Admin/add-company-subgroup-auth/<int:id>', admin_views.add_company_subgroup_auth),
 
     path('Corporate/Admin/company-admins/<int:id>', admin_views.company_admins),
-    path('add-company-admins/<int:id>', admin_views.add_company_admins),
+    path('Corporate/Admin/add-company-admins/<int:id>', admin_views.add_company_admins),
 
-    path('Corporate/Admin/company-admins/<int:id>', admin_views.company_spocs),
+    path('Corporate/Admin/company-spoc/<int:id>', admin_views.company_spocs),
     path('Corporate/Admin/add-spoc/<int:id>', admin_views.add_spocs),
 
     path('Corporate/Admin/company-employees/<int:id>', admin_views.company_employees),
@@ -41,4 +41,19 @@ urlpatterns = [
     path('Corporate/Admin/view-bus-booking/<int:id>', admin_views.view_bus_booking),
     path('Corporate/Admin/accept-bus-booking/<int:id>', admin_views.accept_bus_booking),
     path('Corporate/Admin/reject-bus-booking/<int:id>', admin_views.reject_bus_booking),
+
+    path('Corporate/Admin/train-bookings/<int:id>', admin_views.train_bookings),
+    path('Corporate/Admin/view-train-booking/<int:id>', admin_views.view_train_booking),
+    path('Corporate/Admin/accept-train-booking/<int:id>', admin_views.accept_train_booking),
+    path('Corporate/Admin/reject-train-booking/<int:id>', admin_views.reject_train_booking),
+
+    path('Corporate/Admin/hotel-bookings/<int:id>', admin_views.hotel_bookings),
+    path('Corporate/Admin/view-hotel-booking/<int:id>', admin_views.view_hotel_booking),
+    path('Corporate/Admin/accept-hotel-booking/<int:id>', admin_views.accept_hotel_booking),
+    path('Corporate/Admin/reject-hotel-booking/<int:id>', admin_views.reject_hotel_booking),
+
+    path('Corporate/Admin/flight-bookings/<int:id>', admin_views.flight_bookings),
+    path('Corporate/Admin/view-flight-booking/<int:id>', admin_views.view_flight_booking),
+    path('Corporate/Admin/accept-flight-booking/<int:id>', admin_views.accept_flight_booking),
+    path('Corporate/Admin/reject-flight-booking/<int:id>', admin_views.reject_flight_booking),
 ]

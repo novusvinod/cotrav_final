@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -107,8 +108,7 @@
                                                     </a>
 
                                                     <a class="btn btn-tbl-delete btn-xs" data-target="#model_add_new_group"
-                                                       data-id="{{operator.id}}" data-delete_id="1" data-toggle="modal" href="#">
-                                                        <i class="fa fa-trash-o "></i>
+                                                       data-id="{{operator.id}}" data-delete_id="1" data-toggle="modal" href="#"> <i class="fa fa-trash-o "></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -133,7 +133,7 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
+
 
 
 <script type="text/javascript">
@@ -152,3 +152,7 @@ $(function() {
 
 
 </script>
+
+
+
+{% endblock %}

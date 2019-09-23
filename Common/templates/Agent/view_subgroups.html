@@ -1,5 +1,6 @@
-{% include "Agent/layout/header.html" %}
-{% include "Agent/layout/menu_bar_layout.html" %}
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -29,7 +30,7 @@
                     <div class="form-group row" id="name1">
                         <label class="col-sm-5 control-label">Authenticater Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name"
+                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name" required
                                    type="text">
                         </div>
                     </div>
@@ -37,7 +38,7 @@
                     <div class="form-group row" id="email1">
                         <label class="col-sm-5 control-label">Authenticater Email</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email"
+                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email" required
                                    type="email">
                         </div>
                     </div>
@@ -53,7 +54,7 @@
                     <div class="form-group row" id="contact_no1">
                         <label class="col-sm-5 control-label">Contact</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact"
+                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact" required
                                    type="text">
                         </div>
                     </div>
@@ -196,7 +197,7 @@
                         <div class="form-group row" id="group_name1">
                             <label class="col-sm-5 control-label">SubGroup Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="group_name" name="group_name" placeholder="Group Name"
+                                <input class="form-control" id="group_name" name="group_name" placeholder="Group Name" required
                                        type="text" value="{{g.subgroup_name}}">
                             </div>
                         </div>
@@ -380,7 +381,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Agent/layout/footer.html" %}
+
 
 <script type="text/javascript">
 $(function() {
@@ -499,5 +500,5 @@ $('#set_subgroup_id').val(bla);
 
 </script>
 
-
+{% endblock %}
 

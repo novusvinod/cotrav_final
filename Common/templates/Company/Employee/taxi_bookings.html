@@ -1,5 +1,6 @@
-{% include "Company/Employee/layout/header.html" %}
-{% include "Company/Employee/layout/menu_bar_layout.html" %}
+{% extends 'Company/Employee/layout/header.html' %}
+
+{% block content %}
 
 {% if user %}
 <!-- start page content -->
@@ -38,15 +39,21 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Reference No</th>
-                                    <th>Tour Type</th>
                                     <th>City</th>
+                                    <th>Booking Date</th>
+                                    <th>Pickup Datetime</th>
                                     <th>Pickup Location</th>
                                     <th>Drop Location</th>
-                                    <th>Pickup Datetime</th>
-                                    <th>Booking Date</th>
-                                    <th>No Of Seats</th>
-                                    <th>Reason</th>
-                                    <th>Status</th>
+                                    <th>Tour Type</th>
+                                    <th>Client Status</th>
+                                    <th>CoTrav Status</th>
+
+                                    <th>Operator Details</th>
+                                    <th>Taxi/Driver Assign</th>
+                                    <th>Spoc Details</th>
+
+                                    <th>Passenger Details</th>
+
                                     <th>Details</th>
 
                                 </tr>
@@ -56,6 +63,11 @@
                                 <tr>
                                     <td>{{ booking.id }}</td>
                                     <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.city_name }}</td>
+                                    <td>{{ booking.booking_date}}</td>
+                                    <td>{{ booking.pickup_datetime }}</td>
+                                    <td>{{ booking.pickup_location }}</td>
+                                    <td>{{ booking.drop_location }}</td>
                                     {% if booking.tour_type == 1 %}
                                     <td>Local</td>
                                     {% elif booking.tour_type == 2 %}
@@ -63,17 +75,36 @@
                                     {% else %}
                                     <td>Outstation</td>
                                     {% endif %}
-                                    <td>{{ booking.city_name }}</td>
-                                    <td>{{ booking.pickup_location }}</td>
-                                    <td>{{ booking.drop_location }}</td>
-                                    <td>{{ booking.pickup_datetime }}</td>
-                                    <td>{{ booking.booking_date}}</td>
-                                    <td>{{ booking.no_of_seats }}</td>
-                                    <td>{{ booking.reason_booking }}</td>
-                                    <td>{{ booking.booking_status }}</td>
+
+
+
+                                    <td>{{ booking.client_status }} </td>
+                                    <td>{{ booking.cotrav_status }}<br/>({{ booking.cotrav_agent_name|default:'' }})</td>
+
+
+
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+
+                                    {% if booking.driver_name %}
+                                    <td>{{ booking.driver_name|default:'' }}<br/>({{ booking.driver_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+                                    <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
+
                                     <td>
-                                        <a href="/Corporate/Employee/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        {% for passanger in booking.Passangers %}
+                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <a href="/Corporate/Employee/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs"style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -95,7 +126,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Employee/layout/footer.html" %}
+{% endblock %}
 
 
 

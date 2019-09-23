@@ -1,0 +1,210 @@
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
+
+{% if user %}
+<!-- start page content -->
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+{% for booking in bookings %}
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Basic Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+<form method="post" action="/agents/assign-hotel-booking/{{booking.id}}">
+    <input type="hidden" name="booking_id" value="{{booking.id}}">
+    <input type="hidden" name="user_id" value="{{user.id}}">
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Hotel Name</label>
+                            <div class="col-sm-7">
+                            <select name="assign_hotel_id" id="hotel_name" class="form-control myselect" required>
+                                    <option value="">Select hotel</option>
+                                   {% for hotel in hotels %}
+                                   <option value="{{hotel.id}}" operator-email="{{hotel.operator_email}}" operator-contact="{{hotel.operator_contact}}" operator-address="{{hotel.operator_address}}">{{hotel.operator_name}}</option>
+                                   {% endfor %}
+                               </select>
+                            </div>   
+                        </div>
+
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Room Type</label>
+                            <div class="col-sm-7">
+                                <select name="room_type" id="room_type" class="form-control myselect" required>
+                                    <option value="">Select Hotel Type</option>
+                                   {% for room_type in room_types %}
+                                   <option value="{{room_type.id}}">{{room_type.name}}</option>
+                                   {% endfor %}
+                               </select>
+
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Total Room Price</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="total_room_price" id="total_room_price" placeholder="Total Room Price"
+                                     type="text" value="">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Is AC Room</label>
+                            <div class="col-sm-7">
+                                <select name="is_ac_room" class="form-control myselect" required>
+                                     <option value="1">Yes</option>
+                                     <option value="0">No</option>
+                               </select>
+
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Daily Breakfast</label>
+                            <div class="col-sm-7">
+                                <select name="daily_brakefast" class="form-control myselect" required>
+                                     <option value="1">Yes</option>
+                                     <option value="0">No</option>
+                               </select>
+
+                            </div>
+                        </div>
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Hotel Address</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="hotel_address" id="hotel_address" placeholder="Hotel Address"
+                                     readonly  type="text" value="">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Hotel Contact</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="hotel_contact" id="hotel_contact" placeholder="Hotel Contact"
+                                     readonly  type="text" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Hotel Email</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="hotel_email" id="hotel_email" placeholder="Hotel Email"
+                                     readonly  type="text" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-5 control-label">Voucher Number</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name="voucher_number" placeholder="Voucher Number"
+                                         type="text" value="">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                    <label class="col-sm-5 control-label">Portal Used</label>
+                                    <div class="col-sm-7">
+                                         <select name="portal_used" id="portal_used" class="form-control myselect" required>
+                                            <option value="">Select Portal</option>
+                                           {% for portal in portals %}
+                                           <option value="{{portal.id}}">{{portal.name}}</option>
+                                           {% endfor %}
+                                       </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                        <label class="col-sm-5 control-label">Is Prepaid</label>
+                                        <div class="col-sm-7">
+                                             <select name="is_prepaid" class="form-control myselect" required>
+                                                 <option value="1">Yes</option>
+                                                 <option value="0">No</option>
+                                           </select>
+
+                                        </div>
+                                    </div>   
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-5 control-label">Agent Booking ID</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="agent_booking_id" placeholder="agent booking is"
+                                                     type="text" value="">
+                                            </div>
+                                    </div>  
+                                    
+                                    <div class="form-group row">
+                                            <label class="col-sm-5 control-label">Commission Earned</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="commission_earned" placeholder="commisiion earned"
+                                                     type="text" value="">
+                                            </div>
+                                    </div>  
+
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-5 control-label">Comment (If Any)</label>
+                                            <div class="col-sm-7">
+                                               <textarea class="form-control" name="comment" placeholder="comment if any" ></textarea>
+                                               
+                                            </div>
+                                    </div>  
+
+                                    <div class="form-group">
+                                            <div class="offset-md-3 col-md-9">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+                 
+
+</form>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+ {% endfor %}
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+<script type="text/javascript">
+
+$('#hotel_name').change(function(){
+
+   var option = $('option:selected', this).attr('operator-address');
+   $("#hotel_address").val(option);
+
+
+   var option1 = $('option:selected', this).attr('operator-email');
+   $("#hotel_email").val(option1);
+
+   var option2 = $('option:selected', this).attr('operator-contact');
+   $("#hotel_contact").val(option2);
+
+
+});
+ </script>
+
+
+ {% endblock %}

@@ -1,5 +1,6 @@
-{% include "Company/Admin/layout/header.html" %}
-{% include "Company/Admin/layout/menu_bar_layout.html" %}
+{% extends 'Company/Admin/layout/header.html' %}
+
+{% block content %}
 
 
 {% if user %}
@@ -23,13 +24,13 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Group Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name" type="text">
+                                <input class="form-control" name="group_name" placeholder="Group Name" type="text" required>
                             </div>
                     </div>
                  <div class="form-group row" >
                         <label class="col-sm-5 control-label">Zone Name</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="zone_name" placeholder="Zone Name" type="text">
+                                <input class="form-control" name="zone_name" placeholder="Zone Name" type="text" required>
                             </div>
                     </div>
 
@@ -149,7 +150,7 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-{% include "Company/Admin/layout/footer.html" %}
+
 
 <script type="text/javascript">
 $(function() {
@@ -166,8 +167,8 @@ $(function() {
 
 });
 
-
-
 </script>
 
+
+{% endblock %}
 

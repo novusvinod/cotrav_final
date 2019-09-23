@@ -29,12 +29,14 @@ urlpatterns = [
 ######################### END Commann urls ###############
 
 
+path('login2', basic_web_views.login2),
+
 ######################### CORPORATE ADMIN URLS ############################
     path('', include('Common.URL.Admin.urls')),
     path('', include('Common.URL.Spoc.urls')),
     path('', include('Common.URL.Employee.urls')),
-    path('', include('Common.URL.Approves_1.urls')),
-    path('', include('Common.URL.Approves_2.urls')),
+    path('', include('Common.URL.Approver_1.urls')),
+    path('', include('Common.URL.Approver_2.urls')),
 ######################### END CORPORATE URLS ####################
 
 
@@ -46,6 +48,12 @@ urlpatterns = [
 ######################### API URLS ############################
     path('', include('Common.URL.Api.urls')),
 ######################### END API URLS ####################
+
+
+######################### COTRAV LANDING #########################
+ path('',include('landing.urls')),
+######################### END LANDING #############################
+
 
 
 
