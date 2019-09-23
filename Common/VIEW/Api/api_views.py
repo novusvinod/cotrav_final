@@ -3825,8 +3825,7 @@ def add_taxi_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
 
         employees = request.POST.getlist('employees', '')
-        print("employees")
-        print(employees)
+        employees = ",".join(employees)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3836,24 +3835,12 @@ def add_taxi_booking(request):
                 try:
 
                     cursor.callproc('addTaxiBooking', [user_type,user_id,entity_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
-                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     cursor.close()
-                    for id in booking_id:
-                        for e in employees:
-                            try:
-                                cursor = connection.cursor()
-                                cursor.callproc('addEmployeeTaxiBooking',[id['id'],e])
-                                cursor.close()
-                                data = {'success': 1, 'message': "Insert Successfully"}
-                            except Exception as e:
-                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
-                                return JsonResponse(data)
-                            return JsonResponse(data)
-                    else:
-                        data = {'success': 1, 'message': "Insert Successfully"}
-                        return JsonResponse(data)
+                    data = {'success': 1, 'message': "Insert Successfully"}
+                    return JsonResponse(data)
 
                 except Exception as e:
                     print(e)
@@ -3910,7 +3897,7 @@ def add_bus_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
 
         employees = request.POST.getlist('employees', '')
-
+        employees = ",".join(employees)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3921,27 +3908,12 @@ def add_bus_booking(request):
 
                     cursor.callproc('addBusBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
                                                       to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees])
                     booking_id = dictfetchall(cursor)
 
-
                     cursor.close()
-                    for id in booking_id:
-                        for e in employees:
-                            try:
-                                cursor = connection.cursor()
-                                cursor.callproc('addEmployeeBusBooking',[id['id'],e])
-                                booking_id = dictfetchall(cursor)
-
-                                cursor.close()
-                                data = {'success': 1, 'message': "Insert Success"}
-                                return JsonResponse(data)
-                            except Exception as e:
-                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
-                                return JsonResponse(data)
-                    else:
-                        data = {'success': 1, 'message': "Insert Success"}
-                        return JsonResponse(data)
+                    data = {'success': 1, 'message': "Insert Success"}
+                    return JsonResponse(data)
 
                 except Exception as e:
                     print(e)
@@ -3998,6 +3970,7 @@ def add_train_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
 
         employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -4008,10 +3981,8 @@ def add_train_booking(request):
 
                     cursor.callproc('addTrainBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
                                                       to_location,train_type,train_type,train_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_train,reason_booking,no_of_seats,assessment_code,assessment_city_id])
+                                                             entity_id,preferred_train,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees])
                     booking_id = dictfetchall(cursor)
-
-
                     cursor.close()
                     for id in booking_id:
                         for e in employees:
@@ -4091,6 +4062,7 @@ def add_hotel_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
 
         employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -4101,30 +4073,11 @@ def add_hotel_booking(request):
 
                     cursor.callproc('addHotelBooking', [from_city_id,from_area_id,preferred_area,checkin_datetime,checkout_datetime,bucket_priority_1,bucket_priority_2,
                                                       room_type_id,preferred_hotel,booking_datetime,assessment_code,assessment_city_id,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type])
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees])
                     booking_id = dictfetchall(cursor)
-                    print("booking ID ")
-                    print(booking_id)
-                    cursor.close()
-                    for id in booking_id:
-                        print(id['id'])
-                        for e in employees:
-                            print(e)
-                            try:
-                                cursor = connection.cursor()
-                                cursor.callproc('addEmployeeHotelBooking',[id['id'],e])
-                                booking_id = dictfetchall(cursor)
-                                print("booking ID ")
-                                print(booking_id)
-                                cursor.close()
-                                data = {'success': 1, 'message': "Insert Success"}
-                                return JsonResponse(data)
-                            except Exception as e:
-                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
-                                return JsonResponse(data)
-                    else:
-                        data = {'success': 1, 'message': "Insert Success"}
-                        return JsonResponse(data)
+
+                    data = {'success': 1, 'message': "Insert Success"}
+                    return JsonResponse(data)
 
                 except Exception as e:
                     print("EXCEPTION")
@@ -4163,7 +4116,7 @@ def add_flight_booking(request):
 
         booking_datetime = request.POST.get('booking_datetime', '')
         #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
-        departure_datetime = request.POST.get('departure_date', '')
+        departure_datetime = request.POST.get('departure_datetime', '')
         #departure_datetime = datetime.strptime(departure_datetime, '%d/%m/%Y %H:%M:%S')
 
         preferred_flight= request.POST.get('preferred_flight','')
@@ -4178,8 +4131,9 @@ def add_flight_booking(request):
 
         reason_booking = request.POST.get('reason_booking', '')
         no_of_seats = request.POST.get('no_of_seats', '')
-
         employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
+
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -4190,29 +4144,11 @@ def add_flight_booking(request):
 
                     cursor.callproc('addFlightBooking', [usage_type,journey_type,flight_class,from_location,to_location,booking_datetime,departure_datetime,
                                                       preferred_flight,assessment_code,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type])
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees])
                     booking_id = dictfetchall(cursor)
-                    print("sucess")
-                    print(booking_id)
-
                     cursor.close()
-                    for id in booking_id:
-                        for e in employees:
-                            print(e)
-                            try:
-                                cursor = connection.cursor()
-                                cursor.callproc('addEmployeeFlightBooking',[id['id'],e])
-                                booking_id = dictfetchall(cursor)
-
-                                cursor.close()
-                                data = {'success': 1, 'message': "Insert Success"}
-                                return JsonResponse(data)
-                            except Exception as e:
-                                data = {'success1': 0, 'error': getattr(e, 'message', str(e))}
-                                return JsonResponse(data)
-                    else:
-                        data = {'success': 1, 'message': "Insert Success"}
-                        return JsonResponse(data)
+                    data = {'success': 1, 'message': "Insert Success"}
+                    return JsonResponse(data)
 
                 except Exception as e:
                     print(e)
