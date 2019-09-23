@@ -84,5 +84,16 @@ urlpatterns = [
     path('agents/accept-train-booking', agent_views.accept_train_booking),
     path('agents/assign-train-booking/<int:id>', agent_views.assign_train_booking),
 
+    path('agents/hotel-bookings/<int:id>', agent_views.hotel_bookings),
+    path('agents/add-hotel-booking/<int:id>', agent_views.add_hotel_booking),
+    path('agents/view-hotel-booking/<int:id>', agent_views.view_hotel_booking),
+    path('agents/accept-hotel-booking', agent_views.accept_hotel_booking),
+    path('agents/assign-hotel-booking/<int:id>', agent_views.assign_hotel_booking),
+
+    path('agents/flight-bookings/<int:id>', agent_views.flight_bookings),
     path('agents/add-flight-booking/<int:id>', agent_views.add_flight_booking),
+    path('agents/view-flight-booking/<int:id>', agent_views.view_flight_booking),
+    path('agents/accept-flight-booking', agent_views.accept_flight_booking),
+    path('agents/assign-flight-booking/<int:id>', agent_views.assign_flight_booking),
+
 ]

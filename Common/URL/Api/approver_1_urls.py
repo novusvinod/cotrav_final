@@ -13,4 +13,12 @@ urlpatterns = [
     path('api/approver_1_train_bookings', approver_1_api_view.approver_1_train_bookings),
     path('api/approver_1_accept_train_booking', approver_1_api_view.approver_1_accept_train_booking),
     path('api/approver_1_reject_train_booking', approver_1_api_view.approver_1_reject_train_booking),
+
+    path('api/approver_1_hotel_bookings', approver_1_api_view.approver_1_hotel_bookings),
+    path('api/approver_1_accept_hotel_booking', approver_1_api_view.approver_1_accept_hotel_booking),
+    path('api/approver_1_reject_hotel_booking', approver_1_api_view.approver_1_reject_hotel_booking),
+
+    path('api/approver_1_flight_bookings', approver_1_api_view.approver_1_flight_bookings),
+    path('api/approver_1_accept_flight_booking', approver_1_api_view.approver_1_accept_flight_booking),
+    path('api/approver_1_reject_flight_booking', approver_1_api_view.approver_1_reject_flight_booking),
 ]

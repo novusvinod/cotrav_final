@@ -25,6 +25,11 @@ urlpatterns = [
     path('api/corporate_package', api_views.corporate_package),
 
     path('api/train_types', api_views.train_types),
+    path('api/bus_types', api_views.bus_types),
+    path('api/irctc_accounts', api_views.irctc_accounts),
+    path('api/hotel_types', api_views.hotel_types),
+    path('api/hotel_booking_portals', api_views.hotel_booking_portals),
+    path('api/room_types', api_views.room_types),
 
     path('api/taxi_types', api_views.taxi_types),
     path('api/add_taxi_type', api_views.add_taxi_type),
@@ -118,8 +123,13 @@ urlpatterns = [
 
     path('api/view_taxi_booking', api_views.view_taxi_booking),
     path('api/view_bus_booking', api_views.view_bus_booking),
+    path('api/view_train_booking', api_views.view_train_booking),
+    path('api/view_hotel_booking', api_views.view_hotel_booking),
+    path('api/view_flight_booking', api_views.view_flight_booking),
 
     path('api/add_taxi_booking', api_views.add_taxi_booking),
     path('api/add_bus_booking', api_views.add_bus_booking),
     path('api/add_train_booking', api_views.add_train_booking),
+    path('api/add_hotel_booking', api_views.add_hotel_booking),
+    path('api/add_flight_booking', api_views.add_flight_booking),
 ]

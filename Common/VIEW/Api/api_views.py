@@ -95,11 +95,16 @@ def companies(request):
             
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateDetails', [])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateDetails', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -121,11 +126,16 @@ def view_company(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewCorporateDetails', [corporate_id])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewCorporateDetails', [corporate_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -176,13 +186,18 @@ def add_companies(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
-                  address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
-                   is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
+                      address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
+                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -227,13 +242,18 @@ def update_company(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
-                  has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
-                   is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
+                      has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
+                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -257,11 +277,16 @@ def delete_company(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteCorporate',[corporate_id,user_id,user_type])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteCorporate',[corporate_id,user_id,user_type])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -303,12 +328,17 @@ def add_company_rates(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('addCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
-                                                    night_rate,user_id,user_type,rate_id])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
+                                                        night_rate,user_id,user_type,rate_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -345,12 +375,17 @@ def update_company_rates(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
-                                                    night_rate,user_id,user_type,rate_id])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
+                                                        night_rate,user_id,user_type,rate_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -375,11 +410,16 @@ def delete_company_rates(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteCorporateRate',[rate_id,user_id,user_type])
-                company = dictfetchall(cursor)
-                data = {'success': 1, 'Corporates': company}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteCorporateRate',[rate_id,user_id,user_type])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporates': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -406,11 +446,16 @@ def company_rates(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateRatesDetails', [corporate_id])
-                corporate_rates = dictfetchall(cursor)
-                data = {'success': 1, 'Corporate_Retes': corporate_rates}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateRatesDetails', [corporate_id])
+                    corporate_rates = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Corporate_Retes': corporate_rates}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -437,12 +482,16 @@ def billing_entities(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
-                entity = dictfetchall(cursor)
-
-                data = {'success': 1, 'Entitys': entity}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    entity = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Entitys': entity}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -471,12 +520,16 @@ def admins(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateAdminsDetails', [corporate_id])
-                admin = dictfetchall(cursor)
-
-                data = {'success': 1, 'Admins': admin}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateAdminsDetails', [corporate_id])
+                    admin = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Admins': admin}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -503,11 +556,16 @@ def groups(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateGroupsDetails', [corporate_id])
-                group = dictfetchall(cursor)
-                data = {'success': 1, 'Groups': group}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateGroupsDetails', [corporate_id])
+                    group = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Groups': group}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -534,11 +592,16 @@ def subgroups(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateSubgroupsDetails', [corporate_id])
-                subgroup = dictfetchall(cursor)
-                data = {'success': 1, 'Subgroups': subgroup}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateSubgroupsDetails', [corporate_id])
+                    subgroup = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Subgroups': subgroup}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -565,11 +628,16 @@ def spocs(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateSpocsDetails', [corporate_id])
-                spoc = dictfetchall(cursor)
-                data = {'success': 1, 'Spocs': spoc}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateSpocsDetails', [corporate_id])
+                    spoc = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Spocs': spoc}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -597,11 +665,16 @@ def employee(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateEmployeesDetails', [corporate_id])
-                employee = dictfetchall(cursor)
-                data = {'success': 1, 'Employees': employee}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    employee = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Employees': employee}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -628,11 +701,16 @@ def corporate_package(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getCorporatePackage', [corporate_id])
-                employee = dictfetchall(cursor)
-                data = {'success': 1, 'Package': employee}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getCorporatePackage', [corporate_id])
+                    employee = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Package': employee}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -659,11 +737,16 @@ def get_assessment_code(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllAssessmentCodes', [corporate_id])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'AssCodes': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllAssessmentCodes', [corporate_id])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'AssCodes': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -690,11 +773,16 @@ def get_assessment_city(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllAssessmentCity', [corporate_id])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'AssCity': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllAssessmentCity', [corporate_id])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'AssCity': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -715,11 +803,16 @@ def cities(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCity', [])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'Cities': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCity', [])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Cities': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -740,11 +833,16 @@ def taxi_types(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllTaxiTypes', [])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_types': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllTaxiTypes', [])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_types': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -765,11 +863,16 @@ def train_types(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllTrainTypes', [])
-                train = dictfetchall(cursor)
-                data = {'success': 1, 'Types': train}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllTrainTypes', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Types': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -779,6 +882,158 @@ def train_types(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
+
+def bus_types(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllBusTypes', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Types': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def irctc_accounts(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllIrctcAccounts', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Accounts': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def hotel_types(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllHotelTypes', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Types': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def hotel_booking_portals(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllHotelBookingPortals', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Portals': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def room_types(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllRoomTypes', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Types': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 
 
 def add_taxi_type(request):
@@ -793,11 +1048,16 @@ def add_taxi_type(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('addTaxiTypes', [type_name,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_types': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addTaxiTypes', [type_name,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_types': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -823,11 +1083,16 @@ def update_taxi_type(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateTaxiTypes', [type_name,taxitype_id,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_types': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateTaxiTypes', [type_name,taxitype_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_types': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -851,11 +1116,16 @@ def delete_taxi_type(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteTaxiTypes', [taxitype_id,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_types': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteTaxiTypes', [taxitype_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_types': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -882,11 +1152,16 @@ def add_taxi_model(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('addTaxiModel', [brand_name,model_name,taxi_type_id,no_of_seats,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_types': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addTaxiModel', [brand_name,model_name,taxi_type_id,no_of_seats,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_types': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -914,11 +1189,16 @@ def update_taxi_model(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateTaxiModel', [brand_name,model_name,taxi_type_id,no_of_seats,model_id,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_models': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateTaxiModel', [brand_name,model_name,taxi_type_id,no_of_seats,model_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_models': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -942,11 +1222,16 @@ def delete_taxi_model(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteTaxiModel', [model_id,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_models': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteTaxiModel', [model_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_models': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -968,11 +1253,16 @@ def taxis(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllTaxis', [])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'Taxis': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllTaxis', [])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Taxis': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -1006,11 +1296,16 @@ def add_taxi(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('addTaxi', [model_id,taxi_reg_no,make_year,garage_location,garage_distance,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_types': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addTaxi', [model_id,taxi_reg_no,make_year,garage_location,garage_distance,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_types': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -1046,11 +1341,16 @@ def update_taxi(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateTaxi', [model_id,taxi_reg_no,make_year,garage_location,garage_distance,taxi_id,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_models': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateTaxi', [model_id,taxi_reg_no,make_year,garage_location,garage_distance,taxi_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_models': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -1073,11 +1373,16 @@ def delete_taxi(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteTaxi', [taxi_id,user_id,user_type])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'taxi_models': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteTaxi', [taxi_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'taxi_models': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -1099,11 +1404,16 @@ def taxi_models(request):
 
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllTaxiModels', [])
-                cities = dictfetchall(cursor)
-                data = {'success': 1, 'Models': cities}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllTaxiModels', [])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Models': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -1161,6 +1471,7 @@ def add_billing_entity(request):
                                                                         contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
                                                                         gst_id,pan_no,entity_id,is_delete])
                     result = dictfetchall(cursor)
+                    cursor.close()
                     
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
@@ -1219,7 +1530,7 @@ def update_billing_entity(request):
                     cursor.callproc('updateCorporateBillingEntity', [user_id,corporate_id,user_type,entity_name,billing_city_id,contact_person_name,
                                                                         contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
                                                                         gst_id,pan_no,entity_id])
-
+                    cursor.close()
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -1266,7 +1577,7 @@ def delete_billing_entity(request):
                 try:
                     cursor.callproc('deleteCorporateBillingEntity',
                                     [user_id, user_type, entity_id])
-
+                    cursor.close()
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -1305,6 +1616,7 @@ def add_group(request):
                     cursor.callproc('addNewCorporateGroup', [user_id,corporate_id,user_type,group_name,zone_name])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1346,6 +1658,7 @@ def update_group(request):
                     cursor.callproc('updateGroupDetails', [group_id,group_name,zone_name,user_id,user_type])
 
                     data = {'success': 1, 'message': "Updated Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1384,6 +1697,7 @@ def delete_group(request):
                     cursor.callproc('deleteGroupDetails', [group_id,user_id,user_type])
 
                     data = {'success': 1, 'message': "Deleted Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1421,6 +1735,7 @@ def add_subgroup(request):
                     cursor.callproc('addNewCorporateSubGroup', [user_id,corporate_id,user_type,subgroup_name,group_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1462,6 +1777,7 @@ def update_subgroup(request):
                     cursor.callproc('updateSubGroupDetails', [subgroup_id,subgroup_name,user_id,user_type])
 
                     data = {'success': 1, 'message': "Updated Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1501,6 +1817,7 @@ def delete_subgroup(request):
                     cursor.callproc('deleteSubGroupDetails', [subgroup_id,user_id,user_type])
 
                     data = {'success': 1, 'message': "Deleted Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1574,6 +1891,7 @@ def add_group_auth(request):
                                                              is_water_bottles,is_reverse_logistics,group_id,is_delete,access_token,password,group_auth_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1625,6 +1943,7 @@ def update_group_auth(request):
                         is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,group_auth_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1659,6 +1978,7 @@ def delete_group_auth(request):
                     cursor.callproc('deleteGroupAuthenticator', [group_auth_id,user_id,user_type])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1732,6 +2052,7 @@ def add_subgroup_auth(request):
                                                              is_water_bottles,is_reverse_logistics,subgroup_id,is_delete,access_token,password,subgroup_auth_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1783,6 +2104,7 @@ def update_subgroup_auth(request):
                         is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,subgroup_auth_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1817,6 +2139,7 @@ def delete_subgroup_auth(request):
                     cursor.callproc('deleteSubGroupAuthenticator', [subgroup_auth_id,user_id,user_type])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1887,6 +2210,7 @@ def add_admin(request):
                                                              is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1938,6 +2262,7 @@ def update_admin(request):
                         is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,admin_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -1973,6 +2298,7 @@ def delete_admin(request):
                     cursor.callproc('deleteCorporateAdmin', [admin_id,user_id,user_type])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2054,9 +2380,7 @@ def add_spoc(request):
                     result = cursor.callproc('addNewCorporateSpoc', [user_id,corporate_id,user_type,group_id,subgroup_id,user_cid,user_name,user_contact,email,username,
                                                             budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
                                                              is_water_bottles,is_reverse_logistics,is_delete,access_token,password,spoc_id])
-
-
-
+                    cursor.close()
                     data = {'success': 1, 'message': "Data Insert Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -2120,6 +2444,7 @@ def update_spoc(request):
                                                              is_water_bottles,is_reverse_logistics,is_delete,spoc_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2153,6 +2478,7 @@ def delete_spoc(request):
                 try:
                     cursor.callproc('deleteCorporateSpoc', [spoc_id,user_id,user_type])
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2242,6 +2568,7 @@ def add_employee(request):
                     company = dictfetchall(cursor)
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2303,6 +2630,7 @@ def update_employee(request):
                     fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,employee_id,billing_entity_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2336,6 +2664,7 @@ def delete_employee(request):
                 try:
                     cursor.callproc('deleteCorporateEmployee', [employee_id,user_id,user_type])
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2393,6 +2722,7 @@ def add_agent(request):
                                                           user_type])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2452,6 +2782,7 @@ def update_agent(request):
                                                           user_type,agent_id])
 
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2485,6 +2816,7 @@ def delete_agent(request):
                 try:
                     cursor.callproc('deleteAgent', [user_id,user_type,agent_id])
                     data = {'success': 1, 'message': "Data Insert Successfully"}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -2518,11 +2850,16 @@ def view_group(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewGroupDetails', [group_id])
-                group = dictfetchall(cursor)
-                data = {'success': 1, 'Groups': group}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewGroupDetails', [group_id])
+                    group = dictfetchall(cursor)
+                    data = {'success': 1, 'Groups': group}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2549,11 +2886,16 @@ def view_group_auth(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateGroupsAuthenticator', [group_id])
-                group = dictfetchall(cursor)
-                data = {'success': 1, 'Groups': group}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateGroupsAuthenticator', [group_id])
+                    group = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Groups': group}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2580,11 +2922,16 @@ def view_subgroup(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewSubGroupDetails', [subgroup_id])
-                group = dictfetchall(cursor)
-                data = {'success': 1, 'SubGroups': group}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewSubGroupDetails', [subgroup_id])
+                    group = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'SubGroups': group}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2611,11 +2958,16 @@ def view_subgroup_auth(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateSubGroupsAuthenticator', [subgroup_id])
-                group = dictfetchall(cursor)
-                data = {'success': 1, 'SubGroups': group}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateSubGroupsAuthenticator', [subgroup_id])
+                    group = dictfetchall(cursor)
+                    data = {'success': 1, 'SubGroups': group}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2642,11 +2994,16 @@ def view_spoc(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewSpocDetails', [spoc_id])
-                spoc = dictfetchall(cursor)
-                data = {'success': 1, 'Spoc': spoc}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewSpocDetails', [spoc_id])
+                    spoc = dictfetchall(cursor)
+                    data = {'success': 1, 'Spoc': spoc}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2673,11 +3030,16 @@ def view_employee(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewEmployeeDetails', [employee_id])
-                emp = dictfetchall(cursor)
-                data = {'success': 1, 'Employee': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewEmployeeDetails', [employee_id])
+                    emp = dictfetchall(cursor)
+                    data = {'success': 1, 'Employee': emp}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2704,11 +3066,16 @@ def view_agent(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewAgentDetails', [agent_id])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Agent': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewAgentDetails', [agent_id])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Agent': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2736,11 +3103,16 @@ def assessment_codes(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Codes': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Codes': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2795,11 +3167,16 @@ def add_assessment_codes(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('addCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,user_id,user_type,service_from,service_to])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Codes': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,user_id,user_type,service_from,service_to])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Codes': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2854,11 +3231,16 @@ def update_assessment_codes(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,code_id,user_id,user_type,service_from,service_to])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Codes': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateCorporateAssessmentCodes', [corporate_id,assessment_code,code_desc,from_date,to_date,code_id,user_id,user_type,service_from,service_to])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Codes': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2883,11 +3265,16 @@ def delete_assessment_codes(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteCorporateAssessmentCodes', [code_id,user_id,user_type])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Codes': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteCorporateAssessmentCodes', [code_id,user_id,user_type])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Codes': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2914,11 +3301,16 @@ def assessment_cities(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllCorporateAssessmentCities', [corporate_id])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Cities': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateAssessmentCities', [corporate_id])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Cities': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2944,11 +3336,16 @@ def add_assessment_cities(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('addCorporateAssessmentCity', [corporate_id,city_name,user_id,user_type])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Codes': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addCorporateAssessmentCity', [corporate_id,city_name,user_id,user_type])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Codes': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -2975,11 +3372,16 @@ def update_assessment_cities(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('updateCorporateAssessmentCity', [corporate_id,city_name,city_id,user_id,user_type])
-                agent = dictfetchall(cursor)
-                data = {'success': 1, 'Codes': agent}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateCorporateAssessmentCity', [corporate_id,city_name,city_id,user_id,user_type])
+                    agent = dictfetchall(cursor)
+                    data = {'success': 1, 'Codes': agent}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -3004,11 +3406,16 @@ def delete_assessment_cities(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('deleteCorporateAssessmentCity', [city_id,user_id,user_type])
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteCorporateAssessmentCity', [city_id,user_id,user_type])
 
-                data = {'success': 1, 'message': 'Operation Success'}
-                return JsonResponse(data)
+                    data = {'success': 1, 'message': 'Operation Success'}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -3018,6 +3425,7 @@ def delete_assessment_cities(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
 
 def get_agents(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -3029,11 +3437,16 @@ def get_agents(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('getAllAgentsDetails', [])
-                emp = dictfetchall(cursor)
-                data = {'success': 1, 'Agents': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllAgentsDetails', [])
+                    emp = dictfetchall(cursor)
+                    data = {'success': 1, 'Agents': emp}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -3057,18 +3470,23 @@ def view_taxi_booking(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewTaxiBooking', [booking_id])
-                emp = dictfetchall(cursor)
-                cursor.close()
-                cursor1 = connection.cursor()
-                booking_id = emp[0]['id']
-                print(booking_id)
-                cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
-                passanger = dictfetchall(cursor1)
-                emp[0]['Passangers'] = passanger
-                data = {'success': 1, 'Bookings': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    cursor1 = connection.cursor()
+                    booking_id = emp[0]['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    data = {'success': 1, 'Bookings': emp}
+                    cursor1.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -3090,18 +3508,23 @@ def view_bus_booking(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewBusBooking', [booking_id])
-                emp = dictfetchall(cursor)
-                cursor.close()
-                cursor1 = connection.cursor()
-                booking_id = emp[0]['id']
-                print(booking_id)
-                cursor1.callproc('getAllBusBookingPassangers', [booking_id])
-                passanger = dictfetchall(cursor1)
-                emp[0]['Passangers'] = passanger
-                data = {'success': 1, 'Bookings': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewBusBooking', [booking_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    cursor1 = connection.cursor()
+                    booking_id = emp[0]['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    data = {'success': 1, 'Bookings': emp}
+                    cursor1.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -3123,18 +3546,23 @@ def view_train_booking(request):
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
-                cursor = connection.cursor()
-                cursor.callproc('viewBusBooking', [booking_id])
-                emp = dictfetchall(cursor)
-                cursor.close()
-                cursor1 = connection.cursor()
-                booking_id = emp[0]['id']
-                print(booking_id)
-                cursor1.callproc('getAllBusBookingPassangers', [booking_id])
-                passanger = dictfetchall(cursor1)
-                emp[0]['Passangers'] = passanger
-                data = {'success': 1, 'Bookings': emp}
-                return JsonResponse(data)
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewBusBooking', [booking_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    cursor1 = connection.cursor()
+                    booking_id = emp[0]['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    data = {'success': 1, 'Bookings': emp}
+                    cursor1.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
                 return JsonResponse(data)
@@ -3145,6 +3573,94 @@ def view_train_booking(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
+
+def view_hotel_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        print("hotel Booking Id")
+        print(booking_id)
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewHotelBooking', [booking_id])
+                    emp = dictfetchall(cursor)
+                    print(emp)
+                    cursor.close()
+                    cursor1 = connection.cursor()
+                    booking_id = emp[0]['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllHotelBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    data = {'success': 1, 'Bookings': emp}
+                    cursor1.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def view_flight_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        booking_id = request.POST.get('booking_id', '')
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewFlightBooking', [booking_id])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    cursor1 = connection.cursor()
+                    booking_id = emp[0]['id']
+                    print(booking_id)
+                    cursor1.callproc('getAllFlightBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    cursor1.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('getAllFlightBookingFlights', [booking_id])
+                    flights = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    emp[0]['Passangers'] = passanger
+                    emp[0]['Flights'] = flights
+                    data = {'success': 1, 'Bookings': emp}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def add_city_name(request):
@@ -3165,6 +3681,7 @@ def add_city_name(request):
                     cursor.callproc('addCities', [city_name,state_id])
                     result = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Data Insert Successfully",'id':result}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -3201,6 +3718,7 @@ def add_state_name(request):
                     cursor.callproc('addState', [city_state,country_id])
                     result = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Data Insert Successfully",'id':result}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -3236,6 +3754,7 @@ def add_country_name(request):
                     cursor.callproc('addCountry', [city_country])
                     result = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Data Insert Successfully",'id':result}
+                    cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
@@ -3270,7 +3789,7 @@ def add_taxi_booking(request):
         pickup_location = request.POST.get('pickup_location', '')
         drop_location = request.POST.get('drop_location', '')
         pickup_datetime = request.POST.get('pickup_datetime', '')
-        pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
+        #pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
         taxi_type = request.POST.get('taxi_type')
         package_id = request.POST.get('package_id')
         no_of_days = request.POST.get('no_of_days', '')
@@ -3306,7 +3825,7 @@ def add_taxi_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
 
         employees = request.POST.getlist('employees', '')
-        print("employss")
+        print("employees")
         print(employees)
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -3323,10 +3842,14 @@ def add_taxi_booking(request):
                     cursor.close()
                     for id in booking_id:
                         for e in employees:
-                            cursor = connection.cursor()
-                            cursor.callproc('addEmployeeTaxiBooking',[id['id'],e])
-                            cursor.close()
-                            data = {'success': 1, 'message': "Insert Successfully"}
+                            try:
+                                cursor = connection.cursor()
+                                cursor.callproc('addEmployeeTaxiBooking',[id['id'],e])
+                                cursor.close()
+                                data = {'success': 1, 'message': "Insert Successfully"}
+                            except Exception as e:
+                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                                return JsonResponse(data)
                             return JsonResponse(data)
                     else:
                         data = {'success': 1, 'message': "Insert Successfully"}
@@ -3364,10 +3887,10 @@ def add_bus_booking(request):
         to_location = request.POST.get('to', '')
         bus_type = request.POST.get('bus_type', '')
         booking_datetime = request.POST.get('booking_datetime', '')
-        booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+        #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
 
         journey_datetime = request.POST.get('journey_datetime', '')
-        journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
+        #journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
         entity_id = request.POST.get('entity_id', '')
         preferred_bus = request.POST.get('preferred_bus', '')
         assessment_code = request.POST.get('assessment_code', '')
@@ -3387,6 +3910,7 @@ def add_bus_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
 
         employees = request.POST.getlist('employees', '')
+
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3404,13 +3928,17 @@ def add_bus_booking(request):
                     cursor.close()
                     for id in booking_id:
                         for e in employees:
-                            cursor = connection.cursor()
-                            cursor.callproc('addEmployeeBusBooking',[id['id'],e])
-                            booking_id = dictfetchall(cursor)
+                            try:
+                                cursor = connection.cursor()
+                                cursor.callproc('addEmployeeBusBooking',[id['id'],e])
+                                booking_id = dictfetchall(cursor)
 
-                            cursor.close()
-                            data = {'success': 1, 'message': "Insert Success"}
-                            return JsonResponse(data)
+                                cursor.close()
+                                data = {'success': 1, 'message': "Insert Success"}
+                                return JsonResponse(data)
+                            except Exception as e:
+                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                                return JsonResponse(data)
                     else:
                         data = {'success': 1, 'message': "Insert Success"}
                         return JsonResponse(data)
@@ -3447,10 +3975,10 @@ def add_train_booking(request):
         to_location = request.POST.get('to', '')
         train_type = request.POST.get('train_type', '')
         booking_datetime = request.POST.get('booking_datetime', '')
-        booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+        #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
 
         journey_datetime = request.POST.get('journey_datetime', '')
-        journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
+        #journey_datetime = datetime.strptime(journey_datetime, '%d/%m/%Y %H:%M:%S')
         entity_id = request.POST.get('entity_id', '')
         preferred_train = request.POST.get('preferred_train', '')
         assessment_code = request.POST.get('assessment_code', '')
@@ -3487,13 +4015,17 @@ def add_train_booking(request):
                     cursor.close()
                     for id in booking_id:
                         for e in employees:
-                            cursor = connection.cursor()
-                            cursor.callproc('addEmployeeTrainBooking',[id['id'],e])
-                            booking_id = dictfetchall(cursor)
+                            try:
+                                cursor = connection.cursor()
+                                cursor.callproc('addEmployeeTrainBooking',[id['id'],e])
+                                booking_id = dictfetchall(cursor)
 
-                            cursor.close()
-                            data = {'success': 1, 'message': "Insert Success"}
-                            return JsonResponse(data)
+                                cursor.close()
+                                data = {'success': 1, 'message': "Insert Success"}
+                                return JsonResponse(data)
+                            except Exception as e:
+                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                                return JsonResponse(data)
                     else:
                         data = {'success': 1, 'message': "Insert Success"}
                         return JsonResponse(data)
@@ -3514,6 +4046,188 @@ def add_train_booking(request):
         return JsonResponse(data)
 
 
+def add_hotel_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id', '')
+
+        corporate_id = request.POST.get('corporate_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        from_city_id = request.POST.get('from_city_id', '')
+        from_area_id = request.POST.get('from_area_id', '')
+        preferred_area = request.POST.get('preferred_area', '')
+        bucket_priority_1 = request.POST.get('bucket_priority_1', '')
+        bucket_priority_2 = request.POST.get('bucket_priority_2', '')
+        room_type_id = request.POST.get('room_type_id', '')
+
+        booking_datetime = request.POST.get('booking_datetime', '')
+
+        checkin_datetime = request.POST.get('checkin_datetime', '')
+
+        checkout_datetime = request.POST.get('checkout_datetime', '')
+
+
+        preferred_hotel= request.POST.get('preferred_hotel','')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+
+        if assessment_code:
+            pass
+        else:
+            assessment_code=0
+
+        if assessment_city_id:
+            pass
+        else:
+            assessment_city_id=0
+
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+
+        employees = request.POST.getlist('employees', '')
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+
+                    cursor.callproc('addHotelBooking', [from_city_id,from_area_id,preferred_area,checkin_datetime,checkout_datetime,bucket_priority_1,bucket_priority_2,
+                                                      room_type_id,preferred_hotel,booking_datetime,assessment_code,assessment_city_id,no_of_seats,
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type])
+                    booking_id = dictfetchall(cursor)
+                    print("booking ID ")
+                    print(booking_id)
+                    cursor.close()
+                    for id in booking_id:
+                        print(id['id'])
+                        for e in employees:
+                            print(e)
+                            try:
+                                cursor = connection.cursor()
+                                cursor.callproc('addEmployeeHotelBooking',[id['id'],e])
+                                booking_id = dictfetchall(cursor)
+                                print("booking ID ")
+                                print(booking_id)
+                                cursor.close()
+                                data = {'success': 1, 'message': "Insert Success"}
+                                return JsonResponse(data)
+                            except Exception as e:
+                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                                return JsonResponse(data)
+                    else:
+                        data = {'success': 1, 'message': "Insert Success"}
+                        return JsonResponse(data)
+
+                except Exception as e:
+                    print("EXCEPTION")
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def add_flight_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id', '')
+
+        corporate_id = request.POST.get('corporate_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        usage_type = request.POST.get('usage_type', '')
+        journey_type = request.POST.get('trip_type', '')
+        flight_class = request.POST.get('seat_type', '')
+        from_location = request.POST.get('from_city', '')
+        to_location = request.POST.get('to_city', '')
+
+        booking_datetime = request.POST.get('booking_datetime', '')
+        #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+        departure_datetime = request.POST.get('departure_date', '')
+        #departure_datetime = datetime.strptime(departure_datetime, '%d/%m/%Y %H:%M:%S')
+
+        preferred_flight= request.POST.get('preferred_flight','')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        assessment_code = request.POST.get('assessment_code', '')
+
+
+        if assessment_code:
+            pass
+        else:
+            assessment_code=0
+
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+
+        employees = request.POST.getlist('employees', '')
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+
+                    cursor.callproc('addFlightBooking', [usage_type,journey_type,flight_class,from_location,to_location,booking_datetime,departure_datetime,
+                                                      preferred_flight,assessment_code,no_of_seats,
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type])
+                    booking_id = dictfetchall(cursor)
+                    print("sucess")
+                    print(booking_id)
+
+                    cursor.close()
+                    for id in booking_id:
+                        for e in employees:
+                            print(e)
+                            try:
+                                cursor = connection.cursor()
+                                cursor.callproc('addEmployeeFlightBooking',[id['id'],e])
+                                booking_id = dictfetchall(cursor)
+
+                                cursor.close()
+                                data = {'success': 1, 'message': "Insert Success"}
+                                return JsonResponse(data)
+                            except Exception as e:
+                                data = {'success1': 0, 'error': getattr(e, 'message', str(e))}
+                                return JsonResponse(data)
+                    else:
+                        data = {'success': 1, 'message': "Insert Success"}
+                        return JsonResponse(data)
+
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):

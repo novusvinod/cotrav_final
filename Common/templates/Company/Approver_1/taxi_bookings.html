@@ -70,11 +70,11 @@
 
                                     {% if booking.status_client == 1 %}
                                     <td>
-                                        <a href="/Corporate/Approver_1/accept-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-check"></i>
+                                        <a style="background:cadetblue; color:white;" href="/Corporate/Approver_1/accept-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
+                                             <i class="fa fa-check"></i>
                                         </a>
-                                         <a href="/Corporate/Approver_1/reject-taxi-booking/{{ booking.id }}" class="btn btn-tbl-delete btn-xs">
-                                            <i class="fa fa-trash-o"></i>
+                                         <a  href="/Corporate/Approver_1/reject-taxi-booking/{{ booking.id }}" class="btn btn-tbl-delete btn-xs">
+                                            <i class="fa fa-trash-o "></i>
                                         </a>
                                     </td>
                                     {% else %}
@@ -82,8 +82,7 @@
                                     {% endif %}
 
                                     <td>
-                                        <a href="/Corporate/Approver_1/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        <a href="/Corporate/Approver_1/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs"style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>

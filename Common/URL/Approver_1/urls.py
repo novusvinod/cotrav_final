@@ -27,4 +27,14 @@ urlpatterns = [
     path('Corporate/Approver_1/view-train-booking/<int:id>', approver_1_views.view_train_booking),
     path('Corporate/Approver_1/accept-train-booking/<int:id>', approver_1_views.accept_train_booking),
     path('Corporate/Approver_1/reject-train-booking/<int:id>', approver_1_views.reject_train_booking),
+
+    path('Corporate/Approver_1/hotel-bookings/<int:id>', approver_1_views.hotel_bookings),
+    path('Corporate/Approver_1/view-hotel-booking/<int:id>', approver_1_views.view_hotel_booking),
+    path('Corporate/Approver_1/accept-hotel-booking/<int:id>', approver_1_views.accept_hotel_booking),
+    path('Corporate/Approver_1/reject-hotel-booking/<int:id>', approver_1_views.reject_hotel_booking),
+
+    path('Corporate/Approver_1/flight-bookings/<int:id>', approver_1_views.flight_bookings),
+    path('Corporate/Approver_1/view-flight-booking/<int:id>', approver_1_views.view_flight_booking),
+    path('Corporate/Approver_1/accept-flight-booking/<int:id>', approver_1_views.accept_flight_booking),
+    path('Corporate/Approver_1/reject-flight-booking/<int:id>', approver_1_views.reject_flight_booking),
 ]

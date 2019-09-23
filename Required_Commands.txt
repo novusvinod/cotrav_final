@@ -2,7 +2,7 @@
 sudo yum install gcc
 yum provides mysql_config
 yum install mariadb-devel
-pip3.6 install pipenv
+pip3 install pipenv
 sudo yum install openssl-devel
 sudo yum install libffi-devel
     yum install python34-devel.x86_64
@@ -11,18 +11,23 @@ sudo yum install libffi-devel
     pip install mysqlclient
 
 
-
+---------ubuntu----------
+sudo apt-get install python-dev python3-dev
+sudo apt-get install libmysqlclient-dev
+pip install pymysql
 pip install mysqlclient
+
+pip3 install mysqlclient
 
 #Django middleware that keep request instance for every thread.
 REQUIRED PYTHON_3
-pip3.7 install django-middleware-global-request
+pip3 install django-middleware-global-request
 
 #Django REST framework is a powerful and flexible toolkit for building Web APIs.
-pip3.7 install djangorestframework
+pip3 install djangorestframework
 
 # Django REST framework CALL Internal API
-pip3.7 install requests
+pip3 install requests
 
 #For MYSQL _
 wget http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm

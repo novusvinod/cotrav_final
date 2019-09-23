@@ -45,5 +45,14 @@ urlpatterns = [
     path('api/reject_train_booking', agent_api_view.reject_train_booking),
     path('api/assign_train_booking', agent_api_view.assign_train_booking),
 
+    path('api/agent_hotel_bookings', agent_api_view.agent_hotel_bookings),
+    path('api/accept_hotel_booking', agent_api_view.accept_hotel_booking),
+    path('api/reject_hotel_booking', agent_api_view.reject_hotel_booking),
+    path('api/assign_hotel_booking', agent_api_view.assign_hotel_booking),
+
+    path('api/agent_flight_bookings', agent_api_view.agent_flight_bookings),
+    path('api/accept_flight_booking', agent_api_view.accept_flight_booking),
+    path('api/reject_flight_booking', agent_api_view.reject_flight_booking),
+    path('api/assign_flight_booking', agent_api_view.assign_flight_booking),
 
 ]

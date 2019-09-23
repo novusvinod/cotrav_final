@@ -1,0 +1,134 @@
+{% extends 'Company/Employee/layout/header.html' %}
+
+{% block content %}
+
+
+
+{% if user %}
+<!-- start page content -->
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+{% for booking in bookings %}
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Basic Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Reference No</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                     readonly  type="text" value="{{ booking.reference_no }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Tour Type</label>
+                            <div class="col-sm-7">
+                                    {% if booking.tour_type == 1 %}
+                                     <input readonly class="form-control"name="tour_type" type="text" value="Radio">
+                                    {% elif booking.tour_type == 2 %}
+                                     <input readonly class="form-control" name="tour_type" type="text" value="Local">
+                                    {% else %}
+                                    <input readonly class="form-control" name="tour_type" type="text" value="Outstation">
+                                    {% endif %}
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">City Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="City Name"
+                                     readonly  type="text" value="{{ booking.city_name }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Pickup Location</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="pickup_location" placeholder="Pickup Location"
+                                     readonly  type="text" value="{{ booking.pickup_location }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Drop Location</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="drop_location" placeholder="Drop Location"
+                                     readonly  type="text" value="{{ booking.drop_location }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Pickup Date</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
+                                     readonly  type="text" value="{{ booking.pickup_datetime }}">
+                            </div>
+                        </div>
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Booking Date</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="booking_date" placeholder="Booking Date"
+                                     readonly  type="text" value="{{ booking.booking_date }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">No Of Seats</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="no_of_seats" placeholder="No Of Seats"
+                                     readonly  type="text" value="{{ booking.no_of_seats }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Booking Reason</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
+                                     readonly  type="text" value="{{ booking.reason_booking }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-md-4">
+
+            </div>
+
+            <div class="col-md-4">
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+ {% endfor %}
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+{% endblock %}
+
+
+

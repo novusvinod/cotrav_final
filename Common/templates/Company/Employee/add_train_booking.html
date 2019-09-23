@@ -43,7 +43,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Bus Type*</label>
-                                 <select name="bus_type" class="form-control col-sm-8 tour_type">
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
                                       <option value="1">AC Seater</option>
                                       <option value="2">AC Sleeper</option>
                                       <option value="3">NON AC Seater</option>
@@ -70,7 +70,7 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
-                                   <select name="assessment_code" class="form-control col-sm-8">
+                                   <select name="assessment_code" class="form-control col-sm-8 myselect">
                                         {% for assessment in assessments %}
                                         <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                         {% endfor %}
@@ -79,7 +79,7 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment City*</label>
-                                   <select name="assessment_city_id" class="form-control col-sm-8">
+                                   <select name="assessment_city_id" class="form-control col-sm-8 myselect">
                                         {% for city in cities %}
                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                         {% endfor %}
@@ -186,3 +186,6 @@ var options = {
    var auto3 = new google.maps.places.Autocomplete(drop_location, options);
  });
 </script>
+
+
+{% endblock %}

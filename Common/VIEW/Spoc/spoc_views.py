@@ -262,6 +262,7 @@ def add_taxi_booking(request,id):
 
             corporate_id = request.POST.get('corporate_id', '')
             spoc_id = request.POST.get('spoc_id', '')
+            user_id = request.POST.get('user_id', '')
             group_id = request.POST.get('group_id', '')
             subgroup_id = request.POST.get('subgroup_id', '')
 
@@ -275,6 +276,7 @@ def add_taxi_booking(request,id):
             no_of_days = request.POST.get('no_of_days', '')
             assessment_code = request.POST.get('assessment_code', '')
             assessment_city_id = request.POST.get('assessment_city_id', '')
+            entity_id = request.POST.get('entity_id', '')
 
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
@@ -312,10 +314,11 @@ def add_taxi_booking(request,id):
             payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
                        'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
-                       'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees}
+                       'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,
+                       'employees':employees,'user_id':user_id,'entity_id':entity_id}
             print(payload)
 
-            url_taxi_booking = settings.API_BASE_URL + "spoc_add_taxi_booking"
+            url_taxi_booking = settings.API_BASE_URL + "add_taxi_booking"
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
@@ -335,10 +338,6 @@ def add_taxi_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
             taxies = taxies['taxi_types']
@@ -351,8 +350,16 @@ def add_taxi_booking(request,id):
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
+            url_city = settings.API_BASE_URL + "get_assessment_city"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['AssCity']
+
+            url_pack = settings.API_BASE_URL + "corporate_package"
+            packages = getDataFromAPI(login_type, access_token, url_pack, payload)
+            packages = packages['Package']
+
             if id:
-                return render(request, 'Company/Spoc/add_taxi_booking.html', {'employees':employees,'entities':entities,'cities':cities,'taxies':taxies,'assessments':ass_code})
+                return render(request, 'Company/Spoc/add_taxi_booking.html', {'packages':packages,'employees':employees,'entities':entities,'cities':cities,'taxies':taxies,'assessments':ass_code})
             else:
                 return render(request, 'Company/Spoc/add_taxi_booking.html', {})
         else:
@@ -460,10 +467,6 @@ def add_bus_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             url_enty = settings.API_BASE_URL + "billing_entities"
             entys = getDataFromAPI(login_type, access_token, url_enty, payload)
             entities = entys['Entitys']
@@ -472,8 +475,17 @@ def add_bus_booking(request,id):
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
+            url_city = settings.API_BASE_URL + "get_assessment_city"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['AssCity']
+
+            url_bus_type = settings.API_BASE_URL + "bus_types"
+            bus_type = getDataFromAPI(login_type, access_token, url_bus_type, payload)
+            bus_types = bus_type['Types']
+
+
             if id:
-                return render(request, 'Company/Spoc/add_bus_booking.html', {'employees':employees,'cities':cities,'entities':entities,'assessments':ass_code})
+                return render(request, 'Company/Spoc/add_bus_booking.html', {'bus_types':bus_types,'employees':employees,'cities':cities,'entities':entities,'assessments':ass_code})
             else:
                 return render(request, 'Company/Spoc/add_bus_booking.html', {})
         else:
@@ -566,7 +578,286 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/Corporate/Spoc/train-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/login")
+    else:
+        if 'login_type' in request.session:
+            request = get_request()
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+
+            url_emp = settings.API_BASE_URL + "employees"
+            payload = {'corporate_id': id}
+            r = requests.post(url_emp, data=payload, headers=headers)
+            company_emp = json.loads(r.text)
+            employees = company_emp['Employees']
+
+            url_enty = settings.API_BASE_URL + "billing_entities"
+            entys = getDataFromAPI(login_type, access_token, url_enty, payload)
+            entities = entys['Entitys']
+
+            url_ass_code = settings.API_BASE_URL + "get_assessment_code"
+            ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
+            ass_code = ass_code['AssCodes']
+
+            url_city = settings.API_BASE_URL + "get_assessment_city"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['AssCity']
+
+            url_bus_type = settings.API_BASE_URL + "train_types"
+            bus_type = getDataFromAPI(login_type, access_token, url_bus_type, payload)
+            train_types = bus_type['Types']
+
+            if id:
+                return render(request, 'Company/Spoc/add_train_booking.html', {'train_types':train_types,'employees':employees,'cities':cities,'entities':entities,'assessments':ass_code})
+            else:
+                return render(request, 'Company/Spoc/add_train_booking.html', {})
+        else:
+            return HttpResponseRedirect("/login")
+
+############################################# HOTELS #########################################
+
+
+def hotel_bookings(request,id):
+
+    if 'login_type' in request.session:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "spoc_hotel_bookings"
+        payload = {'spoc_id': user_id,'booking_type':id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Spoc/hotel_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Spoc/hotel_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_hotel_booking(request,id):
+
+    if 'login_type' in request.session:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_hotel_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        print(company)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Spoc/view_hotel_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Spoc/view_hotel_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def add_hotel_booking(request,id):
+    if request.method == 'POST':
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            user_id = request.POST.get('spoc_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            group_id = request.POST.get('group_id', '')
+            subgroup_id = request.POST.get('subgroup_id', '')
+
+            from_city = request.POST.get('from_city')
+            city_area = request.POST.get('city_area')
+            preferred_hotel_area = request.POST.get('preferred_hotel_area')
+            check_in_date = request.POST.get('check_in_date')
+            check_out_date = request.POST.get('check_out_date')
+            room_type_priority1 = request.POST.get('room_type_priority1')
+            room_type_priority2 = request.POST.get('room_type_priority2')
+            room_occupancy = request.POST.get('room_occupancy')
+            preferred_hotel = request.POST.get('preferred_hotel')
+            booking_date = request.POST.get('booking_datetime')
+
+            assessment_code = request.POST.get('assessment_code')
+
+            assessment_city = request.POST.get('assessment_city')
+            billing_entity = request.POST.get('billing_entity')
+            reason_for_booking = request.POST.get('reason_for_booking')
+
+            no_of_seats = 1
+
+            employees = []
+
+            for i in range(1,2):
+                employees.append(request.POST.get('employee_id_'+str(i), ''))
+                print(employees)
+
+            payload = {'login_type': login_type, 'user_id': user_id, 'access_token': access_token,
+                       'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
+                       'subgroup_id': subgroup_id, 'from_city_id': from_city, 'from_area_id': city_area,
+                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date,
+                       'checkout_datetime': check_out_date, 'bucket_priority_1': room_type_priority1,
+                       'bucket_priority_2': room_type_priority2, 'room_type_id': room_occupancy,
+                       'preferred_hotel': preferred_hotel, 'booking_datetime': booking_date,
+                       'assessment_code': assessment_code, 'assessment_city_id': assessment_city,
+                       'billing_entity_id': billing_entity, 'employees': employees,'reason_booking':reason_for_booking,'no_of_seats':no_of_seats}
+            print(payload)
+
+            url_taxi_booking = settings.API_BASE_URL + "add_hotel_booking"
+            booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
+
+            if booking['success'] == 1:
+                return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+        else:
+            return HttpResponseRedirect("/login")
+    else:
+        if 'login_type' in request.session:
+            request = get_request()
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
+
+            url_emp = settings.API_BASE_URL + "employees"
+            payload = {'corporate_id': id}
+            r = requests.post(url_emp, data=payload, headers=headers)
+            company_emp = json.loads(r.text)
+            employees = company_emp['Employees']
+
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['Cities']
+
+            url_emp = settings.API_BASE_URL + "employees"
+            payload = {'corporate_id': id}
+            r = requests.post(url_emp, data=payload, headers=headers)
+            company_emp = json.loads(r.text)
+            employees = company_emp['Employees']
+
+            url_enty = settings.API_BASE_URL + "billing_entities"
+            entys = getDataFromAPI(login_type, access_token, url_enty, payload)
+            entities = entys['Entitys']
+
+            url_ass_code = settings.API_BASE_URL + "get_assessment_code"
+            ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
+            ass_code = ass_code['AssCodes']
+
+            url_cities_ass = settings.API_BASE_URL + "get_assessment_city"
+            cities_ass = getDataFromAPI(login_type, access_token, url_cities_ass, payload)
+            cities_ass = cities_ass['AssCity']
+
+            url_room_types = settings.API_BASE_URL + "room_types"
+            room_types = getDataFromAPI(login_type, access_token, url_room_types, payload)
+            room_types = room_types['Types']
+
+            url_hotel_types = settings.API_BASE_URL + "hotel_types"
+            hotel_types = getDataFromAPI(login_type, access_token, url_hotel_types, payload)
+            hotel_types = hotel_types['Types']
+
+            if id:
+                return render(request, 'Company/Spoc/add_hotel_booking.html', {'hotel_types':hotel_types,'room_types':room_types,'employees':employees,'cities':cities,'entities':entities,'assessments':ass_code,'cities_ass':cities_ass})
+            else:
+                return render(request, 'Company/Spoc/add_hotel_booking.html', {})
+        else:
+            return HttpResponseRedirect("/login")
+
+
+############################################# TRAIN #########################################
+
+
+def flight_bookings(request,id):
+
+    if 'login_type' in request.session:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+        user_id = request.user.id
+
+        url = settings.API_BASE_URL + "spoc_flight_bookings"
+        payload = {'spoc_id': user_id,'booking_type':id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Spoc/flight_bookings.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Spoc/flight_bookings.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_flight_booking(request,id):
+
+    if 'login_type' in request.session:
+        request = get_request()
+        login_type = request.session['login_type']
+        access_token = request.session['access_token']
+
+        url = settings.API_BASE_URL + "view_flight_booking"
+        payload = {'booking_id': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        print(company)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Spoc/view_flight_booking.html",{'bookings': booking})
+        else:
+            return render(request, "Company/Spoc/view_flight_booking.html", {'': {}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def add_flight_booking(request,id):
+    if request.method == 'POST':
+        if 'login_type' in request.session:
+            login_type = request.session['login_type']
+            access_token = request.session['access_token']
+
+            user_id = request.POST.get('spoc_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            group_id = request.POST.get('group_id', '')
+            subgroup_id = request.POST.get('subgroup_id', '')
+
+            usage_type = request.POST.get('usage_type', '')
+            trip_type = request.POST.get('trip_type', '')
+            seat_type = request.POST.get('seat_type', '')
+            from_city = request.POST.get('from_city', '')
+            to_city = request.POST.get('to_city', '')
+            booking_datetime = request.POST.get('booking_datetime', '')
+            departure_date = request.POST.get('departure_date', '')
+            preferred_flight = request.POST.get('preferred_flight', '')
+            assessment_code = request.POST.get('assessment_code', '')
+            entity_id = request.POST.get('entity_id', '')
+            reason_booking = request.POST.get('reason_booking', '')
+            no_of_seats = request.POST.get('no_of_seats', '')
+
+            if entity_id:
+                pass
+            else:
+                entity_id=0
+
+            employees = []
+            no_of_emp = int(no_of_seats) + 1
+            for i in range(1,no_of_emp):
+                employees.append(request.POST.get('employee_id_'+str(i), ''))
+                print(employees)
+
+            payload = {'user_id':user_id,'user_type':login_type,'corporate_id':corporate_id,'spoc_id':spoc_id,'group_id':group_id,
+                       'subgroup_id':subgroup_id,'usage_type':usage_type,'trip_type':trip_type,'seat_type':seat_type,'from_city':from_city,'to_city':to_city,
+                       'booking_datetime':booking_datetime,'departure_date':departure_date,'preferred_flight':preferred_flight,'assessment_code':assessment_code,
+                       'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'billing_entity_id':entity_id}
+            print(payload)
+
+            url_taxi_booking = settings.API_BASE_URL + "add_flight_booking"
+            booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
+
+            if booking['success'] == 1:
+                return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -595,12 +886,11 @@ def add_train_booking(request,id):
             ass_code = ass_code['AssCodes']
 
             if id:
-                return render(request, 'Company/Spoc/add_train_booking.html', {'employees':employees,'cities':cities,'entities':entities,'assessments':ass_code})
+                return render(request, 'Company/Spoc/add_flight_booking.html', {'employees':employees,'cities':cities,'entities':entities,'assessments':ass_code})
             else:
-                return render(request, 'Company/Spoc/add_train_booking.html', {})
+                return render(request, 'Company/Spoc/add_flight_booking.html', {})
         else:
             return HttpResponseRedirect("/login")
-
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

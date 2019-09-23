@@ -66,7 +66,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Pickup DateTime*</label>
-                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date" id="" placeholder="Pickup Date/Time" required>
+                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date" id="" placeholder="Pickup Date/Time" required>
                             </div>
 
                               <div class="form-group row" id="tr_taxi_type">
@@ -155,7 +155,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
                             </div>
 
                                <div class="form-group row">
@@ -258,24 +258,21 @@
 
 <script type="text/javascript">
 
-    $( document ).ready(function() {
-
-        $('#tr_taxi_type').hide();
-        $('#tr_package').hide();
-        $('#tr_no_of_days').hide();
-        $('#emp_row_2').hide();
-        $('#emp_row_3').hide();
-        $('#emp_row_4').hide();
-
-        
-    });
+$( document ).ready(function() {
+    $('#tr_taxi_type').hide();
+    $('#tr_package').hide();
+    $('#tr_no_of_days').hide();
+    $('#emp_row_2').hide();
+    $('#emp_row_3').hide();
+    $('#emp_row_4').hide();
+});
 
     
 
 
 $(".no_of_seats").change(function()
     {
-    alert('ok')
+
     	var no_of_seats = $(this).val();
 
     	if(no_of_seats > 0){
@@ -295,7 +292,7 @@ $(".no_of_seats").change(function()
 
 $("#tour_type").change(function()
     {
-    alert('ok')
+
     	var tour_type = $(this).val();
 
     	switch(tour_type){
@@ -326,7 +323,7 @@ $("#tour_type").change(function()
     });
 
 $("#corporate_id").change(function(){
-    alert('ok')
+
   $('#city_id').empty();
   $('#taxi_type_id').empty();
   $('#spoc_id').empty();

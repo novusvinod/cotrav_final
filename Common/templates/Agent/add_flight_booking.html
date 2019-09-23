@@ -8,7 +8,7 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <form method="post" action="/agents/add-taxi-booking/{{user.id}}">
+        <form method="post" action="/agents/add-flight-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
             <input type="hidden" name="subgroup_id" id="subgroup_id">
@@ -28,7 +28,7 @@
 
                               <div class="form-group row">
                                     <label class="col-sm-4" >Select Company</label>
-                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 select2">
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 myselect">
                                          <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -36,69 +36,76 @@
                                     </select>
                                 </div>
 
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Usage Type*</label>
+                                 <select name="usage_type"  class="form-control col-sm-8 myselect">
+                                      <option value="Flight">Flight</option>
+                                      <option value="Web Checkin">Web Checkin</option>
+
+                                 </select>
+                            </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Journey Type*</label>
+                                 <select name="trip_type"  class="form-control col-sm-8 myselect">
+                                      <option value="One Way">One Way</option>
+                                      <option value="Round Trip">Round Trip</option>
+                                 </select>
+                            </div>
 
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Class*</label>
-                                 <select name="corporate_id"  class="form-control col-sm-8 ">
-                                      <option>Economy</option>
-                                      <option>Premium Economy</option>
-                                      <option>Business</option>
+                                 <select name="seat_type"  class="form-control col-sm-8 myselect">
+                                      <option value="Economy">Economy</option>
+                                      <option value="Premium Economy">Premium Economy</option>
+                                      <option value="Business">Business</option>
                                  </select>
                             </div>
 
-                         <div class="form-group row">
-                                <label class="col-sm-4" >Price Range*</label>
-                                <input type="text" class="form-control col-sm-4" name="pickup_location" placeholder="From">
-                                <input type="text" class="form-control col-sm-4" name="pickup_location" placeholder="To">
-                            </div>
+
 
 
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >From City*</label>
-                                 <input type="text" class="form-control col-sm-8" name="pickup_location" id="pickup_location" placeholder="From City" required>
+                                 <input type="text" class="form-control col-sm-8" name="from_city" id="pickup_location" placeholder="From City" required>
                             </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >To City*</label>
-                                 <input type="text" class="form-control col-sm-8" name="drop_location" id="drop_location" placeholder="To City" required>
+                                 <input type="text" class="form-control col-sm-8" name="to_city" id="drop_location" placeholder="To City" required>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Booking DateTime*</label>
+                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" placeholder="Booking DateTime" required>
                             </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Departure Date*</label>
-                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date" id="" placeholder="Departure Date" required>
+                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="departure_date" placeholder="Departure Date" required>
                             </div>
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Preferred Flights</label>
-                                 <input type="text" class="form-control col-sm-8" name="pickup_location" placeholder="Preferred Flights">
+                                 <input type="text" class="form-control col-sm-8" name="preferred_flight" placeholder="Preferred Flights">
                             </div>
 
 
-                              <div class="form-group row" id="tr_taxi_type">
+                              <div class="form-group row">
                                     <label class="col-sm-4" >Assessment Code*</label>
-                                     <select name="taxi_type" class="form-control col-sm-8">
+                                     <select id="assessment_code" name="assessment_code" class="form-control col-sm-8 myselect">
 
-                                        <option value="{{taxi.id}}">AS12123123123SA</option>
-                                         <option value="{{taxi.id}}">AASAS12123123123SA</option>
-                                         <option value="{{taxi.id}}">AS1212ADA3123123SA</option>
 
                                     </select>
                                 </div>
 
-                             <div class="form-group row" id="tr_package">
-                                    <label class="col-sm-4" >Assessment City*</label>
-                                     <select name="package_id" id="package_id" class="form-control col-sm-8">
-                                        <option>Pune</option>
-                                         <option>Delhi</option>
-                                    </select>
-                                </div>
 
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Select Billing Entity*</label>
-                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 tour_type">
+                                 <select id="entity_id" name="billing_entity_id" class="form-control col-sm-8 myselect">
                                       <option value="">Select Billing Entity </option>
 
                                   </select>
@@ -142,7 +149,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Select Spoc*</label>
-                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 tour_type">
+                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 myselect ">
                                       <option value="">Select Spoc </option>
                                   </select>
                             </div>
@@ -152,7 +159,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Number Of Employees*</label>
-                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats">
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats myselect">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -164,7 +171,7 @@
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-4" >Employee 1</label>
-                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8">
+                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -173,7 +180,7 @@
 
                               <div class="form-group row" id="emp_row_2">
                                     <label class="col-sm-4" >Employee 2</label>
-                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8">
+                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -182,7 +189,7 @@
 
                               <div class="form-group row"  id="emp_row_3">
                                     <label class="col-sm-4" >Employee 3</label>
-                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8">
+                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -191,7 +198,7 @@
 
                               <div class="form-group row"  id="emp_row_4" >
                                     <label class="col-sm-4" >Employee 4</label>
-                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8">
+                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -200,7 +207,7 @@
 
                                <div class="form-group row"  id="emp_row_5" style="display: none">
                                     <label class="col-sm-4" >Employee 5</label>
-                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8">
+                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -209,7 +216,7 @@
 
                                <div class="form-group row"  id="emp_row_6" style="display: none">
                                     <label class="col-sm-4" >Employee 6</label>
-                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8">
+                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -251,9 +258,9 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+$(".js-example-basic-single").select2();
+});
 
-    $('#tr_taxi_type').hide();
-    $('#tr_package').hide();
     $('#tr_no_of_days').hide();
     $('#emp_row_2').hide();
     $('#emp_row_3').hide();
@@ -285,7 +292,7 @@ $("#corporate_id").change(function(){
   $('#taxi_type_id').empty();
   $('#spoc_id').empty();
   $('#entity_id').empty();
-  $('#package_id').empty();
+  $('#assessment_code').empty();
   $('#employee_id_1').empty();
   $('#employee_id_2').empty();
   $('#employee_id_3').empty();
@@ -361,18 +368,18 @@ $("#corporate_id").change(function(){
 
 
   <!--        For Package    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'corporate_package'
+    var_url_spoc = '{{ API_BASE_URL }}'+'assessment_codes'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
       {
-       //alert(data['Spocs']);
-       if(data['Package'].length != 0){
-        package = data['Package']
+
+       if(data['Codes'].length != 0){
+        package = data['Codes']
          for (var i=0;i<package.length;i++) {
-            $('#package_id').append($("<option value='"+package[i].id+"'>"+package[i].package_name+"</option>"));
+            $('#assessment_code').append($("<option value='"+package[i].id+"'>"+package[i].assessment_code+"</option>"));
          }
        }else{
-        alert('No Package Available')
+        alert('No Assessment Codes Available')
        }
        });
 
@@ -405,7 +412,7 @@ var options = {
    var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
    var auto3 = new google.maps.places.Autocomplete(drop_location, options);
 
-});
+
 
 </script>
 

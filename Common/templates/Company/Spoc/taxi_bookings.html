@@ -16,6 +16,14 @@
                         <header>ALL CORPORATE TAXI BOOKINGS</header>
                              <div class="row p-b-20">
 
+                                   <div class="row">
+                             <div class="col-md-6">
+                                    <div class="btn-group">
+                                        <a class="btn btn-info" href="/Corporate/Spoc/add-taxi-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+
                             </div>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
@@ -25,13 +33,7 @@
                     </div>
                     <div class="card-body ">
 
-                        <div class="row">
-                             <div class="col-md-6">
-                                    <div class="btn-group">
-                                        <a class="btn btn-info" href="/Corporate/Spoc/add-taxi-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
-                                    </div>
-                                </div>
-                            </div>
+
 
                         <div class="table-scrollable table-bordered">
 
@@ -40,15 +42,21 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Reference No</th>
-                                    <th>Tour Type</th>
                                     <th>City</th>
+                                    <th>Booking Date</th>
+                                    <th>Pickup Datetime</th>
                                     <th>Pickup Location</th>
                                     <th>Drop Location</th>
-                                    <th>Pickup Datetime</th>
-                                    <th>Booking Date</th>
-                                    <th>No Of Seats</th>
-                                    <th>Reason</th>
-                                    <th>Status</th>
+                                    <th>Tour Type</th>
+                                    <th>Client Status</th>
+                                    <th>CoTrav Status</th>
+                                    <th>Accept/Reject</th>
+                                    <th>Operator Details</th>
+                                    <th>Taxi/Driver Assign</th>
+                                    <th>Spoc Details</th>
+
+                                    <th>Passenger Details</th>
+
                                     <th>Details</th>
 
                                 </tr>
@@ -58,6 +66,11 @@
                                 <tr>
                                     <td>{{ booking.id }}</td>
                                     <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.city_name }}</td>
+                                    <td>{{ booking.booking_date}}</td>
+                                    <td>{{ booking.pickup_datetime }}</td>
+                                    <td>{{ booking.pickup_location }}</td>
+                                    <td>{{ booking.drop_location }}</td>
                                     {% if booking.tour_type == 1 %}
                                     <td>Local</td>
                                     {% elif booking.tour_type == 2 %}
@@ -65,17 +78,45 @@
                                     {% else %}
                                     <td>Outstation</td>
                                     {% endif %}
-                                    <td>{{ booking.city_name }}</td>
-                                    <td>{{ booking.pickup_location }}</td>
-                                    <td>{{ booking.drop_location }}</td>
-                                    <td>{{ booking.pickup_datetime }}</td>
-                                    <td>{{ booking.booking_date}}</td>
-                                    <td>{{ booking.no_of_seats }}</td>
-                                    <td>{{ booking.reason_booking }}</td>
-                                    <td>{{ booking.booking_status }}</td>
+
+
+
+                                    <td>{{ booking.client_status }} </td>
+                                    <td>{{ booking.cotrav_status }}<br/>({{ booking.cotrav_agent_name|default:'' }})</td>
+
                                     <td>
-                                        <a href="/Corporate/Spoc/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        {% if booking.status_cotrav == 1 %}
+                                     <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
+                                    {% endif %}
+                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
+
+                                    </td>
+
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+
+                                    {% if booking.driver_name %}
+                                    <td>{{ booking.driver_name|default:'' }}<br/>({{ booking.driver_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+                                    <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
+
+                                    <td>
+                                        {% for passanger in booking.Passangers %}
+                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
+                                        {% endfor %}
+                                    </td>
+
+                                    <td>
+                                        <a href="/Corporate/Spoc/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>

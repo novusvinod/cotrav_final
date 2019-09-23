@@ -38,7 +38,7 @@
                                     <th>Booking DateTime</th>
                                     <th>Boarding Point</th>
                                     <th>Date of Journey</th>
-                                    <th>Bus Type Requested (Assigned)</th>
+                                    <th>Train Type (Assigned)</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
                                     <th>Action</th>
@@ -60,12 +60,12 @@
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 
-                                    {% if booking.status_client > 1 %}
+                                    {% if booking.status_client == 1 %}
                                     <td>
-                                        <a href="/Corporate/Approver_1/accept-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
+                                        <a style="background:cadetblue; color:white;" href="/Corporate/Approver_1/accept-train-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
                                             <i class="fa fa-check"></i>
                                         </a>
-                                         <a href="/Corporate/Approver_1/reject-bus-booking/{{ booking.id }}" class="btn btn-tbl-delete btn-xs">
+                                         <a href="/Corporate/Approver_1/reject-train-booking/{{ booking.id }}" class="btn btn-tbl-delete btn-xs">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                     </td>
@@ -74,8 +74,7 @@
                                     {% endif %}
 
                                     <td>
-                                        <a href="/Corporate/Approver_1/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        <a href="/Corporate/Approver_1/view-train-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>

@@ -71,19 +71,19 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Reference No</th>
-                                    <th>Pickup City</th>
-                                    <th>Drop City</th>
+                                    <th>From</th>
+                                    <th>To</th>
                                     <th>Booking DateTime</th>
                                     <th>Boarding Point</th>
                                     <th>Date of Journey</th>
-                                    <th>Bus Type Requested (Assigned)</th>
+                                    <th>Bus Type (Assigned)</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
-                                    <th>Accept / Reject</th>
-                                    <th>Action</th>
+                                    <th>Accept/Reject</th>
+                                    <th>Operator Details</th>
                                     <th>Spoc Details</th>
                                     <th>Passenger Details</th>
-                                    <th>Account Used</th>
+
                                     <th>Details</th>
 
                                 </tr>
@@ -98,37 +98,45 @@
                                     <td>{{ booking.booking_datetime }}</td>
                                     <td>{{ booking.boarding_point }}</td>
                                     <td>{{ booking.boarding_datetime }}</td>
-                                    <td>{{ booking.assign_bus_type_id}}</td>
+                                    <td>{{ booking.bus_types_assign_name}}</td>
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 
                                     <td>
                                         {% if booking.status_cotrav == 1 %}
-                                     <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
-                                           data-toggle="modal"> <i class="fa fa-check icon-green" style="color:green;font-size:15px;"></i> </a>
+                                     <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>
                                     {% endif %}
                                         <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
-                                           data-toggle="modal"> <i class="fa fa-remove icon-green" style="color:red;font-size:15px;"></i> </a>
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i></a>
+
+                                        {% if booking.status_cotrav == 2 %}
+                                        <a href="/agents/assign-taxi-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="margin-left:10px; background:#6288b1;">  <i class="fa fa-book"></i> </a>
+                                        {% endif %}
+
                                     </td>
 
 
 
 
-                                    {% if booking.status_cotrav == 2 %}
-                                    <td><a href="/agents/assign-bus-booking/{{booking.id}}" > <span class="label label-sm box-shadow-1 label-warning">Assign </span> </a></td>
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
                                     {% else %}
                                     <td></td>
                                     {% endif %}
 
                                     <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
-                                    <td>{{ booking.cotrav_status }}</td>
-                                    <td>{{ booking.cotrav_status }}</td>
 
+
+                                     <td>
+                                        {% for passanger in booking.Passangers %}
+                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
+                                        {% endfor %}
+                                    </td>
 
 
                                     <td>
-                                        <a href="/agents/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        <a href="/agents/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>

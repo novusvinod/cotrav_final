@@ -100,7 +100,7 @@
                     </div>
                     <div class="card-body no-padding height-9">
 
-                     <form method="post" action="/agents/assign-bus-booking/{{booking.id}}">
+                     <form method="post" action="/agents/assign-train-booking/{{booking.id}}">
                           <input type="hidden" class="col-sm-8 form-control" name="user_id"  value="{{user.id }}">
                           <input type="hidden" class="col-sm-8 form-control" name="booking_id"  value="{{booking.id}}">
 
@@ -121,13 +121,12 @@
 
 
                             <div class="form-group row">
-                                <label class="col-sm-5" >Bus Type*</label>
+                                <label class="col-sm-5" >Train Type*</label>
                                 <div class="col-sm-7">
                                  <select name="assign_bus_type_id" class="form-control myselect">
-                                      <option value="1">AC Seater</option>
-                                      <option value="2">AC Sleeper</option>
-                                      <option value="3">NON AC Seater</option>
-                                      <option value="4">NON AC Sleeper</option>
+                                        {% for type in types %}
+                                         <option value="{{type.id}}">{{type.name}}</option>
+                                        {% endfor %}
                                   </select>
                                     </div>
                             </div>

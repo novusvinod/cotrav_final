@@ -97,7 +97,7 @@
                         </li>
                         <li class="mega-menu-dropdown ">
 	                         <a href="/Corporate/Admin/company-spoc/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC
-                            
+
                             </a>
                          
                         </li>
@@ -108,36 +108,126 @@
                           
                         </li>
                         <li class="mega-menu-dropdown ">
-                             <a href="/Corporate/Admin/taxi-bookings/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
-                              
+                             <a class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
+                              <i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
                             </a>
+                            <ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Admin/taxi-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/taxi-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/taxi-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/taxi-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/taxi-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
                          </li>
 
                         </li>
                          <li class="mega-menu-dropdown active">
-                            <a href="/Corporate/Admin/bus-bookings/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
-
+                            <a class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
+                                <i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
                             </a>
+                             <ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Admin/bus-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/bus-bookings/2"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/bus-bookings/3"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/bus-bookings/4"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/bus-bookings/5"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
 
                         </li>
                         <li class="mega-menu-dropdown">
-                            <a href="/Corporate/Admin/train-bookings/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
-
+                            <a class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
+                                <i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
                             </a>
+                            <ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Admin/train-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/train-bookings/2"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/train-bookings/3"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/train-bookings/4"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/train-bookings/5"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
 
                         </li>
-<!--                        <li class="mega-menu-dropdown">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel-->
+                        <li class="mega-menu-dropdown">
+                            <a class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
 
-<!--                            </a>-->
+                           <i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Admin/hotel-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/hotel-bookings/2"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/hotel-bookings/3"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/hotel-bookings/4"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/hotel-bookings/5"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+                        </li>
+                        <li class="mega-menu-dropdown">
+                            <a class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
 
-<!--                        </li>-->
-<!--                        <li class="mega-menu-dropdown">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight-->
-
-<!--                            </a>-->
-
-<!--                        </li>-->
+                            <i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Admin/flight-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/flight-bookings/2"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/flight-bookings/3"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
+														<li><a href="/Corporate/Admin/flight-bookings/4"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
+														<li><a href="/Corporate/Admin/flight-bookings/5"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+                        </li>
 <!--                        <li class="mega-menu-dropdown">-->
 <!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">restaurant_menu</i>Meal-->
 

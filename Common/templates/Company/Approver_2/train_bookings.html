@@ -37,7 +37,7 @@
                                     <th>Booking DateTime</th>
                                     <th>Boarding Point</th>
                                     <th>Date of Journey</th>
-                                    <th>Bus Type Requested (Assigned)</th>
+                                    <th>Train Type (Assigned)</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
                                     <th>Action</th>
@@ -55,7 +55,7 @@
                                     <td>{{ booking.booking_datetime }}</td>
                                     <td>{{ booking.boarding_point }}</td>
                                     <td>{{ booking.boarding_datetime }}</td>
-                                    <td>{{ booking.assign_bus_type_id}}</td>
+                                    <td>{{ booking.assign_train_type_id}}</td>
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 
@@ -73,8 +73,7 @@
                                     {% endif %}
 
                                     <td>
-                                        <a href="/Corporate/Approver_2/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs">
-                                            <i class="fa fa-pencil"></i>
+                                        <a href="/Corporate/Approver_2/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>
                                     </td>
                                 </tr>
