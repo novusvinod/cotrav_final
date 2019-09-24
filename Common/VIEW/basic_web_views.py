@@ -12,11 +12,6 @@ from Common.models import Corporate_Agent_Login_Access_Token
 from django.db import connection
 
 
-def login2(request):
-    form = Corporate_Login_Form()
-    return render(request, 'corporate_login_new.html')
-
-
 def login(request):
     form = Corporate_Login_Form()
     return render(request, 'corporate_login.html', {'form': form})
