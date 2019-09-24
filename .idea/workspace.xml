@@ -4,6 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
+
     <list default="true" id="38edb318-cd5a-4a39-b6c2-35133688e42a" name="Default Changelist" comment="Add Entity Function">
       <change afterPath="$PROJECT_DIR$/Common/templates/Agent/add_hotel_booking.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Common/templates/Agent/assign_flight_booking.html" afterDir="false" />
@@ -130,6 +131,10 @@
       <change beforePath="$PROJECT_DIR$/Common/templates/Company/Spoc/view_train_booking.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Company/Spoc/view_train_booking.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Common/templates/corporate_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/corporate_login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Required_Commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Required_Commands.txt" afterDir="false" />
+=======
+    <list default="true" id="38edb318-cd5a-4a39-b6c2-35133688e42a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Common/templates/Agent/operator_banks.html" beforeDir="false" afterPath="$PROJECT_DIR$/Common/templates/Agent/operator_banks.html" afterDir="false" />
+>>>>>>> sanket-new
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -137,6 +142,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
@@ -219,6 +225,8 @@
       </file>
     </leaf>
   </component>
+=======
+>>>>>>> sanket-new
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -297,18 +305,13 @@
     </dirStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="Balwant1" />
-      </map>
-    </option>
     <option name="PUSH_TAGS">
       <GitPushTagMode>
         <option name="argument" value="--follow-tags" />
         <option name="title" value="Current Branch" />
       </GitPushTagMode>
     </option>
+
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -365,15 +368,18 @@
         <option value="$PROJECT_DIR$/Common/templates/Company/Employee/view_flight_booking.html" />
         <option value="$PROJECT_DIR$/Common/templates/Company/Spoc/view_flight_booking.html" />
       </list>
+
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="y" value="21" />
-    <option name="width" value="914" />
-    <option name="height" value="820" />
-  </component>
+  <component name="ProjectId" id="1QHAgCtdeqJIOfeaZhfcMGOaeBT" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -493,6 +499,12 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Common/templates/Company/Employee" />
+=======
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+>>>>>>> sanket-new
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2379518" />
@@ -580,6 +592,7 @@
     <option name="localTasksCounter" value="7" />
     <servers />
   </component>
+
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
@@ -603,6 +616,18 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+=======
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+>>>>>>> sanket-new
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -650,6 +675,7 @@
     <MESSAGE value="Add Entity Function" />
     <option name="LAST_COMMIT_MESSAGE" value="Add Entity Function" />
   </component>
+
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Common/templates/Company/Approver_2/flight_bookings.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -1059,4 +1085,6 @@
       </provider>
     </entry>
   </component>
+=======
+>>>>>>> sanket-new
 </project>

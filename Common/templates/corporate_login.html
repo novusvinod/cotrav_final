@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
+{% load static %}
+
 <head>
+<<<<<<< HEAD
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -19,8 +23,49 @@
     <link rel="stylesheet" href="{% static 'assets/css/pages/extra_pages.css' %}">
 	<!-- favicon -->
     <link rel="shortcut icon" href="{% static 'assets/img/favicon.ico' %}" />
+=======
+
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta name="author" content="Chitrakoot Web" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="keywords" content="Multipurpose Business and Admin HTML5 Template" />
+    <meta name="description" content="Fabrex - Multipurpose Business and Admin Template" />
+
+    <!-- title  -->
+    <title>Cotrav | Homepage</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static 'img/logos/favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'img/logos/apple-touch-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/logos/apple-touch-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/logos/apple-touch-icon-114x114.png' %}">
+
+    <!-- plugins -->
+    <link rel="stylesheet" href="{% static 'css/plugins.css' %}" />
+
+    <!-- revolution slider css -->
+    <link rel="stylesheet" href="{% static 'css/rev_slider/settings.css' %}">
+    <link rel="stylesheet" href="{% static 'css/rev_slider/layers.css' %}">
+    <link rel="stylesheet" href="{% static 'css/rev_slider/navigation.css' %}">
+
+    <!-- search css -->
+    <link rel="stylesheet" href="{% static 'search/search.css' %}" />
+
+
+
+    <!-- search css -->
+    <link rel="stylesheet" href="{% static 'css/code.css' %}" />
+
+    <link href="{% static 'css/styles.scss' %}" rel="stylesheet" type="text/x-scss">
+
+
+
 </head>
+
 <body>
+<<<<<<< HEAD
     <div class="limiter">
 		<div class="container-login100 page-background">
 			<div class="wrap-login100">
@@ -81,3 +126,316 @@
     <!-- end js include path -->
 </body>
 </html>
+=======
+    <!-- start page loading -->
+    <div id="preloader">
+        <div class="row loader">
+            <div class="loader-icon"></div>
+        </div>
+    </div>
+    <!-- end page loading -->
+
+    <!-- start main-wrapper section -->
+    <div class="main-wrapper">
+
+        <!-- start header section -->
+        <header>
+
+            <div class="navbar-default">
+
+                <!-- Start Top Search -->
+                <div class="top-search bg-theme">
+                    <div class="container">
+                        <form class="search-form" action="search.html" method="GET" accept-charset="utf-8">
+                            <div class="input-group">
+                                <span class="input-group-addon cursor-pointer">
+                                    <button class="search-form_submit fas fa-search font-size18 text-white" type="submit"></button>
+                                </span>
+                                <input type="text" class="search-form_input form-control" name="s" autocomplete="off" placeholder="Type & hit enter...">
+                                <span class="input-group-addon close-search"><i class="fas fa-times font-size18 line-height-28 margin-5px-top"></i></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- End Top Search -->
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-lg-12">
+                            <div class="menu_area alt-font">
+                                <nav class="navbar navbar-expand-lg navbar-light no-padding">
+
+                                    <div class="navbar-header navbar-header-custom">
+                                        <!-- Start Logo -->
+                                        <a href="/" class="navbar-brand logodefault"><img id="logo" src="{% static 'img/logos/logo.png' %}" alt="logo"></a>
+                                        <!-- End Logo -->
+                                    </div>
+
+                                    <div class="navbar-toggler"></div>
+
+                                    <!-- Menu Area -->
+                                    <ul class="navbar-nav ml-auto" id="nav" class="nav_nav2" style="display: none;">
+                                <li><a href="/">Home</a> </li>
+                                    <li><a href="about">About Us</a> </li>
+                                      <li><a href="login">Login</a> </li>
+                                      <li><a href="signup" >Sign Up</a> </li>
+                                      <li><a href="contact" >Contact Us</a> </li>
+                                      <li><a href="support">Support</a> </li>
+
+
+                                  </ul>
+
+                                     <!-- End Menu Area -->
+
+                                    <!-- Start Atribute Navigation -->
+                                    <div class="attr-nav sm-no-margin sm-margin-65px-right xs-margin-60px-right">
+                                        <ul>
+                                         <li class="search"><a href="#"><i class="fas fa-search"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <!-- End Atribute Navigation -->
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+        <!-- end header section -->
+   
+     <div class="main-wrapper">
+             <!-- start registration form -->
+        <!-- start registration form -->
+        <section class="parallax position-relative box-hover" data-overlay-dark="6" data-background="img/bg/bg-login.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 center-col">
+                        <div class="bg-white padding-30px-all sm-padding-20px-all border border-width-5">
+                            <div class="section-heading section-heading2">
+                                <h3 class="login_btn">Login</h3>
+
+                            </div>
+                            <form method="POST" action="/login" class="registration-form">
+                                <div class="row">
+
+                                    <div class="alert alert-primary" style="display: none;" role="alert"><p style="color:red; weight;bold;">{{error}}</p></div>
+                                   
+                                 
+                                    <div class="col-11">
+                                         <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
+                                        <input type="email" name="email" id="email" required="required" placeholder="Email *" maxlength="70" class="medium-input input_signupform">
+                                    </div>
+                                  
+                                    <div class="col-11">
+                                       <img src="{% static 'img/logos/4.png' %}" id="contact_icon1">
+                                        <input type="password" name="password" id="password" required="required" placeholder="Password *" maxlength="70" class="form2" >
+                                    </div>
+                                        <div class="col-11">
+                                       <img src="{% static 'img/logos/5.png' %}" id="contact_icon1">
+                                    <select class="form2 box_section" name="corporate_login_type" required>
+                                            <option value="">Select Login Type (Admin/SPOC others)</option>
+                                            <option value="1">Admin</option>
+                                            <option value="2">Approver 1</option>
+                                            <option value="3">Approver 2</option>
+                                            <option value="4">SPOC</option>
+                                            <option value="5">Flight Approver</option>
+                                            <option value="6">Employee</option>
+                                                 
+                                       </select>
+                                    </div>
+
+                                    
+                                   
+                                    <div class="col-12">
+                                        <button class="butn theme medium" type="submit"><span>Login</span></button>
+                                        <p class="no-margin float-right" ><a href="login.html" id="signup-txt-color">Forget Password?</a></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- end registration form -->
+      
+    </div>
+    <!-- end main-wrapper section -->
+
+
+
+     <!-- start footer section -->
+     <footer class="no-padding-top">
+            <div class="container">
+                  <div class="row">
+  
+                      <div class="col-lg-4 col-md-6 sm-margin-30px-bottom">
+  
+                          <img alt="footer-logo" src="{% static 'img/logos/logo-footer.png' %}">
+                          <p class="margin-25px-top margin-20px-bottom">Nemo enim enim voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequr magni dolores eos qui ratione voluptatem.</p>
+                          <ul class="footer-list">
+                              <li>
+                                  <span class="d-inline-block vertical-align-top font-size18"><i class="fas fa-map-marker-alt text-theme-color"></i></span>
+                                  <span class="d-inline-block width-85 vertical-align-top padding-10px-left">BAI Infosolutions Private Limited
+  6/813 Main Market
+  Mehrauli
+  New Delhi - 110030</span>
+                              </li>
+                              <li>
+                                  <span class="d-inline-block vertical-align-top font-size18"><i class="fas fa-mobile-alt text-theme-color"></i></span>
+                                  <span class="d-inline-block width-85 vertical-align-top padding-10px-left">(+44) 123 456 789</span>
+                              </li>
+                              <li>
+                                  <span class="d-inline-block vertical-align-top font-size18"><i class="far fa-envelope text-theme-color"></i></span>
+                                  <span class="d-inline-block width-85 vertical-align-top padding-10px-left">support@cotrav.co</span>
+                              </li>
+                          </ul>
+  
+                      </div>
+  
+                      <div class="col-lg-4 col-md-6 sm-margin-30px-bottom">
+                          <h3 class="text-white">Cotrav Links</h3>
+                          <div class="row">
+                              <div class="col-md-6 no-padding-right xs-padding-15px-right">
+                                  <ul class="footer-list xs-margin-5px-bottom">
+                                     <li><a href="cotrav/home">Home</a></li>
+                                      <li><a href="cotrav/about">About us</a></li>
+                                     <li><a href="cotrav/login">Login</a></li>
+                                      <li><a href="cotrav/signup">Sign Up</a></li>
+                                      <li><a href="cotrav/contact">Contact Us</a></li>
+                                      <li><a href="cotrav/support">Support</a></li>
+                                  </ul>
+                              </div>
+                           </div>
+                      </div>
+  
+                      <div class="col-lg-4 col-md-6">
+                          <div class="padding-30px-left sm-no-padding-left">
+                              <h3 class="text-white">Newsletter</h3>
+                              <p class="margin-20px-bottom">Nemo enim enim voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequr.</p>
+                              <form>
+  
+  
+                                      <a class="butn theme grey-hover butn_theme_white " id="butn_theme_feedback"><span>Feedback</span></a>
+  
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+  
+              </div>
+  
+              <div class="footer-bar">
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-md-6 text-left xs-text-center xs-margin-5px-bottom">
+                              <div class="footer-social-icons small">
+                                  <ul>
+                                      <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                      <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                      <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                                      <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                                      <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-6 text-right xs-text-center">
+                              <p class="xs-margin-5px-top xs-font-size13">&copy; 2019 Designed by Cotrav</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+  
+          </footer>
+          <!-- end footer section -->
+  
+      </div>
+      <!-- end main-wrapper section -->
+  
+  
+  
+      <!-- all js include start -->
+  
+      <!-- jQuery -->
+      <script src="{% static 'js/jquery.min.js' %}"></script>
+  
+      <!-- modernizr js -->
+      <script src="{% static 'js/modernizr.js' %}"></script>
+  
+      <!-- bootstrap -->
+      <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  
+      <!-- navigation -->
+      <script src="{% static 'js/nav-menu.js' %}"></script>
+  
+      <!-- serch -->
+      <script src="{% static 'search/search.js' %}"></script>
+  
+      <!-- tab -->
+      <script src="{% static 'js/easy.responsive.tabs.js' %}"></script>
+  
+      <!-- owl carousel -->
+      <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  
+      <!-- jquery.counterup.min -->
+      <script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+  
+      <!-- stellar js -->
+      <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  
+      <!-- waypoints js -->
+      <script src="{% static 'js/waypoints.min.js' %}"></script>
+  
+      <!-- tab js -->
+      <script src="{% static 'js/tabs.min.js' %}"></script>
+  
+      <!-- countdown js -->
+      <script src="{% static 'js/countdown.js' %}"></script>
+  
+      <!-- jquery.magnific-popup js -->
+      <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  
+      <!-- isotope.pkgd.min js -->
+      <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+  
+      <!--  chart js -->
+      <script src="{% static 'js/chart.min.js' %}"></script>
+  
+  
+  
+      <!--  clipboard js -->
+      <script src="{% static 'js/clipboard.min.js' %}"></script>
+  
+      <!--  prism js -->
+      <script src="{% static 'js/prism.js' %}"></script>
+  
+      <!-- revolution slider js files start -->
+      <script src="{% static 'js/rev_slider/jquery.themepunch.tools.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/jquery.themepunch.revolution.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.actions.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.carousel.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.kenburn.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.layeranimation.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.migration.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.navigation.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.parallax.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.slideanims.min.js' %}"></script>
+      <script src="{% static 'js/rev_slider/extensions/revolution.extension.video.min.js' %}"></script>
+      <!-- revolution slider js files end -->
+  
+      <!-- custom scripts -->
+      <script src="{% static 'js/main.js' %}"></script>
+  
+      <!-- contact form scripts -->
+      <script src="{% static 'js/mailform/jquery.form.min.js' %}"></script>
+      <script src="{% static 'js/mailform/jquery.rd-mailform.min.c.js' %}"></script>
+  
+  
+      <!-- all js include end -->
+  
+  
+  </body>
+  
+  </html>
+
