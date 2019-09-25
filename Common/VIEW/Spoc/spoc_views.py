@@ -451,7 +451,7 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -578,7 +578,7 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Spoc/train-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/Corporate/Spoc/train-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -713,7 +713,7 @@ def add_hotel_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -849,7 +849,7 @@ def add_flight_booking(request,id):
 
             payload = {'user_id':user_id,'user_type':login_type,'corporate_id':corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'usage_type':usage_type,'trip_type':trip_type,'seat_type':seat_type,'from_city':from_city,'to_city':to_city,
-                       'booking_datetime':booking_datetime,'departure_date':departure_date,'preferred_flight':preferred_flight,'assessment_code':assessment_code,
+                       'booking_datetime':booking_datetime,'departure_datetime':departure_date,'preferred_flight':preferred_flight,'assessment_code':assessment_code,
                        'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'billing_entity_id':entity_id}
             print(payload)
 
@@ -857,7 +857,7 @@ def add_flight_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:

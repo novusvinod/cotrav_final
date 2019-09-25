@@ -2527,7 +2527,8 @@ def add_employee(request):
         assistant_id = request.POST.get('assistant_id', '')
         date_of_birth = request.POST.get('date_of_birth', '')
         if date_of_birth:
-            date_of_birth = datetime.strptime(date_of_birth, '%d/%m/%Y %H:%M:%S')
+            pass
+            #date_of_birth = datetime.strptime(date_of_birth, '%d/%m/%Y %H:%M:%S')
         else:
             date_of_birth = None
 
@@ -3134,13 +3135,13 @@ def add_assessment_codes(request):
         assessment_code = request.POST.get('assessment_code', '')
         code_desc = request.POST.get('code_desc', '')
         from_date = request.POST.get('from_date', '')
-        from_date = datetime.strptime(from_date, '%d/%m/%Y')
+        #from_date = datetime.strptime(from_date, '%d/%m/%Y')
         to_date = request.POST.get('to_date', '')
-        to_date = datetime.strptime(to_date, '%d/%m/%Y')
+        #to_date = datetime.strptime(to_date, '%d/%m/%Y')
         service_from = request.POST.get('service_from', '')
-        service_from = datetime.strptime(service_from, '%d/%m/%Y')
+        #service_from = datetime.strptime(service_from, '%d/%m/%Y')
         service_to = request.POST.get('service_to', '')
-        service_to = datetime.strptime(service_to, '%d/%m/%Y')
+        #service_to = datetime.strptime(service_to, '%d/%m/%Y')
 
         if from_date:
             pass
@@ -3198,14 +3199,14 @@ def update_assessment_codes(request):
         assessment_code = request.POST.get('assessment_code', '')
         code_desc = request.POST.get('code_desc', '')
         from_date = request.POST.get('from_date', '')
-        from_date = datetime.strptime(from_date, '%d/%m/%Y')
+        #from_date = datetime.strptime(from_date, '%d/%m/%Y')
         to_date = request.POST.get('to_date', '')
-        to_date = datetime.strptime(to_date, '%d/%m/%Y')
+        #to_date = datetime.strptime(to_date, '%d/%m/%Y')
         code_id = request.POST.get('code_id', '')
         service_from = request.POST.get('service_from', '')
-        service_from = datetime.strptime(service_from, '%d/%m/%Y')
+        #service_from = datetime.strptime(service_from, '%d/%m/%Y')
         service_to = request.POST.get('service_to', '')
-        service_to = datetime.strptime(service_to, '%d/%m/%Y')
+        #service_to = datetime.strptime(service_to, '%d/%m/%Y')
 
         if from_date:
             pass
@@ -3548,13 +3549,14 @@ def view_train_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('viewBusBooking', [booking_id])
+                    cursor.callproc('viewTrainBooking', [booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
                     print(booking_id)
-                    cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                    cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
+                    cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
                     passanger = dictfetchall(cursor1)
                     emp[0]['Passangers'] = passanger
                     data = {'success': 1, 'Bookings': emp}

@@ -28,8 +28,8 @@ def login_action(request):
         corporate_login_type = request.POST.get('corporate_login_type', '')
         user_type = corporate_login_type
         user = authenticate(username=username, post_password=password, login_type=corporate_login_type)
-
-        if user is not None:
+        print(user)
+        if user:
             if user:
                 request.session.set_expiry(7200)  # sets the exp. value of the session
                 print("without login")

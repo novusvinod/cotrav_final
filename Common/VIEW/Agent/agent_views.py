@@ -76,7 +76,9 @@ def taxi_types(request):
             taxi = getDataFromAPI(user_type, access_token, url, payload)
 
             if taxi['success'] == 1:
-                return HttpResponseRedirect("agents/taxi-types", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/taxi-types", {'message': "Operation Successfully"})
+            else:
+                return HttpResponseRedirect("/agents/taxi-types", {'message': "Operation Fails"})
 
         else:
             return HttpResponseRedirect("/agents/login")
@@ -129,7 +131,9 @@ def taxi_models(request):
             taxi = getDataFromAPI(user_type, access_token, url, payload)
 
             if taxi['success'] == 1:
-                return HttpResponseRedirect("agents/taxi-models", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/taxi-models", {'message': "Operation Successfully"})
+            else:
+                return HttpResponseRedirect("/agents/taxi-models", {'message': "Operation Fails"})
 
         else:
             return HttpResponseRedirect("/agents/login")
@@ -190,7 +194,9 @@ def taxis(request):
             taxi = getDataFromAPI(user_type, access_token, url, payload)
 
             if taxi['success'] == 1:
-                return HttpResponseRedirect("agents/taxis", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/taxis", {'message': "Operation Successfully"})
+            else:
+                return HttpResponseRedirect("/agents/taxis", {'message': "Operation Fails"})
 
         else:
             return HttpResponseRedirect("/agents/login")
@@ -1677,9 +1683,12 @@ def operator_banks(request,id):
                            'user_id': user_id, 'user_type': user_type}
 
             taxi = getDataFromAPI(user_type, access_token, url, payload)
+            print(taxi)
 
             if taxi['success'] == 1:
-                return HttpResponseRedirect("/agents/operator_banks/"+id, {'message': "Added Successfully"})
+                return HttpResponseRedirect("/agents/operator_banks/"+str(id), {'message': "Added Successfully"})
+            else :
+                return HttpResponseRedirect("/agents/operator_banks/"+str(id), {'message': "Operation Fails"})
 
         else:
             login_type = request.session['login_type']

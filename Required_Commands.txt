@@ -43,4 +43,5 @@ sudo nano /etc/hosts
 
 sudo systemctl restart httpd.service
 
+sudo fuser -k 80/tcp
 netstat -lnp | grep 80

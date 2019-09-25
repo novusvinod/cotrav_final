@@ -6,317 +6,124 @@
 {% if user %}
 <!-- start page content -->
 
+
 <div class="page-content-wrapper">
     <div class="page-content">
-{% for booking in bookings %}
+
         <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ALL CORPORATE TAXI BOOKINGS</header>
+                             <div class="row p-b-20">
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Basic Details</header>
+                                  <div class="row">
+                                     <div class="col-md-6">
+                                            <div class="btn-group">
+                                                <a class="btn btn-info" href="/Corporate/Spoc/add-flight-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
                     </div>
-                    <div class="card-body no-padding height-9">
+                    <div class="card-body ">
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Reference No</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.reference_no }}">
-                            </div>
+                        <div class="table-scrollable table-bordered">
+
+                            <table id="example1" class="display full-width">
+                                <thead>
+                                <tr>
+                                   <th>ID</th>
+                                    <th>Reference No</th>
+                                    <th>City</th>
+                                    <th>Booking Date</th>
+                                    <th>Pickup Datetime</th>
+                                    <th>Pickup Location</th>
+                                    <th>Drop Location</th>
+                                    <th>Tour Type</th>
+                                    <th>Client Status</th>
+                                    <th>CoTrav Status</th>
+
+                                    <th>Operator Details</th>
+                                    <th>Taxi/Driver Assign</th>
+                                    <th>Spoc Details</th>
+
+                                    <th>Passenger Details</th>
+
+                                    <th>Details</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.id }}</td>
+                                    <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.city_name }}</td>
+                                    <td>{{ booking.booking_date}}</td>
+                                    <td>{{ booking.pickup_datetime }}</td>
+                                    <td>{{ booking.pickup_location }}</td>
+                                    <td>{{ booking.drop_location }}</td>
+                                    {% if booking.tour_type == 1 %}
+                                    <td>Local</td>
+                                    {% elif booking.tour_type == 2 %}
+                                    <td>Radio</td>
+                                    {% else %}
+                                    <td>Outstation</td>
+                                    {% endif %}
+
+
+
+                                    <td>{{ booking.client_status }} </td>
+                                    <td>{{ booking.cotrav_status }}<br/>({{ booking.cotrav_agent_name|default:'' }})</td>
+
+
+
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+
+                                    {% if booking.driver_name %}
+                                    <td>{{ booking.driver_name|default:'' }}<br/>({{ booking.driver_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+                                    <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
+
+                                    <td>
+                                        {% for passanger in booking.Passangers %}
+                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
+                                        {% endfor %}
+                                    </td>
+
+
+
+                                    <td>
+                                        <a href="/Corporate/Approver_1/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Bucket Priority</label>
-                            <div class="col-sm-7">
-                                    <input class="form-control" name="group_name" placeholder=">Train Priority 1"
-                                       type="text" value="{{ booking.room_type_name }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Room Type</label>
-                            <div class="col-sm-7">
-                                    <input class="form-control" name="group_name" placeholder=">Train Priority 1"
-                                       type="text" value="{{ booking.hotel_type_name }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">From City Name</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="pickup_location" placeholder="Pickup Location"
-                                       type="text" value="{{ booking.from_city_name }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">City Area</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="drop_location" placeholder="Drop Location"
-                                       type="text" value="{{ booking.from_area_id_name }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Preferred Area</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="drop_location" placeholder="Preferred Area"
-                                       type="text" value="{{ booking.preferred_area_name }}">
-                            </div>
-                        </div>
-
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Check IN Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
-                                       type="text" value="{{ booking.checkin_datetime }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Check Out Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
-                                       type="text" value="{{ booking.checkout_datetime }}">
-                            </div>
-                        </div>
-
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Booking Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="booking_date" placeholder="Booking Date"
-                                       type="text" value="{{ booking.booking_datetime }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">No Of Seats</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="no_of_seats" placeholder="No Of Seats"
-                                       type="text" value="{{ booking.no_of_seats }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Booking Reason</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
-                                       type="text" value="{{ booking.reason_booking }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Client Status</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
-                                       type="text" value="{{ booking.client_status }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">CoTrav Status</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
-                                       type="text" value="{{ booking.cotrav_status }}">
-                            </div>
-                        </div>
-
-
-
-
                     </div>
                 </div>
             </div>
-
-             <div class="col-md-3">
-
-                 <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Spoc Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Name</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.user_name }}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Contact Email</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.user_contact }}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Contact Number</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.email }}">
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                 {% if booking.assign_hotel_id %}
-                 <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Hotel Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Hotels Name</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.operator_name }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Hotels Contact</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.operator_contact }}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Room Type</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.hotel_type_name }}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Daily Brakefast</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.daily_brakefast }}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Is Prepaid</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ booking.is_prepaid }}">
-                            </div>
-                        </div>
-
-                    </div>
-                    </div>
-
-                 {% endif %}
-
-
-
-
-            </div>
-
-            <div class="col-md-3">
-
-                 <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Passanger Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-                         {% for passanger in booking.Passangers %}
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Name {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Name"
-                                       type="text" value="{{ passanger.employee_name|default:'' }}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Contact Email {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Contact Email"
-                                       type="text" value="{{ passanger.employee_email|default:''}}">
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Contact Number {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                       type="text" value="{{ passanger.employee_contact|default:''}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Age {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Age"
-                                       type="text" value="{{ passanger.age|default:''}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Gender {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Gender"
-                                       type="text" value="{{ passanger.gender|default:''}}">
-                            </div>
-                        </div>
-
-
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-            </div>
-
-             <div class="col-md-3">
-
-                 <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Comment Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Comment</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name" type="text" value="{{ booking.reason_booking }}">
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-
-            </div>
-
-
-
         </div>
-
-
-
-
-
-
- {% endfor %}
 
     </div>
 </div>
 <!-- end page content -->
-
 
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>

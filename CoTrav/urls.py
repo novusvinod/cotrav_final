@@ -62,3 +62,4 @@ urlpatterns = [
 
 
 ]
+handler404 = 'landing.views.error_404_view'

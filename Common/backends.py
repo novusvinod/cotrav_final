@@ -35,17 +35,35 @@ class CustomCompanyUserAuth(object):
             print(user_info)
 
             if login_type == '1':
-                user = Corporate_Login.objects.get(email=username)
+                try:
+                    user = Corporate_Login.objects.get(email=username)
+                except Corporate_Login.DoesNotExist:
+                    user = None
             elif login_type == '2':
-                user = Corporate_Approves_1_Login.objects.get(email=username)
+                try:
+                    user = Corporate_Approves_1_Login.objects.get(email=username)
+                except Corporate_Approves_1_Login.DoesNotExist:
+                    user = None
             elif login_type == '3':
-                user = Corporate_Approves_2_Login.objects.get(email=username)
+                try:
+                    user = Corporate_Approves_2_Login.objects.get(email=username)
+                except Corporate_Approves_2_Login.DoesNotExist:
+                    user = None
             elif login_type == '4':
-                user = Corporate_Spoc_Login.objects.get(username=username)
+                try:
+                    user = Corporate_Spoc_Login.objects.get(username=username)
+                except Corporate_Spoc_Login.DoesNotExist:
+                    user = None
             elif login_type == '6':
-                user = Corporate_Employee_Login.objects.get(username=username)
+                try:
+                    user = Corporate_Employee_Login.objects.get(username=username)
+                except Corporate_Employee_Login.DoesNotExist:
+                    user = None
             elif login_type == '10':
-                user = Corporate_Agent.objects.get(email=username)
+                try:
+                    user = Corporate_Agent.objects.get(email=username)
+                except Corporate_Agent.DoesNotExist:
+                    user = None
             else:
                 return None
 

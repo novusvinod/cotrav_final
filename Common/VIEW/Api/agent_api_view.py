@@ -89,7 +89,7 @@ def operator_banks(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllOperatorBanks', [operator_id])
+                    cursor.callproc('getAllOperatorBankAccountDetails', [operator_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'OperatorBanks': emp}
@@ -666,7 +666,7 @@ def delete_operator_rate(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('deleteOperators', [rate_id,user_id,user_type])
+                    cursor.callproc('deleteOperatorRate', [rate_id,user_id,user_type])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Operators': emp}
@@ -769,6 +769,7 @@ def add_operator_driver(request):
                     cursor = connection.cursor()
                     cursor.callproc('addOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,password,fcm_regid,user_id,user_type])
                     emp = dictfetchall(cursor)
+                    print(emp)
                     cursor.close()
                     data = {'success': 1, 'Drivers': emp}
                     return JsonResponse(data)
