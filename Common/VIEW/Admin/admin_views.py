@@ -1131,7 +1131,7 @@ def hotel_bookings(request,id):
         url = settings.API_BASE_URL + "admin_hotel_bookings"
         payload = {'corporate_id':corporate_id,'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
-
+        print(company)
         if company['success'] == 1:
             booking = company['Bookings']
             return render(request, "Company/Admin/hotel_bookings.html",{'bookings': booking})

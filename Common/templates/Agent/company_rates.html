@@ -199,13 +199,22 @@
                                                 <td>{{ corporate_rate.package_name }}</td>
                                                 <td>{{ corporate_rate.city_name|default:'' }}</td>
                                                 <td>{{ corporate_rate.taxi_type|default:'' }}</td>
-                                                <td>{{ corporate_rate.tour_type|default:'' }}</td>
-                                                <td>{{ corporate_rate.kms|default:'' }}</td>
-                                                <td>{{ corporate_rate.hours|default:'' }} hrs</td>
-                                                <td>{{ corporate_rate.km_rate|default:'' }}</td>
-                                                <td>{{ corporate_rate.hour_rate|default:'' }}</td>
-                                                <td>{{ corporate_rate.base_rate|default:'' }}</td>
-                                                <td>{{ corporate_rate.night_rate|default:'' }}</td>
+
+                                                {% if corporate_rate.tour_type == 1 %}
+                                                <td>Local</td>
+                                                {% elif corporate_rate.tour_type == 2 %}
+                                                <td>Radio</td>
+                                                {% else %}
+                                                <td>Outstation</td>
+                                                {% endif %}
+
+
+                                                <td>{{ corporate_rate.kms|default:'0' }}</td>
+                                                <td>{{ corporate_rate.hours|default:'0' }} hrs</td>
+                                                <td>{{ corporate_rate.km_rate|default:'0' }}</td>
+                                                <td>{{ corporate_rate.hour_rate|default:'0' }}</td>
+                                                <td>{{ corporate_rate.base_rate|default:'0' }}</td>
+                                                <td>{{ corporate_rate.night_rate|default:'0' }}</td>
 
                                                 <td>
                                                     <a class="btn btn-tbl-edit btn-xs" href="#" data-toggle="modal" class="btn btn-tbl-delete btn-xs"
@@ -280,11 +289,11 @@ $(function() {
 
     modal.find('#delete_id').val(1);
     modal.find('#rate_id').val(id);
-    modal.find('#corporate_name').val(corporate_name);
+    modal.find('#corporate_name').val(corporate_name).trigger('change');
     modal.find('#package_name').val(package_name);
-    modal.find('#city_name').val(city_name);
-    modal.find('#taxi_type').val(taxi_type);
-    modal.find('#tour_type').val(tour_type);
+    modal.find('#city_id').val(city_name).trigger('change');
+    modal.find('#taxi_type').val(taxi_type).trigger('change');
+    modal.find('#tour_type').val(tour_type).trigger('change');
     modal.find('#kms').val(kms);
     modal.find('#hours').val(hours);
     modal.find('#km_rate').val(km_rate);
