@@ -1,0 +1,121 @@
+<style>
+
+ul.messages {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul.messages li {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 12px;
+  color: black;
+  display: block;
+  position: relative;
+}
+
+ul.messages li:hover {
+  background-color: #eee;
+}
+
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  padding: 12px 16px;
+  transform: translate(0%, -50%);
+}
+
+.close:hover {background: #bbb;}
+
+ul.messages li.success{
+
+background: #48e148;
+    color: white;
+    width: 50%;
+    margin-left: 383px;
+    padding-left: 255px;
+
+}
+
+ul.messages li.info{
+
+background-color:blue;
+
+}
+
+ul.messages li.error{
+
+background-color: #ef3647;
+    color: white;
+    width: 50%;
+    margin-left: 383px;
+    padding-left: 255px;
+
+}
+
+ul.messages li.warning{
+
+background-color: #3366cc;
+    color: white;
+    width: 50%;
+    margin-left: 383px;
+    padding-left: 255px;
+
+}
+
+ul.messages li.debug{
+
+background-color: #333366;
+    color: white;
+    width: 50%;
+    margin-left: 383px;
+    padding-left: 255px;
+
+}
+
+</style>
+
+<!--
+messages.debug(request, '%s SQL statements were executed.' % count)
+messages.info(request, 'Three credits remain in your account.')
+messages.success(request, 'Profile details updated.')
+messages.warning(request, 'Your account expires in three days.')
+messages.error(request, 'Document deleted.')
+
+-->
+
+                        {% if messages %}
+                            <ul class="list-group messages" id="alert-message">
+                                {% for message in messages %}
+
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}
+                                <span class="close">&times;</span>
+
+                            </li>
+
+                        {% endfor %}
+                        </ul>
+                        {% endif %}
+
+
+
+<script>
+var closebtns = document.getElementsByClassName("close");
+var i;
+
+for (i = 0; i < closebtns.length; i++) {
+  closebtns[i].addEventListener("click", function() {
+    this.parentElement.style.display = 'none';
+  });
+}
+
+
+
+
+</script>

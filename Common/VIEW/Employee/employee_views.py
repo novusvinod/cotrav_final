@@ -5,6 +5,7 @@ import json
 from django_global_request.middleware import get_request
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 
 @login_required(login_url='/login')
@@ -880,6 +881,7 @@ def add_flight_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Flight Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Employee/flight-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")

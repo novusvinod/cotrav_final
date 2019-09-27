@@ -5,6 +5,7 @@ import json
 from django_global_request.middleware import get_request
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 
 @login_required(login_url='/login')
@@ -451,6 +452,7 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Bus Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -578,6 +580,7 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Train Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Spoc/train-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -713,6 +716,7 @@ def add_hotel_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Hotel Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -857,6 +861,7 @@ def add_flight_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Flight Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
