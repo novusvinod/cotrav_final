@@ -391,7 +391,7 @@
     
         $.ajaxSetup({
                 headers:{
-                    'Authorization': "Token UEDEI1H266EBQVRLSIYK09QCP575EPILV8SQKJ3MWEWLEAEWB3X3C4IV6KN5",
+                    'Authorization': "Token {{request.session.access_token}}",
                     'usertype': 10
                 }
     
