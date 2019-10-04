@@ -55,7 +55,7 @@
                             <label class="col-sm-5 control-label">Pickup Date</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
-                                     readonly  type="text" value="{{ booking.pickup_to_datetime }}">
+                                     readonly  type="datetime-local" value="{{ booking.pickup_to_datetime }}">
                             </div>
                         </div>
 
@@ -170,7 +170,7 @@
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_datetime" type="text" value="{{ booking.boarding_datetime }}">
+                                <input class="form-control" name="boarding_datetime" type="datetime-local" value="{{ booking.boarding_datetime }}">
                             </div>
                         </div>
 
@@ -242,7 +242,7 @@
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_datetime" type="text" value="{{ booking.boarding_datetime }}">
+                                <input class="form-control" name="boarding_datetime" type="datetime-local" value="{{ booking.boarding_datetime }}">
                             </div>
                         </div>
 

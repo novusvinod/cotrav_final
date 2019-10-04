@@ -226,7 +226,7 @@ def add_company_entity(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Company Entity Added Successfully..!')
+                messages.success(request, 'Add Company Entity Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Admin/company-billing_entities/" + corporate_id,{'message': "Added Successfully"})
             else:
                 messages.error(request, 'Fail To Add Company Entity..!')
@@ -287,7 +287,7 @@ def add_company_subgroup(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Company Subgroup Added Successfully')
+                messages.success(request, 'Add Company Subgroup Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Admin/company-subgroups/" + str(id), {'message': "Added Successfully"})
             else:
                 messages.error(request, 'Fail to Add company Subgroup..!')
@@ -474,10 +474,10 @@ def add_company_group_auth(request, id):
             print(url)
             print(delete_id)
             if company['success'] == 1:
-                messages.success(request, 'Company Group Authentication Operation Successful')
+                messages.success(request, ' Company Group Authentication Added Successful')
                 return HttpResponseRedirect("/Corporate/Admin/view-company-group/" + group_id, {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Company Group Authentication Operation Fails')
+                messages.error(request, 'Company Group Authentication Added Fails')
                 return HttpResponseRedirect("/Corporate/Admin/view-company-group/" + group_id, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -546,10 +546,10 @@ def add_company_subgroup_auth(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Company SubGroup Authentication Operation Successful')
+                messages.success(request, 'Company SubGroup Authentication Added Successful')
                 return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id,{'message': "Added Successfully"})
             else:
-                messages.error(request, 'Company SubGroup Authentication Operation Fails')
+                messages.error(request, 'Company SubGroup Authentication Added Fails')
                 return HttpResponseRedirect("/Corporate/Admin/view-company-subgroup/" + subgroup_id, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -615,10 +615,10 @@ def add_company_admins(request, id):
             print(url)
             print(company)
             if company['success'] == 1:
-                messages.success(request, 'Added Successfully')
+                messages.success(request, 'Company Admin Added Successfully')
                 return HttpResponseRedirect("/Corporate/Admin/company-admins/" + str(id), {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Record Not Added')
+                messages.error(request, 'Company Admin Added Fail')
                 return HttpResponseRedirect("/Corporate/Admin/company-admins/" + str(id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -691,10 +691,10 @@ def add_spocs(request, id):
             print(url)
             print(company)
             if company['success'] == 1:
-                messages.success(request, 'Spocs Added Successfully')
+                messages.success(request, 'Spoc Added Successfully')
                 return HttpResponseRedirect("/Corporate/Admin/company-spoc/" + str(id), {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Spocs Record Not Added')
+                messages.error(request, 'Spoc Record Not Added')
                 return HttpResponseRedirect("/Corporate/Admin/company-spoc/" + str(id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -906,7 +906,7 @@ def taxi_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Admin/taxi_bookings.html",{'bookings': booking})
+            return render(request, "Company/Admin/taxi_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Admin/taxi_bookings.html", {'': {}})
     else:
@@ -997,7 +997,7 @@ def bus_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Admin/bus_bookings.html",{'bookings': booking})
+            return render(request, "Company/Admin/bus_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Admin/bus_bookings.html", {'': {}})
     else:
@@ -1085,7 +1085,7 @@ def train_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Admin/train_bookings.html",{'bookings': booking})
+            return render(request, "Company/Admin/train_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Admin/train_bookings.html", {'': {}})
     else:
@@ -1173,7 +1173,7 @@ def hotel_bookings(request,id):
         print(company)
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Admin/hotel_bookings.html",{'bookings': booking})
+            return render(request, "Company/Admin/hotel_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Admin/hotel_bookings.html", {'': {}})
     else:
@@ -1261,7 +1261,7 @@ def flight_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Admin/flight_bookings.html",{'bookings': booking})
+            return render(request, "Company/Admin/flight_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Admin/flight_bookings.html", {'': {}})
     else:

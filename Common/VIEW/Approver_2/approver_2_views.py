@@ -315,7 +315,7 @@ def bus_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/bus_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/bus_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/bus_bookings.html", {'': {}})
     else:
@@ -405,7 +405,7 @@ def train_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/train_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/train_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/train_bookings.html", {'': {}})
     else:
@@ -493,7 +493,7 @@ def hotel_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/hotel_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/hotel_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/hotel_bookings.html", {'': {}})
     else:
@@ -581,7 +581,7 @@ def flight_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/flight_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/flight_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/flight_bookings.html", {'': {}})
     else:

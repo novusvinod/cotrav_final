@@ -90,18 +90,18 @@ messages.error(request, 'Document deleted.')
 
 -->
 
-                        {% if messages %}
-                            <ul class="list-group messages" id="alert-message">
-                                {% for message in messages %}
+                    {% if messages %}
+                        <ul class="list-group messages" id="alert-message">
+                            {% for message in messages %}
 
-                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}
-                                <span class="close">&times;</span>
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}
+                            <span class="close">&times;</span>
 
-                            </li>
+                        </li>
 
-                        {% endfor %}
-                        </ul>
-                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                    {% endif %}
 
 
 

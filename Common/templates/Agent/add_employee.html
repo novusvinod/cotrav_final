@@ -7,6 +7,14 @@
 <!-- start page content -->
 <div class="page-content-wrapper">
     <div class="page-content">
+
+        <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         Add New Employee
+         </div>
+   </div>
+
+
         <form method="post" action="/agents/add-employee/0">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
@@ -35,7 +43,7 @@
                                 <label class="col-sm-4" >Company Name</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="corporate_id" required>
+                                    <select class="col-sm-8 form-control myselect" name="corporate_id"  required>
                                         <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}" {% if employee.spoc_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
@@ -43,7 +51,7 @@
                                     </select>
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="corporate_id" required>
+                                     <select class="col-sm-8 form-control myselect" name="corporate_id" id="corporate_id" required>
                                         <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -57,7 +65,7 @@
                                 <label class="col-sm-4" >Spoc id</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="spoc_id" required>
+                                    <select class="col-sm-8 form-control myselect" name="spoc_id"  required>
                                         <option value="">Select Spoc</option>
                                         {% for spoc in spocs %}
                                         <option value="{{spoc.id}}" {% if employee.spoc_id == spoc.id %} selected {%endif%}>{{spoc.user_name}}</option>
@@ -65,7 +73,7 @@
                                     </select>
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="spoc_id" required>
+                                     <select class="col-sm-8 form-control myselect" name="spoc_id" id="spoc_id" required>
                                         <option value="">Select Spoc</option>
                                         {% for spoc in spocs %}
                                         <option value="{{spoc.id}}">{{spoc.user_name}}</option>
@@ -79,7 +87,7 @@
                                 <label class="col-sm-4" >Billing Entity</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="billing_entity_id" required >
+                                    <select class="col-sm-8 form-control myselect" name="billing_entity_id"   required >
                                         <option value="">Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}" {% if employee.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
@@ -87,7 +95,7 @@
                                     </select>
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="billing_entity_id" required>
+                                     <select class="col-sm-8 form-control myselect" name="billing_entity_id" id="entity_id" required>
                                         <option value="">Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
@@ -206,12 +214,21 @@
                                 <label class="col-sm-4" >Gender</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="gender" value="{{employee.gender|default:''}}"
-                                       placeholder="Gender">
+                                <select class="col-sm-8 form-control myselect" name="gender"  required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male" {% if employee.gender == 'Male' %} selected {%endif%}>Male</option>
+                                        <option value="Female" {% if employee.gender == 'Female' %} selected {%endif%}>Female</option>
+                                        <option value="Other" {% if employee.gender == 'Other' %} selected {%endif%}>Other</option>
+                                    </select>
+
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="gender"
-                                       placeholder="Gender">
+                               <select class="col-sm-8 form-control myselect" name="gender"  required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male" >Male</option>
+                                        <option value="Female" >Female</option>
+                                        <option value="Other" >Other</option>
+                                    </select>
                                  {% endif %}
                             </div>
 
@@ -416,7 +433,57 @@
  $(function() {
 
  });
+$("#corporate_id").change(function(){
 
+  $('#spoc_id').empty();
+  $('#entity_id').empty();
+
+   var corporate_id =  $(this).val();
+
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': 10
+            }
+
+        });
+//   For Entity
+var_url = '{{ API_BASE_URL }}'+'billing_entities'
+     $.post(var_url,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Entitys']);
+       if(data['Entitys'].length != 0){
+        entities = data['Entitys']
+         for (var i=0;i<entities.length;i++) {
+            $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+//       For SPOC
+
+
+    var_url_spoc = '{{ API_BASE_URL }}'+'spocs'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Spocs']);
+       if(data['Spocs'].length != 0){
+        spocs = data['Spocs']
+         for (var i=0;i<spocs.length;i++) {
+            $('#spoc_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].user_name+"</option>"));
+
+         }
+       }else{
+        alert('No SPOC Available')
+       }
+       });
+
+
+});
 </script>
 
 {% endblock %}

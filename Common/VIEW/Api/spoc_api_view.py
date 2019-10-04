@@ -110,13 +110,13 @@ def spoc_train_bookings(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllSPOCTrainBookings', [spoc_id])
+                    cursor.callproc('getAllSPOCTrainBookings', [spoc_id,booking_type])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
                         cursor1 = connection.cursor()
                         booking_id = e['id']
-                        cursor1.callproc('getAllTrainBookingPassangers', [booking_id,booking_type])
+                        cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
                         cursor1.close()
@@ -150,13 +150,13 @@ def spoc_hotel_bookings(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllSPOCHotelBookings', [spoc_id])
+                    cursor.callproc('getAllSPOCHotelBookings', [spoc_id,booking_type])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
                         cursor1 = connection.cursor()
                         booking_id = e['id']
-                        cursor1.callproc('getAllHotelBookingPassangers', [booking_id,booking_type])
+                        cursor1.callproc('getAllHotelBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
                         cursor1.close()
@@ -191,13 +191,13 @@ def spoc_flight_bookings(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllSPOCFlightBookings', [spoc_id])
+                    cursor.callproc('getAllSPOCFlightBookings', [spoc_id,booking_type])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
                         cursor1 = connection.cursor()
                         booking_id = e['id']
-                        cursor1.callproc('getAllFlightBookingPassangers', [booking_id,booking_type])
+                        cursor1.callproc('getAllFlightBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
                         cursor1.close()

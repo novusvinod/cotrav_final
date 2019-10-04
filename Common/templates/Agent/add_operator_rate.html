@@ -7,6 +7,18 @@
 			<!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
+
+    <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         {% if operator_rates %}
+         Edit Operator Rate Details
+         {% else %}
+            Add New Operators Rate Details
+         {% endif %}
+         </div>
+   </div>
+
+
  <form method="post" action="/agents/add-operator-rate/0">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">

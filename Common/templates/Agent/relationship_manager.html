@@ -17,15 +17,15 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-            <form action="/agents/assessment_cities/0" method="post" enctype="multipart/form-data" >
-                <input type="hidden" name="city_id" id="city_id_edit">
+            <form action="/agents/company-relationship-manager" method="post" enctype="multipart/form-data" >
+                <input type="hidden" name="rms_id" id="oms_id_edit">
                 <input type="hidden" name="user_id" value="{{user.id}}">
 
                 <div class="form-group row" id="corporate_id1">
                         <label class="col-sm-5 control-label">Company Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control" name="corporate_id" id="corporate_id" style="width:100%;" required>
+                            <select class="form-control myselect" name="corporate_id" id="corporate_id" style="width:100%;" required>
                                 <option value="">Select Company</option>
                                {% for company in companies %}
                                 <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -35,11 +35,46 @@
                         </div>
                     </div>
 
-                 <div class="form-group row" >
-                       <label class="col-sm-5 control-label">City Name</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="city_name" id="city_name" placeholder="City Name" type="text" required>
-                            </div>
+
+
+                 <div class="form-group row">
+                        <label class="col-sm-5 control-label">Agent Name</label>
+                        <div class="col-sm-7">
+
+                            <select class="form-control myselect" name="rm_level_1_id" id="agent_level_1" style="width:100%;" required>
+                                <option value="">Select Agent Name</option>
+                               {% for agent in agents %}
+                                <option value="{{agent.id}}">{{agent.user_name}}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+
+                <div class="form-group row">
+                        <label class="col-sm-5 control-label">Agent Name</label>
+                        <div class="col-sm-7">
+
+                            <select class="form-control myselect" name="rm_level_2_id" id="agent_level_2" style="width:100%;" required>
+                                <option value="">Select Agent Name</option>
+                               {% for agent in agents %}
+                                <option value="{{agent.id}}">{{agent.user_name}}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+
+                  <div class="form-group row">
+                        <label class="col-sm-5 control-label">Is Active</label>
+                        <div class="col-sm-7">
+
+                            <select class="form-control myselect" name="is_active" id="is_active" style="width:100%;" required>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+
+                        </div>
                     </div>
 
 
@@ -48,35 +83,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<!-- The Modal -->
-<div class="modal fade model_custom_style" role="dialog" id="model_add_new_group">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Assessment Cities Details </h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-            <form action="/agents/delete-assessment_cities/0" method="post" enctype="multipart/form-data" id="form_id">
-                <input type="hidden" name="city_id" id="city_id">
-                <input type="hidden" name="user_id" value="{{user.id}}">
-
-
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                    <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
                 </div>
             </form>
             </div>
@@ -115,7 +121,7 @@
 {% include 'cotrav_alert_message.html' %}
    <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">
-         All Corporate Group Details
+         All Corporate Relationship Manager Details
          </div>
    </div>
                         <div class="table-scrollable table-bordered ">
@@ -124,30 +130,27 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Company Name</th>
-                                    <th>City Name</th>
-
+                                    <th>Agent Level 1</th>
+                                    <th>Agent Level 2</th>
+                                    <th>Is Active</th>
                                     <th>Action</th>
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for city in cities %}
+                                {% for acces in access %}
                                 <tr>
-                                    <td>{{ city.id }}</td>
-                                    <td>{{ city.corporate_name }}</td>
-                                    <td>{{ city.city_name }}</td>
-
+                                    <td>{{ acces.id }}</td>
+                                    <td>{{ acces.corporate_name }}</td>
+                                    <td>{{ acces.agent_level_1 }}</td>
+                                    <td>{{ acces.agent_level_2 }}</td>
+                                    <td>{{ acces.is_active }}</td>
 
                                     <td>
                                         <a class="btn btn-tbl-edit btn-xs" data-target="#add_group_model"
-                                           data-id="{{city.id}}" data-corporate_id="{{city.corporate_id}}" data-city_name="{{city.city_name}}"
-                                            data-toggle="modal" href="#">
+                                           data-id="{{acces.id}}" data-corporate_id="{{acces.corporate_id}}" data-agent_level_1="{{acces.rm_level_1_id}}"
+                                           data-is_active="{{acces.is_active}}" data-agent_level_2="{{acces.rm_level_2_id}}" data-toggle="modal" href="#">
                                             <i class="fa fa-pencil "></i>
-                                        </a>
-
-                                        <a class="btn btn-tbl-delete btn-xs" data-target="#model_add_new_group"
-                                           data-id="{{city.id}}" data-delete_id="1" data-toggle="modal" href="#">
-                                            <i class="fa fa-trash-o "></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -178,21 +181,16 @@ $(function() {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('id'); // Extract info from data-* attributes
     var corporate_id = button.data('corporate_id');
-    var city_name = button.data('city_name');
+    var agent_level_1 = button.data('agent_level_1');
+    var agent_level_2 = button.data('agent_level_2');
+    var is_active = button.data('is_active');
 
     var modal = $(this);
-    modal.find('#city_id_edit').val(id);
+    modal.find('#oms_id_edit').val(id);
     modal.find('#corporate_id').val(corporate_id).trigger('change');
-    modal.find('#city_name').val(city_name);
-    });
-
-   $('#model_add_new_group').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var id = button.data('id'); // Extract info from data-* attributes
-
-    var modal = $(this);
-    modal.find('#city_id').val(id);
-
+    modal.find('#agent_level_1').val(agent_level_1).trigger('change');
+    modal.find('#agent_level_2').val(agent_level_2).trigger('change');
+    modal.find('#is_active').val(is_active).trigger('change');;
     });
 
 });

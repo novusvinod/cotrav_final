@@ -91,11 +91,11 @@
                         </div>
 
                         {% for employee in booking.Passangers %}
-                        <input type="hidden" name="employee_booking_id[]" value="{{employee.id}}">
+                        <input type="hidden" name="employee_booking_id" value="{{employee.id}}">
                           <div class="form-group row">
                             <label class="col-sm-5 control-label">Ticket Number : {{employee.employee_name}} </label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="ticket_number[]" placeholder="ticket number" type="text" value="">
+                                <input class="form-control" name="ticket_number" placeholder="ticket number" type="text" value="">
                             </div>
                         </div>
 

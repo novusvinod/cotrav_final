@@ -8,6 +8,12 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+
+        <div class="text-center">
+             <div style="font-size:14px; font-weight:bold;">
+                 Add New Bus Booking
+                 </div>
+         </div>
         <form method="post" action="/agents/add-bus-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
@@ -60,7 +66,7 @@
 
                         <div class="form-group row">
                                 <label class="col-sm-4" >Preferred Bus*</label>
-                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus">
                             </div>
 
                          <div class="form-group row">
@@ -148,7 +154,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
                             </div>
 
                                <div class="form-group row">

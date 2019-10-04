@@ -17,6 +17,7 @@
 	<!--bootstrap -->
 	<link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
 	<link href="{% static 'assets/plugins/summernote/summernote.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/plugins/jquery-toast/dist/jquery.toast.min.css' %}">
     <!-- data tables -->
     <link href="{% static 'assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css"/>
 	<!-- morris chart -->
@@ -97,6 +98,10 @@
     <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}" ></script>
     <script src="{% static 'assets/plugins/sparkline/jquery.sparkline.min.js' %}" ></script>
 	<script src="{% static 'assets/js/pages/sparkline/sparkline-data.js' %}" ></script>
+
+    <!-- notifications -->
+    <script src="{% static 'assets/plugins/jquery-toast/dist/jquery.toast.min.js' %}" ></script>
+    <script src="{% static 'assets/plugins/jquery-toast/dist/toast.js' %}" ></script>
     <!-- Common js-->
 	<script src="{% static 'assets/js/app.js' %}" ></script>
     <script src="{% static 'assets/js/layout.js' %}" ></script>
@@ -112,8 +117,8 @@
 
     <!-- google map -->
     <script src="{% static 'assets/plugins/modernizr/modernizr.min.js' %}" ></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtPIcsjNx-GEuJDPmiXOVyB3G9k1eulX0&callback=initMap" async defer></script>
-    <script src="{% static 'assets/js/pages/map/gmap-home.js' %}" ></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtPIcsjNx-GEuJDPmiXOVyB3G9k1eulX0&callback=initMap" async defer></script>-->
+    <!--<script src="{% static 'assets/js/pages/map/gmap-home.js' %}" ></script>-->
     
      <!-- end js include path -->
     <!-- data tables -->

@@ -7,6 +7,14 @@
 			<!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
+
+          <div class="text-center">
+             <div style="font-size:14px; font-weight:bold;">
+                 Edit Companies Details
+                 </div>
+         </div>
+
+
                     {% for corporate in companys %}
  <form method="post" action="/agents/edit-company/{{corporate.id }}">
       {% csrf_token %}

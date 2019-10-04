@@ -8,6 +8,13 @@
 <!-- start page content -->
 <div class="page-content-wrapper">
     <div class="page-content">
+
+                    <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                     Add Spocs
+                     </div>
+            </div>
+
         <form method="post" action="/Corporate/Admin/add-spoc/{{user.corporate_id}}">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">

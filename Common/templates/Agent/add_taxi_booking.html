@@ -8,6 +8,14 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+
+      <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         Add New Taxi Booking Details
+         </div>
+   </div>
+
+
         <form method="post" action="/agents/add-taxi-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
@@ -249,12 +257,53 @@
    $(".myselect").select2();
 </script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtPIcsjNx-GEuJDPmiXOVyB3G9k1eulX0&libraries=places"></script>
+
 
 
 {% else %}
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
+
+<script>
+
+    input = document.getElementById('pickup_city');
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+
+    google.maps.event.addListener(autocomplete,'place_changed',function() {
+
+   var city =  $("#pickup_city").val();
+   var_url = '{{ API_BASE_URL }}'+'add_country_name'
+
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': 10
+            }
+
+        });
+//   For Entity
+
+     $.post(var_url,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Entitys']);
+       if(data['Entitys'].length != 0){
+        entities = data['Entitys']
+         for (var i=0;i<entities.length;i++) {
+            $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+
+    });
+
+</script>
 
 <script type="text/javascript">
 

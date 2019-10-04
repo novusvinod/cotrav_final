@@ -48,7 +48,7 @@
                                  <div class="row">
                                     <div class="col-md-6">
                                             <div class="btn-group">
-                                                <a class="btn btn-info" href="/agents/add-hotel-booking/{{user.corporate_id}}" > Hotel Bookings <i class="fa fa-plus"></i> </a>
+                                                <a class="btn btn-info" href="/agents/add-hotel-booking/0" > Hotel Bookings <i class="fa fa-plus"></i> </a>
                                             </div>
                                     </div>
                                     </div>
@@ -63,7 +63,26 @@
                     <div class="card-body ">
 
                      {% include 'cotrav_alert_message.html' %}
+ <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
 
+         {% if booking_type|stringformat:"s" == "1" %}
+         Today's Booking
+         {% elif booking_type|stringformat:"s" == "2" %}
+         Active Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "3" %}
+         Active Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "4" %}
+         Archived Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "5" %}
+         Archived Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "6" %}
+         Cancelled/Rejected Bookings
+         {% else %}
+         -
+         {% endif %}
+         </div>
+ </div>
 
                         <div class="table-scrollable table-bordered">
 
@@ -94,8 +113,8 @@
                                 <tr>
                                     <td>{{ booking.id }}</td>
                                     <td>{{ booking.reference_no }}</td>
-                                    <td>{{ booking.from_city_id }}</td>
-                                    <td>{{ booking.from_area_id}}</td>
+                                    <td>{{ booking.from_city_name }}</td>
+                                    <td>{{ booking.from_area_id_name}}</td>
                                     <td>{{ booking.booking_datetime}}</td>
                                     <td>{{ booking.checkin_datetime }}</td>
                                     <td>{{ booking.checkout_datetime }}</td>

@@ -63,7 +63,26 @@
                     <div class="card-body ">
 
                  {% include 'cotrav_alert_message.html' %}
+ <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
 
+         {% if booking_type|stringformat:"s" == "1" %}
+         Today's Booking
+         {% elif booking_type|stringformat:"s" == "2" %}
+         Active Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "3" %}
+         Active Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "4" %}
+         Archived Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "5" %}
+         Archived Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "6" %}
+         Cancelled/Rejected Bookings
+         {% else %}
+         -
+         {% endif %}
+         </div>
+ </div>
                         <div class="table-scrollable table-bordered">
 
                             <table id="example1" class="display full-width">
@@ -124,15 +143,16 @@
                                     <td>
                                         {% if booking.status_cotrav == 1 %}
                                      <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
-                                           data-toggle="modal"> <i class="fa fa-check icon-green" style="color:green;font-size:15px;"></i> </a>
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>
 
 
                                     {% endif %}
                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
                                            data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
 
+                                        {% if booking.status_cotrav == 2 %}
                                     <a href="/agents/assign-flight-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="margin-left:10px; background:#6288b1;">  <i class="fa fa-book"></i> </a>
-
+                                        {% endif %}
                                     </td>
 
 

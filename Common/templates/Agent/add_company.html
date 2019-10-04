@@ -6,6 +6,17 @@
 			<!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
+
+    <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         Add New Company
+         </div>
+   </div>
+
+
+
+
+
  <form method="post" action="/agents/add-company">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
@@ -53,7 +64,7 @@
                                             <input type="email" class="col-sm-8 form-control" name="contact_person_email" placeholder="Enter email address" required>
                                         </div>
 
-                                      <div class="form-group row">
+                                      <div class="form-group row" id="is_spoc_row">
                                                 <label class="col-sm-4" for="simpleFormEmail">IS SPOC</label>
                                                 <select class="col-sm-8 form-control" name="is_spoc">
 	                                                <option value="1">Yes</option>
@@ -107,6 +118,16 @@
                                             <label class="col-sm-4"  for="simpleFormEmail">Billing Address Line 3</label>
                                             <input type="text" class="col-sm-8 form-control" name="address_line_3" placeholder="Billing Address Line 3">
                                         </div>
+
+                                     <div class="form-group row" id="billing_city_id1">
+                                        <label class="col-sm-4 control-label">Billing City</label>
+                                            <select class="col-sm-8 form-control myselect" name="billing_city_id" id="billing_city_id" required>
+                                                <option value="">Select City</option>
+                                                {% for city in cities %}
+                                                <option value="{{city.id}}">{{city.city_name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                    </div>
 
                                         <div class="form-group row">
                                             <label class="col-sm-4"  for="simpleFormEmail">GSTIN</label>
@@ -321,10 +342,13 @@
     var getValue=$(this).val();
     if(getValue == '1'){
         $("#no_of_auth_level").show("slow");
+        $("#is_spoc_row").hide("slow");
     }else{
         $("#no_of_auth_level").hide("slow");
+        $("#is_spoc_row").show("slow");
     }
   });
+
  });
 </script>
 

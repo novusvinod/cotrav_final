@@ -85,6 +85,36 @@ def logout(request):
     return JsonResponse(data)
 
 
+def service_types(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllServiceType', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Types': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
 def companies(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -160,6 +190,7 @@ def add_companies(request):
         address_line_1 = request.POST.get('address_line_1', '')
         address_line_2 = request.POST.get('address_line_2', '')
         address_line_3 = request.POST.get('address_line_3', '')
+        billing_city_id = request.POST.get('billing_city_id', '')
         gst_id = request.POST.get('gst_id', '')
 
         has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
@@ -190,7 +221,7 @@ def add_companies(request):
                     cursor = connection.cursor()
                     cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
                       address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
-                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type])
+                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type,billing_city_id])
                     company = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Corporates': company}
@@ -503,6 +534,106 @@ def billing_entities(request):
         return JsonResponse(data)
 
 
+def view_billing_entitie(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        entity_id = request.POST.get('entity_id', '')
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewBillingEntitiesDetails', [entity_id])
+                    entity = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Entitys': entity}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def corporate_management_fee(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateManagementFeesDetails', [])
+                    entity = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Fees': entity}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def service_fee_types(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllServiceFeesTypes', [])
+                    entity = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Types': entity}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def admins(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -691,6 +822,7 @@ def corporate_package(request):
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
         corporate_id = request.POST.get('corporate_id', '')
+        city_id = request.POST.get('city_id', '')
         if corporate_id:
             corporate_id = corporate_id
         else:
@@ -703,7 +835,7 @@ def corporate_package(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getCorporatePackage', [corporate_id])
+                    cursor.callproc('getCorporatePackage', [corporate_id,city_id])
                     employee = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Package': employee}
@@ -1034,6 +1166,112 @@ def room_types(request):
         return JsonResponse(data)
 
 
+def add_corporate_management_fee(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        corporate_id = request.POST.get('corporate_id', '')
+        service_fees_type_id = request.POST.get('service_fees_type_id', '')
+        service_fees_type_value = request.POST.get('service_fees_type_value', '')
+        service_fees_type = request.POST.get('service_fees_type', '')
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addCorporateManagementFees', [corporate_id,service_fees_type_id,service_fees_type_value,service_fees_type,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'message': 'Fee Added Successfully'}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def update_corporate_management_fee(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        corporate_id = request.POST.get('corporate_id', '')
+        service_fees_type_id = request.POST.get('service_fees_type_id', '')
+        service_fees_type_value = request.POST.get('service_fees_type_value', '')
+        service_fees_type = request.POST.get('service_fees_type', '')
+        fees_id = request.POST.get('fees_id', '')
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateCorporateManagementFees', [corporate_id,service_fees_type_id,service_fees_type_value,service_fees_type,fees_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'message': 'Record Updated Successfully'}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def delete_corporate_management_fee(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        fees_id = request.POST.get('fees_id', '')
+        user_id = request.POST.get('user_id', '')
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteCorporateManagementFees', [fees_id,user_id,user_type])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'message': 'Deleted Successfully'}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def add_taxi_type(request):
@@ -2980,6 +3218,78 @@ def view_subgroup_auth(request):
         return JsonResponse(data)
 
 
+def view_auth_1(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        auth_id = request.POST.get('auth_id', '')
+
+        if auth_id:
+            auth_id = auth_id
+        else:
+            auth_id = '0'
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewSubGroupsAuthenticator', [auth_id])
+                    group = dictfetchall(cursor)
+                    data = {'success': 1, 'Authenticator': group}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def view_auth_2(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        auth_id = request.POST.get('auth_id', '')
+
+        if auth_id:
+            auth_id = auth_id
+        else:
+            auth_id = '0'
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewGroupsAuthenticator', [auth_id])
+                    group = dictfetchall(cursor)
+                    data = {'success': 1, 'Authenticator': group}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+    
+
 def view_spoc(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -3555,7 +3865,6 @@ def view_train_booking(request):
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
                     print(booking_id)
-                    cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
                     cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
                     passanger = dictfetchall(cursor1)
                     emp[0]['Passangers'] = passanger
@@ -4166,6 +4475,8 @@ def add_flight_booking(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
+
 
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):

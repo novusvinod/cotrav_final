@@ -228,7 +228,7 @@ def taxi_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/taxi_bookings.html",{'bookings': booking})
+            return render(request, "Company/Spoc/taxi_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Spoc/taxi_bookings.html", {'': {}})
     else:
@@ -323,6 +323,7 @@ def add_taxi_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Taxi Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Spoc/taxi-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -355,12 +356,8 @@ def add_taxi_booking(request,id):
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
             cities = cities['AssCity']
 
-            url_pack = settings.API_BASE_URL + "corporate_package"
-            packages = getDataFromAPI(login_type, access_token, url_pack, payload)
-            packages = packages['Package']
-
             if id:
-                return render(request, 'Company/Spoc/add_taxi_booking.html', {'packages':packages,'employees':employees,'entities':entities,'cities':cities,'taxies':taxies,'assessments':ass_code})
+                return render(request, 'Company/Spoc/add_taxi_booking.html', {'employees':employees,'entities':entities,'cities':cities,'taxies':taxies,'assessments':ass_code})
             else:
                 return render(request, 'Company/Spoc/add_taxi_booking.html', {})
         else:
@@ -384,7 +381,7 @@ def bus_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/bus_bookings.html",{'bookings': booking})
+            return render(request, "Company/Spoc/bus_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Spoc/bus_bookings.html", {'': {}})
     else:
@@ -512,7 +509,7 @@ def train_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/train_bookings.html",{'bookings': booking})
+            return render(request, "Company/Spoc/train_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Spoc/train_bookings.html", {'': {}})
     else:
@@ -637,7 +634,7 @@ def hotel_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/hotel_bookings.html",{'bookings': booking})
+            return render(request, "Company/Spoc/hotel_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Spoc/hotel_bookings.html", {'': {}})
     else:
@@ -788,7 +785,7 @@ def flight_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Spoc/flight_bookings.html",{'bookings': booking})
+            return render(request, "Company/Spoc/flight_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Spoc/flight_bookings.html", {'': {}})
     else:

@@ -226,7 +226,7 @@ def taxi_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Employee/taxi_bookings.html",{'bookings': booking})
+            return render(request, "Company/Employee/taxi_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Employee/taxi_bookings.html", {'': {}})
     else:
@@ -329,6 +329,7 @@ def add_taxi_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Taxi Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Employee/taxi-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -386,7 +387,7 @@ def bus_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Employee/bus_bookings.html",{'bookings': booking})
+            return render(request, "Company/Employee/bus_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Employee/bus_bookings.html", {'': {}})
     else:
@@ -466,6 +467,7 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Bus Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Employee/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
             else:
                 return HttpResponseRedirect("/Corporate/Employee/bus-bookings/" + str(request.user.corporate_id), {'message': "Operation Fail"})
@@ -526,7 +528,7 @@ def train_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Employee/train_bookings.html",{'bookings': booking})
+            return render(request, "Company/Employee/train_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Employee/train_bookings.html", {'': {}})
     else:
@@ -604,6 +606,7 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Train Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Employee/train-bookings/" + str(request.user.corporate_id), {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -657,7 +660,7 @@ def hotel_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Employee/hotel_bookings.html",{'bookings': booking})
+            return render(request, "Company/Employee/hotel_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Employee/hotel_bookings.html", {'': {}})
     else:
@@ -745,6 +748,7 @@ def add_hotel_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
+                messages.success(request, 'Hotel Booking Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Employee/hotel-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -804,7 +808,7 @@ def flight_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Employee/flight_bookings.html",{'bookings': booking})
+            return render(request, "Company/Employee/flight_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Employee/flight_bookings.html", {'': {}})
     else:
