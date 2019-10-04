@@ -8,10 +8,15 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+                                         <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                     Flight Booking Detail
+                     </div>
+            </div>
 {% for booking in bookings %}
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-head card-topline-aqua">
                         <header>Basic Details</header>
@@ -22,52 +27,64 @@
                             <label class="col-sm-5 control-label">Reference No</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="group_name" placeholder="Group Name"
-                                     readonly  type="text" value="{{ booking.reference_no }}">
+                                       type="text" value="{{ booking.reference_no }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Tour Type</label>
+                            <label class="col-sm-5 control-label">Bucket Priority</label>
                             <div class="col-sm-7">
-                                    {% if booking.tour_type == 1 %}
-                                     <input readonly class="form-control"name="tour_type" type="text" value="Radio">
-                                    {% elif booking.tour_type == 2 %}
-                                     <input readonly class="form-control" name="tour_type" type="text" value="Local">
-                                    {% else %}
-                                    <input readonly class="form-control" name="tour_type" type="text" value="Outstation">
-                                    {% endif %}
+                                    <input class="form-control" name="group_name" placeholder=">Train Priority 1"
+                                       type="text" value="{{ booking.room_type_name }}">
                             </div>
                         </div>
 
                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">City Name</label>
+                            <label class="col-sm-5 control-label">Room Type</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="City Name"
-                                     readonly  type="text" value="{{ booking.city_name }}">
+                                    <input class="form-control" name="group_name" placeholder=">Train Priority 1"
+                                       type="text" value="{{ booking.hotel_type_name }}">
                             </div>
                         </div>
 
                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Pickup Location</label>
+                            <label class="col-sm-5 control-label">From City Name</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="pickup_location" placeholder="Pickup Location"
-                                     readonly  type="text" value="{{ booking.pickup_location }}">
+                                       type="text" value="{{ booking.from_city_name }}">
                             </div>
                         </div>
 
                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Drop Location</label>
+                            <label class="col-sm-5 control-label">City Area</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="drop_location" placeholder="Drop Location"
-                                     readonly  type="text" value="{{ booking.drop_location }}">
+                                       type="text" value="{{ booking.from_area_id_name }}">
                             </div>
                         </div>
 
                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Pickup Date</label>
+                            <label class="col-sm-5 control-label">Preferred Area</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="drop_location" placeholder="Preferred Area"
+                                       type="text" value="{{ booking.preferred_area_name }}">
+                            </div>
+                        </div>
+
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Check IN Date</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
-                                     readonly  type="text" value="{{ booking.pickup_datetime }}">
+                                       type="text" value="{{ booking.checkin_datetime }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Check Out Date</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
+                                       type="text" value="{{ booking.checkout_datetime }}">
                             </div>
                         </div>
 
@@ -76,7 +93,7 @@
                             <label class="col-sm-5 control-label">Booking Date</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="booking_date" placeholder="Booking Date"
-                                     readonly  type="text" value="{{ booking.booking_date }}">
+                                       type="text" value="{{ booking.booking_datetime }}">
                             </div>
                         </div>
 
@@ -84,7 +101,7 @@
                             <label class="col-sm-5 control-label">No Of Seats</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="no_of_seats" placeholder="No Of Seats"
-                                     readonly  type="text" value="{{ booking.no_of_seats }}">
+                                       type="text" value="{{ booking.no_of_seats }}">
                             </div>
                         </div>
 
@@ -92,22 +109,205 @@
                             <label class="col-sm-5 control-label">Booking Reason</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="reason_booking" placeholder="Booking Reason"
-                                     readonly  type="text" value="{{ booking.reason_booking }}">
+                                       type="text" value="{{ booking.reason_booking }}">
                             </div>
                         </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Client Status</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
+                                       type="text" value="{{ booking.client_status }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">CoTrav Status</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
+                                       type="text" value="{{ booking.cotrav_status }}">
+                            </div>
+                        </div>
+
+
 
 
                     </div>
                 </div>
             </div>
 
-             <div class="col-md-4">
+             <div class="col-md-3">
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Spoc Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.user_name }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Contact Email</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.user_contact }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Spoc Contact Number</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.email }}">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                 {% if booking.assign_hotel_id %}
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Hotel Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Hotels Name</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.operator_name }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Hotels Contact</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.operator_contact }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Room Type</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.hotel_type_name }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Daily Brakefast</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.daily_brakefast }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Is Prepaid</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ booking.is_prepaid }}">
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
+
+                 {% endif %}
+
+
+
 
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Passanger Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                         {% for passanger in booking.Passangers %}
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Name {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Name"
+                                       type="text" value="{{ passanger.employee_name|default:'' }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Contact Email {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Contact Email"
+                                       type="text" value="{{ passanger.employee_email|default:''}}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Contact Number {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ passanger.employee_contact|default:''}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Age {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Age"
+                                       type="text" value="{{ passanger.age|default:''}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Gender {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Gender"
+                                       type="text" value="{{ passanger.gender|default:''}}">
+                            </div>
+                        </div>
+
+
+                        {% endfor %}
+
+                    </div>
+                </div>
 
             </div>
+
+             <div class="col-md-3">
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Comment Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Comment</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name" type="text" value="{{ booking.reason_booking }}">
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
 
         </div>
 
@@ -117,6 +317,7 @@
 
 
  {% endfor %}
+
 
     </div>
 </div>

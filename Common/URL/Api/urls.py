@@ -24,12 +24,20 @@ urlpatterns = [
 
     path('api/corporate_package', api_views.corporate_package),
 
+    path('api/service_types', api_views.service_types),
     path('api/train_types', api_views.train_types),
     path('api/bus_types', api_views.bus_types),
     path('api/irctc_accounts', api_views.irctc_accounts),
     path('api/hotel_types', api_views.hotel_types),
     path('api/hotel_booking_portals', api_views.hotel_booking_portals),
     path('api/room_types', api_views.room_types),
+
+    path('api/corporate_management_fee', api_views.corporate_management_fee),
+    path('api/add_corporate_management_fee', api_views.add_corporate_management_fee),
+    path('api/update_corporate_management_fee', api_views.update_corporate_management_fee),
+    path('api/delete_corporate_management_fee', api_views.delete_corporate_management_fee),
+    path('api/service_fee_types', api_views.service_fee_types),
+
 
     path('api/taxi_types', api_views.taxi_types),
     path('api/add_taxi_type', api_views.add_taxi_type),
@@ -59,6 +67,7 @@ urlpatterns = [
     path('api/delete_company_rates', api_views.delete_company_rates),
 
     path('api/billing_entities', api_views.billing_entities),
+    path('api/view_billing_entitie', api_views.view_billing_entitie),
     path('api/admins', api_views.admins),
     path('api/groups', api_views.groups),
     path('api/subgroups', api_views.subgroups),
@@ -88,6 +97,9 @@ urlpatterns = [
     path('api/add_subgroup_auth', api_views.add_subgroup_auth),
     path('api/update_subgroup_auth', api_views.update_subgroup_auth),
     path('api/delete_subgroup_auth', api_views.delete_subgroup_auth),
+
+    path('api/view_auth_1', api_views.view_auth_1),
+    path('api/view_auth_2', api_views.view_auth_2),
 
     path('api/add_admin', api_views.add_admin),
     path('api/update_admin', api_views.update_admin),

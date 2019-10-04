@@ -9,6 +9,11 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+                                          <div class="text-center">
+                     <div style="font-size:14px; font-weight:bold;">
+                        Train Booking Detail
+                         </div>
+                </div>
 {% for booking in bookings %}
         <div class="row">
 
@@ -31,7 +36,7 @@
                             <label class="col-sm-5 control-label">Train Priority 1</label>
                             <div class="col-sm-7">
                                     <input class="form-control" name="group_name" placeholder=">Train Priority 1"
-                                       type="text" value="{{ booking.train_type_priority_1_name }}">
+                                       type="text" value="{{ booking.train_type_priority_name }}">
                             </div>
                         </div>
 

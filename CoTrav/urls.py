@@ -29,7 +29,7 @@ urlpatterns = [
 ######################### END Commann urls ###############
 
 
-path('login2', basic_web_views.login2),
+#path('login2', basic_web_views.login2),
 
 ######################### CORPORATE ADMIN URLS ############################
     path('', include('Common.URL.Admin.urls')),
@@ -62,3 +62,4 @@ path('login2', basic_web_views.login2),
 
 
 ]
+handler404 = 'landing.views.error_404_view'

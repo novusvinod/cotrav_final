@@ -9,8 +9,14 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
-        <form method="post" action="/Corporate/Employee/add-taxi-booking/{{user.corporate_id}}">
+                          <div class="text-center">
+                     <div style="font-size:14px; font-weight:bold;">
+                        Add Train Booking
+                         </div>
+                </div>
+        <form method="post" action="/Corporate/Employee/add-train-booking/{{user.corporate_id}}">
             <input type="hidden" name="employee_id_1" value="{{user.id}}">
+            <input type="hidden" name="employee_id" value="{{user.id}}">
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
             <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
             <input type="hidden" name="no_of_seats" value="1">
@@ -42,12 +48,11 @@
                             </div>
 
                          <div class="form-group row">
-                                <label class="col-sm-4" >Bus Type*</label>
-                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
-                                      <option value="1">AC Seater</option>
-                                      <option value="2">AC Sleeper</option>
-                                      <option value="3">NON AC Seater</option>
-                                      <option value="4">NON AC Sleeper</option>
+                                <label class="col-sm-4" >Train Type*</label>
+                                 <select name="train_type" class="form-control col-sm-8 tour_type myselect">
+                                       {% for type in types %}
+                                        <option value="{{type.id}}">{{type.name}}</option>
+                                        {% endfor %}
                                   </select>
                             </div>
 
@@ -58,13 +63,13 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Booking Date*</label>
-                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="min-date"  placeholder="Booking Date/Time" required>
+                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="min-date"  placeholder="Booking Date/Time" required>
                             </div>
 
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Date of Journey*</label>
-                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
+                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
                             </div>
 
 
@@ -126,11 +131,15 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Company/Employee/layout/footer.html" %}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
 
 <script type="text/javascript">
- $(function() {
+$(document).ready(function() {
+$(".js-example-basic-single").select2();
+});
+
+$(function() {
 
 $("#tour_type").change(function()
     {

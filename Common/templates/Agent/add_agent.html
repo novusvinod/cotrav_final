@@ -6,6 +6,15 @@
 <!-- start page content -->
 <div class="page-content-wrapper">
     <div class="page-content">
+  <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         {% if agent %}
+         Edit Agents Details
+         {% else %}
+            Add New Agent Details
+         {% endif %}
+         </div>
+   </div>
         <form method="post" action="/agents/add-agent/0">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
@@ -42,7 +51,7 @@
                                 <label class="col-sm-4" >User Name</label>
                                 {% if agent %}
                                 {% for agent in agent %}
-                                <input type="text" class="col-sm-8 form-control" name="username" value="{{agent.username|default:''}}" required
+                                <input type="text" class="col-sm-8 form-control" name="username" value="{{agent.user_name|default:''}}" required
                                        placeholder="User Name">
                                 {% endfor %}
                                 {% else %}

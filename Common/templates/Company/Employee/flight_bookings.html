@@ -62,8 +62,27 @@
                     </div>
                     <div class="card-body ">
 
+{% include 'cotrav_alert_message.html' %}
+ <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
 
-
+         {% if booking_type|stringformat:"s" == "1" %}
+         Today's Booking
+         {% elif booking_type|stringformat:"s" == "2" %}
+         Active Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "3" %}
+         Active Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "4" %}
+         Archived Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "5" %}
+         Archived Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "6" %}
+         Cancelled/Rejected Bookings
+         {% else %}
+         -
+         {% endif %}
+         </div>
+ </div>
                         <div class="table-scrollable table-bordered">
 
                             <table id="example1" class="display full-width">
@@ -134,7 +153,7 @@
 
                                     <td>
 
-                                        <a href="/Corporate/Admin/view-flight-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
+                                        <a href="/Corporate/Employee/view-flight-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
 
                                     </td>
                                 </tr>

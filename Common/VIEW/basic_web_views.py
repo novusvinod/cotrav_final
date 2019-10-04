@@ -12,11 +12,6 @@ from Common.models import Corporate_Agent_Login_Access_Token
 from django.db import connection
 
 
-def login2(request):
-    form = Corporate_Login_Form()
-    return render(request, 'corporate_login_new.html')
-
-
 def login(request):
     form = Corporate_Login_Form()
     return render(request, 'corporate_login.html', {'form': form})
@@ -33,8 +28,8 @@ def login_action(request):
         corporate_login_type = request.POST.get('corporate_login_type', '')
         user_type = corporate_login_type
         user = authenticate(username=username, post_password=password, login_type=corporate_login_type)
-
-        if user is not None:
+        print(user)
+        if user:
             if user:
                 request.session.set_expiry(7200)  # sets the exp. value of the session
                 print("without login")

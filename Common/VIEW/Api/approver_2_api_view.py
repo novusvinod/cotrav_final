@@ -71,7 +71,7 @@ def approver_2_accept_taxi_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptApprover_2TaxiBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -103,7 +103,7 @@ def approver_2_reject_taxi_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2TaxiBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -175,7 +175,7 @@ def approver_2_accept_bus_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptApprover_2BusBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -207,7 +207,7 @@ def approver_2_reject_bus_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2BusBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -279,7 +279,7 @@ def approver_2_accept_train_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptApprover_2TrainBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -311,7 +311,7 @@ def approver_2_reject_train_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2TrainBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -386,7 +386,7 @@ def approver_2_accept_hotel_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptApprover_2HotelBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -418,7 +418,7 @@ def approver_2_reject_hotel_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2HotelBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -492,7 +492,7 @@ def approver_2_accept_flight_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptApprover_2FlightBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -524,7 +524,7 @@ def approver_2_reject_flight_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2FlightBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:

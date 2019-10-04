@@ -95,7 +95,13 @@
                                 </div>
                                 <div class="card-body ">
 
+                            {% include 'cotrav_alert_message.html' %}
 
+            <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                     Operator Bank Details
+                     </div>
+            </div>
 
                                   <div class="table-scrollable table-bordered">
                                     <table id="example1" class="display full-width table-striped">
@@ -129,8 +135,10 @@
                                                     </a>
 
                                                     <a class="btn btn-tbl-delete btn-xs" data-target="#model_add_new_group"
-                                                       data-id="{{operator_bank.id}}" data-delete_id="1" data-toggle="modal" href="#">
-                                                        <i class="fa fa-pencil "></i>
+                                                       data-id="{{operator_bank.id}}" data-beneficiary_name="{{operator_bank.beneficiary_name}}"
+                                                        data-beneficiary_account_no="{{operator_bank.beneficiary_account_no}}" data-bank_name="{{operator_bank.bank_name}}"
+                                                         data-ifsc_code="{{operator_bank.ifsc_code}}" data-delete_id="1" data-toggle="modal" href="#">
+                                                        <i class="fa fa-trash "></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -175,6 +183,10 @@ $(function() {
     if(delete_id == 1){
     modal.find('#delete_id').val('1');
     modal.find('#bank_id').val(id);
+    modal.find('#beneficiary_name').val(beneficiary_name);
+    modal.find('#beneficiary_account_no').val(beneficiary_account_no);
+    modal.find('#bank_name').val(bank_name);
+    modal.find('#ifsc_code').val(ifsc_code);
 
     modal.find('#beneficiary_name1').hide();
     modal.find('#beneficiary_account_no1').hide();

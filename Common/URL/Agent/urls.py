@@ -16,10 +16,14 @@ urlpatterns = [
     path('agents/edit-company/<int:id>', agent_views.edit_company),
     path('agents/delete-company/<int:id>', agent_views.delete_company),
 
+    path('agents/company-operation-management', agent_views.company_operation_management),
+    path('agents/company-relationship-manager', agent_views.company_relationship_manager),
+
     path('agents/billing_entities/<int:id>', agent_views.company_billing_entities),
     path('agents/rates/<int:id>', agent_views.company_rates),
     path('agents/add-company-rate/<int:id>', agent_views.add_company_rate),
     path('agents/add-company-entity/<int:id>', agent_views.add_company_entity),
+    path('agents/company-management-fees', agent_views.company_management_fees),
 
     path('agents/groups/<int:id>', agent_views.company_groups),
     path('agents/view-company-group/<int:id>', agent_views.view_company_group),

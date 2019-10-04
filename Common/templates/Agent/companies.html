@@ -31,6 +31,38 @@
 </div>
 
 
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_setting_popup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title-status">Select Setting</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <ol style="font-size:14px;">
+                    <li> <a href="/agents/rates/0">Company Rates</a> </li>
+                    <li> <a href="/agents/company-management-fees">Management Fees</a> </li>
+                    <li> <a href="/agents/company-operation-management">Operation Management</a> </li>
+                    <li> <a href="/agents/company-relationship-manager">Relationship Manager</a> </li>
+
+                </ol>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
@@ -55,7 +87,13 @@
                                 </div>
                                 <div class="card-body ">
 
+                                {% include 'cotrav_alert_message.html' %}
 
+         <div class="text-center">
+             <div style="font-size:14px; font-weight:bold;">
+                 All Companies
+                 </div>
+         </div>
 
                                   <div class="table-scrollable table-bordered">
                                     <table id="example1" class="display full-width table-striped">
@@ -66,6 +104,7 @@
                                                 <th>Person Name</th>
                                                 <th>Person No</th>
                                                 <th>Person Email</th>
+                                                <th>Setting</th>
                                                 <th >Action</th>
                                             </tr>
                                             </thead>
@@ -79,6 +118,11 @@
                                                 <td>{{ company.contact_person_no }}</td>
                                                 <td>{{ company.contact_person_email }}</td>
 
+                                                <td>
+                                                   <a class="btn btn-tbl-edit btn-xs" data-target="#model_setting_popup" data-toggle="modal" href="#">
+                                                        <i class="fa fa-gear"></i>
+                                                    </a>
+                                                </td>
 
                                                  <td>
                                                     <a href="/agents/edit-company/{{ company.id }}" class="btn btn-tbl-edit btn-xs">

@@ -14,7 +14,13 @@
                     <div class="card-head">
                         <header>ALL CORPORATE TAXI BOOKINGS</header>
                              <div class="row p-b-20">
-
+                                 <div class="row">
+                                     <div class="col-md-6">
+                                            <div class="btn-group">
+                                                <a class="btn btn-info" href="/Corporate/Employee/add-bus-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
+                                            </div>
+                                        </div>
+                                    </div>
                             </div>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
@@ -23,30 +29,47 @@
                         </div>
                     </div>
                     <div class="card-body ">
+{% include 'cotrav_alert_message.html' %}
+ <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
 
-                        <div class="row">
-                             <div class="col-md-6">
-                                    <div class="btn-group">
-                                        <a class="btn btn-info" href="/Corporate/Employee/add-bus-booking/{{user.corporate_id}}" > Taxi Bookings <i class="fa fa-plus"></i> </a>
-                                    </div>
-                                </div>
-                            </div>
+         {% if booking_type|stringformat:"s" == "1" %}
+         Today's Booking
+         {% elif booking_type|stringformat:"s" == "2" %}
+         Active Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "3" %}
+         Active Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "4" %}
+         Archived Bookings(Unassigned)
+         {% elif booking_type|stringformat:"s" == "5" %}
+         Archived Bookings(Assigned)
+         {% elif booking_type|stringformat:"s" == "6" %}
+         Cancelled/Rejected Bookings
+         {% else %}
+         -
+         {% endif %}
+         </div>
+ </div>
 
                         <div class="table-scrollable table-bordered">
 
                             <table id="example1" class="display full-width">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
+                                     <th>ID</th>
                                     <th>Reference No</th>
-                                    <th>Pickup City</th>
-                                    <th>Drop City</th>
+                                    <th>From</th>
+                                    <th>To</th>
                                     <th>Booking DateTime</th>
                                     <th>Boarding Point</th>
                                     <th>Date of Journey</th>
-                                    <th>Bus Type Requested (Assigned)</th>
+                                    <th>Bus Type (Assigned)</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
+
+                                    <th>Operator Details</th>
+                                    <th>Spoc Details</th>
+                                    <th>Passenger Details</th>
                                     <th>Details</th>
 
                                 </tr>
@@ -54,16 +77,33 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+                                     <td>{{ booking.id }}</td>
                                     <td>{{ booking.reference_no }}</td>
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location}}</td>
                                     <td>{{ booking.booking_datetime }}</td>
                                     <td>{{ booking.boarding_point }}</td>
                                     <td>{{ booking.boarding_datetime }}</td>
-                                    <td>{{ booking.assign_bus_type_id}}</td>
+                                    <td>{{ booking.bus_types_assign_name}}</td>
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
+
+
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+                                    <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
+
+
+                                     <td>
+                                        {% for passanger in booking.Passangers %}
+                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
+                                        {% endfor %}
+                                    </td>
+
                                     <td>
                                         <a href="/Corporate/Employee/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
                                         </a>

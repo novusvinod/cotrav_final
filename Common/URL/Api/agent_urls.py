@@ -28,6 +28,12 @@ urlpatterns = [
     path('api/update_operator_driver', agent_api_view.update_operator_driver),
     path('api/delete_operator_driver', agent_api_view.delete_operator_driver),
 
+    path('api/operation_managements', agent_api_view.operation_managements),
+    path('api/relationship_managements', agent_api_view.relationship_managements),
+    path('api/add_operation_managements', agent_api_view.add_operation_managements),
+    path('api/add_relationship_managements', agent_api_view.add_relationship_managements),
+    path('api/update_operation_managements', agent_api_view.update_operation_managements),
+    path('api/update_relationship_managements', agent_api_view.update_relationship_managements),
 
     path('api/agent_taxi_bookings', agent_api_view.agent_taxi_bookings),
     path('api/agent_add_taxi_booking', agent_api_view.agent_add_taxi_booking),

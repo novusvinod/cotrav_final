@@ -9,6 +9,11 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+                          <div class="text-center">
+                     <div style="font-size:14px; font-weight:bold;">
+                        Add Taxi Booking
+                         </div>
+                </div>
         <form method="post" action="/Corporate/Employee/add-taxi-booking/{{user.corporate_id}}">
             <input type="hidden" name="employee_id" value="{{user.id}}">
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
@@ -33,7 +38,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type">
+                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type myselect">
                                       <option value="">Select Tour Type </option>
                                       <option value="1">Radio </option>
                                       <option value="2">Local </option>
@@ -59,13 +64,13 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Pickup DateTime*</label>
-                                 <input type="text" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date"  placeholder="Pickup Date/Time" required>
+                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="pickup_datetime" id="min-date"  placeholder="Pickup Date/Time" required>
                             </div>
 
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
-                                   <select name="assessment_code" class="form-control col-sm-8">
+                                   <select name="assessment_code" class="form-control col-sm-8 myselect">
                                         {% for assessment in assessments %}
                                         <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                         {% endfor %}
@@ -74,7 +79,7 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment City*</label>
-                                   <select name="assessment_city_id" class="form-control col-sm-8">
+                                   <select name="assessment_city_id" class="form-control col-sm-8 myselect">
                                         {% for city in cities %}
                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                         {% endfor %}
@@ -83,7 +88,7 @@
 
                               <div class="form-group row" id="tr_taxi_type" style="display: none">
                                     <label class="col-sm-4" >Taxi Type</label>
-                                     <select name="taxi_type" class="form-control col-sm-8">
+                                     <select name="taxi_type" class="form-control col-sm-8 myselect">
                                         {% for taxi in taxies %}
                                         <option value="{{taxi.id}}">{{taxi.name}}</option>
                                         {% endfor %}
@@ -92,7 +97,7 @@
 
                              <div class="form-group row" id="tr_package" style="display: none">
                                     <label class="col-sm-4" >Select Package</label>
-                                     <select name="package_id" class="form-control col-sm-8">
+                                     <select name="package_id" class="form-control col-sm-8 myselect">
                                         {% for package in packages %}
                                         <option value="{{package.id}}">{{package.package_name}}</option>
                                         {% endfor %}
@@ -144,11 +149,15 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-{% include "Company/Employee/layout/footer.html" %}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
 
 <script type="text/javascript">
- $(function() {
+$(document).ready(function() {
+$(".js-example-basic-single").select2();
+});
+
+$(function() {
 
 $("#tour_type").change(function()
     {
@@ -204,3 +213,5 @@ var options = {
    var auto3 = new google.maps.places.Autocomplete(drop_location, options);
  });
 </script>
+
+{% endblock %}

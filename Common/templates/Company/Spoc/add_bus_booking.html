@@ -9,6 +9,11 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+                                          <div class="text-center">
+                     <div style="font-size:14px; font-weight:bold;">
+                        Add Bus Booking
+                         </div>
+                </div>
         <form method="post" action="/Corporate/Spoc/add-bus-booking/{{user.corporate_id}}">
             <input type="hidden" name="spoc_id" value="{{user.id}}">
             <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
@@ -205,7 +210,7 @@
 {% endif %}
 
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
 
 <script type="text/javascript">
  $(function() {

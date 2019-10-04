@@ -7,6 +7,17 @@
 <!-- start page content -->
 <div class="page-content-wrapper">
     <div class="page-content">
+
+      <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         {% if spoc %}
+         Edit Operator Rate Details
+         {% else %}
+            Add New Operators Rate Details
+         {% endif %}
+         </div>
+   </div>
+
         <form method="post" action="/agents/add-spoc/0">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
@@ -31,7 +42,7 @@
                         <div class="card-body " id="bar-parent">
                               <div class="form-group row" id="corporate_id1">
                                     <label class="col-sm-4 ">Company Name</label>
-                                        <select class="form-control col-sm-8 myselect" name="corporate_id" required>
+                                        <select class="form-control col-sm-8 myselect" name="corporate_id"  id="corporate_id" required>
                                             <option value="">Select Company</option>
                                             {% if spoc %}
                                             {% for spoc in spoc %}
@@ -53,7 +64,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Group Name</label>
-                                <select class="form-control col-sm-8 myselect" name="group_id" required>
+                                <select class="form-control col-sm-8 myselect" name="group_id" id="group_id" required>
                                     <option value="">Select Group</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -73,7 +84,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >SubGroup Group</label>
-                                <select class="form-control col-sm-8 myselect" name="subgroup_id" required>
+                                <select class="form-control col-sm-8 myselect" name="subgroup_id" id="subgroup_id" required>
                                     <option value="">Select SubGroup</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -439,7 +450,59 @@
  $(function() {
 
  });
+$("#corporate_id").change(function(){
 
+  $('#spoc_id').empty();
+  $('#group_id').empty();
+  $('#subgroup_id').empty();
+
+   var corporate_id =  $(this).val();
+   var_url = '{{ API_BASE_URL }}'+'groups'
+
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': 10
+            }
+
+        });
+//   For Entity
+
+     $.post(var_url,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Groups']);
+       if(data['Groups'].length != 0){
+        entities = data['Groups']
+         for (var i=0;i<entities.length;i++) {
+            $('#group_id').append($("<option value='"+entities[i].id+"'>"+entities[i].group_name+"</option>"));
+         }
+       }else{
+        alert('No Group Available')
+       }
+       });
+
+
+//       For SubGroup
+
+
+    var_subgroups = '{{ API_BASE_URL }}'+'subgroups'
+     $.post(var_subgroups,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Subgroups']);
+       if(data['Subgroups'].length != 0){
+        spocs = data['Subgroups']
+         for (var i=0;i<spocs.length;i++) {
+            $('#subgroup_id').append($("<option value='"+spocs[i].id+" '>"+spocs[i].subgroup_name+"</option>"));
+
+         }
+       }else{
+        alert('No SubGroup Available')
+       }
+       });
+
+});
 </script>
 
 {% endblock %}

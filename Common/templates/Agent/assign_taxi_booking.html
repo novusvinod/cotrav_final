@@ -127,7 +127,9 @@
                                 <select name="operator_id" class="form-control" required>
                                     <option value="">Select</option>
                                     {% for operator in operators %}
+                                    {% if operator.service_type_id == booking.tour_type %}
                                         <option value="{{operator.id}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
+                                    {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>

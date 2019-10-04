@@ -9,6 +9,13 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
+
+         <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         Add New Train Booking Details
+         </div>
+   </div>
+
         <form method="post" action="/agents/add-train-booking/{{user.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
@@ -59,8 +66,8 @@
                             </div>
 
                         <div class="form-group row">
-                                <label class="col-sm-4" >Preferred Bus*</label>
-                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
+                                <label class="col-sm-4" >Preferred Train</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Train" >
                             </div>
 
                          <div class="form-group row">
@@ -149,7 +156,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
                             </div>
 
                                <div class="form-group row">
@@ -248,7 +255,7 @@
 {% endif %}
 
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
 
 <script type="text/javascript">
 
@@ -361,21 +368,7 @@ $("#corporate_id").change(function(){
 
 
 
-  <!--        For Package    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'corporate_package'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
-      function(data)
-      {
-       //alert(data['Spocs']);
-       if(data['Package'].length != 0){
-        package = data['Package']
-         for (var i=0;i<package.length;i++) {
-            $('#package_id').append($("<option value='"+package[i].id+"'>"+package[i].package_name+"</option>"));
-         }
-       }else{
-        alert('No Package Available')
-       }
-       });
+
 
 
 });

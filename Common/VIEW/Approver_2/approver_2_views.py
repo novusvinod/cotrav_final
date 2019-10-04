@@ -5,7 +5,7 @@ import json
 from django_global_request.middleware import get_request
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-
+from django.contrib import messages
 
 @login_required(login_url='/login')
 def homepage(request):
@@ -268,8 +268,10 @@ def accept_taxi_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Taxi Booking Sccepted Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/taxi-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail To Accept Taxi Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/taxi-bookings/1", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/login")
@@ -288,8 +290,10 @@ def reject_taxi_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Taxi Booking Rejected Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/taxi-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail To Reject Taxi Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/taxi-bookings/1", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/login")
@@ -311,7 +315,7 @@ def bus_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/bus_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/bus_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/bus_bookings.html", {'': {}})
     else:
@@ -352,8 +356,10 @@ def accept_bus_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Bus Booking Accepted Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/bus-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Accept Bus Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/bus-bookings/1", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/login")
@@ -372,8 +378,10 @@ def reject_bus_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Bus Booking Rejected Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/bus-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Reject Bus Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/bus-bookings/1", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/login")
@@ -397,7 +405,7 @@ def train_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/train_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/train_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/train_bookings.html", {'': {}})
     else:
@@ -438,8 +446,10 @@ def accept_train_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Train Booking Accepted successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/train-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Accept Train Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/train-bookings/1", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/login")
@@ -458,8 +468,10 @@ def reject_train_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Train Booking Rejected Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/train-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Reject Train Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/train-bookings/1", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/login")
@@ -481,7 +493,7 @@ def hotel_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/hotel_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/hotel_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/hotel_bookings.html", {'': {}})
     else:
@@ -522,8 +534,10 @@ def accept_hotel_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Hotel Booking Accepted Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/hotel-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Accept Hotel Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/hotel-bookings/1",{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -542,8 +556,10 @@ def reject_hotel_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Hotel Booking Rejected Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/hotel-bookings/1" , {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail To Reject Hotel Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/hotel-bookings/1",{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -565,7 +581,7 @@ def flight_bookings(request,id):
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Company/Approver_2/flight_bookings.html",{'bookings': booking})
+            return render(request, "Company/Approver_2/flight_bookings.html",{'bookings': booking,'booking_type':id})
         else:
             return render(request, "Company/Approver_2/flight_bookings.html", {'': {}})
     else:
@@ -606,8 +622,10 @@ def accept_flight_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Flight Booking Accepted Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/flight-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Accept Flight Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/flight-bookings/1",{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -626,22 +644,13 @@ def reject_flight_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
+            messages.success(request, 'Flight Booking Rejected Successfully..!')
             return HttpResponseRedirect("/Corporate/Approver_2/flight-bookings/1", {'message': "Operation Successfully"})
         else:
+            messages.error(request, 'Fail to Reject flight Booking..!')
             return HttpResponseRedirect("/Corporate/Approver_2/flight-bookings/1",{'message': "Operation Fails"})
     else:
         return redirect('/login')
-
-
-
-
-
-
-
-
-
-
-
 
 
 
