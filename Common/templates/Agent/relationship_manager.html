@@ -144,7 +144,7 @@
                                     <td>{{ acces.corporate_name }}</td>
                                     <td>{{ acces.agent_level_1 }}</td>
                                     <td>{{ acces.agent_level_2 }}</td>
-                                    <td>{{ acces.is_active }}</td>
+                                    <td>{{ acces.is_active|yesno:'Active,De-Active' }}</td>
 
                                     <td>
                                         <a class="btn btn-tbl-edit btn-xs" data-target="#add_group_model"

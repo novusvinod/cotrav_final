@@ -1,54 +1,59 @@
+
+
+
+
+
 /*
  *  Document   : style.css
  *  Author     : Redstartheme
  *  Description: The main theme stylesheet of the template
  *
  *  Structure (with shortcodes):
- 
+
  		1. GLOBLE STYLE
 		2. BODY
-		3. HEADER	
+		3. HEADER
 		4. SIDE MENU
-		5. SEARCH BAR 
-		6. NAVIGATION 
-		7. PANEL 
-		8. PAGE CONTENT 
-		9. FORM 
-		10. USER PANEL STYLE 
-		11. MODAL WINDOW 
-		12. CHAT PANEL 
-		13. CARD BOX STYLE 
-		14. PROFILE 
-		15. WIZARD 
-		16. TABLE 
-		17. BUTTON 
-		18. LABEL 
-		19. CALENDAR 
-		20. DROP DOWN STYLE 
-		21. CHECKBOX & RADIO 
-		22. ICON BUTTON 
-		23. VALIDATION ICONS 
-		24. NOTE 
-		25. PAGINATION 
-		26. ACCORDION 
-		27. TAB 
-		28. STATE OVERVIEW 
-		29. BORDER BOX 
-		30. RATING BUTTON 
-		31. TO DO LIST 
-		32. BADGE 
-		33. SCROLL TO TOP 
-		34. FOOTER 	
+		5. SEARCH BAR
+		6. NAVIGATION
+		7. PANEL
+		8. PAGE CONTENT
+		9. FORM
+		10. USER PANEL STYLE
+		11. MODAL WINDOW
+		12. CHAT PANEL
+		13. CARD BOX STYLE
+		14. PROFILE
+		15. WIZARD
+		16. TABLE
+		17. BUTTON
+		18. LABEL
+		19. CALENDAR
+		20. DROP DOWN STYLE
+		21. CHECKBOX & RADIO
+		22. ICON BUTTON
+		23. VALIDATION ICONS
+		24. NOTE
+		25. PAGINATION
+		26. ACCORDION
+		27. TAB
+		28. STATE OVERVIEW
+		29. BORDER BOX
+		30. RATING BUTTON
+		31. TO DO LIST
+		32. BADGE
+		33. SCROLL TO TOP
+		34. FOOTER
 		35. FEED
 		36. FAQ
 		37. WIDGET
-		38. CONTACT 
+		38. CONTACT
 		39. THEME STYLE
  */
 /***********************************************************************
 
 						[1. GLOBLE STYLE ]
-						
+
 ***********************************************************************/
 
 h1,
@@ -373,8 +378,8 @@ code {
 	font-size: 23px;
 }
 .font-size-20{
-	font-size: 20px;
-	margin-left: -25px;
+	font-size: 16px;
+	margin-left: -67px;
 }
 /******* Colors Codes********/
 
@@ -652,7 +657,7 @@ li [class^=icon-].icon-large {
 /******************************************************************************************
 
 						 		[ 2. BODY ]
-							
+
 *******************************************************************************************/
 
 body {
@@ -667,8 +672,8 @@ body {
 }
 /* ***********************************************************************
 
-							    [ 3. PAGE HEADER ]	 
-								
+							    [ 3. PAGE HEADER ]
+
 **************************************************************************/
 .navbar-fixed-top {
     position: fixed;
@@ -1525,7 +1530,7 @@ span.notify {
     margin: 8px 0 2px
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle {
-    padding: 13px 6px 12px 8px
+    padding: 18px 6px 12px 8px
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle>.username {
     display: inline-block;
@@ -1534,10 +1539,11 @@ span.notify {
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle>img {
     float: left;
-    margin-top: -1px;
-    margin-right: -9px;
-    height: 29px;
-    display: inline-block
+    margin-top: -2px;
+    margin-right: -2px;
+    height: 23px;
+    display: inline-block;
+
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle>i {
     display: inline-block;
@@ -1548,7 +1554,7 @@ span.notify {
     width: 160px;
 	margin-top: 0px;
     margin-right: -8px;
-	
+
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-menu>li>a {
     font-size: 11px;
@@ -1600,7 +1606,7 @@ span.notify {
 .page-header.navbar .hor-menu {
     margin: 0;
     float: left
-	
+
 }
 .page-header.navbar .hor-menu .navbar-nav {
     min-height: 50px;
@@ -1760,7 +1766,7 @@ span.notify {
     top: 0
 }
 .page-header .top-menu .dropdown-quick-sidebar-toggler>.dropdown-toggle i:before {
-    content: "î�¥"
+    content: "î?¥"
 }
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-extended .dropdown-menu>li.external h3 {
     text-transform: uppercase;
@@ -1786,7 +1792,7 @@ span.notify {
 /******************************************************************************************
 
 						 		[ 4. SIDE MENU ]
-							
+
 *******************************************************************************************/
 
 .sidemenu-container,
@@ -2152,7 +2158,7 @@ span.notify {
     text-align: center;
     margin-top: -6px;
     border-radius: 2px;
-} 
+}
 .sidemenu-container .sidemenu.sidemenu-closed>li>a>i {
     float: none;
 }
@@ -2506,7 +2512,7 @@ span.notify {
 /**************************************************************
 
 					[6. NAVIGATION ]
-						
+
 ***************************************************************/
 
 .nav-pills,
@@ -2747,7 +2753,7 @@ span.notify {
 /****************************************************************
 
 					[7. PANEL ]
-						
+
 *****************************************************************/
 
 .panel {
@@ -2800,7 +2806,7 @@ span.notify {
 /********************************************************************
 
 						[8. PAGE CONTENT ]
-						
+
 *********************************************************************/
 
 .page-title {
@@ -2970,7 +2976,7 @@ span.notify {
 /**************************************************************
 
 					[9. FORM ]
-					
+
 ***************************************************************/
 
 .form {
@@ -3370,7 +3376,7 @@ textarea.form-control-textarea {
 /*****************************************************************
 
 					[10. USER PANEL STYLE ]
-						
+
 ******************************************************************/
 
 .user-panel {
@@ -3413,7 +3419,7 @@ textarea.form-control-textarea {
 /*************************************************************
 
 				[11. MODAL WINDOW ]
-							
+
 *************************************************************/
 
 .modal {
@@ -3498,7 +3504,7 @@ body[ng-controller] .modal {
 /****************************************************************************
 
 						[12. CHAT PANEL ]
-								
+
 *****************************************************************************/
 
 .chat {
@@ -3749,7 +3755,7 @@ ul.chat.nice-chat {
 }
 .chat-sidebar-open .page-header .top-menu .dropdown-quick-sidebar-toggler>.dropdown-toggle i:before,
 .chat-sidebar-open .chat-sidebar-toggler>i:before {
-    content: "î�¦"
+    content: "î?¦"
 }
 .chat-sidebar-toggler {
     overflow: hidden;
@@ -4359,7 +4365,7 @@ h4.media-heading {
 /******************************************************************
 
 					[13. CARD BOX STYLE ]
-							
+
 *********************************************************************/
 
 .card {
@@ -4629,7 +4635,7 @@ h4.media-heading {
     font-size: 16px;
 }
 .vehicleStyle{
-	
+
 }
 .vehicle-img{
 	width: 100%;
@@ -4640,13 +4646,13 @@ h4.media-heading {
 	color: #fff;
 }
 .chart-window{
-	width:100%; 
+	width:100%;
 	height: 500px;
 }
 /*************************************************************************
 
 						[14. PROFILE ]
-							
+
 **************************************************************************/
 
 .doctor-pic {
@@ -4991,7 +4997,7 @@ ul.activity-list .activity-desk h5 a {
 /**********************************************************
 
 						[15. WIZARD ]
-						
+
 ***********************************************************/
 
 .sw-toolbar-top,
@@ -5028,7 +5034,7 @@ ul.activity-list .activity-desk h5 a {
 /****************************************************************
 
 					[16. TABLE ]
-						
+
 *****************************************************************/
 
 .table-scrollable {
@@ -6348,7 +6354,7 @@ fieldset[disabled] .btn.purple:not(.btn-outline):hover {
 /************************************************************
 
 					[18. LABEL ]
-						
+
 *************************************************************/
 
 label {
@@ -6476,7 +6482,7 @@ h6 .label {
 }
 /***************************************************************
 
-					[19. CALENDAR ] 
+					[19. CALENDAR ]
 
 ****************************************************************/
 
@@ -6803,7 +6809,7 @@ h6 .label {
 /***************************************************************
 
 					[21. CHECKBOX & RADIO ]
-						
+
 ****************************************************************/
 
 .rt-chkbox,
@@ -6974,7 +6980,7 @@ th>.rt-radio.rt-radio-single {
 /**********************************************************
 
 					[22. ICON BUTTON ]
-					
+
 ***********************************************************/
 
 .icon-btn {
@@ -7054,7 +7060,7 @@ th>.rt-radio.rt-radio-single {
 /************************************************************
 
 			[23. VALIDATION ICONS ]
-						
+
 *************************************************************/
 
 .input-icon {
@@ -7124,7 +7130,7 @@ th>.rt-radio.rt-radio-single {
 /****************************************************************
 
 				[24. NOTE ]
-						
+
 *****************************************************************/
 
 .note {
@@ -7233,7 +7239,7 @@ th>.rt-radio.rt-radio-single {
 /****************************************************************
 
 				[25. PAGINATION ]
-						
+
 *****************************************************************/
 
 .pagination {
@@ -7248,22 +7254,22 @@ th>.rt-radio.rt-radio-single {
 /****************************************************************
 
 				[26. ACCORDION ]
-						
+
 *****************************************************************/
 
 .accordion .card-header:after {
-    font-family: 'FontAwesome';  
+    font-family: 'FontAwesome';
     content: "\f068";
-    float: right; 
+    float: right;
 }
 .accordion .card-header.collapsed:after {
     /* symbol for "collapsed" panels */
-    content: "\f067"; 
+    content: "\f067";
 }
 /****************************************************************
 
-					[27. TAB ]	
-						
+					[27. TAB ]
+
 *****************************************************************/
 
 .tab-pane>p:last-child {
@@ -7282,7 +7288,7 @@ th>.rt-radio.rt-radio-single {
 }
 .customtab.nav-tabs .nav-link {
     border-left: 0;
-    border-top: 0; 
+    border-top: 0;
     border-right: 0;
     color: #999;
 }
@@ -7336,7 +7342,7 @@ nav-tabs>li {
 /****************************************************************
 
 					[28. STATE OVERVIEW ]
-						
+
 *****************************************************************/
 
 .state-overview h1.sbold,
@@ -7478,7 +7484,7 @@ nav-tabs>li {
 /********************************************************************
 
 					[29. BORDER BOX ]
-							
+
 *********************************************************************/
 
 .borderBox.light.bordered {
@@ -7627,7 +7633,7 @@ nav-tabs>li {
 /*********************************************************************
 
 					[31. TO DO LIST ]
-							
+
 **********************************************************************/
 
 .todo-title {
@@ -7775,7 +7781,7 @@ nav-tabs>li {
 /***********************************************************************
 
 						[32. BADGE ]
-						
+
 ***********************************************************************/
 
 .badge {
@@ -7844,7 +7850,7 @@ nav-tabs>li {
 /****************************************************************************
 
 						[33. SCROLL TO TOP ]
-								
+
 *****************************************************************************/
 
 .scroll-to-top {
@@ -8420,7 +8426,7 @@ span.notificationtime {
     margin: 5px;
     color: transparent;
     position: relative;
-    background-color: #EAEEF3; 
+    background-color: #EAEEF3;
 }
 .quick-setting ul#themecolors li a.green-theme {
     background-color: #0f0;
@@ -8550,7 +8556,7 @@ span.notificationtime {
     left: 0;
 }
 .selector-title{
-	margin-top: 0px !important; 
+	margin-top: 0px !important;
 	color: #000000;
 }
 .mdl-button--file input {
@@ -8580,6 +8586,9 @@ span.notificationtime {
 font-weight: bold;
 }
 .Companies_Entity_Name{
-	margin-right: 126px;
-    font-weight: 500;
+	    margin-right: 211px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 20px;
 }
+

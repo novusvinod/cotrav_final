@@ -61,4 +61,6 @@ urlpatterns = [
     path('api/reject_flight_booking', agent_api_view.reject_flight_booking),
     path('api/assign_flight_booking', agent_api_view.assign_flight_booking),
 
+    path('api/get_city_id', agent_api_view.get_city_id),
+
 ]

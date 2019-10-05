@@ -58,7 +58,7 @@
             </div>
             <div class="navbar-custom">
 				<div class="hor-menu hidden-sm hidden-xs">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav mynav">
                         <li class="mega-menu-dropdown ">
                             <a href="/Corporate/Spoc/home" class="dropdown-toggle"> <i class="material-icons">dashboard</i>  Home
                                
@@ -103,7 +103,7 @@
                             </a>
 
                         </li>
-                                                                       <li class="mega-menu-dropdown ">
+                                                                       <li class="mega-menu-dropdown " id="taxi_li_menu">
                              <a class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
                               <i class="fa fa-angle-down"></i>
                                 <span class="arrow "></span>
@@ -114,6 +114,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Spoc/add-taxi-booking/{{user.corporate_id}}"><i class="fa fa-fast-forward" aria-hidden="true"></i>Add Taxi Bookings</a></li>
 														<li><a href="/Corporate/Spoc/taxi-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
 														<li><a href="/Corporate/Spoc/taxi-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
 														<li><a href="/Corporate/Spoc/taxi-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
@@ -129,7 +130,7 @@
                          </li>
 
                         </li>
-                         <li class="mega-menu-dropdown active">
+                         <li class="mega-menu-dropdown active" id="bus_li_menu">
                             <a class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
                                 <i class="fa fa-angle-down"></i>
                                 <span class="arrow "></span>
@@ -140,6 +141,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Spoc/add-bus-booking/{{user.corporate_id}}"><i class="fa fa-fast-forward" aria-hidden="true"></i>Add Bus Bookings</a></li>
 														<li><a href="/Corporate/Spoc/bus-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
 														<li><a href="/Corporate/Spoc/bus-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
 														<li><a href="/Corporate/Spoc/bus-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
@@ -154,7 +156,7 @@
 								</ul>
 
                         </li>
-                        <li class="mega-menu-dropdown">
+                        <li class="mega-menu-dropdown" id="train_li_menu">
                             <a class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
                                 <i class="fa fa-angle-down"></i>
                                 <span class="arrow "></span>
@@ -165,6 +167,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Spoc/add-train-booking/{{user.corporate_id}}"><i class="fa fa-fast-forward" aria-hidden="true"></i>Add Train Bookings</a></li>
 														<li><a href="/Corporate/Spoc/train-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
 														<li><a href="/Corporate/Spoc/train-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
 														<li><a href="/Corporate/Spoc/train-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
@@ -179,7 +182,7 @@
 								</ul>
 
                         </li>
-                        <li class="mega-menu-dropdown">
+                        <li class="mega-menu-dropdown" id="hotel_li_menu">
                             <a class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
 
                            <i class="fa fa-angle-down"></i>
@@ -191,6 +194,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Spoc/add-hotel-booking/{{user.corporate_id}}"><i class="fa fa-fast-forward" aria-hidden="true"></i>Add Hotel Bookings</a></li>
 														<li><a href="/Corporate/Spoc/hotel-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
 														<li><a href="/Corporate/Spoc/hotel-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
 														<li><a href="/Corporate/Spoc/hotel-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
@@ -204,7 +208,7 @@
 									</li>
 								</ul>
                         </li>
-                        <li class="mega-menu-dropdown">
+                        <li class="mega-menu-dropdown" id="flight_li_menu">
                             <a class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
 
                             <i class="fa fa-angle-down"></i>
@@ -216,6 +220,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
+														<li><a href="/Corporate/Spoc/add-flight-booking/{{user.corporate_id}}"><i class="fa fa-fast-forward" aria-hidden="true"></i>Add Flight Bookings</a></li>
 														<li><a href="/Corporate/Spoc/flight-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
 														<li><a href="/Corporate/Spoc/flight-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
 														<li><a href="/Corporate/Spoc/flight-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
