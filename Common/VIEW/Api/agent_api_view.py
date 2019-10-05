@@ -2,14 +2,16 @@ from datetime import datetime
 
 from django.http import JsonResponse
 from django.db import connection
-from Common.models import Corporate_Login
+from Common.models import Corporate_Login, Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Spoc_Login
+from Common.models import Corporate_Employee_Login
 from Common.models import Corporate_Approves_1_Login
 from Common.models import Corporate_Approves_2_Login
 from Common.models import Corporate_Agent
 
 from Common.models import Corporate_Login_Access_Token
 from Common.models import Corporate_Spoc_Login_Access_Token
+from Common.models import Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
@@ -2010,6 +2012,8 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
             user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '4':
             user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '6':
+            user = Corporate_Employee_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '10':
             user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
 
@@ -2028,6 +2032,8 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
                 user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
             elif user_type == '4':
                 user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
+            elif user_type == '6':
+                user_info = Corporate_Employee_Login.objects.get(id=user.employee_id)
             elif user_type == '10':
                 user_info = Corporate_Agent.objects.get(id=user.agent_id)
             else:
@@ -2046,3 +2052,47 @@ def dictfetchall(cursor):
             dict(zip([col[0] for col in desc], row))
             for row in cursor.fetchall()
     ]
+
+#########################################3
+
+def get_city_id(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        post_str = request.POST.get('search_string')
+
+
+        my_list = post_str.split(",")
+
+        li = []
+        for i in my_list:
+            v = i.strip()
+            li.append(v)
+
+        search_str = ",".join(map(str, li))
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getCityId', [search_str])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'city_id': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+
+        return JsonResponse(data)

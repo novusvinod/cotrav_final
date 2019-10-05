@@ -823,6 +823,7 @@ def corporate_package(request):
         user_type = request.META['HTTP_USERTYPE']
         corporate_id = request.POST.get('corporate_id', '')
         city_id = request.POST.get('city_id', '')
+        taxi_type = request.POST.get('taxi_type', '')
         if corporate_id:
             corporate_id = corporate_id
         else:
@@ -835,7 +836,7 @@ def corporate_package(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getCorporatePackage', [corporate_id,city_id])
+                    cursor.callproc('getCorporatePackage', [corporate_id,city_id,taxi_type])
                     employee = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Package': employee}

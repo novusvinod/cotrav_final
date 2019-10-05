@@ -1,5 +1,7 @@
 <style>
-
+.bg-1{
+  background-color: #eaeef3;
+}
 ul.messages {
   list-style-type: none;
   padding: 0;
@@ -29,53 +31,107 @@ ul.messages li:hover {
   right: 0%;
   padding: 12px 16px;
   transform: translate(0%, -50%);
+   color: #ffffff;
 }
 
-.close:hover {background: #bbb;}
+.close:hover {
+  background: var(--sidebar-color);
+color:black;
+
+}
 
 ul.messages li.success{
-
-background: #48e148;
+   background-image: url(/static/assets/img/su-1.png);
+    background-repeat: no-repeat;
+    background-position: left;
     color: white;
-    width: 50%;
-    margin-left: 383px;
-    padding-left: 255px;
-
+    width: 24%;
+    margin-left: 635px;
+    padding-left: 70px;
+    border-radius: 7px;
+    line-height: 14px;
+    display: block;
+    position: relative;
+    margin-top: 20px;
+    font-size: 13px;
+    background-color: #51c897;
+    border-top: solid 3px #d0d0d0;
 }
 
 ul.messages li.info{
-
-background-color:blue;
+background-image: url("/static/assets/img/su-2.png");
+background-repeat: no-repeat;
+  background-position: left;
+   color: white;
+   width: 24%;
+   margin-left: 635px;
+    padding-left: 90px;
+    border-radius: 7px;
+    line-height: 14px;
+    display: block;
+    position: relative;
+    margin-top: 20px;
+    font-size: 13px;
+    background-color: #78a3f9;
+    border-top:solid 3px #d0d0d0;
 
 }
 
-ul.messages li.error{
 
-background-color: #ef3647;
-    color: white;
-    width: 50%;
-    margin-left: 383px;
-    padding-left: 255px;
+ul.messages li.error{
+background-image: url("/static/assets/img/su-3.png");
+background-repeat: no-repeat;
+  background-position: left;
+  color: white;
+   width: 24%;
+  margin-left: 635px;
+    padding-left: 90px;
+    border-radius: 7px;
+    line-height: 14px;
+    display: block;
+    position: relative;
+    margin-top: 20px;
+    font-size: 13px;
+    background-color: #fc7b68;
+    border-top:solid 3px #d0d0d0;
 
 }
 
 ul.messages li.warning{
-
-background-color: #3366cc;
-    color: white;
-    width: 50%;
-    margin-left: 383px;
-    padding-left: 255px;
+background-image: url("/static/assets/img/su-4.png");
+background-repeat: no-repeat;
+  background-position: left;
+  color: white;
+   width: 24%;
+  margin-left: 635px;
+    padding-left: 70px;
+    border-radius: 7px;
+    line-height: 14px;
+    display: block;
+    position: relative;
+    margin-top: 20px;
+    font-size: 13px;
+    background-color: #f7c549;
+    border-top:solid 3px #d0d0d0;
 
 }
 
 ul.messages li.debug{
-
-background-color: #333366;
-    color: white;
-    width: 50%;
-    margin-left: 383px;
-    padding-left: 255px;
+background-image: url("/static/assets/img/su-5.png");
+background-repeat: no-repeat;
+  background-position: left;
+  color: white;
+    width: 24%;
+   margin-left: 635px;
+    padding-left: 70px;
+    border-radius: 7px;
+    line-height: 14px;
+    display: block;
+    position: relative;
+    margin-top: 20px;
+    font-size: 13px;
+    background-color: #78a3f9;
+    border-top:solid 3px #d0d0d0;
 
 }
 
@@ -89,20 +145,23 @@ messages.warning(request, 'Your account expires in three days.')
 messages.error(request, 'Document deleted.')
 
 -->
+                            <div class="bg-1">
+                        {% if messages %}
 
-                    {% if messages %}
-                        <ul class="list-group messages" id="alert-message">
-                            {% for message in messages %}
+                            <ul class="list-group messages" id="alert-message">
+                                {% for message in messages %}
 
-                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}
-                            <span class="close">&times;</span>
+                            <li {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}
+                                <span class="close">&times;</span>
 
-                        </li>
 
-                    {% endfor %}
-                    </ul>
-                    {% endif %}
+                            </li>
 
+
+                        {% endfor %}
+                        </ul>
+                        {% endif %}
+                        </div>
 
 
 <script>

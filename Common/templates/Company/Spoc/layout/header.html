@@ -125,6 +125,62 @@
             $('#example1').DataTable();
         } );
 
+
+         function setNavigation() {
+                var path = window.location.pathname;
+                path = path.replace(/\/$/, "");
+                path = decodeURIComponent(path);
+
+                var a = path.substring(28,20);
+                alert(a);
+                switch(a) {
+
+                    case 'taxi-boo' :
+                    case 'add-taxi' :
+                    $('#taxi_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'bus-book':
+                    case 'add-bus-' :
+                      // code block
+                      $('#bus_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'train-bo':
+                    case 'add-trai' :
+                      // code block
+                      $('#train_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'hotel-bo':
+                    case 'add-hote' :
+                      // code block
+                      $('#hotel_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'flight-b':
+                    case 'add-flig' :
+                      // code block
+                      $('#flight_li_menu').addClass('active');
+                      return;
+                      break;
+                    default:
+                      // code block
+                  }
+
+
+                $(".mynav a").each(function () {
+                    var href = $(this).attr('href');
+                   // alert(a);
+
+                    if (path.substring(0, href.length) === href) {
+                        $(this).closest('li').addClass('active');
+                    }
+                });
+            }
+
+
+
     </script>
 
 </body>

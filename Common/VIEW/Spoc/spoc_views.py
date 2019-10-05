@@ -278,6 +278,7 @@ def add_taxi_booking(request,id):
             assessment_code = request.POST.get('assessment_code', '')
             assessment_city_id = request.POST.get('assessment_city_id', '')
             entity_id = request.POST.get('entity_id', '')
+            actual_city_id = request.POST.get('current_city_id', '')
 
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
@@ -287,30 +288,6 @@ def add_taxi_booking(request,id):
             for i in range(1,no_of_emp):
                 employees.append(request.POST.get('employee_id_'+str(i), ''))
                 print(employees)
-
-            pickup_details = [x.strip() for x in pickup_city.split(',')]
-            city_data = {'login_type': login_type, 'access_token': access_token, 'city_country': pickup_details[2]}
-
-            url_add_city = settings.API_BASE_URL + "add_city_name"
-            url_add_state = settings.API_BASE_URL + "add_state_name"
-            url_add_country = settings.API_BASE_URL + "add_country_name"
-
-            country_id = getDataFromAPI(login_type, access_token, url_add_country, city_data)
-            for conty_id in country_id['id']:
-                actual_country_id = conty_id['id']
-
-            city_data = {'login_type': login_type, 'access_token': access_token, 'city_state': pickup_details[1], 'country_id': actual_country_id}
-            state_id = getDataFromAPI(login_type, access_token, url_add_state, city_data)
-
-            for conty_id in state_id['id']:
-                actual_state_id = conty_id['id']
-
-            city_data = {'login_type': login_type, 'access_token': access_token, 'city_name': pickup_details[0],
-                         'state_id': actual_state_id}
-            city_id = getDataFromAPI(login_type, access_token, url_add_city, city_data)
-
-            for conty_id in city_id['id']:
-                actual_city_id = conty_id['id']
 
             payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,

@@ -142,7 +142,7 @@
                                     <td>{{ acces.corporate_name }}</td>
                                     <td>{{ acces.service_name }}</td>
                                     <td>{{ acces.user_name }}</td>
-                                    <td>{{ acces.is_active }}</td>
+                                    <td>{{ acces.is_active|yesno:'Active,De-Active' }}</td>
 
                                     <td>
                                         <a class="btn btn-tbl-edit btn-xs" data-target="#add_group_model"

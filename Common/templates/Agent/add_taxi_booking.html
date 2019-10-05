@@ -60,6 +60,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-4" >Pickup City*</label>
                                  <input type="text" class="form-control col-sm-8" name="pickup_city" id="pickup_city" placeholder="Pickup City" required>
+                                <input type="hidden" name="current_city_id" id="current_city_id">
                             </div>
 
                               <div class="form-group row">
@@ -257,7 +258,7 @@
    $(".myselect").select2();
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtPIcsjNx-GEuJDPmiXOVyB3G9k1eulX0&libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 
 
@@ -266,16 +267,23 @@
 {% endif %}
 
 
-<script>
+ <script>
+      var input = document.getElementById('pickup_city');
+      var autocomplete = new google.maps.places.Autocomplete(input);
 
-    input = document.getElementById('pickup_city');
+      var pickup_location = document.getElementById('pickup_location');
+      var autocomplete = new google.maps.places.Autocomplete(pickup_location);
 
-    var autocomplete = new google.maps.places.Autocomplete(input);
+       var drop_location = document.getElementById('drop_location');
+      var autocomplete = new google.maps.places.Autocomplete(drop_location);
 
-    google.maps.event.addListener(autocomplete,'place_changed',function() {
+      google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
-   var city =  $("#pickup_city").val();
-   var_url = '{{ API_BASE_URL }}'+'add_country_name'
+      var search_str = $("#pickup_city").val();
+        alert(search_str);
+      var_url = '{{ API_BASE_URL }}'+'get_city_id'
+
+      //var_url = 'http://localhost:8000/api/testpath'
 
     $.ajaxSetup({
             headers:{
@@ -284,26 +292,21 @@
             }
 
         });
-//   For Entity
 
-     $.post(var_url,{ corporate_id: corporate_id },
+     $.post(var_url,{ search_string: search_str },
       function(data)
       {
-       //alert(data['Entitys']);
-       if(data['Entitys'].length != 0){
-        entities = data['Entitys']
-         for (var i=0;i<entities.length;i++) {
-            $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
-         }
-       }else{
-        alert('No Entity Available')
-       }
+
+       var city_id = data['city_id'][0]['id'];
+       $('#current_city_id').val(city_id);
+       alert(data['city_id'][0]['id']);
+
        });
 
+});
 
-    });
+    </script>
 
-</script>
 
 <script type="text/javascript">
 
@@ -457,10 +460,26 @@ $("#corporate_id").change(function(){
 
 
 
-  //       For Package    
+
+
+});
+
+$("#select_taxi_type").change(function(){
+    var taxi_type =  $(this).val();
+    var corporate_id= $("#corporate_id").val();
+    var current_city_id= $("#current_city_id").val();
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+  //       For Package
 
     var_url_spoc = '{{ API_BASE_URL }}'+'corporate_package'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
+     $.post(var_url_spoc,{ corporate_id: corporate_id, taxi_type : taxi_type, city_id:current_city_id },
       function(data)
       {
        //alert(data['Spocs']);
@@ -473,36 +492,7 @@ $("#corporate_id").change(function(){
         alert('No Package Available')
        }
        });
-
 });
-
-
-
-
-  //      For GET All Cities    
-
-  var city_Names = [];
-
-    {% for city in cities %}
-        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
-    {% endfor %}
-
-
-  
-
-
-
-var pickup_city = document.getElementById('pickup_city');
-var pickup_location = document.getElementById('pickup_location');
-var drop_location = document.getElementById('drop_location');
-var options = {
- types: ['(cities)'],
- componentRestrictions: {country: 'in'}
-};
-
-   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
-   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
-   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
 
 </script>
 

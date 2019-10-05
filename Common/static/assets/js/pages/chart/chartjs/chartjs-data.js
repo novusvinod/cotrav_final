@@ -184,14 +184,14 @@ $(document).ready(function() {
                     randomScalingFactor(),
                     randomScalingFactor(),
                     randomScalingFactor(),
-                    randomScalingFactor(),
+
                 ],
                 backgroundColor: [
                     color(chartColors.red).alpha(0.5).rgbString(),
                     color(chartColors.orange).alpha(0.5).rgbString(),
                     color(chartColors.yellow).alpha(0.5).rgbString(),
                     color(chartColors.green).alpha(0.5).rgbString(),
-                    color(chartColors.blue).alpha(0.5).rgbString(),
+
                 ],
                 label: 'My dataset' // for legend
             }],
@@ -200,7 +200,7 @@ $(document).ready(function() {
                 "Orange",
                 "Yellow",
                 "Green",
-                "Blue"
+
             ]
         },
         options: {
