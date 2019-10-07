@@ -271,11 +271,7 @@
       var input = document.getElementById('pickup_city');
       var autocomplete = new google.maps.places.Autocomplete(input);
 
-      var pickup_location = document.getElementById('pickup_location');
-      var autocomplete = new google.maps.places.Autocomplete(pickup_location);
 
-       var drop_location = document.getElementById('drop_location');
-      var autocomplete = new google.maps.places.Autocomplete(drop_location);
 
       google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
@@ -302,6 +298,12 @@
        alert(data['city_id'][0]['id']);
 
        });
+
+          var pickup_location = document.getElementById('pickup_location');
+      var autocomplete = new google.maps.places.Autocomplete(pickup_location);
+
+       var drop_location = document.getElementById('drop_location');
+      var autocomplete = new google.maps.places.Autocomplete(drop_location);
 
 });
 
