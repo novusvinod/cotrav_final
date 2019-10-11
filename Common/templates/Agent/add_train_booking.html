@@ -48,12 +48,24 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >From*</label>
-                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>-->
+                                  <select name="from" id="pickup_location" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select From Station</option>
+                                        {% for railway_station in railway_stations %}
+                                        <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >To*</label>
-                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>-->
+                                   <select name="to" id="drop_location" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select To Station</option>
+                                        {% for railway_station in railway_stations %}
+                                        <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
 
                          <div class="form-group row">
@@ -70,20 +82,18 @@
                                  <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Train" >
                             </div>
 
-                         <div class="form-group row">
-                                <label class="col-sm-4" >Booking Date*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="date-start"  placeholder="Booking Date/Time" required>
-
-                         </div>
-
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Date of Journey*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" placeholder="Journey Date/Time" required>
                             </div>
 
 
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Booking Date*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="booking_datetime" placeholder="Booking Date/Time" required>
 
+                         </div>
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Select Billing Entity*</label>
@@ -91,6 +101,11 @@
                                       <option value="">Select Billing Entity </option>
 
                                   </select>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
+                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
                             </div>
 
 
@@ -110,26 +125,9 @@
                                   </select>
                             </div>
 
-
-
-
-
-
-
-
-
-
-
                         </div>
 
-
-
-
                      </div>
-
-
-
-
                      </div>
 
 
@@ -155,19 +153,14 @@
 
 
                                <div class="form-group row">
-                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
-                            </div>
-
-                               <div class="form-group row">
                                 <label class="col-sm-4" >Number Of Employees*</label>
                                 <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats myselect" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
-                                    <option value="5" style="display: none">5</option>
-                                    <option value="6" style="display: none">6</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
                                 </select>
                             </div>
 
@@ -207,7 +200,7 @@
                                     </select>
                                 </div>
 
-                               <div class="form-group row"  id="emp_row_5" style="display: none">
+                               <div class="form-group row"  id="emp_row_5" >
                                     <label class="col-sm-4" >Employee 5</label>
                                      <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
@@ -216,7 +209,7 @@
                                     </select>
                                 </div>
 
-                               <div class="form-group row"  id="emp_row_6" style="display: none">
+                               <div class="form-group row"  id="emp_row_6">
                                     <label class="col-sm-4" >Employee 6</label>
                                      <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8 myselect">
                                         {% for employee in employees %}
@@ -254,34 +247,35 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
-
 <script type="text/javascript">
 
 $(document).ready(function() {
 $(".js-example-basic-single").select2();
-});
 
-    $('#emp_row_2').hide();
+
+});
+  $('#emp_row_2').hide();
     $('#emp_row_3').hide();
     $('#emp_row_4').hide();
-
-
+    $('#emp_row_5').hide();
+    $('#emp_row_6').hide();
 $(".no_of_seats").change(function()
     {
+
     	var no_of_seats = $(this).val();
 
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
             {
                 $('#emp_row_'+i).show();
+                $("#employee_id_"+i).attr('required',true);
 
             }
             var j = parseInt(no_of_seats) + 1;
 			for(j=j; j<=6; j++)
 			{
 				$('#emp_row_'+j).hide();
+				$("#employee_id_"+j).attr('required',false);
 
 			}
     	}
@@ -293,15 +287,6 @@ $("#corporate_id").change(function(){
   $('#taxi_type_id').empty();
   $('#spoc_id').empty();
   $('#entity_id').empty();
-  $('#package_id').empty();
-  $('#employee_id_1').empty();
-  $('#employee_id_2').empty();
-  $('#employee_id_3').empty();
-  $('#employee_id_4').empty();
-  $('#employee_id_5').empty();
-  $('#employee_id_6').empty();
-
-
 
    var corporate_id =  $(this).val();
    var_url = '{{ API_BASE_URL }}'+'billing_entities'
@@ -320,6 +305,7 @@ $("#corporate_id").change(function(){
        //alert(data['Entitys']);
        if(data['Entitys'].length != 0){
         entities = data['Entitys']
+        $('#entity_id').append($("<option value=''>Select Billing Entity</option>"));
          for (var i=0;i<entities.length;i++) {
             $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
          }
@@ -336,6 +322,7 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['Spocs'].length != 0){
         spocs = data['Spocs']
+        $('#spoc_id').append($("<option value=''>Select Spoc</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#spoc_id').append($("<option value='"+spocs[i].id+','+spocs[i].group_id+','+spocs[i].subgroup_id+" '>"+spocs[i].user_name+"</option>"));
 
@@ -345,14 +332,42 @@ $("#corporate_id").change(function(){
        }
        });
 
- <!--        For Employees    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'employees'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
+
+});
+
+
+$("#spoc_id").change(function(){
+    var spoc_idd =  $(this).val();
+    var spoc_id = spoc_idd.split(",");
+      $('#employee_id_1').empty();
+      $('#employee_id_2').empty();
+      $('#employee_id_3').empty();
+      $('#employee_id_4').empty();
+      $('#employee_id_5').empty();
+      $('#employee_id_6').empty();
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': {{request.session.login_type}}
+            }
+
+        });
+
+        //       For Employees
+
+    var_url_spoc_employee = '{{ API_BASE_URL }}'+'spoc_employee'
+     $.post(var_url_spoc_employee,{ spoc_id: spoc_id[0] },
       function(data)
       {
-       //alert(data['Spocs']);
+
        if(data['Employees'].length != 0){
-        employee = data['Employees']
+        employee = data['Employees'];
+        $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
          for (var i=0;i<employee.length;i++) {
             $('#employee_id_1').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
             $('#employee_id_2').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
@@ -366,38 +381,7 @@ $("#corporate_id").change(function(){
        }
        });
 
-
-
-
-
-
 });
-
-
-  <!--        For GET All Cities    -->
-  var city_Names = [];
-
-    {% for city in cities %}
-        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
-    {% endfor %}
-
-
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
-
-
-var pickup_city = document.getElementById('pickup_city');
-var pickup_location = document.getElementById('pickup_location');
-var drop_location = document.getElementById('drop_location');
-var options = {
- types: ['(cities)'],
- componentRestrictions: {country: 'in'}
-};
-
-   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
-   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
-   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
 
 
 </script>

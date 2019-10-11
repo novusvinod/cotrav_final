@@ -128,7 +128,8 @@
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-4" >Employee 1</label>
-                                     <select name="employee_id_1" class="form-control col-sm-8 myselect">
+                                     <select name="employee_id_1" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -138,6 +139,7 @@
                               <div class="form-group row" id="emp_row_2" style="display: none">
                                     <label class="col-sm-4" >Employee 2</label>
                                      <select name="employee_id_2" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -147,6 +149,7 @@
                               <div class="form-group row"  id="emp_row_3" style="display: none">
                                     <label class="col-sm-4" >Employee 3</label>
                                      <select name="employee_id_3" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -156,6 +159,7 @@
                               <div class="form-group row"  id="emp_row_4" style="display: none">
                                     <label class="col-sm-4" >Employee 4</label>
                                      <select name="employee_id_4" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -165,6 +169,7 @@
                                <div class="form-group row"  id="emp_row_5" style="display: none">
                                     <label class="col-sm-4" >Employee 5</label>
                                      <select name="employee_id_5" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -174,6 +179,7 @@
                                <div class="form-group row"  id="emp_row_6" style="display: none">
                                     <label class="col-sm-4" >Employee 6</label>
                                      <select name="employee_id_6" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -209,81 +215,39 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
+ var input = document.getElementById('pickup_location');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+
+  var input = document.getElementById('drop_location');
+  var autocomplete = new google.maps.places.Autocomplete(input);
  $(function() {
 
 $(".no_of_seats").change(function()
     {
+
     	var no_of_seats = $(this).val();
+
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
             {
                 $('#emp_row_'+i).show();
+                $("#employee_id_"+i).attr('required',true);
+
             }
             var j = parseInt(no_of_seats) + 1;
 			for(j=j; j<=6; j++)
 			{
 				$('#emp_row_'+j).hide();
+				$("#employee_id_"+j).attr('required',false);
 
 			}
     	}
     });
 
-$("#tour_type").change(function()
-    {
-    	var tour_type = $(this).val();
 
-    	switch(tour_type){
-           case '1':
-              {
-                $('#tr_taxi_type').hide();
-                $('#tr_package').hide();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '2':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '3':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').show();
-                break;
-              }
-    	}
-    });
-
-var pickup_city = document.getElementById('pickup_city');
-var pickup_location = document.getElementById('pickup_location');
-var drop_location = document.getElementById('drop_location');
-var options = {
- types: ['(cities)'],
- componentRestrictions: {country: 'in'}
-};
-
-  <!--        For GET All Cities    -->
-  var city_Names = [];
-
-    {% for city in cities %}
-        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
-    {% endfor %}
-
-
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
-
-   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
-   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
-   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
  });
 </script>
 

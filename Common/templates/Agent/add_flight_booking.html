@@ -46,6 +46,7 @@
                         <div class="form-group row">
                                 <label class="col-sm-4" >Usage Type*</label>
                                  <select name="usage_type"  class="form-control col-sm-8 myselect">
+                                     <option value="">Select Usage Type</option>
                                       <option value="Flight">Flight</option>
                                       <option value="Web Checkin">Web Checkin</option>
 
@@ -55,6 +56,7 @@
                         <div class="form-group row">
                                 <label class="col-sm-4" >Journey Type*</label>
                                  <select name="trip_type"  class="form-control col-sm-8 myselect">
+                                     <option value="">Select Journey Type</option>
                                       <option value="One Way">One Way</option>
                                       <option value="Round Trip">Round Trip</option>
                                  </select>
@@ -64,15 +66,12 @@
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Class*</label>
                                  <select name="seat_type"  class="form-control col-sm-8 myselect">
+                                     <option value="">Select Class</option>
                                       <option value="Economy">Economy</option>
                                       <option value="Premium Economy">Premium Economy</option>
                                       <option value="Business">Business</option>
                                  </select>
                             </div>
-
-
-
-
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >From City*</label>
@@ -84,29 +83,22 @@
                                  <input type="text" class="form-control col-sm-8" name="to_city" id="drop_location" placeholder="To City" required>
                             </div>
 
-                         <div class="form-group row">
-                                <label class="col-sm-4" >Booking DateTime*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" placeholder="Booking DateTime" required>
+                          <div class="form-group row">
+                                <label class="col-sm-4" >Departure Date*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="departure_datetime" placeholder="Departure Date" required>
                             </div>
 
-                               <div class="form-group row">
-                                <label class="col-sm-4" >Departure Date*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="departure_datetime" placeholder="Departure Date" required>
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Booking DateTime*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="booking_datetime" placeholder="Booking DateTime" required>
                             </div>
+
+
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Preferred Flights</label>
                                  <input type="text" class="form-control col-sm-8" name="preferred_flight" placeholder="Preferred Flights">
                             </div>
-
-
-                              <div class="form-group row">
-                                    <label class="col-sm-4" >Assessment Code*</label>
-                                     <select id="assessment_code" name="assessment_code" class="form-control col-sm-8 myselect">
-
-
-                                    </select>
-                                </div>
 
 
 
@@ -259,39 +251,49 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
 
 $(document).ready(function() {
 $(".js-example-basic-single").select2();
+
+  $('#emp_row_2').hide();
+  $('#emp_row_3').hide();
+  $('#emp_row_4').hide();
+
+ var input = document.getElementById('pickup_location');
+ var autocomplete = new google.maps.places.Autocomplete(input);
+
+  var input = document.getElementById('drop_location');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+
 });
 
-    $('#tr_no_of_days').hide();
-    $('#emp_row_2').hide();
-    $('#emp_row_3').hide();
-    $('#emp_row_4').hide();
 
 
 $(".no_of_seats").change(function()
     {
+
     	var no_of_seats = $(this).val();
 
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
             {
                 $('#emp_row_'+i).show();
+                $("#employee_id_"+i).attr('required',true);
 
             }
             var j = parseInt(no_of_seats) + 1;
 			for(j=j; j<=6; j++)
 			{
 				$('#emp_row_'+j).hide();
+				$("#employee_id_"+j).attr('required',false);
 
 			}
     	}
     });
+
 
 
 $("#corporate_id").change(function(){
@@ -300,14 +302,6 @@ $("#corporate_id").change(function(){
   $('#spoc_id').empty();
   $('#entity_id').empty();
   $('#assessment_code').empty();
-  $('#employee_id_1').empty();
-  $('#employee_id_2').empty();
-  $('#employee_id_3').empty();
-  $('#employee_id_4').empty();
-  $('#employee_id_5').empty();
-  $('#employee_id_6').empty();
-
-
 
    var corporate_id =  $(this).val();
    var_url = '{{ API_BASE_URL }}'+'billing_entities'
@@ -326,6 +320,7 @@ $("#corporate_id").change(function(){
        //alert(data['Entitys']);
        if(data['Entitys'].length != 0){
         entities = data['Entitys']
+        $('#entity_id').append($("<option value=''>Select Billing Entity</option>"));
          for (var i=0;i<entities.length;i++) {
             $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
          }
@@ -342,6 +337,7 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['Spocs'].length != 0){
         spocs = data['Spocs']
+        $('#spoc_id').append($("<option value=''>Select Spoc</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#spoc_id').append($("<option value='"+spocs[i].id+','+spocs[i].group_id+','+spocs[i].subgroup_id+" '>"+spocs[i].user_name+"</option>"));
 
@@ -351,14 +347,60 @@ $("#corporate_id").change(function(){
        }
        });
 
- <!--        For Employees    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'employees'
+
+  <!--        For Package    -->
+    var_url_spoc = '{{ API_BASE_URL }}'+'assessment_codes'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
       {
-       //alert(data['Spocs']);
+
+       if(data['Codes'].length != 0){
+        package = data['Codes']
+        $('#assessment_code').append($("<option value=''>Select Assessment Code</option>"));
+         for (var i=0;i<package.length;i++) {
+            $('#assessment_code').append($("<option value='"+package[i].id+"'>"+package[i].assessment_code+"</option>"));
+         }
+       }else{
+        alert('No Assessment Codes Available')
+       }
+       });
+
+
+});
+
+
+  $("#spoc_id").change(function(){
+    var spoc_idd =  $(this).val();
+    var spoc_id = spoc_idd.split(",");
+      $('#employee_id_1').empty();
+      $('#employee_id_2').empty();
+      $('#employee_id_3').empty();
+      $('#employee_id_4').empty();
+      $('#employee_id_5').empty();
+      $('#employee_id_6').empty();
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': {{request.session.login_type}}
+            }
+
+        });
+
+        //       For Employees
+
+    var_url_spoc_employee = '{{ API_BASE_URL }}'+'spoc_employee'
+     $.post(var_url_spoc_employee,{ spoc_id: spoc_id[0] },
+      function(data)
+      {
+
        if(data['Employees'].length != 0){
-        employee = data['Employees']
+        employee = data['Employees'];
+        $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
          for (var i=0;i<employee.length;i++) {
             $('#employee_id_1').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
             $('#employee_id_2').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
@@ -372,53 +414,7 @@ $("#corporate_id").change(function(){
        }
        });
 
-
-
-  <!--        For Package    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'assessment_codes'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
-      function(data)
-      {
-
-       if(data['Codes'].length != 0){
-        package = data['Codes']
-         for (var i=0;i<package.length;i++) {
-            $('#assessment_code').append($("<option value='"+package[i].id+"'>"+package[i].assessment_code+"</option>"));
-         }
-       }else{
-        alert('No Assessment Codes Available')
-       }
-       });
-
-
 });
-
-
-  <!--        For GET All Cities    -->
-  var city_Names = [];
-
-    {% for city in cities %}
-        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
-    {% endfor %}
-
-
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
-
-
-var pickup_city = document.getElementById('pickup_city');
-var pickup_location = document.getElementById('pickup_location');
-var drop_location = document.getElementById('drop_location');
-var options = {
- types: ['(cities)'],
- componentRestrictions: {country: 'in'}
-};
-
-   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
-   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
-   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
-
 
 
 </script>

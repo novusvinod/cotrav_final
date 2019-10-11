@@ -32,7 +32,7 @@
     <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/theme-color.css' %}" rel="stylesheet" type="text/css" />
 	<!-- favicon -->
-    <link rel="shortcut icon" href="{% static 'assets/img/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}" />
 
     <!-- dropzone -->
     <link href="{% static 'assets/plugins/dropzone/dropzone.css' %}" rel="stylesheet" media="screen">
@@ -111,7 +111,68 @@
         } );
     
     </script> 
+ <script>
+        $(document).ready(function() {
+            $('#example1').DataTable();
+        } );
 
+
+         function setNavigation() {
+                var path = window.location.pathname;
+                path = path.replace(/\/$/, "");
+                path = decodeURIComponent(path);
+
+                var a = path.substring(29,21);
+
+                switch(a) {
+
+                    case 'taxi-boo' :
+                    case 'add-taxi' :
+                    $('#taxi_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'bus-book':
+                    case 'add-bus-' :
+                      // code block
+                      $('#bus_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'train-bo':
+                    case 'add-trai' :
+                      // code block
+                      $('#train_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'hotel-bo':
+                    case 'add-hote' :
+                      // code block
+                      $('#hotel_li_menu').addClass('active');
+                      return;
+                      break;
+                    case 'flight-b':
+                    case 'add-flig' :
+                      // code block
+                      $('#flight_li_menu').addClass('active');
+                      return;
+                      break;
+                    default:
+                      // code block
+                  }
+
+
+                $(".mynav a").each(function () {
+                    var href = $(this).attr('href');
+                   // alert(a);
+
+                    if (path.substring(0, href.length) === href) {
+                        $(this).closest('li').addClass('active');
+                    }
+                });
+            }
+
+
+
+    </script>
 
  </body>
  </html>

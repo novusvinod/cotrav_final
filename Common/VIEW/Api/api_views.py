@@ -61,28 +61,32 @@ def login(request):
 
 
 def logout(request):
-    access_token = request.META['HTTP_AUTHORIZATION']
-    login_type = request.META['HTTP_USERTYPE']
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
 
-    if login_type == '1':
-        user = Corporate_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == '2':
-        user = Corporate_Approves_1_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == '3':
-        user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == '4':
-        user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == '6':
-        user = Corporate_Employee_Login_Access_Token.objects.get(access_token=access_token)
-    elif login_type == '10':
-        user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    user.expiry_date = datetime.now()  # change field
+                    user.save()  # this will update only
+                    data = {'success': 1, 'message': 'User Logout Successfully'}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
     else:
-        return None
-
-    user.expiry_date = datetime.now()  # change field
-    user.save()  # this will update only
-    data = {'success': 1, 'message': 'User Logout Successfully'}
-    return JsonResponse(data)
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def service_types(request):
@@ -114,6 +118,38 @@ def service_types(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
+
+def railway_stations(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllRailwayStations', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Stations': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
 
 def companies(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -817,6 +853,43 @@ def employee(request):
         return JsonResponse(data)
 
 
+def spoc_employee(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        spoc_id = request.POST.get('spoc_id', '')
+        if spoc_id:
+            spoc_id = spoc_id
+        else:
+            spoc_id = 0
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateSpocEmployeesDetails', [spoc_id])
+                    employee = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Employees': employee}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def corporate_package(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -824,6 +897,7 @@ def corporate_package(request):
         corporate_id = request.POST.get('corporate_id', '')
         city_id = request.POST.get('city_id', '')
         taxi_type = request.POST.get('taxi_type', '')
+        tour_type = request.POST.get('tour_type', '')
         if corporate_id:
             corporate_id = corporate_id
         else:
@@ -836,7 +910,7 @@ def corporate_package(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getCorporatePackage', [corporate_id,city_id,taxi_type])
+                    cursor.callproc('getCorporatePackage', [corporate_id,city_id,taxi_type,tour_type])
                     employee = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Package': employee}
@@ -4101,6 +4175,11 @@ def add_taxi_booking(request):
         pickup_location = request.POST.get('pickup_location', '')
         drop_location = request.POST.get('drop_location', '')
         pickup_datetime = request.POST.get('pickup_datetime', '')
+        booking_datetime = request.POST.get('booking_datetime', '')
+        if booking_datetime:
+            pass
+        else:
+            booking_datetime = datetime.now()
         #pickup_datetime = datetime.strptime(pickup_datetime, '%d/%m/%Y %H:%M:%S')
         taxi_type = request.POST.get('taxi_type')
         package_id = request.POST.get('package_id')
@@ -4133,6 +4212,11 @@ def add_taxi_booking(request):
         else:
             assessment_city_id =0
 
+        if booking_datetime:
+            pass
+        else:
+            booking_datetime = datetime.now()  # change field
+
         reason_booking = request.POST.get('reason_booking', '')
         no_of_seats = request.POST.get('no_of_seats', '')
 
@@ -4147,7 +4231,7 @@ def add_taxi_booking(request):
                 try:
 
                     cursor.callproc('addTaxiBooking', [user_type,user_id,entity_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
-                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees])
+                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_datetime])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     cursor.close()
@@ -4186,6 +4270,10 @@ def add_bus_booking(request):
         to_location = request.POST.get('to', '')
         bus_type = request.POST.get('bus_type', '')
         booking_datetime = request.POST.get('booking_datetime', '')
+        if booking_datetime:
+            pass
+        else:
+            booking_datetime = datetime.now()
         #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
 
         journey_datetime = request.POST.get('journey_datetime', '')
@@ -4259,6 +4347,10 @@ def add_train_booking(request):
         to_location = request.POST.get('to', '')
         train_type = request.POST.get('train_type', '')
         booking_datetime = request.POST.get('booking_datetime', '')
+        if booking_datetime:
+            pass
+        else:
+            booking_datetime = datetime.now()
         #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
 
         journey_datetime = request.POST.get('journey_datetime', '')
@@ -4349,11 +4441,13 @@ def add_hotel_booking(request):
         room_type_id = request.POST.get('room_type_id', '')
 
         booking_datetime = request.POST.get('booking_datetime', '')
-
+        if booking_datetime:
+            pass
+        else:
+            booking_datetime = datetime.now() 
+        
         checkin_datetime = request.POST.get('checkin_datetime', '')
-
         checkout_datetime = request.POST.get('checkout_datetime', '')
-
 
         preferred_hotel= request.POST.get('preferred_hotel','')
         billing_entity_id = request.POST.get('billing_entity_id', '')
@@ -4428,6 +4522,11 @@ def add_flight_booking(request):
 
         booking_datetime = request.POST.get('booking_datetime', '')
         #booking_datetime = datetime.strptime(booking_datetime, '%d/%m/%Y %H:%M:%S')
+        if booking_datetime:
+            pass
+        else:
+            booking_datetime = datetime.now()
+
         departure_datetime = request.POST.get('departure_datetime', '')
         #departure_datetime = datetime.strptime(departure_datetime, '%d/%m/%Y %H:%M:%S')
 
@@ -4478,6 +4577,54 @@ def add_flight_booking(request):
         return JsonResponse(data)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def get_cotrav_billing_entities(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCotravBillingEntities', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Enitity': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):

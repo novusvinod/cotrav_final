@@ -21,6 +21,7 @@
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="accept_id" id="accept_id">
                 <input type="hidden" name="reject_id" id="reject_id">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <label>Are you sure you want to Perform Action</label>
 
@@ -90,10 +91,11 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Reference No</th>
-                                    <th>From</th>
-                                    <th>To</th>
+                                    <th>Pickup City</th>
+                                    <th>Drop City</th>
                                     <th>Booking DateTime</th>
                                     <th>Boarding Point</th>
+                                    <th>Boarding DateTime</th>
                                     <th>Date of Journey</th>
                                     <th>Bus Type (Assigned)</th>
                                     <th>Client Status</th>
@@ -111,13 +113,14 @@
                                 {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.id }}</td>
-                                    <td>{{ booking.reference_no }}</td>
-                                    <td>{{ booking.pickup_location }}</td>
-                                    <td>{{ booking.drop_location}}</td>
-                                    <td>{{ booking.booking_datetime }}</td>
-                                    <td>{{ booking.boarding_point }}</td>
-                                    <td>{{ booking.boarding_datetime }}</td>
-                                    <td>{{ booking.bus_types_assign_name}}</td>
+                                    <td>{{ booking.reference_no|default:'' }}</td>
+                                    <td>{{ booking.pickup_location|default:'' }}</td>
+                                    <td>{{ booking.drop_location|default:''}}</td>
+                                    <td>{{ booking.booking_datetime|default:'' }}</td>
+                                    <td>{{ booking.boarding_point|default:'' }}</td>
+                                    <td>{{ booking.boarding_datetime|default:'' }}</td>
+                                    <td>{{ booking.pickup_from_datetime|default:''}} To {{ booking.pickup_to_datetime|default:'' }} </td>
+                                    <td>{{ booking.bus_types_assign_name|default:''}}</td>
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 

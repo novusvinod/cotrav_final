@@ -8,13 +8,6 @@
 
 <div class="page-content-wrapper">
     <div class="page-content">
-
-                 <div class="text-center">
-                 <div style="font-size:14px; font-weight:bold;">
-                     Taxi Booking Details
-                     </div>
-            </div>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-topline-aqua">
@@ -99,8 +92,11 @@
 
 
                                     <td>{{ booking.client_status }} </td>
-                                    <td>{{ booking.cotrav_status }}<br/>({{ booking.cotrav_agent_name|default:'' }})</td>
+                                    <td>{{ booking.cotrav_status }}<br/>
 
+                                        {% if booking.status_cotrav > 1 %}
+                                            ({{ booking.cotrav_agent_name|default:'' }})</td>
+                                        {% endif %}
 
 
                                     {% if booking.operator_name %}

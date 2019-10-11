@@ -1,4 +1,4 @@
-{% extends 'Company/Spoc//layout/header.html' %}
+{% extends 'Company/Spoc/layout/header.html' %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
                                                               <div class="text-center">
                      <div style="font-size:14px; font-weight:bold;">
                         Add Hotel Booking
-                         </div>
+                     </div></div>
 
  <form method="post" action="/Corporate/Spoc/add-hotel-booking/{{user.id}}" enctype="multipart/form-data">
       {% csrf_token %}
@@ -55,6 +55,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4" >City Area</label>
                                                     <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>
+                                                        <option value="">Select City Area</option>
                                                        {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -65,6 +66,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4">Preferred Hotel Area</label>
                                                     <select class="col-sm-8 form-control myselect" name="preferred_hotel_area" id="preferred_hotel_area"  required>
+                                                        <option value="">Select Hotel Area</option>
                                                         {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -74,18 +76,19 @@
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check In DateTime</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="check_in_date">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="check_in_date">
                                         </div>
     
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check Out DateTime</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="check_out_date">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="check_out_date">
                                         </div>  
                                         
                                         
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Room type (Priority 1)</label>
                                                 <select class="col-sm-8 form-control myselect" name="room_type_priority1" id="room_type_priority1"  required>
+                                                    <option value="">Select Room Type</option>
                                                     {% for room_type in room_types %}
                                                         <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                     {% endfor %}
@@ -97,7 +100,8 @@
                                                 <label class="col-sm-4">Room type (Priority 2)</label>
     
                                                 <select class="col-sm-8 form-control myselect" name="room_type_priority2" id="room_type_priority2"  required>
-                                                {% for room_type in room_types %}
+                                                <option value="">Select Room Type</option>
+                                                    {% for room_type in room_types %}
                                                 <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                 {% endfor %}
                                                 </select>
@@ -108,6 +112,7 @@
                                                 <label class="col-sm-4" for="room_occupancy">Room Occupancy</label>
     
                                                     <select class="col-sm-8 form-control myselect" name="room_occupancy" id="room_occupancy"  required>
+                                                       <option value="">Select Room Occupancy</option>
                                                         {% for hotel_type in hotel_types %}
                                                 <option value="{{hotel_type.id}}">{{hotel_type.name}}</option>
                                                 {% endfor %}
@@ -121,16 +126,12 @@
                                         </div>
 
                                         
-                                        <div class="form-group row">
 
-                                                <label class="col-sm-4">Booking Date</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="booking_datetime">
-        
-                                        </div>
 
                                         <div class="form-group row">
                                             <label class="col-sm-4">Assessment Code</label>
                                             <select class="col-sm-8 form-control myselect" name="assessment_code" id="assessment_code">
+                                                <option value="">Select Assessment Code</option>
                                                 {% for assessment in assessments %}
                                                 <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                                 {% endfor %}
@@ -143,6 +144,7 @@
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Assessment City</label>
                                                 <select class="col-sm-8 form-control myselect" name="assessment_city" id="assessment_cities">
+                                                    <option value="">Select Assessment City</option>
                                                     {% for city in cities_ass %}
                                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -155,6 +157,7 @@
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Billing Entity</label>
                                                 <select class="col-sm-8 form-control myselect" name="billing_entity" id="entity_id"  required>
+                                                    <option value="">Select Billing Entity</option>
                                                     {% for entity in entities %}
                                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
                                                     {% endfor %}
@@ -203,7 +206,8 @@
                            
                                                           <div class="form-group row" id="emp_row_1">
                                                                <label class="col-sm-4" >Employee 1</label>
-                                                                <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8 myselect">
+                                                                <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8 myselect" required>
+                                                                    <option value="">Select Employee</option>
                                                                    {% for employee in employees %}
                                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                                    {% endfor %}
@@ -213,6 +217,7 @@
                                                          <div class="form-group row" id="emp_row_2">
                                                                <label class="col-sm-4" >Employee 2</label>
                                                                 <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8 myselect">
+                                                                    <option value="">Select Employee</option>
                                                                    {% for employee in employees %}
                                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                                    {% endfor %}
@@ -222,6 +227,7 @@
                                                          <div class="form-group row"  id="emp_row_3">
                                                                <label class="col-sm-4" >Employee 3</label>
                                                                 <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8 myselect">
+                                                                    <option value="">Select Employee</option>
                                                                    {% for employee in employees %}
                                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                                    {% endfor %}
@@ -231,6 +237,7 @@
                                                          <div class="form-group row"  id="emp_row_4" >
                                                                <label class="col-sm-4" >Employee 4</label>
                                                                 <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8 myselect">
+                                                                    <option value="">Select Employee</option>
                                                                    {% for employee in employees %}
                                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                                    {% endfor %}
@@ -240,6 +247,7 @@
                                                           <div class="form-group row"  id="emp_row_5" style="display: none">
                                                                <label class="col-sm-4" >Employee 5</label>
                                                                 <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8 myselect">
+                                                                    <option value="">Select Employee</option>
                                                                    {% for employee in employees %}
                                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                                    {% endfor %}
@@ -249,6 +257,7 @@
                                                           <div class="form-group row"  id="emp_row_6" style="display: none">
                                                                <label class="col-sm-4" >Employee 6</label>
                                                                 <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8 myselect">
+                                                                    <option value="">Select Employee</option>
                                                                    {% for employee in employees %}
                                                                    <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                                    {% endfor %}
@@ -283,237 +292,33 @@
 {% endif %}
 
 <script>
+$('#emp_row_2').hide();
+$('#emp_row_3').hide();
+$('#emp_row_4').hide();
 
-        $( document ).ready(function() {
-
-            $('#emp_row_2').hide();
-            $('#emp_row_3').hide();
-            $('#emp_row_4').hide();
-        
-            
-        });
-
-    $(".no_of_seats").change(function()
+$(".no_of_seats").change(function()
     {
-    alert('ok')
+
     	var no_of_seats = $(this).val();
 
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
             {
                 $('#emp_row_'+i).show();
+                $("#employee_id_"+i).attr('required',true);
 
             }
             var j = parseInt(no_of_seats) + 1;
 			for(j=j; j<=6; j++)
 			{
 				$('#emp_row_'+j).hide();
+				$("#employee_id_"+j).attr('required',false);
 
 			}
     	}
     });
 
-    $("#tour_type").change(function()
-    {
-    alert('ok')
-    	var tour_type = $(this).val();
 
-    	switch(tour_type){
-           case '1':
-              {
-                $('#tr_taxi_type').hide();
-                $('#tr_package').hide();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '2':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '3':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').show();
-                break;
-              }
-        }
-        
-       
-    });
-
-
-
-    $("#corporate_id").change(function(){
-
-      $('#city_id').empty();
-      $('#taxi_type_id').empty();
-      $('#spoc_id').empty();
-      $('#entity_id').empty();
-      $('#package_id').empty();
-      $('#employee_id_1').empty();
-      $('#employee_id_2').empty();
-      $('#employee_id_3').empty();
-      $('#employee_id_4').empty();
-      $('#employee_id_5').empty();
-      $('#employee_id_6').empty();
-      $('#room_type_priority1').empty();
-      $('#room_type_priority2').empty();
-      $('#room_occupancy').empty();
-    
-    
-    
-       var corporate_id =  $(this).val();
-       var_url = '{{ API_BASE_URL }}'+'billing_entities'
-    
-        $.ajaxSetup({
-                headers:{
-                    'Authorization': "Token {{request.session.access_token}}",
-                    'usertype': 10
-                }
-    
-            });
-    //   For Entity  
-    
-         $.post(var_url,{ corporate_id: corporate_id },
-          function(data)
-          {
-           //alert(data['Entitys']);
-           if(data['Entitys'].length != 0){
-            entities = data['Entitys']
-             for (var i=0;i<entities.length;i++) {
-                $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
-             }
-           }else{
-            alert('No Entity Available')
-           }
-           });
-    
-    //       For SPOC    
-    
-    
-        var_url_spoc = '{{ API_BASE_URL }}'+'spocs'
-         $.post(var_url_spoc,{ corporate_id: corporate_id },
-          function(data)
-          {
-           //alert(data['Spocs']);
-           if(data['Spocs'].length != 0){
-            spocs = data['Spocs']
-             for (var i=0;i<spocs.length;i++) {
-                $('#spoc_id').append($("<option value='"+spocs[i].id+','+spocs[i].group_id+','+spocs[i].subgroup_id+" '>"+spocs[i].user_name+"</option>"));
-    
-             }
-           }else{
-            alert('No SPOC Available')
-           }
-           });
-    
-     //       For Employees    
-    
-    
-        var_url_spoc = '{{ API_BASE_URL }}'+'employees'
-         $.post(var_url_spoc,{ corporate_id: corporate_id },
-          function(data)
-          {
-           //alert(data['Spocs']);
-           if(data['Employees'].length != 0){
-            employee = data['Employees']
-             for (var i=0;i<employee.length;i++) {
-                $('#employee_id_1').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_2').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_3').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_4').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_5').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_6').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-             }
-           }else{
-            alert('No Employees Available')
-           }
-           });
-    
-    
-    
-      //       For Cities
-    
-        var_url_spoc = '{{ API_BASE_URL }}'+'assessment_cities'
-         $.post(var_url_spoc,{ corporate_id: corporate_id },
-          function(data)
-          {
-           if(data['Cities'].length != 0){
-            package = data['Cities']
-             for (var i=0;i<package.length;i++) {
-                $('#assessment_cities').append($("<option value='"+package[i].id+"'>"+package[i].city_name+"</option>"));
-             }
-           }else{
-            alert('No Assessment Cities Available')
-           }
-           });
-
-
-             <!--        For assessment_codes    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'assessment_codes'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
-      function(data)
-      {
-
-       if(data['Codes'].length != 0){
-        package = data['Codes']
-         for (var i=0;i<package.length;i++) {
-            $('#assessment_code').append($("<option value='"+package[i].id+"'>"+package[i].assessment_code+"</option>"));
-         }
-       }else{
-        alert('No Assessment Codes Available')
-       }
-       });
-
-    <!--        For hotel_types    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'hotel_types'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
-      function(data)
-      {
-
-       if(data['Types'].length != 0){
-        package = data['Types']
-         for (var i=0;i<package.length;i++) {
-            $('#room_occupancy').append($("<option value='"+package[i].id+"'>"+package[i].name+"</option>"));
-
-         }
-       }else{
-        alert('No Room Type Available')
-       }
-       });
-
-
-    <!--        For room_types    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'room_types'
-     $.post(var_url_spoc,{ corporate_id: corporate_id },
-      function(data)
-      {
-
-       if(data['Types'].length != 0){
-        package = data['Types']
-         for (var i=0;i<package.length;i++) {
-            $('#room_type_priority1').append($("<option value='"+package[i].id+"'>"+package[i].name+"</option>"));
-            $('#room_type_priority2').append($("<option value='"+package[i].id+"'>"+package[i].name+"</option>"));
-         }
-       }else{
-        alert('No Room Type Available')
-       }
-       });
-
-
-
-
-
-
-
-
-
-    
-    });
 
 
 </script>

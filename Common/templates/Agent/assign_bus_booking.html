@@ -54,8 +54,8 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Pickup Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
-                                     readonly  type="datetime-local" value="{{ booking.pickup_to_datetime }}">
+                                <input class="form-control " name="pickup_datetime" placeholder="Pickup Datetime"
+                                     readonly  type="text" value="{{ booking.pickup_to_datetime }}">
                             </div>
                         </div>
 
@@ -163,14 +163,14 @@
                            <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Point</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_point" type="text" value="{{ booking.boarding_point }}">
+                                <input class="form-control" name="boarding_point" type="text" value="{{ booking.boarding_point|default:'' }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_datetime" type="datetime-local" value="{{ booking.boarding_datetime }}">
+                                <input class="form-control date-format" name="boarding_datetime" type="text" value="{{ booking.boarding_datetime|default:'' }}">
                             </div>
                         </div>
 
@@ -235,14 +235,14 @@
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Point</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_point" type="text" value="{{ booking.boarding_point }}">
+                                <input class="form-control" name="boarding_point" type="text" value="{{ booking.boarding_point|default:'' }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_datetime" type="datetime-local" value="{{ booking.boarding_datetime }}">
+                                <input class="form-control date-format" name="boarding_datetime" type="text" value="{{ booking.boarding_datetime|default:'' }}">
                             </div>
                         </div>
 
@@ -257,23 +257,60 @@
 
              <div class="col-md-4">
 
-                  <div class="card">
+                 <div class="card">
                     <div class="card-head card-topline-aqua">
-                        <header>Passenger Details</header>
+                        <header>Passanger Details</header>
                     </div>
                     <div class="card-body no-padding height-9">
 
+                         {% for passanger in booking.Passangers %}
+
                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Name</label>
+                            <label class="col-sm-5 control-label">Passanger Name {{ forloop.counter }}</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="group_name" readonly  type="text" value="{{ booking.user_name }}">
+                                <input class="form-control" name="group_name" placeholder="Name"
+                                       type="text" value="{{ passanger.employee_name|default:'' }}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Contact Email {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Contact Email"
+                                       type="text" value="{{ passanger.employee_email|default:''}}">
+                            </div>
+                        </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Contact Number {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                       type="text" value="{{ passanger.employee_contact|default:''}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Age {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Age"
+                                       type="text" value="{{ passanger.age|default:''}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Passanger Gender {{ forloop.counter }}</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="group_name" placeholder="Gender"
+                                       type="text" value="{{ passanger.gender|default:''}}">
                             </div>
                         </div>
 
 
+                        {% endfor %}
 
                     </div>
                 </div>
+
             </div>
 
 

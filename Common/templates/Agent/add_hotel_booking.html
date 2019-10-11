@@ -74,6 +74,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4" >City Area</label>
                                                     <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>
+                                                        <option value="">Select City Area</option>
                                                        {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -84,6 +85,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4">Preferred Hotel Area</label>
                                                     <select class="col-sm-8 form-control myselect" name="preferred_hotel_area" id="preferred_hotel_area"  required>
+                                                         <option value="">Select Hotel Area</option>
                                                         {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -93,12 +95,12 @@
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check In DateTime</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="check_in_date">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="check_in_date">
                                         </div>
     
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check Out DateTime</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="check_out_date">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="check_out_date">
                                         </div>  
                                         
                                         
@@ -137,7 +139,7 @@
                                         <div class="form-group row">
 
                                                 <label class="col-sm-4">Booking Date</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="booking_datetime">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="booking_datetime">
         
                                         </div>
 
@@ -156,10 +158,10 @@
                                                 <select class="col-sm-8 form-control myselect" name="assessment_city" id="assessment_cities"  required>
 
                                                 </select>
-                                            
+
                                         </div>
 
-                                        
+
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Billing Entity</label>
@@ -312,34 +314,37 @@
 
 <script>
 
-        $( document ).ready(function() {
+$( document ).ready(function() {
 
-            $('#emp_row_2').hide();
-            $('#emp_row_3').hide();
-            $('#emp_row_4').hide();
-        
-            
-        });
+    $('#emp_row_2').hide();
+    $('#emp_row_3').hide();
+    $('#emp_row_4').hide();
 
-    $(".no_of_seats").change(function()
+
+});
+
+$(".no_of_seats").change(function()
     {
-    alert('ok')
+
     	var no_of_seats = $(this).val();
 
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
             {
                 $('#emp_row_'+i).show();
+                $("#employee_id_"+i).attr('required',true);
 
             }
             var j = parseInt(no_of_seats) + 1;
 			for(j=j; j<=6; j++)
 			{
 				$('#emp_row_'+j).hide();
+				$("#employee_id_"+j).attr('required',false);
 
 			}
     	}
     });
+
 
     $("#tour_type").change(function()
     {
@@ -369,8 +374,8 @@
                 break;
               }
         }
-        
-       
+
+
     });
 
 
@@ -412,6 +417,7 @@
            //alert(data['Entitys']);
            if(data['Entitys'].length != 0){
             entities = data['Entitys']
+            $('#entity_id').append($("<option value=''>Select Billing Entity</option>"));
              for (var i=0;i<entities.length;i++) {
                 $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
              }
@@ -430,6 +436,7 @@
            //alert(data['Spocs']);
            if(data['Spocs'].length != 0){
             spocs = data['Spocs']
+            $('#spoc_id').append($("<option value=''>Select Spoc</option>"));
              for (var i=0;i<spocs.length;i++) {
                 $('#spoc_id').append($("<option value='"+spocs[i].id+','+spocs[i].group_id+','+spocs[i].subgroup_id+" '>"+spocs[i].user_name+"</option>"));
     
@@ -438,40 +445,17 @@
             alert('No SPOC Available')
            }
            });
-    
-     //       For Employees    
-    
-    
-        var_url_spoc = '{{ API_BASE_URL }}'+'employees'
-         $.post(var_url_spoc,{ corporate_id: corporate_id },
-          function(data)
-          {
-           //alert(data['Spocs']);
-           if(data['Employees'].length != 0){
-            employee = data['Employees']
-             for (var i=0;i<employee.length;i++) {
-                $('#employee_id_1').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_2').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_3').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_4').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_5').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-                $('#employee_id_6').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-             }
-           }else{
-            alert('No Employees Available')
-           }
-           });
-    
-    
-    
+
+
       //       For Cities
-    
+
         var_url_spoc = '{{ API_BASE_URL }}'+'assessment_cities'
          $.post(var_url_spoc,{ corporate_id: corporate_id },
           function(data)
           {
            if(data['Cities'].length != 0){
             package = data['Cities']
+            $('#assessment_cities').append($("<option value=''>Select Assessment City</option>"));
              for (var i=0;i<package.length;i++) {
                 $('#assessment_cities').append($("<option value='"+package[i].id+"'>"+package[i].city_name+"</option>"));
              }
@@ -489,6 +473,7 @@
 
        if(data['Codes'].length != 0){
         package = data['Codes']
+        $('#assessment_code').append($("<option value=''>Select Assessment Code</option>"));
          for (var i=0;i<package.length;i++) {
             $('#assessment_code').append($("<option value='"+package[i].id+"'>"+package[i].assessment_code+"</option>"));
          }
@@ -505,6 +490,7 @@
 
        if(data['Types'].length != 0){
         package = data['Types']
+        $('#room_occupancy').append($("<option value=''>Select Room Occupancy</option>"));
          for (var i=0;i<package.length;i++) {
             $('#room_occupancy').append($("<option value='"+package[i].id+"'>"+package[i].name+"</option>"));
 
@@ -523,6 +509,8 @@
 
        if(data['Types'].length != 0){
         package = data['Types']
+        $('#room_type_priority1').append($("<option value=''>Select Room Type</option>"));
+        $('#room_type_priority2').append($("<option value=''>Select Room Type</option>"));
          for (var i=0;i<package.length;i++) {
             $('#room_type_priority1').append($("<option value='"+package[i].id+"'>"+package[i].name+"</option>"));
             $('#room_type_priority2').append($("<option value='"+package[i].id+"'>"+package[i].name+"</option>"));
@@ -532,17 +520,54 @@
        }
        });
 
-
-
-
-
-
-
-
-
-    
     });
 
+$("#spoc_id").change(function(){
+    var spoc_idd =  $(this).val();
+    var spoc_id = spoc_idd.split(",");
+      $('#employee_id_1').empty();
+      $('#employee_id_2').empty();
+      $('#employee_id_3').empty();
+      $('#employee_id_4').empty();
+      $('#employee_id_5').empty();
+      $('#employee_id_6').empty();
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.access_token}}",
+                'usertype': {{request.session.login_type}}
+            }
+
+        });
+
+        //       For Employees
+
+    var_url_spoc_employee = '{{ API_BASE_URL }}'+'spoc_employee'
+     $.post(var_url_spoc_employee,{ spoc_id: spoc_id[0] },
+      function(data)
+      {
+
+       if(data['Employees'].length != 0){
+        employee = data['Employees'];
+        $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
+         for (var i=0;i<employee.length;i++) {
+            $('#employee_id_1').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
+            $('#employee_id_2').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
+            $('#employee_id_3').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
+            $('#employee_id_4').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
+            $('#employee_id_5').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
+            $('#employee_id_6').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
+         }
+       }else{
+        alert('No Employees Available')
+       }
+       });
+
+});
 
 </script>
 

@@ -1273,7 +1273,7 @@ def reject_taxi_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptTaxiBooking', [booking_id,user_id,user_type])
+                    cursor.callproc('rejectTaxiBooking', [booking_id,user_id,user_type])
                     data = {'success': 1}
                     cursor.close()
                     return JsonResponse(data)

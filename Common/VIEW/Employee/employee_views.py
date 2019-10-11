@@ -323,9 +323,9 @@ def add_taxi_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
+            url_city1 = settings.API_BASE_URL + "cities"
+            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            citiess = cities1['Cities']
 
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
@@ -335,8 +335,12 @@ def add_taxi_booking(request,id):
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
+            url_city = settings.API_BASE_URL + "get_assessment_city"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['AssCity']
+
             if id:
-                return render(request, 'Company/Employee/add_taxi_booking.html', {'employees':employees,'cities':cities,'taxies':taxies,'assessments':ass_code})
+                return render(request, 'Company/Employee/add_taxi_booking.html', {'employees':employees,'cities':cities,'taxies':taxies,'assessments':ass_code,'citiess':citiess})
             else:
                 return render(request, 'Company/Employee/add_taxi_booking.html', {})
         else:
@@ -451,32 +455,19 @@ def add_bus_booking(request,id):
             request = get_request()
             login_type = request.session['login_type']
             access_token = request.session['access_token']
-            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
 
-            url_emp = settings.API_BASE_URL + "employees"
             payload = {'corporate_id': id}
-            r = requests.post(url_emp, data=payload, headers=headers)
-            company_emp = json.loads(r.text)
-            employees = company_emp['Employees']
-
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
-            url_taxi = settings.API_BASE_URL + "taxi_types"
-            taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
-            taxies = taxies['taxi_types']
-
-            package = settings.API_BASE_URL + "corporate_package"
-            package = getDataFromAPI(login_type, access_token, package, payload)
-            packages = package['Package']
 
             url_ass_code = settings.API_BASE_URL + "get_assessment_code"
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
+            url_city = settings.API_BASE_URL + "get_assessment_city"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['AssCity']
+
             if id:
-                return render(request, 'Company/Employee/add_bus_booking.html', {'employees':employees,'cities':cities,'taxies':taxies,'packages':packages,'assessments':ass_code})
+                return render(request, 'Company/Employee/add_bus_booking.html', {'cities':cities,'assessments':ass_code})
             else:
                 return render(request, 'Company/Employee/add_bus_booking.html', {})
         else:
@@ -588,17 +579,11 @@ def add_train_booking(request,id):
             request = get_request()
             login_type = request.session['login_type']
             access_token = request.session['access_token']
-            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
-
-            url_emp = settings.API_BASE_URL + "employees"
             payload = {'corporate_id': id}
-            r = requests.post(url_emp, data=payload, headers=headers)
-            company_emp = json.loads(r.text)
-            employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
+            url_city = settings.API_BASE_URL + "get_assessment_city"
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
+            cities = cities['AssCity']
 
             url_train = settings.API_BASE_URL + "train_types"
             trains = getDataFromAPI(login_type, access_token, url_train, payload)
@@ -609,8 +594,12 @@ def add_train_booking(request,id):
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
+            url_railway_stations = settings.API_BASE_URL + "railway_stations"
+            trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
+            railway_stations = trains1['Stations']
+
             if id:
-                return render(request, 'Company/Employee/add_train_booking.html', {'employees':employees,'cities':cities,'types':types,'assessments':ass_code})
+                return render(request, 'Company/Employee/add_train_booking.html', {'cities':cities,'types':types,'assessments':ass_code,'railway_stations':railway_stations})
             else:
                 return render(request, 'Company/Employee/add_train_booking.html', {})
         else:
@@ -730,18 +719,10 @@ def add_hotel_booking(request,id):
             request = get_request()
             login_type = request.session['login_type']
             access_token = request.session['access_token']
-            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
 
-            url_emp = settings.API_BASE_URL + "employees"
+
+
             payload = {'corporate_id': id}
-            r = requests.post(url_emp, data=payload, headers=headers)
-            company_emp = json.loads(r.text)
-            employees = company_emp['Employees']
-
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             url_room_types = settings.API_BASE_URL + "room_types"
             room_types = getDataFromAPI(login_type, access_token, url_room_types, payload)
             room_types = room_types['Types']
@@ -750,16 +731,20 @@ def add_hotel_booking(request,id):
             hotel_types = getDataFromAPI(login_type, access_token, url_hotel_types, payload)
             hotel_types = hotel_types['Types']
 
-            package = settings.API_BASE_URL + "corporate_package"
-            package = getDataFromAPI(login_type, access_token, package, payload)
-            packages = package['Package']
+            url_city = settings.API_BASE_URL + "get_assessment_city"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities_ass = cities['AssCity']
 
             url_ass_code = settings.API_BASE_URL + "get_assessment_code"
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
+            url_city1 = settings.API_BASE_URL + "cities"
+            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            cities = cities1['Cities']
+
             if id:
-                return render(request, 'Company/Employee/add_hotel_booking.html', {'room_types':room_types,'employees':employees,'cities':cities,'hotel_types':hotel_types,'packages':packages,'assessments':ass_code})
+                return render(request, 'Company/Employee/add_hotel_booking.html', {'room_types':room_types,'cities_ass':cities_ass,'hotel_types':hotel_types,'assessments':ass_code,'cities':cities})
             else:
                 return render(request, 'Company/Employee/add_hotel_booking.html', {})
         else:
@@ -867,32 +852,18 @@ def add_flight_booking(request,id):
             request = get_request()
             login_type = request.session['login_type']
             access_token = request.session['access_token']
-            headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
-
-            url_emp = settings.API_BASE_URL + "employees"
             payload = {'corporate_id': id}
-            r = requests.post(url_emp, data=payload, headers=headers)
-            company_emp = json.loads(r.text)
-            employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
+            url_city = settings.API_BASE_URL + "get_assessment_city"
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
-            url_taxi = settings.API_BASE_URL + "taxi_types"
-            taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
-            taxies = taxies['taxi_types']
-
-            package = settings.API_BASE_URL + "corporate_package"
-            package = getDataFromAPI(login_type, access_token, package, payload)
-            packages = package['Package']
+            cities_ass = cities['AssCity']
 
             url_ass_code = settings.API_BASE_URL + "get_assessment_code"
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
             if id:
-                return render(request, 'Company/Employee/add_flight_booking.html', {'employees':employees,'cities':cities,'taxies':taxies,'packages':packages,'assessments':ass_code})
+                return render(request, 'Company/Employee/add_flight_booking.html', {'cities_ass':cities_ass,'assessments':ass_code})
             else:
                 return render(request, 'Company/Employee/add_flight_booking.html', {})
         else:

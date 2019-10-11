@@ -82,7 +82,11 @@
                                     <td>{{ booking.boarding_datetime }}</td>
                                     <td>{{ booking.bus_types_assign_name}}</td>
                                     <td>{{ booking.client_status }} </td>
-                                    <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
+                                    <td>{{ booking.cotrav_status }}
+                                    {% if booking.status_cotrav > 1 %}
+                                            ({{ booking.cotrav_agent_name|default:'' }})</td>
+                                        {% endif %}
+                                    </td>
 
                                     {% if booking.operator_name %}
                                     <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>

@@ -40,9 +40,9 @@ $(document).ready(function()
 				format: 'HH:mm'
 			});
 
-			$('#date-format').bootstrapMaterialDatePicker
+			$('.date-format').bootstrapMaterialDatePicker
 			({
-				format: 'dddd DD MMMM YYYY - HH:mm'
+				format: 'YYYY-MM-DD HH:mm:ss'
 			});
 			$('#date-fr').bootstrapMaterialDatePicker
 			({

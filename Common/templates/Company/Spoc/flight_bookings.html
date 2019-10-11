@@ -109,10 +109,6 @@
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 
 
-
-
-
-
                                       <td>
                                         {% for passanger in booking.Passangers %}
                                         {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>

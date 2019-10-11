@@ -13,7 +13,7 @@
                                                   <div class="text-center">
                      <div style="font-size:14px; font-weight:bold;">
                         Add Train Booking
-                         </div>
+                         </div></div>
 
         <form method="post" action="/Corporate/Spoc/add-bus-booking/{{user.corporate_id}}">
             <input type="hidden" name="spoc_id" value="{{user.id}}">
@@ -37,17 +37,30 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >From*</label>
-                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>-->
+                                  <select name="from" id="pickup_location" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select From Station</option>
+                                        {% for railway_station in railway_stations %}
+                                        <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >To*</label>
-                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>-->
+                                   <select name="to" id="drop_location" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select To Station</option>
+                                        {% for railway_station in railway_stations %}
+                                        <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
 
                          <div class="form-group row">
-                                <label class="col-sm-4" >Bus Type*</label>
+                                <label class="col-sm-4" >Coach Type*</label>
                                  <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
+                                     <option value="">Select Coach Type</option>
                                      {% for train_type in train_types %}
                                         <option value="{{train_type.id}}">{{train_type.name}}</option>
                                         {% endfor %}
@@ -55,19 +68,15 @@
                             </div>
 
                         <div class="form-group row">
-                                <label class="col-sm-4" >Preferred Bus*</label>
+                                <label class="col-sm-4" >Preferred Train*</label>
                                  <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Train" required>
                             </div>
 
-                         <div class="form-group row">
-                                <label class="col-sm-4" >Booking Date*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="min-date"  placeholder="Booking Date/Time" required>
-                            </div>
 
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Date of Journey*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
                             </div>
 
 
@@ -100,6 +109,11 @@
                                   </select>
                             </div>
 
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
+                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                            </div>
+
 
 
                         </div>
@@ -110,10 +124,7 @@
 
                           <div class="col-md-4 col-sm-4">
 
-                               <div class="form-group row">
-                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
-                            </div>
+
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Number Of Employees*</label>
@@ -129,7 +140,8 @@
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-4" >Employee 1</label>
-                                     <select name="employee_id_1" class="form-control col-sm-8 myselect">
+                                     <select name="employee_id_1" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -139,6 +151,7 @@
                               <div class="form-group row" id="emp_row_2" style="display: none">
                                     <label class="col-sm-4" >Employee 2</label>
                                      <select name="employee_id_2" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -148,6 +161,7 @@
                               <div class="form-group row"  id="emp_row_3" style="display: none">
                                     <label class="col-sm-4" >Employee 3</label>
                                      <select name="employee_id_3" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -157,6 +171,7 @@
                               <div class="form-group row"  id="emp_row_4" style="display: none">
                                     <label class="col-sm-4" >Employee 4</label>
                                      <select name="employee_id_4" class="form-control col-sm-8 myselect">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -166,6 +181,7 @@
                                <div class="form-group row"  id="emp_row_5" style="display: none">
                                     <label class="col-sm-4" >Employee 5</label>
                                      <select name="employee_id_5" class="form-control col-sm-8">
+                                         <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
@@ -174,7 +190,8 @@
 
                                <div class="form-group row"  id="emp_row_6" style="display: none">
                                     <label class="col-sm-4" >Employee 6</label>
-                                     <select name="employee_id_6" class="form-control col-sm-8">
+                                     <select name="employee_id_6" class="form-control col-sm-8"><option value="">Select Employee</option>
+
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}

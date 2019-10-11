@@ -21,6 +21,7 @@
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="accept_id" id="accept_id">
                 <input type="hidden" name="reject_id" id="reject_id">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <label>Are you sure you want to Perform Action</label>
 
@@ -100,7 +101,7 @@
                                     <th>Tour Type</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
-                                    <th>Accept/Reject</th>
+                                    <th>Action</th>
                                     <th>Operator Details</th>
                                     <th>Taxi/Driver Assign</th>
                                     <th>Spoc Details</th>
@@ -122,9 +123,9 @@
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location }}</td>
                                     {% if booking.tour_type == 1 %}
-                                    <td>Local</td>
-                                    {% elif booking.tour_type == 2 %}
                                     <td>Radio</td>
+                                    {% elif booking.tour_type == 2 %}
+                                    <td>Local</td>
                                     {% else %}
                                     <td>Outstation</td>
                                     {% endif %}
@@ -132,18 +133,20 @@
 
 
                                     <td>{{ booking.client_status }} </td>
-                                    <td>{{ booking.cotrav_status }}<br/>({{ booking.cotrav_agent_name|default:'' }})</td>
-
+                                    <td>{{ booking.cotrav_status }}<br/>
+                                        {% if booking.status_cotrav > 1 %}
+                                            ({{ booking.cotrav_agent_name|default:'' }})</td>
+                                        {% endif %}
                                     <td>
                                         {% if booking.status_cotrav == 1 %}
-                                     <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                     <a title="Accept Booking" style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
                                     {% endif %}
-                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                        <a title="Reject Booking"  data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
                                            data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
 
                                         {% if booking.status_cotrav == 2 %}
-                                        <a href="/agents/assign-taxi-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="margin-left:10px; background:#6288b1;">  <i class="fa fa-book"></i> </a>
+                                        <a title="Assign Booking" href="/agents/assign-taxi-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;">  <i class="fa fa-pencil"></i> </a>
                                         {% endif %}
 
                                     </td>
@@ -170,7 +173,7 @@
                                     </td>
 
                                     <td>
-                                        <a href="/agents/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
+                                        <a title="Booking Details" href="/agents/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i  class="fa fa-search"></i> </a>
                                     </td>
                                 </tr>
                                 {% endfor %}

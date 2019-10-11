@@ -2399,6 +2399,7 @@ def add_taxi_booking(request,id):
             pickup_location = request.POST.get('pickup_location', '')
             drop_location = request.POST.get('drop_location', '')
             pickup_datetime = request.POST.get('pickup_datetime', '')
+            booking_datetime = request.POST.get('booking_datetime', '')
             taxi_type = request.POST.get('taxi_type', '')
             package_id = request.POST.get('package_id', '')
             no_of_days = request.POST.get('no_of_days', '')
@@ -2413,10 +2414,9 @@ def add_taxi_booking(request,id):
                 employees.append(request.POST.get('employee_id_'+str(i), ''))
                 print(employees)
 
-
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'entity_id':entity_id,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,
-                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
+                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'booking_datetime':booking_datetime,'taxi_type':taxi_type,
                        'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees}
             print(payload)
 
@@ -2468,6 +2468,7 @@ def accept_taxi_booking(request):
         user_id = request.POST.get('user_id', '')
         accept_id = request.POST.get('accept_id', '')
         reject_id = request.POST.get('reject_id', '')
+        current_url = request.POST.get('current_url', '')
 
         url = ""
         if accept_id:
@@ -2484,10 +2485,10 @@ def accept_taxi_booking(request):
 
         if company['success'] == 1:
             messages.success(request, operation_message)
-            return HttpResponseRedirect("/agents/taxi-bookings/1", {'message': "Operation Successfully"})
+            return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
             messages.error(request, 'Fail to Accept Taxi Booking..!')
-            return HttpResponseRedirect("/agents/taxi-bookings/1", {'message': "Operation Fails"})
+            return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/agents/login")
 
@@ -2498,6 +2499,7 @@ def assign_taxi_booking(request,id):
         if request.method == 'POST':
             login_type = request.session['login_type']
             access_token = request.session['access_token']
+            current_url = request.POST.get('current_url', '')
 
             booking_id = request.POST.get('booking_id', '')
             user_id = request.POST.get('user_id', '')
@@ -2518,10 +2520,10 @@ def assign_taxi_booking(request,id):
 
             if company['success'] == 1:
                 messages.success(request, 'Taxi Booking Assigned..!')
-                return HttpResponseRedirect("/agents/taxi-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Assign Taxi Booking..!')
-                return HttpResponseRedirect("/agents/taxi-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
             login_type = request.session['login_type']
             access_token = request.session['access_token']
@@ -2688,8 +2690,7 @@ def accept_bus_booking(request):
             accept_id = request.POST.get('accept_id', '')
             reject_id = request.POST.get('reject_id', '')
 
-            print(accept_id)
-            print(reject_id)
+            current_url = request.POST.get('current_url', '')
 
             url = ""
             if accept_id == '1':
@@ -2706,10 +2707,10 @@ def accept_bus_booking(request):
 
             if company['success'] == 1:
                 messages.success(request, operation_message)
-                return HttpResponseRedirect("/agents/bus-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Accept Bus Booking..!')
-                return HttpResponseRedirect("/agents/bus-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
             return render(request, "Agent/bus_bookings.html", {'': {}})
     else:
@@ -2892,12 +2893,16 @@ def add_train_booking(request,id):
             trains = getDataFromAPI(login_type, access_token, url_train, payload)
             types = trains['Types']
 
+            url_railway_stations = settings.API_BASE_URL + "railway_stations"
+            trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
+            railway_stations = trains1['Stations']
+
             if id:
 
-                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types})
+                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types,'railway_stations':railway_stations})
             else:
 
-                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types})
+                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types,'railway_stations':railway_stations})
         else:
             return HttpResponseRedirect("/agents/login")
 
@@ -2913,6 +2918,7 @@ def accept_train_booking(request):
             user_id = request.POST.get('user_id', '')
             accept_id = request.POST.get('accept_id', '')
             reject_id = request.POST.get('reject_id', '')
+            current_url = request.POST.get('current_url', '')
 
             url = ""
             if accept_id == '1':
@@ -2929,10 +2935,10 @@ def accept_train_booking(request):
 
             if company['success'] == 1:
                 messages.success(request, operation_message)
-                return HttpResponseRedirect("/agents/train-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Accept Train Booking..!')
-                return HttpResponseRedirect("/agents/train-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
             return render(request, "Agent/train_bookings.html", {'': {}})
     else:
@@ -3146,6 +3152,7 @@ def accept_hotel_booking(request):
             user_id = request.POST.get('user_id', '')
             accept_id = request.POST.get('accept_id', '')
             reject_id = request.POST.get('reject_id', '')
+            current_url = request.POST.get('current_url', '')
 
             url = ""
             if accept_id == '1':
@@ -3162,10 +3169,10 @@ def accept_hotel_booking(request):
 
             if company['success'] == 1:
                 messages.success(request, operation_message)
-                return HttpResponseRedirect("/agents/hotel-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail To Accept Hotel Booking..!')
-                return HttpResponseRedirect("/agents/hotel-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
             return render(request, "Agent/hotel_bookings.html", {'': {}})
     else:
@@ -3192,8 +3199,6 @@ def assign_hotel_booking(request, id):
             voucher_number = request.POST.get('voucher_number', '')
             portal_used = request.POST.get('portal_used', '')
             commission_earned = request.POST.get('commission_earned', '')
-
-
 
             user_id = request.POST.get('user_id')
             booking_id = request.POST.get('booking_id')
@@ -3438,7 +3443,7 @@ def accept_flight_booking(request):
             user_id = request.POST.get('user_id', '')
             accept_id = request.POST.get('accept_id', '')
             reject_id = request.POST.get('reject_id', '')
-
+            current_url = request.POST.get('current_url', '')
             url = ""
             if accept_id == '1':
                 url = settings.API_BASE_URL + "accept_flight_booking"
@@ -3454,10 +3459,10 @@ def accept_flight_booking(request):
 
             if company['success'] == 1:
                 messages.success(request, operation_message)
-                return HttpResponseRedirect("/agents/flight-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fails To Accept Flight Booking..!')
-                return HttpResponseRedirect("/agents/flight-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
             return render(request, "Agent/train_bookings.html", {'': {}})
     else:

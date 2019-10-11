@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('api/login', api_views.login),
     path('api/logout', api_views.logout),
+    path('api/get_cotrav_billing_entities', api_views.get_cotrav_billing_entities),
 
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('api/hotel_types', api_views.hotel_types),
     path('api/hotel_booking_portals', api_views.hotel_booking_portals),
     path('api/room_types', api_views.room_types),
+    path('api/railway_stations', api_views.railway_stations),
 
     path('api/corporate_management_fee', api_views.corporate_management_fee),
     path('api/add_corporate_management_fee', api_views.add_corporate_management_fee),
@@ -73,6 +75,7 @@ urlpatterns = [
     path('api/subgroups', api_views.subgroups),
     path('api/spocs', api_views.spocs),
     path('api/employees', api_views.employee),
+    path('api/spoc_employee', api_views.spoc_employee),
 
     path('api/add_billing_entity', api_views.add_billing_entity),
     path('api/update_billing_entity', api_views.update_billing_entity),

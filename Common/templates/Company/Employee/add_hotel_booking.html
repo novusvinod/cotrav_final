@@ -56,6 +56,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4" >City Area</label>
                                                     <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>
+                                                       <option value="">Select Area</option>
                                                        {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -66,6 +67,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4">Preferred Hotel Area</label>
                                                     <select class="col-sm-8 form-control myselect" name="preferred_hotel_area" id="preferred_hotel_area"  required>
+                                                         <option value="">Select Hotel Area</option>
                                                         {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -75,18 +77,19 @@
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check In DateTime</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="check_in_date">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="check_in_date">
                                         </div>
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check Out DateTime</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="check_out_date">
+                                                <input type="text" class="col-sm-8 form-control date-format" name="check_out_date">
                                         </div>
 
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Room type (Priority 1)</label>
                                                 <select class="col-sm-8 form-control myselect" name="room_type_priority1" id="room_type_priority1"  required>
+                                                    <option value="">Select Room Type</option>
                                                     {% for room_type in room_types %}
                                                         <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                     {% endfor %}
@@ -97,8 +100,9 @@
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Room type (Priority 2)</label>
 
-                                                <select class="col-sm-8 form-control myselect" name="room_type_priority2" id="room_type_priority2"  required>
-                                                {% for room_type in room_types %}
+                                                <select class="col-sm-8 form-control myselect" name="room_type_priority2" id="room_type_priority2" >
+                                                <option value="">Select Room Type</option>
+                                                    {% for room_type in room_types %}
                                                 <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                 {% endfor %}
                                                 </select>
@@ -109,6 +113,7 @@
                                                 <label class="col-sm-4" for="room_occupancy">Room Occupancy</label>
 
                                                     <select class="col-sm-8 form-control myselect" name="room_occupancy" id="room_occupancy"  required>
+                                                       <option value="">Select Room Occupancy</option>
                                                         {% for hotel_type in hotel_types %}
                                                 <option value="{{hotel_type.id}}">{{hotel_type.name}}</option>
                                                 {% endfor %}
@@ -122,16 +127,12 @@
                                         </div>
 
 
-                                        <div class="form-group row">
 
-                                                <label class="col-sm-4">Booking Date</label>
-                                                <input type="datetime-local" class="col-sm-8 form-control" name="booking_datetime">
-
-                                        </div>
 
                                         <div class="form-group row">
                                             <label class="col-sm-4">Assessment Code</label>
                                             <select class="col-sm-8 form-control myselect" name="assessment_code" id="assessment_code">
+                                                <option value="">Select Assessment Code</option>
                                                 {% for assessment in assessments %}
                                                 <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                                 {% endfor %}
@@ -144,6 +145,7 @@
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Assessment City</label>
                                                 <select class="col-sm-8 form-control myselect" name="assessment_city" id="assessment_cities">
+                                                    <option value="">Select Assessment City</option>
                                                     {% for city in cities_ass %}
                                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -155,7 +157,7 @@
 
                                         <div class="form-group row">
                                             <label class="col-sm-4">Reason for Booking</label>
-                                            <input type="text" class="col-sm-8 form-control" name="reason_for_booking" placeholder="Reason for Booking" required>
+                                            <input type="text" class="col-sm-8 form-control" name="reason_for_booking" placeholder="Reason for Booking">
                                         </div>
 
 
@@ -185,9 +187,11 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
+<script>
 $(document).ready(function() {
 $(".js-example-basic-single").select2();
 });
 
+</script>
 
 {% endblock %}

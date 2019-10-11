@@ -37,19 +37,32 @@
                      <div class="row">
                          <div class="col-md-12 col-sm-12">
 
-                              <div class="form-group row">
+                             <div class="form-group row">
                                 <label class="col-sm-4" >From*</label>
-                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>-->
+                                  <select name="from" id="pickup_location" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select From Station</option>
+                                        {% for railway_station in railway_stations %}
+                                        <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >To*</label>
-                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>-->
+                                   <select name="to" id="drop_location" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select To Station</option>
+                                        {% for railway_station in railway_stations %}
+                                        <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Train Type*</label>
                                  <select name="train_type" class="form-control col-sm-8 tour_type myselect">
+                                     <option value="">Select Train Type</option>
                                        {% for type in types %}
                                         <option value="{{type.id}}">{{type.name}}</option>
                                         {% endfor %}
@@ -57,25 +70,20 @@
                             </div>
 
                         <div class="form-group row">
-                                <label class="col-sm-4" >Preferred Bus*</label>
-                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
+                                <label class="col-sm-4" >Preferred Train*</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Train">
                             </div>
-
-                         <div class="form-group row">
-                                <label class="col-sm-4" >Booking Date*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="booking_datetime" id="min-date"  placeholder="Booking Date/Time" required>
-                            </div>
-
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Date of Journey*</label>
-                                 <input type="datetime-local" class="form-control col-sm-8 floating-label mdl-textfield__input" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
                             </div>
 
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
                                    <select name="assessment_code" class="form-control col-sm-8 myselect">
+                                       <option value="">Select Assessment Code</option>
                                         {% for assessment in assessments %}
                                         <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                         {% endfor %}
@@ -85,7 +93,8 @@
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment City*</label>
                                    <select name="assessment_city_id" class="form-control col-sm-8 myselect">
-                                        {% for city in cities %}
+                                       <option value="">Select Assessment City</option>
+                                       {% for city in cities %}
                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                         {% endfor %}
                                     </select>
@@ -94,7 +103,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
+                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
                             </div>
 
 
@@ -139,61 +148,7 @@ $(document).ready(function() {
 $(".js-example-basic-single").select2();
 });
 
-$(function() {
 
-$("#tour_type").change(function()
-    {
-    	var tour_type = $(this).val();
-
-    	switch(tour_type){
-           case '1':
-              {
-                $('#tr_taxi_type').hide();
-                $('#tr_package').hide();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '2':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').hide();
-                break;
-              }
-           case '3':
-              {
-                $('#tr_taxi_type').show();
-                $('#tr_package').show();
-                $('#tr_no_of_days').show();
-                break;
-              }
-    	}
-    });
-
-  <!--        For GET All Cities    -->
-  var city_Names = [];
-
-    {% for city in cities %}
-        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
-    {% endfor %}
-
-
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
-
-var pickup_city = document.getElementById('pickup_city');
-var pickup_location = document.getElementById('pickup_location');
-var drop_location = document.getElementById('drop_location');
-var options = {
- types: ['(cities)'],
- componentRestrictions: {country: 'in'}
-};
-
-   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
-   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
-   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
- });
 </script>
 
 

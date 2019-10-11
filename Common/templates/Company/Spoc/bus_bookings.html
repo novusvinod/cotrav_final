@@ -64,10 +64,15 @@
                                     <th>Drop City</th>
                                     <th>Booking DateTime</th>
                                     <th>Boarding Point</th>
+                                    <th>Boarding DateTime</th>
                                     <th>Date of Journey</th>
-                                    <th>Bus Type Requested (Assigned)</th>
+                                    <th>Bus Type (Assigned)</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
+
+                                    <th>Operator Details</th>
+                                    <th>Spoc Details</th>
+                                    <th>Passenger Details</th>
                                     <th>Details</th>
 
                                 </tr>
@@ -76,16 +81,31 @@
                                 {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.id }}</td>
-                                    <td>{{ booking.reference_no }}</td>
-                                    <td>{{ booking.pickup_location }}</td>
-                                    <td>{{ booking.drop_location}}</td>
-                                    <td>{{ booking.booking_datetime }}</td>
-                                    <td>{{ booking.boarding_point }}</td>
-                                    <td>{{ booking.boarding_datetime }}</td>
-                                    <td>{{ booking.assign_bus_type_id}}</td>
+                                    <td>{{ booking.reference_no|default:'' }}</td>
+                                    <td>{{ booking.pickup_location|default:'' }}</td>
+                                    <td>{{ booking.drop_location|default:''}}</td>
+                                    <td>{{ booking.booking_datetime|default:'' }}</td>
+                                    <td>{{ booking.boarding_point|default:'' }}</td>
+                                    <td>{{ booking.boarding_datetime|default:'' }}</td>
+                                    <td>{{ booking.pickup_from_datetime|default:''}} To {{ booking.pickup_to_datetime|default:'' }} </td>
+                                    <td>{{ booking.bus_types_assign_name|default:''}}</td>
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }} ({{ booking.cotrav_agent_name|default:'' }})</td>
 
+                                    {% if booking.operator_name %}
+                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+
+                                    <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
+
+
+                                     <td>
+                                        {% for passanger in booking.Passangers %}
+                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
+                                        {% endfor %}
+                                    </td>
 
                                     <td>
                                         <a href="/Corporate/Spoc/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>

@@ -60,22 +60,20 @@
                                 <thead>
                                 <tr>
                                    <th>ID</th>
-                                    <th>Reference No</th>
+                                     <th>Reference No</th>
                                     <th>City</th>
-                                    <th>Booking Date</th>
-                                    <th>Pickup Datetime</th>
-                                    <th>Pickup Location</th>
-                                    <th>Drop Location</th>
-                                    <th>Tour Type</th>
-                                    <th>Client Status</th>
+                                    <th>Area</th>
+                                    <th>Booking DateTime</th>
+                                    <th>Check-In Date</th>
+                                    <th>Check-Out Date</th>
+                                    <th>Assessment Code</th>
+                                     <th>Preferred Hotel</th>
+                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
 
-                                    <th>Operator Details</th>
-                                    <th>Taxi/Driver Assign</th>
-                                    <th>Spoc Details</th>
-
+                                    <th>Hotels Details</th>
+                                    <th>SPOC Details</th>
                                     <th>Passenger Details</th>
-
                                     <th>Details</th>
 
                                 </tr>
@@ -85,25 +83,16 @@
                                 <tr>
                                     <td>{{ booking.id }}</td>
                                     <td>{{ booking.reference_no }}</td>
-                                    <td>{{ booking.city_name }}</td>
-                                    <td>{{ booking.booking_date}}</td>
-                                    <td>{{ booking.pickup_datetime }}</td>
-                                    <td>{{ booking.pickup_location }}</td>
-                                    <td>{{ booking.drop_location }}</td>
-                                    {% if booking.tour_type == 1 %}
-                                    <td>Local</td>
-                                    {% elif booking.tour_type == 2 %}
-                                    <td>Radio</td>
-                                    {% else %}
-                                    <td>Outstation</td>
-                                    {% endif %}
+                                    <td>{{ booking.from_city_id }}</td>
+                                    <td>{{ booking.from_area_id}}</td>
+                                    <td>{{ booking.booking_datetime}}</td>
+                                    <td>{{ booking.checkin_datetime }}</td>
+                                    <td>{{ booking.checkout_datetime }}</td>
+                                    <td>{{ booking.assessment_code }}</td>
+                                    <td>{{ booking.preferred_hotel }}</td>
 
-
-
-                                    <td>{{ booking.client_status }} </td>
-                                    <td>{{ booking.cotrav_status }}<br/>({{ booking.cotrav_agent_name|default:'' }})</td>
-
-
+                                    <td>{{ booking.client_status }}</td>
+                                    <td>{{ booking.cotrav_status }}</td>
 
                                     {% if booking.operator_name %}
                                     <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
@@ -112,15 +101,10 @@
                                     {% endif %}
 
 
-                                    {% if booking.driver_name %}
-                                    <td>{{ booking.driver_name|default:'' }}<br/>({{ booking.driver_contact|default:'' }})</td>
-                                    {% else %}
-                                    <td></td>
-                                    {% endif %}
 
                                     <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
 
-                                    <td>
+                                     <td>
                                         {% for passanger in booking.Passangers %}
                                         {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
                                         {% endfor %}
@@ -129,7 +113,7 @@
 
 
                                     <td>
-                                        <a href="/Corporate/Approver_1/view-taxi-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
+                                        <a href="/Corporate/Spoc/view-hotel-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
                                     </td>
                                 </tr>
                                 {% endfor %}
