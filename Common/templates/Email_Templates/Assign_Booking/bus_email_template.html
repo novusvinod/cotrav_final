@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html  lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Cotrav Train template</title>
+   <link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Montserrat" >
+  <style type="text/css">
+ .content {width: 100%; max-width: 700px; }
+  .h1, .h2, .bodycopy {color: black; font-family:Montserrat;}
+  .h1 {font-size: 19px; line-height: 38px; font-weight: 600;}
+  .h2 { font-size: 17px; line-height: 28px; font-weight: bold;}
+  .bodycopy {font-size: 16px; line-height: 22px;}
+  .button {text-align: center; font-size: 18px; font-family:Montserrat; font-weight: bold; padding: 0 30px 0 30px;}
+  .button a {color: #ffffff; text-decoration: none;}
+  .footer {padding: 20px 30px 15px 30px;}
+  .footercopy {float: left;}
+  .footercopy a {color: #ffffff; text-decoration: none;}
+
+  @media only screen and (max-width: 550px), screen and (max-device-width: 767px) {
+  body[yahoo] .hide {display: none!important;}
+  body[yahoo] .buttonwrapper {background-color: transparent!important;}
+  body[yahoo] .button {padding: 0px!important;}
+  body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important;}
+  body[yahoo] .unsubscribe {display: block; margin-top: 20px; padding: 10px 50px; background: #2f3942; border-radius: 5px; text-decoration: none!important; font-weight: bold;}
+  }
+
+  /*@media only screen and (min-device-width: 601px) {
+    .content {width: 600px !important;}
+    .col425 {width: 425px!important;}
+    .col380 {width: 380px!important;}
+    }*/
+
+  </style>
+</head>
+{% for booking in bookings %}
+<body class="header">
+<table width="100%" bgcolor="#f6f8f1" border="0" cellpadding="0" cellspacing="0">
+
+<tr>
+  <td>
+  
+    <table bgcolor="#ffffff" class="content" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td>
+          <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%">  
+            <tr>
+              <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                    <td>
+                      <img src="http://cotrav.co/static/email_template_images/bg1.png" width="100%">
+                    </td>
+                  </tr>
+              
+              <tr>
+             
+              </tr>
+
+                  <tr>
+                    <td>
+                       <img src="http://cotrav.co/static/email_template_images/bus.png" style="float: right; margin-top: -10px; margin-right: 70px; width: 85px;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td  style="font-size: 19px; line-height: 38px; font-weight: 600;text-align: center;background-color: whitesmoke; font-family: Montserrat">
+                    <img src="http://cotrav.co/static/email_template_images/dot.png" style="width: 20px; margin-bottom: -3px;"> Booking Assigned from Cotrav<br><small style="font-size: 14px;">Booking ID : {{ booking.reference_no }} </small>
+     
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+       
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 30px 30px 30px 30px;">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td style="font-weight: 600;text-align: center; font-size: 17px;  font-weight: bold;font-family: Montserrat" >
+                 Dear {{user_name}},
+              </td>
+            </tr>
+            <tr>
+              <td class="bodycopy" style="text-align: center; font-weight: 600;">
+              <small>This is to inform you that your bus travel has been assigned by Cotrav Team.The details of your booking are mentioned below:</small>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+         <td>
+
+            <fieldset style="font-family: Montserrat; font-weight: 600; line-height: 20px;">
+             <legend style="font-size: 17px;text-align: center;">Booking Details</legend>
+       <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="line-height: 30px;">
+             <div style="text-align: center;font-size: 14px;">Booking ID : {{ booking.reference_no }} </div><br>
+
+       <tr>
+       <td style="font-size: 12px;text-align: center;"><img src="http://cotrav.co/static/email_template_images/dot.png" style="margin-bottom: -3px; width: 14px;"> Pickup Location :  {{ booking.pickup_location }}<br>{{ booking.pickup_from_datetime }} </td>
+
+       <td></td>
+
+         <td style="font-size: 12px; text-align: center;"><img src="http://cotrav.co/static/email_template_images/dot2.png" style="margin-bottom: -3px; width: 14px;"> Drop Location :  {{ booking.drop_location }}<br>{{ booking.pickup_to_datetime }} </td>
+    </tr>
+<br/>
+       <tr>
+         <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Boarding Point : {{ booking.boarding_point|default:'-' }}</a></td>
+
+         <td style="font-size: 12px;text-align: center;"> Boarding Time:{{ booking.boarding_datetime }} </td>
+
+         <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Operator Name:  {{ booking.operator_name }}</a></td>
+    </tr>
+
+<br/>
+       <tr>
+         <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Bus Type:  {{ booking.assign_bus_type_id }}</a></td>
+
+         <td style="font-size: 12px;text-align: center;">Ticket No:  {{ booking.ticket_no }} </td>
+
+         <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">PNR No:  {{ booking.pnr_no }}</a></td>
+    </tr>
+
+
+           <br/>
+       <tr>
+         <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Seat No:  {{ booking.seat_no }}</a></td>
+
+
+    </tr>
+
+
+</table>
+</fieldset>
+                                       
+      <br/> 
+
+       <fieldset style="font-family: Montserrat; font-weight: 600; line-height: 20px;">
+      <legend style="font-size: 17px;text-align: center;">Spoc Details</legend>
+       <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center"  style="line-height: 30px;">
+
+        <tr>
+         <td style="font-size: 12px; line-height: 30px;text-align: center;">Spoc Name :       {{ booking.user_name }}</td>
+            <a href="#"><td style="font-size: 12px;text-align: center;">  Email :       {{ booking.user_email }}</td></a>
+          <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Contact :      {{ booking.user_contact }}</a></td>
+
+       </tr>
+    </table>
+  </fieldset>
+
+             <br/>
+
+       <fieldset style="font-family: Montserrat; font-weight: 600; line-height: 20px;">
+      <legend style="font-size: 17px;text-align: center;">Passanger Details</legend>
+       <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center"  style="line-height: 30px;">
+{% for passanger in booking.Passangers %}
+        <tr>
+
+         <td style="font-size: 12px; line-height: 30px;text-align: center;">Name: {{ passanger.employee_name|default:'' }}</td>
+            <a href="#"><td style="font-size: 12px;text-align: center;">Email: {{ passanger.employee_email|default:'' }}</td></a>
+          <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Contact: {{ passanger.employee_contact|default:'' }}</a></td>
+
+       </tr>
+            {% endfor %}
+    </table>
+  </fieldset>
+
+    </td>
+      </tr>
+      <tr>
+        <td style="padding: 30px 30px 30px 30px;">
+        </td>
+      </tr>
+     
+      <tr>
+       <td bgcolor="#006699" ><br>
+
+
+
+	<table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" class="cont_blk" style="margin-bottom: -20px; color: white;">
+
+	<tr>
+
+	<td></td>
+
+	<td align="center"><img src="http://cotrav.co/static/email_template_images/1.png" style="margin-bottom: -7px;width: 20px; color: white;"> 7291995220, 9990045853</td>
+
+
+
+	<td align="center"> <img src="http://cotrav.co/static/email_template_images/2.png" style="margin-bottom: -7px;width: 20px;"> <a href="#" style="color: white; text-decoration-line: none; padding-right: 33px;">vinod@cotrav.co</a></td>
+
+	<td></td>
+
+	</tr>
+
+
+
+	</table>
+
+	<br>
+
+	<table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" style="color: white; font-family: Montserrat,Medium; font-size: 13px; text-align: center;">
+
+	<tr>
+
+	<td align="center" style="padding-top: 21px;"><img src="http://cotrav.co/static/email_template_images/3.png" style="margin-bottom: -7px;width: 20px;"> 6/813 Main Market, Mehrauli,<br>New Delhi 110030 </td>
+
+	</tr>
+
+
+
+	<tr>
+
+	<td> <a href="#" style="color: white; font-family: Montserrat,Medium; text-decoration-line: none; font-size: 14px;">Privacy | About Us | Contact Us </a></td>
+
+
+
+	</tr>
+
+
+
+	</table>
+
+
+
+
+
+	<table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" style="color: white; font-family: Montserrat,Medium; font-size: 15px; line-height: 18px;">
+
+
+
+	<tr>
+
+	<td align="center">
+
+	<a href="#"> <img src="http://cotrav.co/static/email_template_images/f1.png">
+
+	<img src="http://cotrav.co/static/email_template_images/f2.png">
+
+	<img src="http://cotrav.co/static/email_template_images/f3.png"></a>
+
+	</td>
+
+
+
+	</tr>
+
+	<tr>
+
+	<td align="center">
+
+	© 2019 Powered by Cotrav
+
+	</td>
+
+                  </tr>
+             </table>
+        </td>
+      </tr>
+    </table>
+  
+    </td>
+  </tr>
+</table>
+</body>
+ {% endfor %}
+</html>

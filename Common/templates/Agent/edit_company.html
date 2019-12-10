@@ -5,6 +5,7 @@
 
 {% if user %}
 			<!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -20,6 +21,7 @@
       {% csrf_token %}
      <input type="hidden" name="user_id" value="{{user.id}}">
      <input type="hidden" name="corporate_id" value="{{corporate.id}}" >
+      <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                     <div class="row">
                         <div class="col-md-4 col-sm-4">
                             <div class="card card-box">
@@ -240,7 +242,7 @@
                                         <div class="form-group">
                                             <div class="offset-md-3 col-md-9">
                                                 <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" class="btn btn-default">Cancel</button>
+                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                             </div>
                                         </div>
 

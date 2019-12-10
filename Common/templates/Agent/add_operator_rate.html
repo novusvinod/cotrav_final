@@ -2,9 +2,49 @@
 
 {% block content %}
 
+<style>
 
+.
+.autocomplete-active:hover{
+background:white;
+}
+
+#myInput1autocomplete-list{
+
+      margin-left: 177px;
+}
+
+    .autocomplete-items{
+     border: solid 3px lightgray;
+    overflow: auto;
+    padding:8px;
+    line-height:30px;
+     border-collapse: collapse;
+  border-spacing: 0;
+
+
+ border-radius:6px;
+ background-color:#dee2e6;
+ font-size:13px;
+  color: #041261;
+width:70%;
+ }
+ .autocomplete-items div:hover,
+.autocomplete-active {
+  color: #041261;
+  background-color:#9ba9f7;
+}
+
+. mypackage{
+left:50%;
+}
+
+
+
+</style>
 {% if user %}
 			<!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -22,7 +62,7 @@
  <form method="post" action="/agents/add-operator-rate/0">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
             {% if operator_rates %}
             {% for rate in operator_rates %}
             <input type="hidden" class="col-sm-8 form-control" name="rate_id" value="{{rate.id }}">
@@ -50,10 +90,11 @@
 
 
                                          <div class="form-group row">
-                                                <label class="col-sm-4">Operator</label>
+                                                <label class="col-sm-4">Operator Name</label>
                                              {% if operator_rates %}
                                             {% for rate in operator_rates %}
 	                                                 <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                                         <option value="">Select Operator</option>
                                                     {% for operator in operators %}
                                                      <option value="{{operator.id}}" {%if rate.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
                                                     {% endfor %}
@@ -62,6 +103,7 @@
                                               {% else %}
 
                                                 <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                                    <option value="">Select Operator</option>
 	                                                {% for operator in operators %}
                                                      <option value="{{operator.id}}" >{{operator.operator_name}}</option>
                                                     {% endfor %}
@@ -75,6 +117,7 @@
                                              {% if operator_rates %}
                                             {% for rate in operator_rates %}
 	                                                 <select class="col-sm-8 form-control myselect" name="city_id" required>
+                                                         <option value="">Select City</option>
                                                          {% for city in cities %}
                                                      <option value="{{city.id}}" {%if rate.city_id == city.id %} selected {%endif%}>{{city.city_name}}</option>
                                                     {% endfor %}
@@ -83,6 +126,7 @@
                                               {% else %}
 
                                                 <select class="col-sm-8 form-control myselect" name="city_id" required>
+                                                    <option value="">Select City</option>
 	                                                {% for city in cities %}
                                                      <option value="{{city.id}}" >{{city.city_name}}</option>
                                                     {% endfor %}
@@ -95,6 +139,7 @@
                                              {% if operator_rates %}
                                             {% for rate in operator_rates %}
 	                                                 <select class="col-sm-8 form-control myselect" name="taxi_type_id" required>
+                                                         <option value="">Select Taxi Type</option>
                                                          {% for taxi_type in taxi_types %}
                                                      <option value="{{taxi_type.id}}" {%if rate.taxi_type_id == taxi_type.id %} selected {%endif%}>{{taxi_type.name}}</option>
                                                     {% endfor %}
@@ -103,6 +148,7 @@
                                               {% else %}
 
                                                 <select class="col-sm-8 form-control myselect" name="taxi_type_id" required>
+                                                    <option value="">Select Taxi Type</option>
 	                                                {% for taxi_type in taxi_types %}
                                                      <option value="{{taxi_type.id}}" >{{taxi_type.name}}</option>
                                                     {% endfor %}
@@ -115,10 +161,12 @@
                                             <label class="col-sm-4" >Package Name</label>
                                          {% if operator_rates %}
                                             {% for rate in operator_rates %}
-                                            <input type="text" class="col-sm-8 form-control" name="package_name"  value="{{rate.package_name}}" required>
+
+                                         <input class="col-sm-8 form-control" autocomplete="off" id="myInput" name="package_name" placeholder="Package Name" type="text" value="{{rate.package_name}}">
                                             {% endfor %}
+
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="package_name" placeholder="Package Name" required>
+                                            <input class="col-sm-8  form-control" autocomplete="off" id="myInput1" name="package_name" placeholder="Package Name" type="text" value="{{rate.package_name}}">
                                          {% endif %}
                                         </div>
 
@@ -128,16 +176,16 @@
                                              {% if operator_rates %}
                                             {% for rate in operator_rates %}
 	                                                 <select class="col-sm-8 form-control myselect" name="tour_type" required>
-                                                     <option value="1" {%if rate.tour_type == 1 %} selected {%endif%}>Local</option>
-                                                    <option value="2" {%if rate.tour_type == 2 %} selected {%endif%}>Radio</option>
-                                                         <option value="3" {%if rate.tour_type == 3 %} selected {%endif%}>Outstation</option>
+                                                         <option value="">Select Tour Type</option>
+                                                     <option value="2" {%if rate.tour_type == 1 %} selected {%endif%}>Local</option>
+                                                     <option value="3" {%if rate.tour_type == 3 %} selected {%endif%}>Outstation</option>
 	                                            </select>
                                             {% endfor %}
                                               {% else %}
 
                                                 <select class="col-sm-8 form-control myselect" name="tour_type" required>
-                                                    <option value="1">Local</option>
-                                                    <option value="2">Radio</option>
+                                                    <option value="">Select Tour Type</option>
+                                                    <option value="2">Local</option>
                                                     <option value="3">Outstation</option>
 	                                            </select>
                                              {% endif %}
@@ -173,50 +221,6 @@
                                 <div class="card-body " >
 
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >KMS</label>
-                                         {% if operator_rates %}
-                                            {% for rate in operator_rates %}
-                                            <input type="text" class="col-sm-8 form-control" name="kms"  value="{{rate.kms}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="kms" placeholder="KMS" required>
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Hours</label>
-                                         {% if operator_rates %}
-                                            {% for rate in operator_rates %}
-                                            <input type="text" class="col-sm-8 form-control" name="hours"  value="{{rate.hours}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="hours" placeholder="Hours" required>
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Km Rate</label>
-                                         {% if operator_rates %}
-                                            {% for rate in operator_rates %}
-                                            <input type="text" class="col-sm-8 form-control" name="km_rate"  value="{{rate.km_rate}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="km_rate" placeholder="Km Rate" required>
-                                         {% endif %}
-                                        </div>
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Hours Rate</label>
-                                         {% if operator_rates %}
-                                            {% for rate in operator_rates %}
-                                            <input type="text" class="col-sm-8 form-control" name="hour_rate"  value="{{rate.hour_rate}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="hour_rate" placeholder="Hours Rate" required>
-                                         {% endif %}
-                                        </div>
-
                                       <div class="form-group row">
                                             <label class="col-sm-4" >Base Rate</label>
                                          {% if operator_rates %}
@@ -229,7 +233,56 @@
                                         </div>
 
                                      <div class="form-group row">
-                                            <label class="col-sm-4" >Night Rate</label>
+                                            <label class="col-sm-4" >Hours Included</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="hours"  value="{{rate.hours}}" required>
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="hours" placeholder="Hours" required>
+                                         {% endif %}
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Kms Included</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="kms"  value="{{rate.kms}}" required>
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="kms" placeholder="KMS" required>
+                                         {% endif %}
+                                        </div>
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Per Hour Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="hour_rate"  value="{{rate.hour_rate}}" required>
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="hour_rate" placeholder="Hours Rate" required>
+                                         {% endif %}
+                                        </div>
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Per Km Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="km_rate"  value="{{rate.km_rate}}" required>
+                                            {% endfor %}
+                                              {% else %}
+                                            <input type="text" class="col-sm-8 form-control" name="km_rate" placeholder="Km Rate" required>
+                                         {% endif %}
+                                        </div>
+
+
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Night/Driver Charge</label>
                                          {% if operator_rates %}
                                             {% for rate in operator_rates %}
                                             <input type="text" class="col-sm-8 form-control" name="night_rate"  value="{{rate.night_rate}}" required>
@@ -240,7 +293,7 @@
                                         </div>
 
                                      <div class="form-group row">
-                                            <label class="col-sm-4" >Fuel Rate</label>
+                                            <label class="col-sm-4" >Fuel Charge</label>
                                          {% if operator_rates %}
                                             {% for rate in operator_rates %}
                                             <input type="text" class="col-sm-8 form-control" name="fuel_rate"  value="{{rate.fuel_rate}}" >
@@ -253,7 +306,7 @@
                                      <div class="form-group">
                                             <div class="offset-md-3 col-md-9">
                                                 <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" class="btn btn-default">Cancel</button>
+                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                             </div>
                                         </div>
 
@@ -277,10 +330,117 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-<script type="text/javascript">
- $(function() {
+<script>
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
 
- });
+/*An array containing all the country names in the world:*/
+var countries = [
+{% for taxi_package in taxi_packages %}
+
+"{{taxi_package.package_name}}",
+
+{% endfor %}
+]
+
+autocomplete(document.getElementById("myInput1"), countries);
+{% if operator_rates %}
+autocomplete(document.getElementById("myInput"), countries);
+{% endif %}
 </script>
 
 {% endblock %}

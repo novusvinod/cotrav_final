@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from Common.VIEW import basic_web_views
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -26,6 +27,9 @@ urlpatterns = [
 ######################### Comman urls ################
     path('login', basic_web_views.login_action),
     path('logout', basic_web_views.logout_action),
+    path('change_password', basic_web_views.change_password),
+    path('send_sms', basic_web_views.send_sms),
+    path('send_email', basic_web_views.send_email),
 ######################### END Commann urls ###############
 
 
@@ -61,5 +65,5 @@ urlpatterns = [
 
 
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 handler404 = 'landing.views.error_404_view'

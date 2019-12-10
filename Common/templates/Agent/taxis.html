@@ -19,13 +19,13 @@
             <form action="/agents/taxis" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="taxi_id" id="taxi_id_add">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                  <div class="form-group row" >
                         <label class="col-sm-5 control-label">Taxi Type Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control myselect" name="model_id" id="model_id" style="width:100%;" required>
+                            <select class="form-control" name="model_id" id="model_id" style="width:100%;" required>
                                 <option value="">Select Taxi Type</option>
                                {% for taxi_model in taxi_models %}
                                 <option value="{{taxi_model.id}}">{{taxi_model.brand_name}}({{taxi_model.model_name}})</option>
@@ -86,7 +86,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Taxi Model Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Taxi ?</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -107,7 +107,7 @@
     </div>
 </div>
 
-
+  {% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
@@ -132,7 +132,7 @@
                     </div>
                     <div class="card-body ">
 
-    {% include 'cotrav_alert_message.html' %}
+
             <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      Taxies Details
@@ -192,6 +192,17 @@
 <!-- end page content -->
 <script type="text/javascript">
    $(".myselect").select2();
+
+   var mymod = $("#model_id");
+
+   mymod.select2();
+
+ //  mymod.val(3); // Change the value or make some change to the internal state
+ //   mymod.trigger('change.select2'); // Notify only Select2 of changes
+
+
+
+
 </script>
 
 {% else %}
@@ -221,16 +232,33 @@ $(function() {
     var garage_location = button.data('garage_location');
     var garage_distance = button.data('garage_distance');
 
+   // $('#model_id').select2();
+
+   
+
+    
+
+
     var modal = $(this);
+  
     modal.find('#taxi_id_add').val(id);
     modal.find('#taxi_reg_no').val(taxi_reg_no);
     modal.find('#make_year').val(make_year);
     modal.find('#garage_location').val(garage_location);
     modal.find('#garage_distance').val(garage_distance);
 
-    modal.find('#model_id').val(taxi_model_id).trigger('change');
+
+    
+    mymod.val(taxi_model_id); // Change the value or make some change to the internal state
+    mymod.trigger('change.select2'); // Notify only Select2 of changes
+    
 
     });
+
+
+    $('#add_taxi_model').on('hidden.bs.modal', function() {
+        $('#model_id').select2('destroy');
+      })
 
 
 });

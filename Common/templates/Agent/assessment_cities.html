@@ -5,7 +5,7 @@
 
 {% if user %}
 <!-- start page content -->
-
+{% include 'cotrav_alert_message.html' %}
 <!-- The Modal -->
 <div class="modal fade model_custom_style" role="dialog" id="add_group_model">
     <div class="modal-dialog">
@@ -13,19 +13,20 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4  class="modal-title-status">Assessment Codes Details </h4>
+                <h4  class="modal-title-status">Assessment City Details </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/agents/assessment_cities/0" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="city_id" id="city_id_edit">
                 <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <div class="form-group row" id="corporate_id1">
                         <label class="col-sm-5 control-label">Company Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control" name="corporate_id" id="corporate_id" style="width:100%;" required>
+                            <select class="form-control myselect" name="corporate_id" id="corporate_id" style="width:100%;" required>
                                 <option value="">Select Company</option>
                                {% for company in companies %}
                                 <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -64,14 +65,14 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Assessment Cities Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Assessment Cities ? </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/agents/delete-assessment_cities/0" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="city_id" id="city_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
 
                 <div class="modal-footer">
@@ -89,13 +90,11 @@
 <div class="page-content-wrapper">
     <div class="page-content">
 
-
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
-                        <header>ALL CORPORATE GROUP LIST</header>
+                        <header>ALL CORPORATE ASSESSMENT CITY LIST</header>
                           <div class="row p-b-20">
                             <div class="col-md-6 col-sm-6 col-6">
                                 <div class="btn-group">
@@ -112,10 +111,9 @@
                     </div>
                     <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
    <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">
-         All Corporate Group Details
+         All Corporate Assessment Cities Details
          </div>
    </div>
                         <div class="table-scrollable table-bordered ">
@@ -165,6 +163,12 @@
 <!-- end page content -->
 <script type="text/javascript">
    $(".myselect").select2();
+
+   var mymod = $('#corporate_id');
+
+   mymod.select2();
+
+
 </script>
 
 {% else %}
@@ -182,8 +186,12 @@ $(function() {
 
     var modal = $(this);
     modal.find('#city_id_edit').val(id);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+
     modal.find('#city_name').val(city_name);
+    
     });
 
    $('#model_add_new_group').on('show.bs.modal', function (event) {

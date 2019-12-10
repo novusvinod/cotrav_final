@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <div class="page-wrapper">
         <!-- start header -->
         <div class="page-header navbar navbar-fixed-top">
@@ -38,23 +38,18 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default animated jello">
                                 <li>
-                                    <a href="user_profile.html">
+                                    <a href="/Corporate/Approver_2/user_profile">
                                         <i class="fa fa-user-o"></i> Profile </a>
                                 </li>
 
                                 <li>
-                                    <a href="/logout">
+                                    <a href="/Corporate/Approver_2/logout">
                                         <i class="fa fa-sign-out"></i> Log Out </a>
                                 </li>
                             </ul>
                         </li>
                         <!-- end manage user dropdown -->
 
-                        <li class="dropdown dropdown-quick-sidebar-toggler">
-                             <a id="headerSettingButton" class="mdl-button mdl-js-button mdl-button--icon pull-right" data-upgraded=",MaterialButton">
-	                           <i class="material-icons">more_vert</i>
-	                        </a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -63,9 +58,9 @@
                     <ul class="nav navbar-nav mynav">
                         <li class="mega-menu-dropdown ">
                             <a href="/Corporate/Approver_2/home" class="dropdown-toggle"> <i class="material-icons">dashboard</i>  Home
-                               
+
                             </a>
-                           
+
                         </li>
                         <li class="classic-menu-dropdown mega-menu-dropdown">
                                 <a href="/Corporate/Approver_2/company-billing_entities/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">assignment_turned_in</i>Entities
@@ -78,152 +73,60 @@
                             </a>
 
                         </li>
-                        <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Approver_2/company-groups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">group</i>  Group
-                            </a>
-                  
-                        </li>
-						 <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Approver_2/company-subgroups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">people_outline</i>  SubGroup
-                            </a>
+<!--                        <li class="classic-menu-dropdown mega-menu-dropdown">-->
+<!--                                <a href="/Corporate/Approver_2/company-groups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">group</i>  Group-->
+<!--                            </a>-->
+<!--                  -->
+<!--                        </li>-->
+<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
+<!--                                <a href="/Corporate/Approver_2/company-subgroup/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">people_outline</i>  SubGroup-->
+<!--                            </a>-->
 
-                        </li>
-						 <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Approver_2/company-admins/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">school</i>  Admins
-                            </a>
+<!--                        </li>-->
+<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
+<!--                                <a href="/Corporate/Approver_2/company-admins/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">school</i>  Admins-->
+<!--                            </a>-->
 
-                        </li>
-                        <li class="mega-menu-dropdown ">
-	                         <a href="/Corporate/Approver_2/company-spocs/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC
-                            
-                            </a>
-                         
-                        </li>
+<!--                        </li>-->
+<!--                        <li class="mega-menu-dropdown ">-->
+<!--	                         <a href="/Corporate/Approver_2/company-spocs/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC-->
+<!--                            -->
+<!--                            </a>-->
+<!--                         -->
+<!--                        </li>-->
                         <li class="mega-menu-dropdown ">
                             <a href="/Corporate/Approver_2/company-employees/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person_outline</i>Employee
 
                             </a>
-                          
+
                         </li>
-                        <li class="mega-menu-dropdown " id="taxi_li_menu">
-                             <a class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
-                              <i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+						<li class="mega-menu-dropdown " id="taxi_li_menu">
+                             <a href="/Corporate/Approver_2/taxi-bookings/2" class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
                             </a>
-                            <ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/Corporate/Approver_2/taxi-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/taxi-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/taxi-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/taxi-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
                          </li>
 
                         </li>
                          <li class="mega-menu-dropdown" id="bus_li_menu">
-                            <a class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
-                                <i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+                            <a href="/Corporate/Approver_2/bus-bookings/2" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
+
                             </a>
-                             <ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/Corporate/Approver_2/bus-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/bus-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/bus-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-														<li><a href="/Corporate/Approver_2/bus-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
-
                         </li>
-                        <li class="mega-menu-dropdown" id="train_li_menu">
-                            <a class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
-                                <i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
-                            </a>
-                            <ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/Corporate/Approver_2/train-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/train-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/train-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
 
-														<li><a href="/Corporate/Approver_2/train-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
+                        <li class="mega-menu-dropdown" id="train_li_menu">
+                            <a href="/Corporate/Approver_2/train-bookings/2" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
+                            </a>
+
 
                         </li>
                         <li class="mega-menu-dropdown" id="hotel_li_menu">
-                            <a class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
-
-                           <i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+                            <a href="/Corporate/Approver_2/hotel-bookings/2" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
                             </a>
-                            <ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/Corporate/Approver_2/hotel-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/hotel-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/hotel-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-														<li><a href="/Corporate/Approver_2/hotel-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
                         </li>
+
                         <li class="mega-menu-dropdown" id="flight_li_menu">
-                            <a class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
-
-                            <i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+                            <a href="/Corporate/Approver_2/flight-bookings/2" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
                             </a>
-                            <ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/Corporate/Approver_2/flight-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/flight-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/flight-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
 
-														<li><a href="/Corporate/Approver_2/flight-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
                         </li>
 <!--                        <li class="mega-menu-dropdown">-->
 <!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">restaurant_menu</i>Meal-->
@@ -244,18 +147,18 @@
 
 <!--                        </li>-->
                     </ul>
-                </div>                			
+                </div>
 			</div>
         </div>
         <!-- end header -->
         <!-- start page container -->
-       <div class="page-container">
+        <div class="page-container">
             <!-- start sidebar menu -->
  			<div class="sidebar-container">
  				<div class="sidemenu-container navbar-collapse collapse fixed-menu">
 	                <div id="remove-scroll">
 	                    <ul class="sidemenu page-header-fixed p-t-20" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-	                       <li class="mega-menu-dropdown ">
+	                        <li class="mega-menu-dropdown ">
                             <a href="/Corporate/Approver_2/home" class="dropdown-toggle"> <i class="material-icons">dashboard</i>  Home
 
                             </a>
@@ -272,27 +175,27 @@
                             </a>
 
                         </li>
-                        <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Approver_2/company-groups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">group</i>  Group
-                            </a>
+<!--                        <li class="classic-menu-dropdown mega-menu-dropdown">-->
+<!--                                <a href="/Corporate/Approver_2/company-groups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">group</i>  Group-->
+<!--                            </a>-->
 
-                        </li>
-						 <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Approver_2/company-subgroups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">people_outline</i>  SubGroup
-                            </a>
+<!--                        </li>-->
+<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
+<!--                                <a href="/Corporate/Approver_2/company-subgroup/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">people_outline</i>  SubGroup-->
+<!--                            </a>-->
 
-                        </li>
-						 <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Approver_2/company-admins/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">school</i>  Admins
-                            </a>
+<!--                        </li>-->
+<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
+<!--                                <a href="/Corporate/Approver_2/company-admins/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">school</i>  Admins-->
+<!--                            </a>-->
 
-                        </li>
-                        <li class="mega-menu-dropdown ">
-	                         <a href="/Corporate/Approver_2/company-spocs/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC
+<!--                        </li>-->
+<!--                        <li class="mega-menu-dropdown ">-->
+<!--	                         <a href="/Corporate/Approver_2/company-spocs/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC-->
 
-                            </a>
+<!--                            </a>-->
 
-                        </li>
+<!--                        </li>-->
                         <li class="mega-menu-dropdown ">
                             <a href="/Corporate/Approver_2/company-employees/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person_outline</i>Employee
 
@@ -301,84 +204,38 @@
                         </li>
 
 
->
 
-	                           <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
-	                           <i class="material-icons">local_taxi</i> Taxi
-
-                                	<span class="arrow"></span>
+	                           <li class="nav-item" >
+	                        <a href="/Corporate/Approver_2/taxi-bookings/2" class="nav-link nav-toggle">
+	                         <i class="material-icons">local_taxi</i>Taxi
 	                            </a>
-	                            <ul class="sub-menu">
-
-														<li><a href="/Corporate/Approver_2/taxi-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/taxi-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/taxi-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-														<li><a href="/Corporate/Approver_2/taxi-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-	                            </ul>
 	                        </li>
 
-	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                            <li class="nav-item" >
+	                        <a href="/Corporate/Approver_2/bus-bookings/2" class="nav-link nav-toggle">
 	                            <i class="material-icons">directions_bus</i> Bus
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
-
-														<li><a href="/Corporate/Approver_2/bus-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/bus-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/bus-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-														<li><a href="/Corporate/Approver_2/bus-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-	                            </ul>
 	                        </li>
 
 	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/Corporate/Approver_2/train-bookings/2" class="nav-link nav-toggle">
 	                        <i class="material-icons">directions_subway</i> Train
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
-
-													<li><a href="/Corporate/Approver_2/train-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/train-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/train-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-														<li><a href="/Corporate/Approver_2/train-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-
-	                            </ul>
 	                        </li>
 
 
-	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                            <li class="nav-item" >
+	                        <a href="/Corporate/Approver_2/hotel-bookings/2" class="nav-link nav-toggle">
 	                           <i class="material-icons">hotel</i> Hotel
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
-	                                               <li><a href="/Corporate/Approver_2/hotel-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/hotel-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-														<li><a href="/Corporate/Approver_2/hotel-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-														<li><a href="/Corporate/Approver_2/hotel-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-	                            </ul>
 	                        </li>
 
 	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/Corporate/Approver_2/flight-bookings/2" class="nav-link nav-toggle">
 	                        <i class="material-icons">flight</i> Flight
-                                	<span class="arrow"></span>
+
 	                            </a>
-	                            <ul class="sub-menu">
 
-									<li><a href="/Corporate/Approver_2/flight-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Bookings</a></li>
-									<li><a href="/Corporate/Approver_2/flight-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Pending For Approved Bookings</a></li>
-									<li><a href="/Corporate/Approver_2/flight-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Approved Bookings</a></li>
-
-									<l><a href="/Corporate/Approver_2/flight-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></l>
-
-	                            </ul>
 	                        </li>
 
 
@@ -392,7 +249,7 @@
             </div>
         </div>
         <!-- end sidebar menu -->
-
+        <!-- end sidebar menu -->
 
         <!-- start chat sidebar -->
         <div class="chat-sidebar-container" data-close-on-body-click="false">
@@ -402,7 +259,7 @@
                             <a href="#quick_sidebar_tab_1" class="nav-link active tab-icon"  data-toggle="tab">Theme
                                 </a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a href="#quick_sidebar_tab_2" class="nav-link tab-icon"  data-toggle="tab">  Settings
                             </a>
@@ -462,7 +319,7 @@
 								</div>
 							</div>
 						</div>
-                        <!-- Start Setting Panel --> 
+                        <!-- Start Setting Panel -->
  						<div class="tab-pane chat-sidebar-settings animated slideInUp" id="quick_sidebar_tab_2">
                             <div class="chat-sidebar-settings-list slimscroll-style">
                                 <div class="chat-header"><h5 class="list-heading">Layout Settings</h5></div>
@@ -511,9 +368,9 @@
 					                        <div class="setting-text">Notifications</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-1">
-									                  <input type = "checkbox" id = "switch-1" 
+									                  <input type = "checkbox" id = "switch-1"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>
@@ -523,9 +380,9 @@
 					                        <div class="setting-text">Show Online</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-7">
-									                  <input type = "checkbox" id = "switch-7" 
+									                  <input type = "checkbox" id = "switch-7"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>
@@ -535,9 +392,9 @@
 					                        <div class="setting-text">Status</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-2">
-									                  <input type = "checkbox" id = "switch-2" 
+									                  <input type = "checkbox" id = "switch-2"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>
@@ -547,9 +404,9 @@
 					                        <div class="setting-text">2 Steps Verification</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-3">
-									                  <input type = "checkbox" id = "switch-3" 
+									                  <input type = "checkbox" id = "switch-3"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>
@@ -562,9 +419,9 @@
 					                        <div class="setting-text">Location</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-4">
-									                  <input type = "checkbox" id = "switch-4" 
+									                  <input type = "checkbox" id = "switch-4"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>
@@ -574,9 +431,9 @@
 					                        <div class="setting-text">Save Histry</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-5">
-									                  <input type = "checkbox" id = "switch-5" 
+									                  <input type = "checkbox" id = "switch-5"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>
@@ -586,9 +443,9 @@
 					                        <div class="setting-text">Auto Updates</div>
 					                        <div class="setting-set">
 					                            <div class="switch">
-					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+					                                <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect"
 									                  for = "switch-6">
-									                  <input type = "checkbox" id = "switch-6" 
+									                  <input type = "checkbox" id = "switch-6"
 									                     class = "mdl-switch__input" checked>
 									               	</label>
 					                            </div>

@@ -25,6 +25,8 @@ SECRET_KEY = 'g#gtui399&t+up!=938cgm507xh69!^2&#ofa+c!-mi1snqjyv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+
 ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
@@ -98,7 +100,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'Common.context_processors.global_settings'
+                'Common.context_processors.global_settings',
+                'Common.context_processors.get_access_details_by_corporate_name',
             ],
         },
     },
@@ -160,11 +163,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+UPLOAD_URL = os.path.join(BASE_DIR,'static')
+
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'asset')
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+EMAIL_HOST = 'smtp.taxivaxi.in'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'balwant@taxivaxi.in'
+EMAIL_HOST_PASSWORD = 'BalwantC13!#'
+EMAIL_USE_TLS = True
 
 
 

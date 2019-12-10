@@ -3,13 +3,13 @@
 <html lang="en">
 <!-- BEGIN HEAD -->
 <head>
-    {% load staticfiles %}
+    {% load static %}
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta name="description" content="Responsive Admin Template" />
     <meta name="author" content="SmartUniversity" />
-    <title>CoTrav - Agent Home Page</title>
+    <title>CoTrav - Approver 2</title>
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet" type="text/css" />
     <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}" ></script>
@@ -41,6 +41,9 @@
     <!--tagsinput-->
     <link href="{% static 'assets/plugins/jquery-tags-input/jquery-tags-input.css' %}" rel="stylesheet">
 
+        <!-- Date Time item CSS -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.css' %}" />
+
     <!--select2-->
     <link href="{% static 'assets/plugins/select2/css/select2.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
@@ -61,15 +64,15 @@
 
 <!-- start footer -->
 <div class="page-footer">
-    <div class="page-footer-inner"> 2018 &copy; CoTrav Taxi Admin Template By
-        <a href="" target="_top" class="makerCss">Redstartheme</a>
+    <div class="page-footer-inner"> 2019 &copy;
+        <a href="" target="_top" class="makerCss">CoTrav</a>
     </div>
     <div class="scroll-to-top">
         <i class="material-icons">eject</i>
     </div>
 </div>
 <!-- end footer -->
-{% load staticfiles %}
+{% load static %}
 <!-- start js include path -->
 <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}" ></script>
 <script src="{% static 'assets/plugins/popper/popper.min.js' %}" ></script>
@@ -100,6 +103,12 @@
 <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}" ></script>
  <script src="{% static 'assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}" ></script>
  <script src="{% static 'assets/js/pages/table/table_data.js' %}" ></script>
+
+<!-- animation -->
+	<script src="{% static 'assets/js/pages/ui/animations.js' %}" ></script>
+	<script src="{% static 'assets/plugins/material-datetimepicker/moment-with-locales.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>
+	<script src="{% static 'assets/plugins/material-datetimepicker/datetimepicker.js' %}"></script>
 
  <script>
         $(document).ready(function() {

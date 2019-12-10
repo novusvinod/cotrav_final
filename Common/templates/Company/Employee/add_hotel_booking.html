@@ -4,6 +4,8 @@
 
 {% if user %}
 			<!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
+
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -21,6 +23,7 @@
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
             <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
             <input type="hidden" name="employee_id" value="{{user.id}}">
+      <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                     <div class="row">
                         <div class="col-md-4 col-sm-4">
@@ -123,11 +126,12 @@
 
                                         <div class="form-group row">
                                             <label class="col-sm-4">Preferred Hotel</label>
-                                            <input type="text" class="col-sm-8 form-control" name="preferred_hotel"  placeholder="preferred_hotel">
+                                            <input type="text" class="col-sm-8 form-control" name="preferred_hotel"  placeholder="Preferred Hotel">
                                         </div>
 
 
-
+{% for corp_acces in corp_access %}
+                                {% if corp_acces.has_assessment_codes == 1 %}
 
                                         <div class="form-group row">
                                             <label class="col-sm-4">Assessment Code</label>
@@ -153,6 +157,9 @@
 
                                         </div>
 
+                                     {% endif %}
+                              {% endfor %}
+
 
 
                                         <div class="form-group row">
@@ -164,7 +171,7 @@
                                      <div class="form-group">
                                                <div class="offset-md-3 col-md-9">
                                                    <button type="submit" class="btn btn-info">Submit</button>
-                                                   <button type="button" class="btn btn-default">Cancel</button>
+                                                   <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                                </div>
                                            </div>
 

@@ -8,10 +8,14 @@
 <!-- start page content -->
 <div class="page-content-wrapper">
     <div class="page-content">
-
+{% include 'cotrav_alert_message.html' %}
                     <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
-                     Add Spocs
+                     {% if spoc %}
+                      Edit Spoc Details
+                      {% else %}
+                     Add New Spoc Details
+                     {% endif %}
                      </div>
             </div>
 
@@ -19,6 +23,8 @@
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
             <input type="hidden" class="col-sm-8 form-control" name="corporate_id" value="{{user.corporate_id }}">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
             {% if spoc %}
             {% for spoc in spoc %}
             <input type="hidden" class="col-sm-8 form-control" name="spoc_id" value="{{spoc.id }}">
@@ -40,7 +46,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Group Name</label>
-                                <select class="form-control col-sm-8 myselect" name="group_id" required>
+                                <select class="form-control col-sm-8 myselect" name="group_id">
                                     <option value="">Select Group</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -60,7 +66,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >SubGroup Group</label>
-                                <select class="form-control col-sm-8 myselect" name="subgroup_id" required>
+                                <select class="form-control col-sm-8 myselect" name="subgroup_id">
                                     <option value="">Select SubGroup</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -128,76 +134,16 @@
                                   {% endif %}
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Login User Email</label>
-                                {% if spoc %}
-                                {% for spoc in spoc %}
-                                <input type="text" class="col-sm-8 form-control" name="username" value="{{spoc.username}}" required
-                                       placeholder="Login User Email">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="username" required
-                                       placeholder="Login User Email">
-                                  {% endif %}
+
+                                <input type="hidden" class="col-sm-8 form-control" name="budget" value="0"
+                                       placeholder="Budget">
+
                             </div>
 
 
                         </div>
                     </div>
-                </div>
 
-
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
-                        <div class="card-head">
-                            <header>Billing Details</header>
-                            <button
-                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                                    data-upgraded=",MaterialButton">
-                                <i class="material-icons">more_vert</i>
-                            </button>
-                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                                data-mdl-for="panel-button">
-                                <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body ">
-
-                            <div class="form-group row">
-                                <label class="col-sm-4">Budget</label>
-                                {% if spoc %}
-                                {% for spoc in spoc %}
-                                <input type="text" class="col-sm-8 form-control" name="budget" value="{{spoc.budget}}"
-                                       placeholder="Budget">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="budget"
-                                       placeholder="Budget">
-                                 {% endif %}
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Expense</label>
-                                {% if spoc %}
-                                {% for spoc in spoc %}
-                                <input type="text" class="col-sm-8 form-control" name="expense" value="{{spoc.expense}}"
-                                       placeholder="Expense">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="expense"
-                                       placeholder="Expense">
-                                 {% endif %}
-                            </div>
-
-
-
-
-                        </div>
-                    </div>
-                </div>
 
 
                 <div class="col-md-4 col-sm-4">
@@ -387,13 +333,13 @@
                                 <label class="col-sm-4 control-label">Single Employee</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="has_single_employee">
-                                         <option value="1">Yes</option>
+                                         <option value="0">No</option>
                                         {% if spoc %}
                                         {% for spoc in spoc %}
-                                         <option value="0" {% if spoc.has_single_employee == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if spoc.has_single_employee == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
-                                         <option value="0">No</option>
+                                         <option value="1">Yes</option>
                                         {% endif %}
                                     </select>
                                 </div>
@@ -403,7 +349,7 @@
                             <div class="form-group">
                                 <div class="offset-md-3 col-md-9">
                                     <button type="submit" class="btn btn-info">Submit</button>
-                                    <button type="button" class="btn btn-default">Cancel</button>
+                                    <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                 </div>
                             </div>
 

@@ -23,6 +23,7 @@
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
                 <input type="hidden" name="delete_id" id="delete_id">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <!-- Modal footer -->
                 <div class="modal-body">
 
@@ -117,25 +118,12 @@
     </div>
 </div>
 
+{% include 'cotrav_alert_message.html' %}
 
-
-{% if message %}
-
-<div class="alert label-success alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
-    {{message}}
-</div>
-
-{% endif %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
-            <div class="text-center">
-                 <div style="font-size:14px; font-weight:bold;">
-                     Billing Entities
-                     </div>
-            </div>
+
 
         <div class="row">
             <div class="col-md-12">
@@ -143,13 +131,20 @@
                     <div class="card-head">
                         <header>ALL CORPORATE BILLING ENTITIES LIST</header>
                          <div class="row p-b-20">
-                            <div class="col-md-6 col-sm-6 col-6">
+                             <div class="row">
+                            <div class="col-md-10">
                                 <div class="btn-group">
                                     <a class="btn btn-info" href="#" data-toggle="modal"
-                                       data-target="#model_add_new_entities"> Add <i class="fa fa-plus"></i> </a>
+                                       data-target="#model_add_new_entities"> <i class="fa fa-plus"></i> Add New Billing Entity </a>
                                 </div>
                             </div>
-                        </div>
+                             <div class="col-sm-2">
+                                        <div class="btn-group">
+                                           <a href="/Corporate/Admin/download-billing-entities" class="btn btn-success pull-right">Download</a>
+
+                                  </div>
+                                  </div>
+                        </div></div>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
                             <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -157,23 +152,24 @@
                         </div>
                     </div>
                     <div class="card-body ">
-
-{% include 'cotrav_alert_message.html' %}
-
+<div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                     Billing Entities
+                     </div>
+            </div>
                         <div class="table-scrollable table-bordered">
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Operator Name</th>
+                                    <th>Company Name</th>
                                     <th>Entity name</th>
                                     <th>Billing City</th>
                                     <th>Contact Name</th>
                                     <th>Contact Email</th>
                                     <th>Contact No</th>
-                                    <th>Address Line 1</th>
-                                    <th>Address Line 2</th>
-                                    <th>Address Line 3</th>
+                                    <th>Address</th>
+
                                     <th>GSTIN NO</th>
                                     <th>PAN NO</th>
 
@@ -188,13 +184,12 @@
                                     <td>{{ be.entity_name }}</td>
                                     <td>{{ be.billing_city }}</td>
                                     <td>{{ be.contact_person_name }}</td>
-                                    <td>{{ be.contact_person_email }}</td>
-                                    <td>{{ be.contact_person_no }}</td>
-                                    <td>{{ be.address_line_1 }} hrs</td>
-                                    <td>{{ be.address_line_2 }}</td>
-                                    <td>{{ be.address_line_3 }}</td>
-                                    <td>{{ be.gst_id }}</td>
-                                    <td>{{ be.pan_no }}</td>
+                                    <td>{{ be.contact_person_email|default:'' }}</td>
+                                    <td>{{ be.contact_person_no|default:'' }}</td>
+                                    <td>{{ be.address_line_1 }} &nbsp; {{ be.address_line_2|default:'' }} &nbsp; {{ be.address_line_3|default:'' }}</td>
+
+                                    <td>{{ be.gst_id|default:'' }}</td>
+                                    <td>{{ be.pan_no|default:'' }}</td>
 
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#model_add_new_entities"
@@ -231,7 +226,12 @@
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
+<script>
+        $(".myselect").select2();
+        var billingcitySelect = $('#billing_city_id');
+        billingcitySelect.select2();
 
+</script>
 
 <script type="text/javascript">
 $(function() {
@@ -258,7 +258,10 @@ $(function() {
     if(delete_id == 1){
     modal.find('#delete_id').val(delete_id);
     modal.find('#entity_id').val(id);
-    $("#billing_city_id").val(billing_city).trigger('change');
+
+    billingcitySelect.val(billing_city);
+    billingcitySelect.trigger('change.select2');
+
     modal.find('#entity_name').val(entity_name);
     modal.find('#corporate_name').val(entity_name);
     modal.find('#contact_person_name').val(contact_person_name);
@@ -270,7 +273,7 @@ $(function() {
     modal.find('#gst_id').val(gst_id);
     modal.find('#pan_no').val(pan_no);
 
-    $('#delete_label').text("do you want to delete this record");
+    $('#delete_label').text("Do You Want to Delete This Record");
     $('#delete_btn').html("Yes");
 
     $('#entity_id1').hide();
@@ -289,7 +292,10 @@ $(function() {
     }else{
 
     modal.find('#entity_id').val(id);
-    $("#billing_city_id").val(billing_city).trigger('change');
+
+    billingcitySelect.val(billing_city);
+    billingcitySelect.trigger('change.select2');
+
     modal.find('#entity_name').val(entity_name);
     modal.find('#corporate_name').val(entity_name);
     modal.find('#contact_person_name').val(contact_person_name);

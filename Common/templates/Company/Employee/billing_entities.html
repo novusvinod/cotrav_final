@@ -6,29 +6,16 @@
 {% if user %}
 <!-- start page content -->
 
-{% if message %}
-
-<div class="alert label-success alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
-    {{message}}
-</div>
-
-{% endif %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
-                          <div class="text-center">
-                     <div style="font-size:14px; font-weight:bold;">
-                        Company Billing Entities
-                         </div>
-                </div>
 
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>ALL CORPORATE BILLING ENTITIES LIST</header>
+
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
                             <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -36,6 +23,11 @@
                         </div>
                     </div>
                     <div class="card-body ">
+ <div class="text-center">
+                     <div style="font-size:14px; font-weight:bold;">
+                        Company Billing Entities
+                         </div>
+                </div>
 
                         <div class="table-scrollable table-bordered">
                             <table id="example1" class="display full-width table-striped">

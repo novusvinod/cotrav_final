@@ -5,14 +5,19 @@
 
 {% if user %}
 <!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
-        <div class="text-center">
-     <div style="font-size:14px; font-weight:bold;">
-         Add New Employee
-         </div>
-   </div>
+       <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                      {% if employee %}
+                      Edit Employee Details
+                      {% else %}
+                     Add New Employee Details
+                     {% endif %}
+                     </div>
+                     </div>
 
 
         <form method="post" action="/agents/add-employee/0">
@@ -46,7 +51,7 @@
                                     <select class="col-sm-8 form-control myselect" name="corporate_id"  required>
                                         <option value="">Select Company</option>
                                         {% for company in companies %}
-                                        <option value="{{company.id}}" {% if employee.spoc_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
+                                        <option value="{{company.id}}" {% if employee.corporate_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
                                         {% endfor %}
                                     </select>
                                 {% endfor %}
@@ -62,7 +67,7 @@
 
 
                             <div class="form-group row">
-                                <label class="col-sm-4" >Spoc id</label>
+                                <label class="col-sm-4" >Select Spoc</label>
                                 {% if employee %}
                                 {% for employee in employee %}
                                     <select class="col-sm-8 form-control myselect" name="spoc_id"  required>
@@ -88,7 +93,7 @@
                                 {% if employee %}
                                 {% for employee in employee %}
                                     <select class="col-sm-8 form-control myselect" name="billing_entity_id"   required >
-                                        <option value="">Billing Entity</option>
+                                        <option value="">Select Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}" {% if employee.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
                                         {% endfor %}
@@ -96,7 +101,7 @@
                                 {% endfor %}
                                 {% else %}
                                      <select class="col-sm-8 form-control myselect" name="billing_entity_id" id="entity_id" required>
-                                        <option value="">Billing Entity</option>
+                                        <option value="">Select Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
                                         {% endfor %}
@@ -105,7 +110,36 @@
                             </div>
 
 
-                            <div class="form-group row">
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 col-sm-4">
+                    <div class="card card-box">
+                        <div class="card-head">
+                            <header>Employee Details</header>
+                            <button
+                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
+                                    data-upgraded=",MaterialButton">
+                                <i class="material-icons">more_vert</i>
+                            </button>
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                                data-mdl-for="panel-button">
+                                <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+                                <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+                                <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body ">
+
+                             <div class="form-group row">
                                 <label class="col-sm-4" >Core Employee id</label>
                                 {% if employee %}
                                 {% for employee in employee %}
@@ -119,7 +153,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4" >Employee Cid</label>
+                                <label class="col-sm-4" >Employee Company id</label>
                                 {% if employee %}
                                 {% for employee in employee %}
                                 <input type="text" class="col-sm-8 form-control" name="employee_cid" value="{{employee.employee_cid|default:''}}"
@@ -161,14 +195,70 @@
                                 <label class="col-sm-4" >Employee Contact</label>
                                  {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_contact" value="{{employee.employee_contact|default:''}}" required
+                                <input type="number" class="col-sm-8 form-control" name="employee_contact" value="{{employee.employee_contact|default:''}}" required
                                        placeholder="Employee Contact">
                                  {% endfor %}
                                 {% else %}
-                                 <input type="text" class="col-sm-8 form-control" name="employee_contact" required
+                                 <input type="number" class="col-sm-8 form-control" name="employee_contact" required
                                        placeholder="Employee Contact">
                                   {% endif %}
                             </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Designation</label>
+                                {% if employee %}
+                                {% for employee in employee %}
+                                <input type="text" class="col-sm-8 form-control" name="designation" value="{{employee.designation}}"
+                                       placeholder="Designation">
+                                {% endfor %}
+                                {% else %}
+                                <input type="text" class="col-sm-8 form-control" name="designation"
+                                       placeholder="Designation">
+                                 {% endif %}
+                            </div>
+
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Gender</label>
+                                <select name="gender" class="col-sm-8 form-control">
+                                    {% if employee %}
+                                {% for employee in employee %}
+                                <option value="Male" {% if employee.gender == 'Male' %} selected {%endif%}>Male</option>
+                                <option value="Female" {% if employee.gender == 'Female' %} selected {%endif%}>Female</option>
+                                {% endfor %}
+                                {% else %}
+                                <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                 {% endif %}
+
+                                </select>
+
+                            </div>
+
+
+
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Date Of Birth</label>
+                                {% if employee %}
+                                {% for employee in employee %}
+                                {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
+
+                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth" value="{{employee.date_of_birth}}"
+                                       placeholder="Assistant ID" required>
+                                {% else %}
+
+                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                       placeholder="Date Of Birth" required>
+                                 {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                       placeholder="Date Of Birth" required>
+                                 {% endif %}
+                            </div>
+
 
 
 
@@ -181,57 +271,21 @@
                 <div class="col-md-4 col-sm-4">
                     <div class="card card-box">
                         <div class="card-head">
-                            <header>Billing Details</header>
-                            <button
+                            <header>Other Information</header>
+                            <button id="panel-button2"
                                     class="mdl-button mdl-js-button mdl-button--icon pull-right"
                                     data-upgraded=",MaterialButton">
                                 <i class="material-icons">more_vert</i>
                             </button>
                             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                                data-mdl-for="panel-button">
+                                data-mdl-for="panel-button2">
                                 <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
                                 <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
                                 <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
                                 </li>
                             </ul>
                         </div>
-                        <div class="card-body ">
-
-                            <div class="form-group row">
-                                <label class="col-sm-4">Age</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="age" value="{{employee.age|default:''}}"
-                                       placeholder="Age">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="age"
-                                       placeholder="Age">
-                                 {% endif %}
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Gender</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <select class="col-sm-8 form-control myselect" name="gender"  required>
-                                        <option value="">Select Gender</option>
-                                        <option value="Male" {% if employee.gender == 'Male' %} selected {%endif%}>Male</option>
-                                        <option value="Female" {% if employee.gender == 'Female' %} selected {%endif%}>Female</option>
-                                        <option value="Other" {% if employee.gender == 'Other' %} selected {%endif%}>Other</option>
-                                    </select>
-
-                                {% endfor %}
-                                {% else %}
-                               <select class="col-sm-8 form-control myselect" name="gender"  required>
-                                        <option value="">Select Gender</option>
-                                        <option value="Male" >Male</option>
-                                        <option value="Female" >Female</option>
-                                        <option value="Other" >Other</option>
-                                    </select>
-                                 {% endif %}
-                            </div>
-
+                        <div class="card-body " id="bar-parent1">
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Id Proof Type</label>
@@ -259,17 +313,26 @@
                                  {% endif %}
                             </div>
 
-                             <div class="form-group row">
+                            <div class="form-group row">
                                 <label class="col-sm-4" >Home City</label>
                                 {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="home_city" value="{{employee.home_city|default:''}}"
-                                       placeholder="Home City">
+                                {% for employe in employee %}
+                                    <select class="col-sm-8 form-control myselect" name="home_city" required>
+                                        <option value="">Select Home City</option>
+                                        {% for citie in cities %}
+                                        <option value="{{citie.id}}" {% if employe.home_city == citie.id %} selected {%endif%}>{{citie.city_name}}</option>
+                                        {% endfor %}
+                                    </select>
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="home_city"
-                                       placeholder="Home City">
-                                 {% endif %}
+
+                                     <select class="col-sm-8 form-control myselect" name="home_city" required>
+                                        <option value="">Select Home City</option>
+                                        {% for citie in cities %}
+                                        <option value="{{citie.id}}">{{citie.city_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
                             </div>
 
                              <div class="form-group row">
@@ -285,121 +348,58 @@
                                  {% endif %}
                             </div>
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Assistant ID</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="assistant_id" value="{{employee.assistant_id|default:''}}"
-                                       placeholder="Assistant ID">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="assistant_id"
-                                       placeholder="Assistant ID">
-                                 {% endif %}
-                            </div>
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Date Of Birth</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="date_of_birth" value="{{employee.date_of_birth|default:''}}"
-                                       placeholder="Assistant ID">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="date_of_birth"
-                                       placeholder="Assistant ID">
-                                 {% endif %}
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
-                        <div class="card-head">
-                            <header>Access Details</header>
-                            <button id="panel-button2"
-                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                                    data-upgraded=",MaterialButton">
-                                <i class="material-icons">more_vert</i>
-                            </button>
-                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                                data-mdl-for="panel-button2">
-                                <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body " id="bar-parent1">
-
-                            <div class="form-group row">
+                           <div class="form-group row">
                                 <label class="col-sm-4 control-label">is Active</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_active">
+
+                                    <select class="form-control col-sm-8" name="is_active">
 
                                         {% if employee %}
                                         {% for employee in employee %}
-                                            <option value="0" {% if employee.is_active == 0 %} selected {%endif%}>No</option>
+                                            <option value="1" {% if employee.is_active == 1 %} selected {%endif%}>Yes</option>
+                                        {% endfor %}
+                                        {% else %}
+                                            <option value="1">Yes</option>
+                                        {% endif %}
+                                        <option value="0">No</option>
+                                    </select>
+
+                            </div>
+
+                             <div class="form-group row">
+                                <label class="col-sm-4 control-label">is CXO</label>
+
+                                    <select class="form-control col-sm-8" name="is_cxo" id="is_cxo">
+
+                                       {% if employee %}
+                                        {% for employee in employee %}
+                                            <option value="0" {% if employee.is_cxo == 0 %} selected {%endif%}>No</option>
+                                            <option value="1" {% if employee.is_cxo == 1 %} selected {%endif%}>Yes</option>
                                         {% endfor %}
                                         {% else %}
                                             <option value="0">No</option>
+                                            <option value="1">Yes</option>
                                         {% endif %}
-                                        <option value="1">Yes</option>
                                     </select>
-                                </div>
+
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4 control-label">Has Dummy Email</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="has_dummy_email">
-
-                                        {% if employee %}
-                                        {% for employee in employee %}
-                                        <option value="0" {% if employee.has_dummy_email == 0 %} selected {%endif%}>No</option>
-                                        {% endfor %}
-                                        {% else %}
-                                         <option value="0">No</option>
-                                        {% endif %}
-                                        <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 control-label">is CXO</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_cxo">
-
-                                        {% if employee %}
-                                        {% for employee in employee %}
-                                         <option value="0" {% if employee.is_cxo == 0 %} selected {%endif%}>No</option>
-                                         {% endfor %}
-                                        {% else %}
-                                         <option value="0">No</option>
-                                        {% endif %}
-                                         <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                           <div class="form-group row">
-                                <label class="col-sm-4" >Designation</label>
+                            <div class="form-group row" id="row_assistant_id">
+                                <label class="col-sm-4" >Assistant Name</label>
+                                <select name="assistant_id" id="assistant_id" class="form-control col-sm-8 myselect">
+                                    <option value=" " >Select Assistant</option>
                                 {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="designation" value="{{employee.designation|default:''}}"
-                                       placeholder="Designation">
+                                {% for employe in employee %}
+                                {% for employee in employeess %}
+                                        <option value="{{employee.id}}" {% if employe.assistant_id == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
+                                        {% endfor %}
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="designation"
-                                       placeholder="Designation">
+                                {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}</option>
+                                        {% endfor %}
                                  {% endif %}
+                                </select>
                             </div>
 
 
@@ -408,13 +408,16 @@
                             <div class="form-group">
                                 <div class="offset-md-3 col-md-9">
                                     <button type="submit" class="btn btn-info">Submit</button>
-                                    <button type="button" class="btn btn-default">Cancel</button>
+                                    <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                 </div>
                             </div>
 
                         </div>
                     </div>
                 </div>
+
+
+
             </div>
         </form>
     </div>
@@ -430,9 +433,24 @@
 
 
 <script type="text/javascript">
- $(function() {
 
- });
+ var getValue=$('#is_cxo').val();
+    if(getValue == '1'){
+        $("#row_assistant_id").show("slow");
+    }else{
+        $("#row_assistant_id").hide("slow");
+    }
+
+ $("#is_cxo").on('change',function(){
+    var getValue=$(this).val();
+    if(getValue == '1'){
+        $("#row_assistant_id").show("slow");
+    }else{
+        $("#row_assistant_id").hide("slow");
+    }
+  });
+
+
 $("#corporate_id").change(function(){
 
   $('#spoc_id').empty();
@@ -442,19 +460,20 @@ $("#corporate_id").change(function(){
 
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token {{request.session.access_token}}",
+                'Authorization': "Token {{request.session.agent_access_token}}",
                 'usertype': 10
             }
 
         });
 //   For Entity
-var_url = '{{ API_BASE_URL }}'+'billing_entities'
+var_url = '/api/'+'billing_entities'
      $.post(var_url,{ corporate_id: corporate_id },
       function(data)
       {
        //alert(data['Entitys']);
        if(data['Entitys'].length != 0){
         entities = data['Entitys']
+        $('#entity_id').append($("<option value=''>Select Entity</option>"));
          for (var i=0;i<entities.length;i++) {
             $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
          }
@@ -466,13 +485,14 @@ var_url = '{{ API_BASE_URL }}'+'billing_entities'
 //       For SPOC
 
 
-    var_url_spoc = '{{ API_BASE_URL }}'+'spocs'
+    var_url_spoc = '/api/'+'spocs'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
       {
        //alert(data['Spocs']);
        if(data['Spocs'].length != 0){
         spocs = data['Spocs']
+        $('#spoc_id').append($("<option value=''>Select Spoc</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#spoc_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].user_name+"</option>"));
 
@@ -481,6 +501,25 @@ var_url = '{{ API_BASE_URL }}'+'billing_entities'
         alert('No SPOC Available')
        }
        });
+
+
+    var_url_spoc = '/api/'+'employees'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Employees']);
+       if(data['Employees'].length != 0){
+        spocs = data['Employees']
+        $('#assistant_id').append($("<option value=''>Select Employee</option>"));
+         for (var i=0;i<spocs.length;i++) {
+            $('#assistant_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].employee_name+"</option>"));
+
+         }
+       }else{
+        alert('No Employee Available')
+       }
+       });
+
 
 
 });

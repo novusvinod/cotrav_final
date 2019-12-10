@@ -4,10 +4,10 @@
 
 {% if user %}
 <!-- start page content -->
-
+{% include 'cotrav_alert_message.html' %}
 <!-- The Modal -->
-<div class="modal fade model_custom_style" role="dialog" id="add_group_model">
-    <div class="modal-dialog">
+<div class="modal fade model_custom_style" role="dialog" id="add_group_model" >
+    <div class="modal-dialog" style="position: relative; z-index: -1;">
         <div class="modal-content">
 
             <!-- Modal Header -->
@@ -51,28 +51,28 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">From Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="from_date" id="from_date" placeholder="From Date" type="date" required>
+                                <input class="form-control date"  name="from_date" id="from_date" placeholder="From Date" type="text" required>
                             </div>
                     </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">To Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="to_date" id="to_date" placeholder="To Date" type="date" required>
+                                <input class="form-control date" name="to_date" id="to_date" placeholder="To Date" type="text" required>
                             </div>
                     </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Service From Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="service_from" id="service_from" placeholder="Service From Date" type="date" required>
+                                <input class="form-control date" name="service_from" id="service_from" placeholder="Service From Date" type="text" required>
                             </div>
                     </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Service To Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="service_to" id="service_to" placeholder="Service To Date" type="date" required>
+                                <input class="form-control date" name="service_to" id="service_to" placeholder="Service To Date" type="text" required>
                             </div>
                     </div>
 
@@ -96,7 +96,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Assessment Cities Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Assessment Cities ? </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -121,13 +121,11 @@
 <div class="page-content-wrapper">
     <div class="page-content">
 
-
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
-                        <header>ALL CORPORATE GROUP LIST</header>
+                        <header>ALL CORPORATE Assessment Codes LIST</header>
                           <div class="row p-b-20">
                             <div class="col-md-6 col-sm-6 col-6">
                                 <div class="btn-group">
@@ -144,10 +142,9 @@
                     </div>
                     <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
     <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">
-         All Corporate Group Details
+         All Corporate Assessment Codes Details
          </div>
    </div>
                         <div class="table-scrollable table-bordered ">
@@ -207,6 +204,11 @@
 <!-- end page content -->
 <script type="text/javascript">
    $(".myselect").select2();
+
+   var mymod = $('#corporate_id');
+   mymod.select2();
+
+
 </script>
 
 {% else %}
@@ -230,7 +232,10 @@ $(function() {
 
     var modal = $(this);
     modal.find('#code_id_edit').val(id);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+    
     modal.find('#assessment_code').val(assessment_code);
     modal.find('#code_desc').val(code_desc);
     modal.find('#from_date').val(from_date);
@@ -255,5 +260,21 @@ $(function() {
 
 </script>
 
+<script>
+          var date = new Date();
+var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
+
+var optComponent = {
+  format: 'dd-mm-yyyy',
+  container: '#datePicker',
+  orientation: 'bottom center',
+  todayHighlight: true,
+  autoclose: true
+};
+
+
+$( '#datePicker1' ).datepicker( optComponent );
+
+        </script>
 {% endblock %}

@@ -7381,3 +7381,41 @@ margin-left: 33px;
   display: block;
   overflow: scroll;
 }
+
+
+
+.txt-block-sec{
+
+    margin-left: 1px;
+    font-size: 60px;
+    color:#4583ff;
+    font-family: 'Montserrat',Regular;
+    padding-top: 71px;
+}
+
+
+.fullscreen_bg{
+  background-color: white;
+}
+
+
+.footer_txt{
+  position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   padding-bottom: 0px;
+}
+.logo-img{
+    margin-left: -96px;
+    width: 210px;
+}
+.p-txt{
+  color: #191919;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: montserrat;
+}
+.img_1{
+  margin-top: -50px;
+}

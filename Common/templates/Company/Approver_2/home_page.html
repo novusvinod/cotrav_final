@@ -1,140 +1,215 @@
 {% extends 'Company/Approver_2/layout/header.html' %}
 
 {% block content %}
-
-
+{% for Dashboard in dataDashboard %}
 {% if user %}
+
 <!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
 
 
-                  <!-- Taxi live location start -->
-					<div class="row">
-                        <div class="col-md-12">
-                            <div class="card card-box">
+			               		<div class="row state-overview">
+				                  <div class="col-lg-2">
+			                        <div class="info-box bg-b-purple">
+							            <span class="info-box-icon"><i class="material-icons">person</i></span>
+							            <div class="info-box-content">
+							              <span class="info-box-text">Total Active Users</span>
+							              <span class="info-box-number">{{Dashboard.total_active_users}}</span>
+							            </div>
+							          </div>
+								  </div>
+
+									<div class="col-lg-2">
+			                        <div class="info-box bg-b-green">
+							            <span class="info-box-icon"><i class="material-icons">alarm_on</i></span>
+							            <div class="info-box-content">
+							              <span class="info-box-text">Total Bookings Done</span>
+							              <span class="info-box-number">{{Dashboard.total_bookings_count}}</span>
+							            </div>
+							          </div>
+								  </div>
+
+									<div class="col-lg-2">
+			                        <div class="info-box bg-b-black">
+							            <span class="info-box-icon"><i class="material-icons">new_releases</i></span>
+							            <div class="info-box-content">
+							              <span class="info-box-text">Upcoming Trips</span>
+							              <span class="info-box-number">{{Dashboard.uc_total_bookings_count}}</span>
+							            </div>
+							          </div>
+								  </div>
+
+									<div class="col-lg-2">
+			                        <div class="info-box bg-b-yellow">
+							            <span class="info-box-icon"><i class="material-icons">report</i></span>
+							            <div class="info-box-content">
+							              <span class="info-box-text">Bookings- Pending</span>
+							              <span class="info-box-number">{{Dashboard.tom_total_bookings_count}}</span>
+							            </div>
+							          </div>
+								  </div>
+
+									<div class="col-lg-2">
+			                        <div class="info-box bg-b-blue">
+							            <span class="info-box-icon"><i class="material-icons">info</i></span>
+							            <div class="info-box-content">
+							              <span class="info-box-text">Invoice- Pending</span>
+							              <span class="info-box-number">{{Dashboard.pi_total_bookings_count}}</span>
+							            </div>
+							          </div>
+								  </div>
+
+
+									<div class="col-lg-2">
+			                        <div class="info-box bg-b-green">
+							            <span class="info-box-icon"><i class="material-icons">local_atm</i></span>
+							            <div class="info-box-content">
+							              <span class="info-box-text">Total Invoice Amount</span>
+							              <span class="info-box-number">{{Dashboard.total_invoice_amount}}</span>
+							            </div>
+							          </div>
+								  </div>
+
+		                    </div>
+
+
+
+                 <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>Taxi Live Location</header>
+                                    <header>Total Bookings Done</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-										<a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
                                     </div>
                                 </div>
                                 <div class="card-body ">
-                                    <div id="map" class="height-350"></div>
+                                    <div class="row">
+                                         <canvas id="canvasTaxiBookings" height="200"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+
+					   <div class="col-md-4">
+                            <div class="card card-topline-lightblue">
+                                <div class="card-head">
+                                    <header>Invoice Pending</header>
+                                    <div class="tools">
+                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                                    </div>
+                                </div>
+                                <div class="card-body " id="chartjs_pie_parent3">
+                                    <div class="row">
+                                         <canvas id="canvasUCBookings" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+					   <div class="col-md-4">
+                            <div class="card card-topline-lightblue">
+                                <div class="card-head">
+                                    <header>Invoice Amount</header>
+                                    <div class="tools">
+                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                                    </div>
+                                </div>
+                                <div class="card-body " id="chartjs_pie_parent2">
+                                    <div class="row">
+                                         <canvas id="canvasTOMBookings" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                     </div>
-                    <!-- Taxi live location end -->
-
-
-                    <div class="row">
-			               	<div class="col-xl-6 col-md-12">
-			                     <div class="card">
-			                         <div class="card-block">
-			                             <div class="row text-center p-t-10">
-				                            <div class="col-sm-4 col-6">
-				                                <h4 class="margin-0">$ 209 </h4>
-				                                <p class="text-muted"> Today's Income</p>
-				                            </div>
-				                            <div class="col-sm-4 col-6">
-				                                <h4 class="margin-0">$ 837 </h4>
-				                                <p class="text-muted">This Week's Income</p>
-				                            </div>
-				                            <div class="col-sm-4 col-6">
-				                                <h4 class="margin-0">$ 3410 </h4>
-				                                <p class="text-muted">This Month's Income</p>
-				                            </div>
-				                        </div>
-			                             <div id="area_line_chart" style="height: 200px; margin:30px"></div>
-			                         </div>
-			                     </div>
-			                 </div>
-			                 <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-			               		<div class="row state-overview">
-				                  <div class="col-lg-6 col-md-6 col-sm-6 col-12">
-			                        <div class="info-box bg-b-purple">
-							            <span class="info-box-icon push-bottom"><i class="material-icons">group</i></span>
-							            <div class="info-box-content">
-							              <span class="info-box-text">Booked Trips</span>
-							              <span class="info-box-number">450</span>
-							              <div class="progress">
-						                <div class="progress-bar width-60"></div>
-						              </div>
-						              <span class="progress-description">
-					                    60% Increase in 28 Days
-					                  </span>
-							            </div>
-							            <!-- /.info-box-content -->
-							          </div>
-			                    </div>
-			                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-			                        <div class="info-box bg-b-green">
-							            <span class="info-box-icon push-bottom"><i class="material-icons">person</i></span>
-							            <div class="info-box-content">
-							              <span class="info-box-text">Cancelled Trip</span>
-							              <span class="info-box-number">155</span>
-							              <div class="progress">
-							                <div class="progress-bar width-40"></div>
-							              </div>
-							              <span class="progress-description">
-							                    40% Increase in 28 Days
-							                  </span>
-							            </div>
-							            <!-- /.info-box-content -->
-							          </div>
-			                    </div>
-		                    </div>
-		                    <div class="row state-overview">
-			                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-			                        <div class="info-box bg-b-black">
-							            <span class="info-box-icon push-bottom"><i class="material-icons">content_cut</i></span>
-							            <div class="info-box-content">
-							              <span class="info-box-text">New Users</span>
-							              <span class="info-box-number">52</span>
-							              <div class="progress">
-							                <div class="progress-bar width-80"></div>
-							              </div>
-							              <span class="progress-description">
-							                    80% Increase in 28 Days
-							                  </span>
-							            </div>
-							            <!-- /.info-box-content -->
-							          </div>
-			                    	</div>
-				                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-				                        <div class="info-box bg-b-danger">
-							            <span class="info-box-icon push-bottom"><i class="material-icons">monetization_on</i></span>
-							            <div class="info-box-content">
-							              <span class="info-box-text">Total Earning</span>
-							              <span class="info-box-number">13,921</span><span>$</span>
-							              <div class="progress">
-							                <div class="progress-bar width-60"></div>
-							              </div>
-							              <span class="progress-description">
-							                    60% Increase in 28 Days
-							                  </span>
-							            </div>
-							            <!-- /.info-box-content -->
-							          </div>
-									</div>
-								</div>
-			                 </div>
-			               </div>
-
-
-
-
-                </div>
-            </div>
-            <!-- end page content -->
+    <!--Chart JS-->
+{% load static %}
+    <script src="{% static 'assets/plugins/chart-js/Chart.bundle.js' %}" ></script>
+    <script src="{% static 'assets/plugins/chart-js/utils.js' %}" ></script>
 
 {% else %}
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
+<script>
+
+	/*Taxi Bookings*/
+	  var ctx = document.getElementById("canvasTaxiBookings");
+	  var data = {
+		labels: ["Taxi","Bus","Train","Hotel","Flight"],
+		datasets: [{
+		  data: [{{Dashboard.taxi_bookings_count}},{{Dashboard.bus_bookings_count}},{{Dashboard.train_bookings_count}},{{Dashboard.hotel_bookings_count}},{{Dashboard.flight_bookings_count}}],
+		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
+		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
+
+		}]
+	  };
+	  var canvasUCBookings = new Chart(ctx, {
+		type: 'doughnut',
+		tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+		data: data
+	  });
+
+
+
+	/*Upcoming Bookings*/
+	  var ctx = document.getElementById("canvasUCBookings");
+	  var data = {
+		labels: ["Taxi","Bus","Train","Hotel","Flight"],
+		datasets: [{
+		  data: [{{Dashboard.pi_taxi_bookings_count}},{{Dashboard.pi_bus_bookings_count}},{{Dashboard.pi_train_bookings_count}},{{Dashboard.pi_hotel_bookings_count}},{{Dashboard.pi_flight_bookings_count}}],
+		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
+		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
+
+		}]
+	  };
+	  var canvasUCBookings = new Chart(ctx, {
+		type: 'doughnut',
+		tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+		data: data
+	  });
+
+
+
+
+
+	  	   /*Today/Tomorrow Bookings*/
+	  var ctx = document.getElementById("canvasTOMBookings");
+	  var data = {
+		labels: ["Taxi","Bus","Train","Hotel","Flight"],
+		datasets: [{
+		  data: [{{Dashboard.taxi_invoice_amount}},{{Dashboard.bus_invoice_amount}},{{Dashboard.train_invoice_amount}},{{Dashboard.hotel_invoice_amount}},{{Dashboard.flight_invoice_amount}}],
+		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
+		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
+
+		}]
+	  };
+	  var canvasTOMBookings = new Chart(ctx, {
+		type: 'doughnut',
+		tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+		data: data
+	  });
+
+</script>
+
+
+
+
+
+{% endfor %}
 {% endblock %}
 
 

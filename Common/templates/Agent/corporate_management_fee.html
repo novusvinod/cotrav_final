@@ -19,7 +19,9 @@
             <form action="/agents/company-management-fees" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="fees_id" id="code_id_edit">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-                <input type="text" name="delete_id" id="delete_id">
+                <input type="hidden" name="delete_id" id="delete_id">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
 
                 <div class="form-group row">
                         <label class="col-sm-5 control-label">Company Name</label>
@@ -58,8 +60,9 @@
                        <label class="col-sm-5 control-label">Service Fees Type</label>
                             <div class="col-sm-7">
                                 <select class="form-control myselect" name="service_fees_type" id="service_fees_type" style="width:100%;" required>
-                                    <option value="0">Fix</option>
-                                    <option value="1">Percentage</option>
+                                    <option value="">Select Service Fees Type</option>
+                                    <option value="1">Fix</option>
+                                    <option value="2">Percentage</option>
                                 </select>
                             </div>
                     </div>
@@ -75,7 +78,7 @@
         </div>
     </div>
 </div>
-
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
         <div class="row">
@@ -102,7 +105,6 @@
                     </div>
                     <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
  <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">Corporate Management Fees</div>
  </div>
@@ -157,6 +159,17 @@
 <!-- end page content -->
 <script type="text/javascript">
    $(".myselect").select2();
+
+   var mymod = $('#corporate_id');
+   mymod.select2();
+
+   var mymod1 = $('#service_fees_type_id');
+   mymod1.select2();
+
+   var mymod2 = $('#service_fees_type');
+   mymod2.select2();
+
+
 </script>
 
 {% else %}
@@ -178,7 +191,14 @@ $(function() {
 
     var modal = $(this);
     modal.find('#code_id_edit').val(id);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+    mymod1.val(service_fees_type_id);
+    mymod1.trigger('change.select2');
+    mymod2.val(service_fees_type);
+    mymod2.trigger('change.select2');
+
     modal.find('#service_fees_type_id').val(service_fees_type_id);
     modal.find('#service_fees_type_value').val(service_fees_type_value);
     modal.find('#service_fees_type').val(service_fees_type);

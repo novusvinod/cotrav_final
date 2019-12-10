@@ -1,5 +1,5 @@
 <body class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md page-full-width header-white white-sidebar-color logo-white">
-{% load staticfiles %}
+{% load static %}
 <div class="page-wrapper">
         <!-- start header -->
         <div class="page-header navbar navbar-fixed-top">
@@ -41,7 +41,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default animated jello">
                                 <li>
-                                    <a href="user_profile.html">
+                                    <a href="/agents/user_profile">
                                         <i class="fa fa-user-o"></i> Profile </a>
                                 </li>
 
@@ -92,7 +92,7 @@
                         </li>
 
 						 <li class="mega-menu-dropdown ">
-                            <a href="#" class="dropdown-toggle"> <i class="material-icons">dashboard</i>  Companies
+                            <a href="#" class="dropdown-toggle"> <i class="material-icons">business</i>  Companies
  								<i class="fa fa-angle-down"></i>
                                 <span class="arrow "></span>
                             </a>
@@ -102,22 +102,36 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
+
+<!--														<li><a href="/agents/companies"><i class="fa fa-industry" aria-hidden="true"></i> View Companies</a></li>-->
+<!--													    <li><a href="/agents/add-company"><i class="fa fa-plus" aria-hidden="true"></i> Add Company</a></li>-->
+<!--														<li><a href="/agents/rates/0"><i class="fa fa-inr" aria-hidden="true"></i> Company Rates</a></li>-->
+<!--														<li><a href="/agents/admins/0"><i class="fa fa-user-secret" aria-hidden="true"></i> Company Admins</a></li>-->
+<!--														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> View Company Billing Enitity</a></li>-->
+<!--														<li><a href="/agents/groups/0"><i class="fa fa-group"></i> View All Groups</a></li>-->
+<!--														<li><a href="/agents/subgroups/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Subgroups</a></li>-->
+<!--														<li><a href="/agents/spocs/0"><i class="fa fa-user" aria-hidden="true"></i> View All SPOCs</a></li>-->
+<!--														<li><a href="/agents/employees/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Employees</a></li>-->
+<!--														<li><a href="/agents/assessment_cities/0"><i class="fa fa-simplybuilt" aria-hidden="true"></i> Assessment Cities</a></li>-->
+<!--														<li><a href="/agents/assessment_codes/0"><i class="fa fa-code" aria-hidden="true"></i> Assessment Codes</a></li>-->
+<!--														<li><a href="/agents/company-operation-management"><i class="fa fa-gear" aria-hidden="true"></i> Operation Management</a></li>-->
+<!--														<li><a href="/agents/company-relationship-manager"><i class="fa fa fa-handshake-o" aria-hidden="true"></i> Relationship Manager</a></li>-->
+<!--														<li><a href="/agents/agents"><i class="fa fa fa-user-circle-o" aria-hidden="true"></i> Corporate Agents</a></li>-->
 
 														<li><a href="/agents/companies"><i class="fa fa-industry" aria-hidden="true"></i> View Companies</a></li>
-													    <li><a href="/agents/add-company"><i class="fa fa-plus" aria-hidden="true"></i> Add Company</a></li>
+														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> Billing Entities</a></li>
 														<li><a href="/agents/rates/0"><i class="fa fa-inr" aria-hidden="true"></i> Company Rates</a></li>
+														<li class="dropdown-divider"></li>
+
+														<li><a href="/agents/groups/0"><i class="fa fa-group"></i> All Groups</a></li>
+														<li><a href="/agents/subgroups/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> All Subgroups</a></li>
+														<li class="dropdown-divider"></li>
 														<li><a href="/agents/admins/0"><i class="fa fa-user-secret" aria-hidden="true"></i> Company Admins</a></li>
-														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> View Company Billing Enitity</a></li>
-														<li><a href="/agents/groups/0"><i class="fa fa-group"></i> View All Groups</a></li>
-														<li><a href="/agents/subgroups/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Subgroups</a></li>
-														<li><a href="/agents/spocs/0"><i class="fa fa-user" aria-hidden="true"></i> View All SPOCs</a></li>
-														<li><a href="/agents/employees/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Employees</a></li>
+													   	<li><a href="/agents/spocs/0"><i class="fa fa-user" aria-hidden="true"></i> Company SPOCs</a></li>
+														<li><a href="/agents/employees/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> All Employees</a></li>
+														<li class="dropdown-divider"></li>
 														<li><a href="/agents/assessment_cities/0"><i class="fa fa-simplybuilt" aria-hidden="true"></i> Assessment Cities</a></li>
 														<li><a href="/agents/assessment_codes/0"><i class="fa fa-code" aria-hidden="true"></i> Assessment Codes</a></li>
-														<li><a href="/agents/company-operation-management"><i class="fa fa-gear" aria-hidden="true"></i> Operation Management</a></li>
-														<li><a href="/agents/company-relationship-manager"><i class="fa fa fa-handshake-o" aria-hidden="true"></i> Relationship Manager</a></li>
-														<li><a href="/agents/agents"><i class="fa fa fa-user-circle-o" aria-hidden="true"></i> Corporate Agents</a></li>
-
 
 													</ul>
 												</div>
@@ -128,90 +142,30 @@
                         </li>
 
 						 <li class="mega-menu-dropdown ">
-                            <a href="#" class="dropdown-toggle"> <i class="material-icons">local_taxi</i> Taxi
- 								<i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+                            <a href="/agents/taxi-bookings/1" class="dropdown-toggle"> <i class="material-icons">local_taxi</i> Taxi
+
                             </a>
-								<ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/agents/add-taxi-booking/0"><i class="material-icons">add_circle</i></i> Add Taxi Bookings</a></li>
-														<li><a href="/agents/taxi-bookings/1"><i class="fa fa-hand-o-up" aria-hidden="true"></i> Today's Booking</a></li>
-														<li><a href="/agents/taxi-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i> Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/taxi-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i> Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/taxi-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i> Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/taxi-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i> Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/taxi-bookings/6"><i class="fa fa-window-close-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-														<li><a href="/agents/taxi-bookings/7"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Operator Issues</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
+
                         </li>
 
 
 						 <li class="mega-menu-dropdown ">
-                            <a href="#" class="dropdown-toggle"> <i class="material-icons">directions_bus</i> Bus
- 								<i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
-                            </a>
-								<ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/agents/add-bus-booking/0"><i class="material-icons">add_circle</i>Add Bus Bookings</a></li>
-														<li><a href="/agents/bus-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/bus-bookings/2"><i class="fa fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/bus-bookings/3"><i class="fa fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/bus-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/bus-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/bus-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i>Cancelled/Rejected Bookings</a></li>
+                            <a href="/agents/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i> Bus
 
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
+                            </a>
+
                         </li>
 
 
 						<li class="mega-menu-dropdown ">
-                            <a href="#" class="dropdown-toggle"> <i class="material-icons">directions_subway</i> Train
- 								<i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+                            <a href="/agents/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_subway</i> Train
+
                             </a>
-								<ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/agents/add-train-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Train Bookings</a></li>
-														<li><a href="/agents/train-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/train-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i> Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/train-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i> Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/train-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i> Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/train-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i> Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/train-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
+
                         </li>
 
 
-
-                       <li class="mega-menu-dropdown ">
+						<li class="mega-menu-dropdown ">
                             <a href="#" class="dropdown-toggle"> <i class="material-icons">hotel</i> Hotel
  								<i class="fa fa-angle-down"></i>
                                 <span class="arrow "></span>
@@ -222,13 +176,10 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
-														<li><a href="/agents/add-hotel-booking/0"><i class="fa fa-plus" aria-hidden="true"></i> Add Hotel Bookings</a></li>
-														<li><a href="/agents/hotel-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/hotel-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i> Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/hotel-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i> Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/hotel-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i> Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/hotel-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i> Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/hotel-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
+														<li><a href="/agents/hotel-bookings/1"><i class="fa fa-list" aria-hidden="true"></i> All Hotel Booking</a></li>
+														<li><a href="/agents/hotels"><i class="fa fa-hotel" aria-hidden="true"></i> All Hotels</a></li>
+														<li><a href="/agents/hotel_booking_portals"><i class="fa fa-drivers-license-o " aria-hidden="true"></i> All Hotels Booking Portals</a></li>
+
 													</ul>
 												</div>
 											</div>
@@ -239,30 +190,26 @@
 
 
                         <li class="mega-menu-dropdown ">
-                            <a href="#" class="dropdown-toggle"> <i class="material-icons">flight</i> Flight
- 								<i class="fa fa-angle-down"></i>
-                                <span class="arrow "></span>
+                            <a href="/agents/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight</i> Flight
+
                             </a>
-								<ul class="dropdown-menu" style="min-width: 200px;">
-									<li>
-										<div class="mega-menu-content">
-											<div class="row">
-												<div class="col-md-12">
-													<ul class="mega-menu-submenu">
-														<li><a href="/agents/add-flight-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Flight Bookings</a></li>
-														<li><a href="/agents/flight-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/flight-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/flight-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/flight-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/flight-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/flight-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</li>
-								</ul>
+
                         </li>
+
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/lead/" class="dropdown-toggle"> <i class="material-icons">person_add</i> Leads
+
+                        </a>
+
+                        </li>
+
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/agents" class="dropdown-toggle"> <i class="material-icons">supervisor_account</i>  Cotrav Agents
+
+                            </a>
+
+                        </li>
+
 
 <!--                         <li class="mega-menu-dropdown ">-->
 <!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">local_dining</i> Meal-->
@@ -402,94 +349,39 @@
 	                        </li>
 
 	                           <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/agents/taxi-bookings/1" class="nav-link nav-toggle">
 	                           <i class="material-icons">local_taxi</i> Taxi
-
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
 
-														<li><a href="/agents/add-taxi-booking/0"><i class="material-icons">add_circle</i></i> Add Taxi Bookings</a></li>
-														<li><a href="/agents/taxi-bookings/1"><i class="fa fa-hand-o-up" aria-hidden="true"></i> Today's Booking</a></li>
-														<li><a href="/agents/taxi-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i> Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/taxi-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i> Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/taxi-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i> Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/taxi-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i> Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/taxi-bookings/6"><i class="fa fa-window-close-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-														<li><a href="/agents/taxi-bookings/7"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Operator Issues</a></li>
-	                            </ul>
 	                        </li>
 
 	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/agents/bus-bookings/1" class="nav-link nav-toggle">
 	                            <i class="material-icons">directions_bus</i> Bus
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
 
-													<li><a href="/agents/add-bus-booking/0"><i class="material-icons">add_circle</i>Add Bus Bookings</a></li>
-														<li><a href="/agents/bus-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/bus-bookings/2"><i class="fa fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/bus-bookings/3"><i class="fa fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/bus-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/bus-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/bus-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i>Cancelled/Rejected Bookings</a></li>
-
-	                            </ul>
 	                        </li>
 
 	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/agents/train-bookings/1" class="nav-link nav-toggle">
 	                        <i class="material-icons">directions_subway</i> Train
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
 
-													<li><a href="/agents/add-train-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Train Bookings</a></li>
-														<li><a href="/agents/train-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/train-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i> Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/train-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i> Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/train-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i> Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/train-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i> Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/train-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-
-
-	                            </ul>
 	                        </li>
 
 
 	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/agents/hotel-bookings/1" class="nav-link nav-toggle">
 	                           <i class="material-icons">hotel</i> Hotel
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
-	                             <li><a href="/agents/add-hotel-booking/0"><i class="fa fa-plus" aria-hidden="true"></i> Add Hotel Bookings</a></li>
-														<li><a href="/agents/hotel-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/hotel-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i> Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/hotel-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i> Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/hotel-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i> Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/hotel-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i> Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/hotel-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-	                            </ul>
+
 	                        </li>
 
 	                            <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
+	                        <a href="/agents/flight-bookings/1" class="nav-link nav-toggle">
 	                        <i class="material-icons">flight</i> Flight
-                                	<span class="arrow"></span>
 	                            </a>
-	                            <ul class="sub-menu">
 
-														<li><a href="/agents/add-flight-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Flight Bookings</a></li>
-														<li><a href="/agents/flight-bookings/1"><i class="fa fa-fast-forward" aria-hidden="true"></i>Today's Booking</a></li>
-														<li><a href="/agents/flight-bookings/2"><i class="fa fa-fast-forward" aria-hidden="true"></i>Active Bookings(Unassigned)</a></li>
-														<li><a href="/agents/flight-bookings/3"><i class="fa fa-forward" aria-hidden="true"></i>Active Bookings(Assigned)</a></li>
-														<li><a href="/agents/flight-bookings/4"><i class="fa fa-fast-backward" aria-hidden="true"></i>Archived Bookings(Unassigned)</a></li>
-														<li><a href="/agents/flight-bookings/5"><i class="fa fa-backward" aria-hidden="true"></i>Archived Bookings(Assigned)</a></li>
-														<li><a href="/agents/flight-bookings/6"><i class="fa fa fa-times-rectangle-o " aria-hidden="true"></i> Cancelled/Rejected Bookings</a></li>
-
-	                            </ul>
 	                        </li>
 
 

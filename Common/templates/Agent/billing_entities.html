@@ -21,6 +21,7 @@
                 <input type="hidden" name="entity_id" id="entity_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="delete_id" id="delete_id">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <!-- Modal footer -->
                 <div class="modal-body">
 
@@ -129,16 +130,7 @@
 </div>
 
 
-
-{% if message %}
-
-<div class="alert label-success alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
-    {{message}}
-</div>
-
-{% endif %}
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
@@ -164,7 +156,7 @@
                     </div>
                     <div class="card-body ">
 
-                        {% include 'cotrav_alert_message.html' %}
+
 
 
                         <div class="table-scrollable table-bordered">
@@ -239,6 +231,23 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
+
+<script>
+
+        $(".myselect").select2();
+
+        var mymod = $('#corporate_id');
+
+        mymod.select2();
+
+        var billingcitySelect = $('#billing_city_id');
+
+        billingcitySelect.select2();
+
+</script>
+
+
+
 <script type="text/javascript">
 $(function() {
   $('#model_add_new_entities').on('show.bs.modal', function (event) {
@@ -265,8 +274,14 @@ $(function() {
     if(delete_id == 1){
     modal.find('#delete_id').val(delete_id);
     modal.find('#entity_id').val(id);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
-    modal.find('#billing_city_id').val(billing_city).trigger('change');
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+
+    billingcitySelect.val(billing_city);
+    billingcitySelect.trigger('change.select2');
+
+
     modal.find('#entity_name').val(entity_name);
     modal.find('#corporate_name').val(entity_name);
     modal.find('#contact_person_name').val(contact_person_name);
@@ -298,7 +313,14 @@ $(function() {
     }else{
 
     modal.find('#entity_id').val(id);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+
+    billingcitySelect.val(billing_city);
+    billingcitySelect.trigger('change.select2');
+
+
     modal.find('#billing_city_id').val(billing_city).trigger('change');
     modal.find('#entity_name').val(entity_name);
     modal.find('#corporate_name').val(entity_name);

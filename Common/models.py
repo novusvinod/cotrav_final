@@ -1,4 +1,11 @@
 from django.db import models
+from datetime import timedelta, timezone
+import datetime
+
+
+def one_month_from_today():
+    d1 = datetime.date.today()
+    return d1 + timedelta(days=30)
 
 
 class Corporate_Login(models.Model):
@@ -39,6 +46,7 @@ class Corporate_Login(models.Model):
 
 class Corporate_Agent(models.Model):
     user_name = models.CharField(max_length=200)
+    emp_id = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
@@ -275,7 +283,7 @@ class Corporate_Approves_2_Login_Access_Token(models.Model):
 class Corporate_Agent_Login_Access_Token(models.Model):
     agent_id = models.CharField(default=True, max_length=10)
     access_token = models.CharField(default=True,max_length=200)
-    expiry_date = models.DateTimeField(max_length=100)
+    expiry_date = models.DateTimeField(default=one_month_from_today)
     user_agent = models.CharField(default=True, max_length=200)
 
     class Meta:

@@ -2,13 +2,13 @@
 <html lang="en">
 <!-- BEGIN HEAD -->
 <head>
-    {% load staticfiles %}
+    {% load static %}
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta name="description" content="Responsive Admin Template" />
     <meta name="author" content="SmartUniversity" />
-    <title>CoTrav - Agent Home Page</title>
+    <title>CoTrav - Agent</title>
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet" type="text/css" />
 	<!-- icons -->
@@ -75,13 +75,15 @@
 </body>
 
 <script type="text/javascript">
-   $(".myselect").select2();
+   $(".myselect").select2({
+    width: 'resolve'
+    });
 </script>
 
 
     <!-- start footer -->
     <div class="page-footer">
-        <div class="page-footer-inner"> 2018 &copy; CoTrav By
+        <div class="page-footer-inner"> 2019
             <a href="https://taxivaxi.com/" target="_top" class="makerCss">CoTrav</a>
         </div>
         <div class="scroll-to-top">
@@ -89,7 +91,7 @@
         </div>
     </div>
     <!-- end footer -->
-    {% load staticfiles %}
+    {% load static %}
     <!-- start js include path -->
     <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}" ></script>
     <script src="{% static 'assets/plugins/popper/popper.min.js' %}" ></script>
@@ -127,7 +129,7 @@
  	<script src="{% static 'assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}" ></script>
      <script src="{% static 'assets/js/pages/table/table_data.js' %}" ></script>
      
-<!-- animation -->
+    <!-- animation -->
 	<script src="{% static 'assets/js/pages/ui/animations.js' %}" ></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/moment-with-locales.min.js' %}"></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>

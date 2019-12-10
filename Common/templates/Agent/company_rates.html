@@ -4,6 +4,44 @@
 
 
 {% if user %}
+
+<style>
+
+.
+.autocomplete-active:hover{
+background:white;
+}
+#myInputautocomplete-list{
+z-index:100;
+display:block;
+cursor: pointer;
+list-style:
+}
+    .autocomplete-items{
+     border: solid 3px lightgray;
+    overflow: auto;
+    padding:8px;
+    line-height:30px;
+     border-collapse: collapse;
+  border-spacing: 0;
+ z-index:99
+ display:block;
+ border-radius:6px;
+ background-color:#dee2e6;
+ font-size:13px;
+  color: #041261;
+ }
+ .autocomplete-items div:hover,
+.autocomplete-active {
+  color: #041261;
+  background-color:#9ba9f7;
+
+
+}
+
+
+
+</style>
 <!-- The Modal -->
 <div class="modal fade model_custom_style" id="model_add_new_group" role="dialog">
     <div class="modal-dialog">
@@ -11,7 +49,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title-status" id="delete_label">Add New Admin Form</h4>
+                <h4 class="modal-title-status" id="delete_label">Add New Company Rate Form</h4>
                 <button class="close" data-dismiss="modal" type="button">&times;</button>
             </div>
 
@@ -20,6 +58,7 @@
                 <input id="rate_id" name="rate_id" type="hidden">
                 <input name="user_id" type="hidden" value="{{user.id}}">
                 <input id="delete_id" name="delete_id" type="hidden">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <!-- Modal footer -->
                 <div class="modal-body">
 
@@ -38,14 +77,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" id="package_name1">
-                        <label class="col-sm-5 control-label">Package Name</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="package_name" name="package_name" placeholder="Package Name"
-                                   type="text" required>
-                        </div>
-                    </div>
-
                      <div class="form-group row" id="city_id1">
                         <label class="col-sm-5 control-label">City Name</label>
                         <div class="col-sm-7">
@@ -58,8 +89,7 @@
                         </div>
                     </div>
 
-
-                    <div class="form-group row" id="taxi_type1">
+                      <div class="form-group row" id="taxi_type1">
                         <label class="col-sm-5 control-label">Taxi Type</label>
                         <div class="col-sm-7">
                             <select class="form-control myselect" name="taxi_type" id="taxi_type" style="width:100%;" required>
@@ -71,52 +101,33 @@
                         </div>
                     </div>
 
+
                     <div class="form-group row" id="tour_type1">
                         <label class="col-sm-5 control-label">Tour Type</label>
                         <div class="col-sm-7">
                             <select class="form-control myselect" name="tour_type" id="tour_type" style="width:100%;" required>
                                 <option value="">Select Tour Type</option>
-                                <option value="1">Radio</option>
-                                 <option value="2">Local</option>
-                                 <option value="3">Outstation</option>
+                                <option value="2">Local</option>
+                                <option value="3">Outstation</option>
                             </select>
                         </div>
                     </div>
 
+                    <div class="form-group row" id="package_name1">
+                        <label class="col-sm-5 control-label">Package Name</label>
+                        <div class="col-sm-7" id="package_select">
 
-                    <div class="form-group row" id="kms1">
-                        <label class="col-sm-5 control-label">KMS</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="kms" name="kms" placeholder="kms" required
-                                   type="text">
+
+                             <input id="myInput"  class="form-control" type="text" name="package_name" value="" autocomplete="off" placeholder="Package Name">
+
                         </div>
+
+
                     </div>
 
-                     <div class="form-group row" id="hours1">
-                        <label class="col-sm-5 control-label">Hours</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="hours" name="hours" placeholder="Hours" required
-                                   type="text">
-                        </div>
-                    </div>
+                    
 
-                     <div class="form-group row" id="km_rate1">
-                        <label class="col-sm-5 control-label">Km Rate</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="km_rate" name="km_rate" placeholder="Km Rate" required
-                                   type="text">
-                        </div>
-                    </div>
-
-                    <div class="form-group row" id="hour_rate1">
-                        <label class="col-sm-5 control-label">Hours Rate</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="hour_rate" name="hour_rate" placeholder="Hours Rate" required
-                                   type="text">
-                        </div>
-                    </div>
-
-                     <div class="form-group row" id="base_rate1">
+                    <div class="form-group row" id="base_rate1">
                         <label class="col-sm-5 control-label">Base Rate</label>
                         <div class="col-sm-7">
                             <input class="form-control" id="base_rate" name="base_rate" placeholder="Base Rate" required
@@ -124,8 +135,45 @@
                         </div>
                     </div>
 
+                     <div class="form-group row" id="hours1">
+                        <label class="col-sm-5 control-label">Hours Included</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="hours" name="hours" placeholder="Hours" required
+                                   type="text">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row" id="kms1">
+                        <label class="col-sm-5 control-label">Kms Included</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="kms" name="kms" placeholder="kms" required
+                                   type="text">
+                        </div>
+                    </div>
+
+
+
+                     <div class="form-group row" id="km_rate1">
+                        <label class="col-sm-5 control-label">Per Km Rate</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="km_rate" name="km_rate" placeholder="Km Rate" required
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="hour_rate1">
+                        <label class="col-sm-5 control-label">Per Hour Rate</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="hour_rate" name="hour_rate" placeholder="Hours Rate" required
+                                   type="text">
+                        </div>
+                    </div>
+
+
+
                      <div class="form-group row" id="night_rate1">
-                        <label class="col-sm-5 control-label">Night Rate</label>
+                        <label class="col-sm-5 control-label">Night/Driver Charge</label>
                         <div class="col-sm-7">
                             <input class="form-control" id="night_rate" name="night_rate" placeholder="Night Rate" required
                                    type="text">
@@ -144,6 +192,8 @@
         </div>
     </div>
 </div>
+
+{% include 'cotrav_alert_message.html' %}
 
 <!-- start page content -->
             <div class="page-content-wrapper">
@@ -170,7 +220,7 @@
                                 </div>
                                 <div class="card-body ">
 
-                            {% include 'cotrav_alert_message.html' %}
+                            
          <div class="text-center">
              <div style="font-size:14px; font-weight:bold;">
                  All Companies Rates
@@ -181,7 +231,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Operator Name</th>
+                                                <th>Company Name</th>
                                                 <th>Package Name</th>
                                                 <th>City</th>
                                                 <th>Taxi Type</th>
@@ -204,10 +254,9 @@
                                                 <td>{{ corporate_rate.city_name|default:'' }}</td>
                                                 <td>{{ corporate_rate.taxi_type|default:'' }}</td>
 
-                                                {% if corporate_rate.tour_type == 1 %}
+
+                                                {% if corporate_rate.tour_type == 2 %}
                                                 <td>Local</td>
-                                                {% elif corporate_rate.tour_type == 2 %}
-                                                <td>Radio</td>
                                                 {% else %}
                                                 <td>Outstation</td>
                                                 {% endif %}
@@ -269,12 +318,111 @@
 {% endif %}
 
 <script type="text/javascript">
+
+    var data = [
+            {% for package in taxi_packages %}
+                {
+                    id: '{{package.package_name}}',
+                    text: '{{package.package_name}}',
+                    kms: '{{package.kms}}',
+                    hours: '{{package.hours}}',
+                    
+                },
+            
+            {% endfor %}    
+                
+            ];
+            
+                $("#taxi_package").select2(
+                    {
+                        data: data
+                    }
+                )  
+                
+</script>
+
+<script>
+
+    var eventSelect = $("#taxi_package");
+
+    var cityidSelect = $("#city_id");
+
+    var taxitypeSelect = $("#taxi_type");
+
+    var tourtypeSelect = $("#tour_type");
+
+    var corporateSelect = $('#corporate_name');
+
+    eventSelect.select2();
+
+    cityidSelect.select2();
+
+    taxitypeSelect.select2();
+
+    tourtypeSelect.select2();
+
+    corporateSelect.select2();
+    
+
+    eventSelect.on("change", function (e) { 
+
+        var package_id = $("#taxi_package").val();
+       
+        var kms = data.find(x => x.id == package_id).kms;
+
+        var hours = data.find(x => x.id == package_id).hours;
+      
+        var modal = $('#model_add_new_group');
+
+        modal.find('#kms').val(kms);
+        modal.find('#hours').val(hours);
+
+
+     });
+
+
+     $('#model_add_new_group').on('hidden.bs.modal', function() {
+        eventSelect.select2('destroy');
+        cityidSelect.select2('destroy');
+        taxitypeSelect.select2('destroy');
+        tourtypeSelect.select2('destroy');
+
+      })
+ 
+</script>
+
+
+
+<script>
+
 $(function() {
+
+  //  $('select').prop('disabled', true);
+
+    $('#package_name').hide();
+
+$("#add_new_package").click(function () {
+    $('#package_name').toggle();
+    $('#taxi_package').toggle();
+
+});
+
+
+function hidePackageSelect(){
+
+    $('#taxi_package').prop('disabled', true);
+
+}
+
+
+
   $('#model_add_new_group').on('show.bs.modal', function (event) {
+
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('id'); // Extract info from data-* attributes
     var corporate_name = button.data('corporate_name');
     var package_name = button.data('package_name');
+    var package_id = button.data('id');
     var city_name = button.data('city_name');
     var taxi_type = button.data('taxi_type');
     var tour_type = button.data('tour_type');
@@ -293,11 +441,22 @@ $(function() {
 
     modal.find('#delete_id').val(1);
     modal.find('#rate_id').val(id);
-    modal.find('#corporate_name').val(corporate_name).trigger('change');
-    modal.find('#package_name').val(package_name);
-    modal.find('#city_id').val(city_name).trigger('change');
-    modal.find('#taxi_type').val(taxi_type).trigger('change');
-    modal.find('#tour_type').val(tour_type).trigger('change');
+    modal.find('#myInput').val(package_name);
+
+    corporateSelect.val(corporate_name);
+    corporateSelect.trigger('change.select2');
+
+    cityidSelect.val(city_name);
+    cityidSelect.trigger('change.select2');
+
+
+    taxitypeSelect.val(taxi_type);
+    taxitypeSelect.trigger('change.select2');
+
+    tourtypeSelect.val(tour_type);
+    tourtypeSelect.trigger('change.select2');
+
+
     modal.find('#kms').val(kms);
     modal.find('#hours').val(hours);
     modal.find('#km_rate').val(km_rate);
@@ -305,7 +464,7 @@ $(function() {
     modal.find('#base_rate').val(base_rate);
     modal.find('#night_rate').val(night_rate);
 
-    $('#delete_label').text("Do You Want to Delete This Record");
+    $('#delete_label').text("Do You Want to Delete Company Rate");
     $('#delete_btn').html("Yes");
 
     $('#rate_id').hide();
@@ -324,11 +483,21 @@ $(function() {
     }else{
 
     modal.find('#rate_id').val(id);
-    modal.find('#corporate_name').val(corporate_name).trigger('change');
-    modal.find('#package_name').val(package_name);
-    modal.find('#city_id').val(city_name).trigger('change');
-    modal.find('#taxi_type').val(taxi_type).trigger('change');
-    modal.find('#tour_type').val(tour_type).trigger('change');
+
+    corporateSelect.val(corporate_name);
+    corporateSelect.trigger('change.select2');
+
+    cityidSelect.val(city_name);
+    cityidSelect.trigger('change.select2');
+
+
+    taxitypeSelect.val(taxi_type);
+    taxitypeSelect.trigger('change.select2');
+
+    tourtypeSelect.val(tour_type);
+    tourtypeSelect.trigger('change.select2');
+
+    modal.find('#myInput').val(package_name);
     modal.find('#kms').val(kms);
     modal.find('#hours').val(hours);
     modal.find('#km_rate').val(km_rate);
@@ -339,7 +508,7 @@ $(function() {
 
     modal.find('#delete_id').val('');
 
-    $('#delete_label').text("Add New Admin Form");
+    $('#delete_label').text("Company Rate Form");
     $('#delete_btn').html("Save");
 
     $('#group_auth_id1').show();
@@ -362,6 +531,117 @@ $(function() {
 });
 
 </script>
+
+
+<script>
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
+
+/*An array containing all the country names in the world:*/
+var countries = [
+{% for taxi_package in taxi_packages %}
+"{{taxi_package.package_name}}",
+{% endfor %}
+]
+
+autocomplete(document.getElementById("myInput"), countries);
+</script>
+
+
 
 {% endblock %}
 

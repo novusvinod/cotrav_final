@@ -7,4 +7,11 @@ urlpatterns = [
     path('api/spoc_train_bookings', spoc_api_view.spoc_train_bookings),
     path('api/spoc_hotel_bookings', spoc_api_view.spoc_hotel_bookings),
     path('api/spoc_flight_bookings', spoc_api_view.spoc_flight_bookings),
+
+    path('api/spoc_reject_taxi_booking', spoc_api_view.spoc_reject_taxi_bookings),
+    path('api/spoc_reject_bus_booking', spoc_api_view.spoc_reject_bus_bookings),
+    path('api/spoc_reject_train_booking', spoc_api_view.spoc_reject_train_bookings),
+    path('api/spoc_reject_hotel_booking', spoc_api_view.spoc_reject_hotel_bookings),
+    path('api/spoc_reject_flight_booking', spoc_api_view.spoc_reject_flight_bookings),
+
 ]

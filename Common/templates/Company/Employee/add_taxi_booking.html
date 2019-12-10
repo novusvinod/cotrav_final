@@ -6,7 +6,7 @@
 {% if user %}
 <!-- start page content -->
 
-
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
                           <div class="text-center">
@@ -19,6 +19,7 @@
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
             <input type="hidden" name="corporate_id" id="corporate_id" value="{{user.corporate_id}}">
             <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
 
         <div class="row">
@@ -38,11 +39,23 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type myselect">
+                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type myselect" required>
                                       <option value="">Select Tour Type </option>
+                                    {% for corp_acces in corp_access %}
+
+
+                                      {% if corp_acces.is_radio == 1 %}
                                       <option value="1">Radio </option>
+                                      {% endif %}
+                                      {% if corp_acces.is_local == 1 %}
                                       <option value="2">Local </option>
+                                      {% endif %}
+                                      {% if corp_acces.is_outstation == 1 %}
                                       <option value="3">Outstation </option>
+                                      {% endif %}
+
+
+                              {% endfor %}
                                   </select>
                             </div>
 
@@ -97,6 +110,9 @@
                             </div>
 
 
+                             {% for corp_acces in corp_access %}
+                                {% if corp_acces.has_assessment_codes == 1 %}
+
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
                                    <select name="assessment_code" class="form-control col-sm-8 myselect">
@@ -116,6 +132,9 @@
                                         {% endfor %}
                                     </select>
                             </div>
+
+                              {% endif %}
+                              {% endfor %}
 
 
 
@@ -140,7 +159,7 @@
                       <div class="form-group">
                     <div class="offset-md-3 col-md-9">
                         <button type="submit" class="btn btn-info">Submit</button>
-                        <button type="button" class="btn btn-default">Cancel</button>
+                        <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                     </div>
                 </div>
                 </div>
@@ -168,35 +187,6 @@
 
 
  <script>
-      var input = document.getElementById('pickup_city');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-
-      google.maps.event.addListener(autocomplete, 'place_changed', function() {
-
-      var search_str = $("#pickup_city").val();
-
-      var_url = '{{ API_BASE_URL }}'+'get_city_id'
-
-      //var_url = 'http://localhost:8000/api/testpath'
-
-    $.ajaxSetup({
-            headers:{
-                'Authorization': "Token {{request.session.access_token}}",
-                'usertype': {{request.session.login_type}}
-            }
-
-        });
-
-     $.post(var_url,{ search_string: search_str },
-      function(data)
-      {
-
-       var city_id = data['city_id'][0]['id'];
-       $('#current_city_id').val(city_id);
-
-       });
-
-});
 
   var pickup_location = document.getElementById('pickup_location');
       var autocomplete = new google.maps.places.Autocomplete(pickup_location);
@@ -264,14 +254,14 @@ $('#package_id').empty();
         {
             $.ajaxSetup({
                 headers:{
-                    'Authorization': "Token {{request.session.access_token}}",
-                    'usertype': {{request.session.login_type}}
+                    'Authorization': "Token {{request.session.employee_access_token}}",
+                    'usertype': {{request.session.employee_login_type}}
                 }
             });
 
             //       For Package
 
-            var_url_spoc = '{{ API_BASE_URL }}'+'corporate_package'
+            var_url_spoc = '/api/'+'corporate_package'
              $.post(var_url_spoc,{ corporate_id: corporate_id, taxi_type : taxi_type, city_id:current_city_id, tour_type:tour_type },
               function(data)
               {

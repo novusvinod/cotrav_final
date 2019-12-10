@@ -15,6 +15,13 @@ urlpatterns = [
     path('api/login', api_views.login),
     path('api/logout', api_views.logout),
     path('api/get_cotrav_billing_entities', api_views.get_cotrav_billing_entities),
+    path('api/employee_dashboard', api_views.employee_dashboard),
+    path('api/approver_1_dashboard', api_views.approver_1_dashboard),
+    path('api/approver_2_dashboard', api_views.approver_2_dashboard),
+    path('api/spoc_dashboard', api_views.spoc_dashboard),
+    path('api/admin_dashboard', api_views.admin_dashboard),
+    path('api/agent_dashboard', api_views.agent_dashboard),
+
 
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
@@ -30,9 +37,16 @@ urlpatterns = [
     path('api/bus_types', api_views.bus_types),
     path('api/irctc_accounts', api_views.irctc_accounts),
     path('api/hotel_types', api_views.hotel_types),
+
     path('api/hotel_booking_portals', api_views.hotel_booking_portals),
+    path('api/view_hotel_portal', api_views.view_hotel_portal),
+    path('api/add_hotel_portal', api_views.add_hotel_portal),
+    path('api/update_hotel_portal', api_views.update_hotel_portal),
+    #path('api/delete_hotel_portal', api_views.delete_hotel_portal),
+
     path('api/room_types', api_views.room_types),
     path('api/railway_stations', api_views.railway_stations),
+    path('api/bus_booking_portals', api_views.bus_booking_portals),
 
     path('api/corporate_management_fee', api_views.corporate_management_fee),
     path('api/add_corporate_management_fee', api_views.add_corporate_management_fee),
@@ -40,6 +54,7 @@ urlpatterns = [
     path('api/delete_corporate_management_fee', api_views.delete_corporate_management_fee),
     path('api/service_fee_types', api_views.service_fee_types),
 
+    path('api/get_corporate_management_fee', api_views.corporate_management_fees),
 
     path('api/taxi_types', api_views.taxi_types),
     path('api/add_taxi_type', api_views.add_taxi_type),
@@ -67,6 +82,8 @@ urlpatterns = [
     path('api/add_company_rates', api_views.add_company_rates),
     path('api/update_company_rates', api_views.update_company_rates),
     path('api/delete_company_rates', api_views.delete_company_rates),
+##sanket added this
+    path('api/taxi_packages', api_views.taxi_packages),
 
     path('api/billing_entities', api_views.billing_entities),
     path('api/view_billing_entitie', api_views.view_billing_entitie),
@@ -112,6 +129,7 @@ urlpatterns = [
     path('api/add_spoc', api_views.add_spoc),
     path('api/update_spoc', api_views.update_spoc),
     path('api/delete_spoc', api_views.delete_spoc),
+    path('api/active_spoc', api_views.active_spoc),
 
     path('api/view_employee', api_views.view_employee),
     path('api/add_employee', api_views.add_employee),
@@ -147,4 +165,11 @@ urlpatterns = [
     path('api/add_train_booking', api_views.add_train_booking),
     path('api/add_hotel_booking', api_views.add_hotel_booking),
     path('api/add_flight_booking', api_views.add_flight_booking),
+
+    ################ MIS API ######################
+    path('api/report_taxi_booking', api_views.report_taxi_booking),
+    path('api/report_bus_booking', api_views.report_bus_booking),
+    path('api/report_train_booking', api_views.report_train_booking),
+    path('api/report_flight_booking', api_views.report_flight_booking),
+    path('api/report_hotel_booking', api_views.report_hotel_booking),
 ]

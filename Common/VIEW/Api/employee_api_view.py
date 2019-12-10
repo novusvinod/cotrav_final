@@ -2,19 +2,7 @@ from datetime import datetime
 
 from django.http import JsonResponse
 from django.db import connection
-from Common.models import Corporate_Login
-from Common.models import Corporate_Spoc_Login
-from Common.models import Corporate_Employee_Login
-from Common.models import Corporate_Approves_1_Login
-from Common.models import Corporate_Approves_2_Login
-from Common.models import Corporate_Agent
-
-from Common.models import Corporate_Login_Access_Token
-from Common.models import Corporate_Spoc_Login_Access_Token
-from Common.models import Corporate_Employee_Login_Access_Token
-from Common.models import Corporate_Approves_1_Login_Access_Token
-from Common.models import Corporate_Approves_2_Login_Access_Token
-from Common.models import Corporate_Agent_Login_Access_Token
+from Common.VIEW.Api.api_views import getUserinfoFromAccessToken, dictfetchall
 
 
 def employee_taxi_bookings(request):
@@ -216,69 +204,3 @@ def employee_flight_bookings(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
-
-
-
-def getUserinfoFromAccessToken(user_token=None, user_type=None):
-    try:
-        user = {}
-        user_info = {}
-        if user_type == '1':
-            user = Corporate_Login_Access_Token.objects.get(access_token=user_token)
-
-        elif user_type == '2':
-            user = Corporate_Approves_1_Login_Access_Token.objects.get(access_token=user_token)
-        elif user_type == '3':
-            user = Corporate_Approves_2_Login_Access_Token.objects.get(access_token=user_token)
-        elif user_type == '4':
-            user = Corporate_Spoc_Login_Access_Token.objects.get(access_token=user_token)
-        elif user_type == '6':
-            user = Corporate_Employee_Login_Access_Token.objects.get(access_token=user_token)
-            print(user)
-        elif user_type == '10':
-            user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
-
-        present = datetime.now()
-
-        if user.expiry_date.date() < present.date():
-            return None
-        else:
-
-            if user_type == '1':
-                user_info = Corporate_Login.objects.get(id=user.corporate_login_id)
-
-            elif user_type == '2':
-                user_info = Corporate_Approves_1_Login.objects.get(id=user.subgroup_authenticater_id)
-            elif user_type == '3':
-                user_info = Corporate_Approves_2_Login.objects.get(id=user.group_authenticater_id)
-            elif user_type == '4':
-                user_info = Corporate_Spoc_Login.objects.get(id=user.spoc_id)
-            elif user_type == '6':
-                user_info = Corporate_Employee_Login.objects.get(id=user.employee_id)
-                print(user_info)
-            elif user_type == '10':
-                user_info = Corporate_Agent.objects.get(id=user.agent_id)
-            else:
-                return None
-
-            return user_info
-
-    except Exception as e:
-        print(e)
-        return None
-
-
-
-
-
-
-
-
-
-def dictfetchall(cursor):
-    "Returns all rows from a cursor as a dict"
-    desc = cursor.description
-    return [
-            dict(zip([col[0] for col in desc], row))
-            for row in cursor.fetchall()
-    ]

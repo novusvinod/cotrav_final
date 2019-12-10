@@ -7,17 +7,23 @@
 <!-- start page content -->
 <div class="page-content-wrapper">
     <div class="page-content">
-
+{% include 'cotrav_alert_message.html' %}
                             <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
-                     Add Employess
+                      {% if employee %}
+                      Edit Employee Details
+                      {% else %}
+                     Add New Employee Details
+                     {% endif %}
                      </div>
-            </div>
+                     </div>
+
 
         <form method="post" action="/Corporate/Admin/add-employee/{{user.corporate_id}}">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
             <input type="hidden" class="col-sm-8 form-control" name="corporate_id" value="{{user.corporate_id }}">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
             {% if employee %}
             {% for employee in employee %}
             <input type="hidden" class="col-sm-8 form-control" name="employee_id" value="{{employee.id }}">
@@ -38,45 +44,49 @@
                         <div class="card-body " id="bar-parent">
 
                             <div class="form-group row">
-                                <label class="col-sm-4" >Spoc id</label>
+                                <label class="col-sm-4" >Select Spoc</label>
+                                <select class="col-sm-8 form-control myselect" name="spoc_id" required>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="spoc_id" required>
+
                                         <option value="">Select Spoc</option>
                                         {% for spoc in spocs %}
                                         <option value="{{spoc.id}}" {% if employee.spoc_id == spoc.id %} selected {%endif%}>{{spoc.user_name}}</option>
                                         {% endfor %}
-                                    </select>
+
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="spoc_id" required>
+
                                         <option value="">Select Spoc</option>
                                         {% for spoc in spocs %}
                                         <option value="{{spoc.id}}">{{spoc.user_name}}</option>
                                         {% endfor %}
-                                    </select>
+
                                 {% endif %}
+                                    </select>
                             </div>
 
                            <div class="form-group row">
                                 <label class="col-sm-4" >Billing Entity</label>
+                               <select class="col-sm-8 form-control myselect" name="billing_entity_id" required>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="billing_entity_id" required>
+
                                         <option value="">Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}" {% if employee.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
                                         {% endfor %}
-                                    </select>
+
                                 {% endfor %}
                                 {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="billing_entity_id" required>
-                                        <option value="">Billing Entity</option>{{entitys}}dgsdg
+
+                                        <option value="">Billing Entity</option>
                                         {% for entity in entitys %}
                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
                                         {% endfor %}
-                                    </select>
+
                                 {% endif %}
+                                   </select>
                             </div>
 
 
@@ -86,7 +96,7 @@
                                 <label class="col-sm-4" >Core Employee id</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="core_employee_id" value="{{employee.core_employee_id}}"
+                                <input type="text" class="col-sm-8 form-control" name="core_employee_id" value="{{employee.core_employee_id|default:''}}"
                                        placeholder="Core Employee id">
                                 {% endfor %}
                                 {% else %}
@@ -96,10 +106,10 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4" >Employee Cid</label>
+                                <label class="col-sm-4" >Employee Company id</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_cid" value="{{employee.employee_cid}}"
+                                <input type="text" class="col-sm-8 form-control" name="employee_cid" value="{{employee.employee_cid|default:''}}"
                                        placeholder="Employee Cid">
                                 {% endfor %}
                                 {% else %}
@@ -147,6 +157,19 @@
                                   {% endif %}
                             </div>
 
+                             <div class="form-group row">
+                                <label class="col-sm-4" >Designation</label>
+                                {% if employee %}
+                                {% for employee in employee %}
+                                <input type="text" class="col-sm-8 form-control" name="designation" value="{{employee.designation|default:''}}"
+                                       placeholder="Designation">
+                                {% endfor %}
+                                {% else %}
+                                <input type="text" class="col-sm-8 form-control" name="designation"
+                                       placeholder="Designation">
+                                 {% endif %}
+                            </div>
+
 
 
 
@@ -158,7 +181,7 @@
                 <div class="col-md-4 col-sm-4">
                     <div class="card card-box">
                         <div class="card-head">
-                            <header>Billing Details</header>
+                            <header>Other Details</header>
                             <button
                                     class="mdl-button mdl-js-button mdl-button--icon pull-right"
                                     data-upgraded=",MaterialButton">
@@ -175,29 +198,20 @@
                         <div class="card-body ">
 
                             <div class="form-group row">
-                                <label class="col-sm-4">Age</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="age" value="{{employee.age}}" required
-                                       placeholder="Age">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="age" required
-                                       placeholder="Age">
-                                 {% endif %}
-                            </div>
-
-                            <div class="form-group row">
                                 <label class="col-sm-4" >Gender</label>
-                                {% if employee %}
+                                <select name="gender" class="col-sm-8 form-control">
+                                    {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="gender" value="{{employee.gender}}" required
-                                       placeholder="Gender">
+                                <option value="Male" {% if employee.gender == 'Male' %} selected {%endif%}>Male</option>
+                                <option value="Female" {% if employee.gender == 'Female' %} selected {%endif%}>Female</option>
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="gender" required
-                                       placeholder="Gender">
+                                <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                  {% endif %}
+
+                                </select>
+
                             </div>
 
 
@@ -205,7 +219,7 @@
                                 <label class="col-sm-4" >Id Proof Type</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="id_proof_type" value="{{employee.id_proof_type}}"
+                                <input type="text" class="col-sm-8 form-control" name="id_proof_type" value="{{employee.id_proof_type|default:''}}"
                                        placeholder="Id Proof Type">
                                 {% endfor %}
                                 {% else %}
@@ -218,7 +232,7 @@
                                 <label class="col-sm-4" >Id Proof No</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="id_proof_no" value="{{employee.id_proof_no}}"
+                                <input type="text" class="col-sm-8 form-control" name="id_proof_no" value="{{employee.id_proof_no|default:''}}"
                                        placeholder="Id Proof No">
                                 {% endfor %}
                                 {% else %}
@@ -227,24 +241,34 @@
                                  {% endif %}
                             </div>
 
-                             <div class="form-group row">
+
+                            <div class="form-group row">
                                 <label class="col-sm-4" >Home City</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="home_city" value="{{employee.home_city}}"
-                                       placeholder="Home City">
+                                    <select class="col-sm-8 form-control myselect" name="home_city" required>
+                                        <option value="">Select Home City</option>
+                                        {% for citie in cities %}
+                                        <option value="{{citie.id}}" {% if employee.home_city == citie.id %} selected {%endif%}>{{citie.city_name}}</option>
+                                        {% endfor %}
+                                    </select>
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="home_city"
-                                       placeholder="Home City">
-                                 {% endif %}
+
+                                     <select class="col-sm-8 form-control myselect" name="home_city" required>
+                                        <option value="">Select Home City</option>
+                                        {% for citie in cities %}
+                                        <option value="{{citie.id}}">{{citie.city_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
                             </div>
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Home Address</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="home_address" value="{{employee.home_address}}"
+                                <input type="text" class="col-sm-8 form-control" name="home_address" value="{{employee.home_address|default:''}}"
                                        placeholder="Home Address">
                                 {% endfor %}
                                 {% else %}
@@ -253,29 +277,26 @@
                                  {% endif %}
                             </div>
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Assistant ID</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="assistant_id" value="{{employee.assistant_id}}"
-                                       placeholder="Assistant ID">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="assistant_id"
-                                       placeholder="Assistant ID">
-                                 {% endif %}
-                            </div>
+
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Date Of Birth</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="date_of_birth" value="{{employee.date_of_birth}}"
-                                       placeholder="Assistant ID">
-                                {% endfor %}
+                                 {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
+
+                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth" value="{{employee.date_of_birth}}"
+                                       placeholder="Assistant ID" required>
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="date_of_birth"
-                                       placeholder="Assistant ID">
+
+                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                       placeholder="Date Of Birth" required>
+                                 {% endif %}
+                                 {% endfor %}
+
+                                {% else %}
+                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                       placeholder="Date Of Birth" required>
                                  {% endif %}
                             </div>
 
@@ -306,69 +327,62 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4 control-label">is Active</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_active">
+
+                                    <select class="form-control col-sm-8" name="is_active">
 
                                         {% if employee %}
                                         {% for employee in employee %}
+                                            <option value="1" {% if employee.is_active == 1 %} selected {%endif%}>Yes</option>
                                             <option value="0" {% if employee.is_active == 0 %} selected {%endif%}>No</option>
                                         {% endfor %}
                                         {% else %}
+                                            <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         {% endif %}
-                                        <option value="1">Yes</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4 control-label">Has Dummy Email</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="has_dummy_email">
-
-                                        {% if employee %}
-                                        {% for employee in employee %}
-                                        <option value="0" {% if employee.has_dummy_email == 0 %} selected {%endif%}>No</option>
-                                        {% endfor %}
-                                        {% else %}
-                                         <option value="0">No</option>
-                                        {% endif %}
-                                        <option value="1">Yes</option>
                                     </select>
-                                </div>
+
                             </div>
 
 
                             <div class="form-group row">
                                 <label class="col-sm-4 control-label">is CXO</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_cxo">
+
+                                    <select class="form-control col-sm-8" name="is_cxo" id="is_cxo">
 
                                         {% if employee %}
                                         {% for employee in employee %}
-                                         <option value="0" {% if employee.is_cxo == 0 %} selected {%endif%}>No</option>
-                                         {% endfor %}
+                                            <option value="0" {% if employee.is_cxo == 0 %} selected {%endif%}>No</option>
+                                            <option value="1" {% if employee.is_cxo == 1 %} selected {%endif%}>Yes</option>
+                                        {% endfor %}
                                         {% else %}
-                                         <option value="0">No</option>
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
                                         {% endif %}
-                                         <option value="1">Yes</option>
                                     </select>
-                                </div>
+
                             </div>
 
-
-                           <div class="form-group row">
-                                <label class="col-sm-4" >Designation</label>
+                            <div class="form-group row" id="row_assistant_id">
+                                <label class="col-sm-4" >Select Assistant</label>
+                                <select name="assistant_id" class="form-control col-sm-8 myselect">
+                                    <option value=" " >Select Assistant</option>
                                 {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="designation" value="{{employee.designation}}"
-                                       placeholder="Designation">
+                                {% for employe in employee %}
+                                {% for employee in employees %}
+                                        <option value="{{employee.id}}" {% if employe.assistant_id == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
+                                        {% endfor %}
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="designation"
-                                       placeholder="Designation">
+                                {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}</option>
+                                        {% endfor %}
                                  {% endif %}
+                                </select>
                             </div>
+
+
+
 
 
 
@@ -376,7 +390,7 @@
                             <div class="form-group">
                                 <div class="offset-md-3 col-md-9">
                                     <button type="submit" class="btn btn-info">Submit</button>
-                                    <button type="button" class="btn btn-default">Cancel</button>
+                                    <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                 </div>
                             </div>
 
@@ -396,9 +410,25 @@
 {% endif %}
 
 <script type="text/javascript">
- $(function() {
+ var getValue=$('#is_cxo').val();
+    if(getValue == '1'){
+        $("#row_assistant_id").show("slow");
+        $("#row_assistant_id").prop('required',true);
+    }else{
+        $("#row_assistant_id").hide("slow");
+        $("#row_assistant_id").prop('required',false);
+    }
 
- });
+ $("#is_cxo").on('change',function(){
+    var getValue=$(this).val();
+    if(getValue == '1'){
+        $("#row_assistant_id").show("slow");
+        $("#row_assistant_id").prop('required',true);
+    }else{
+        $("#row_assistant_id").hide("slow");
+        $("#row_assistant_id").prop('required',false);
+    }
+  });
 
 </script>
 

@@ -2,16 +2,38 @@ from django.urls import path,include
 from Common.VIEW.Api import agent_api_view
 
 urlpatterns = [
+    path('api/view_hotel', agent_api_view.view_hotel),
+
+    path('api/hotels', agent_api_view.hotels),
+    path('api/hotel_contacts', agent_api_view.hotel_contacts),
+    path('api/hotel_banks', agent_api_view.hotel_banks),
+
+    path('api/add_hotel', agent_api_view.add_hotel),
+    path('api/add_hotel_contact', agent_api_view.add_hotel_contact),
+    path('api/add_hotel_bank', agent_api_view.add_hotel_bank),
+
+    path('api/update_hotel', agent_api_view.update_hotel),
+    path('api/update_hotel_contact', agent_api_view.update_hotel_contact),
+    path('api/update_hotel_bank', agent_api_view.update_hotel_bank),
+
+    path('api/delete_hotel', agent_api_view.delete_hotel),
+    path('api/delete_hotel_contact', agent_api_view.delete_hotel_contact),
+    path('api/delete_hotel_bank', agent_api_view.delete_hotel_bank),
+
     path('api/operators', agent_api_view.operators),
+    path('api/get_operators_by_service_type', agent_api_view.operators_by_service_type),
     path('api/operator_contacts', agent_api_view.operator_contacts),
     path('api/operator_banks', agent_api_view.operator_banks),
     path('api/view_operator', agent_api_view.view_operator),
+
     path('api/add_operator', agent_api_view.add_operator),
     path('api/add_operator_contact', agent_api_view.add_operator_contact),
     path('api/add_operator_bank', agent_api_view.add_operator_bank),
+
     path('api/update_operator', agent_api_view.update_operator),
     path('api/update_operator_contact', agent_api_view.update_operator_contact),
     path('api/update_operator_bank', agent_api_view.update_operator_bank),
+
     path('api/delete_operator', agent_api_view.delete_operator),
     path('api/delete_operator_contact', agent_api_view.delete_operator_contact),
     path('api/delete_operator_bank', agent_api_view.delete_operator_bank),
@@ -41,6 +63,9 @@ urlpatterns = [
     path('api/reject_taxi_booking', agent_api_view.reject_taxi_booking),
     path('api/assign_taxi_booking', agent_api_view.assign_taxi_booking),
 
+    path('api/add_taxi_invoice', agent_api_view.add_taxi_invoice),
+
+
     path('api/agent_bus_bookings', agent_api_view.agent_bus_bookings),
     path('api/accept_bus_booking', agent_api_view.accept_bus_booking),
     path('api/reject_bus_booking', agent_api_view.reject_bus_booking),
@@ -62,5 +87,6 @@ urlpatterns = [
     path('api/assign_flight_booking', agent_api_view.assign_flight_booking),
 
     path('api/get_city_id', agent_api_view.get_city_id),
+
 
 ]

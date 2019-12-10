@@ -2,10 +2,16 @@
 
 {% block content %}
 
+{% for Dashboard in dataDashboard %}
+
+
 
 {% if user %}
 <!-- start page content -->
  {% include 'cotrav_alert_message.html' %}
+
+
+
 
             <div class="page-content-wrapper">
                 <div class="page-content">
@@ -15,7 +21,7 @@
                         <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>PIE CHART</header>
+                                    <header>Unassigned Bookings {{un_taxi_booking_count}}</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -34,7 +40,7 @@
 					   <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>PIE CHART</header>
+                                    <header>Total Booking Count</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -53,7 +59,7 @@
 					   <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>PIE CHART</header>
+                                    <header>Taxi Unbilled Amount</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -72,7 +78,7 @@
 					   <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>PIE CHART</header>
+                                    <header>Taxi Unpaid Amount</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -81,7 +87,7 @@
                                 </div>
                                 <div class="card-body " id="chartjs_pie_parent1">
                                     <div class="row">
-                                         <canvas id="chartjs_pie1" height="200"></canvas>
+                                         <canvas id="canvasTOMBookings1" height="200"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +106,7 @@
 
 
     <!--Chart JS-->
-{% load staticfiles %}
+{% load static %}
     <script src="{% static 'assets/plugins/chart-js/Chart.bundle.js' %}" ></script>
     <script src="{% static 'assets/plugins/chart-js/utils.js' %}" ></script>
 
@@ -113,9 +119,9 @@
 	/*Taxi Bookings*/
 	  var ctx = document.getElementById("canvasTaxiBookings");
 	  var data = {
-		labels: ["Active Unassigned","Active Assigned","Archived Unassigned","Archived Assigned","Cancelled/Rejected"],
+		labels: ["Taxi","Bus","Train","Hotel","Flight"],
 		datasets: [{
-		  data: [1,2,3,4,5],
+		  data: [{{Dashboard.un_taxi_booking_count}},{{Dashboard.un_bus_booking_count}},{{Dashboard.un_train_booking_count}},{{Dashboard.un_hotel_booking_count}},{{Dashboard.un_flight_booking_count}}],
 		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
 		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
 
@@ -129,20 +135,12 @@
 
 
 
-
-
-
-
-
-
-
-
 	/*Upcoming Bookings*/
 	  var ctx = document.getElementById("canvasUCBookings");
 	  var data = {
 		labels: ["Taxi","Bus","Train","Hotel","Flight"],
 		datasets: [{
-		  data: [1,2,3,4,5],
+		  data: [{{Dashboard.taxi_booking_count}},{{Dashboard.bus_booking_count}},{{Dashboard.train_booking_count}},{{Dashboard.hotel_booking_count}},{{Dashboard.flight_booking_count}}],
 		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
 		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
 
@@ -163,7 +161,7 @@
 	  var data = {
 		labels: ["Taxi","Bus","Train","Hotel","Flight"],
 		datasets: [{
-		  data: [1,2,3,4,56],
+		  data: [{{Dashboard.un_taxi_booking_count}},{{Dashboard.un_bus_booking_count}},{{Dashboard.un_train_booking_count}},{{Dashboard.un_hotel_booking_count}},{{Dashboard.un_flight_booking_count}}],
 		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
 		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
 
@@ -175,8 +173,27 @@
 		data: data
 	  });
 
+
+
+	  	   /*Today/Tomorrow Bookings*/
+	  var ctx = document.getElementById("canvasTOMBookings1");
+	  var data = {
+		labels: ["Taxi","Bus","Train","Hotel","Flight"],
+		datasets: [{
+		  data: [{{Dashboard.un_taxi_booking_count}},{{Dashboard.un_bus_booking_count}},{{Dashboard.un_train_booking_count}},{{Dashboard.un_hotel_booking_count}},{{Dashboard.un_flight_booking_count}}],
+		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
+		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
+
+		}]
+	  };
+	  var canvasTOMBookings = new Chart(ctx, {
+		type: 'doughnut',
+		tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+		data: data
+	  });
 </script>
 
+{% endfor %}
 
 {% endblock %}
 

@@ -7,7 +7,7 @@
 			<!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
-
+{% include 'cotrav_alert_message.html' %}
                                      <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      Edit Company
@@ -15,6 +15,7 @@
             </div>
 
  <form method="post" action="/Corporate/agents/corporate">
+      <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
       {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
@@ -210,7 +211,7 @@
                                         <div class="form-group">
                                             <div class="offset-md-3 col-md-9">
                                                 <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" class="btn btn-default">Cancel</button>
+                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                             </div>
                                         </div>
 

@@ -5,7 +5,7 @@
 {% if user %}
 <!-- start page content -->
 
-
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
@@ -14,12 +14,13 @@
                  Add New Bus Booking
                  </div>
          </div>
-        <form method="post" action="/agents/add-bus-booking/{{user.id}}">
+        <form method="post" action="/agents/add-bus-booking/{{user.id}}" enctype="multipart/form-data">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="group_id" id="group_id">
             <input type="hidden" name="subgroup_id" id="subgroup_id">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>Booking Details</header>
@@ -42,16 +43,19 @@
                                     </select>
                                 </div>
 
-
+                                 <div class="form-group row">
+                                                    <label class="col-sm-4">Booking Email Copy</label>
+                                                    <input type="file" class="col-sm-8 form-control" name="email_attachment"  placeholder="Booking Email Copy" >
+                                                    </div>
 
                               <div class="form-group row">
-                                <label class="col-sm-4" >From*</label>
-                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>
+                                <label class="col-sm-4" >From City*</label>
+                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From City" required>
                             </div>
 
                               <div class="form-group row">
-                                <label class="col-sm-4" >To*</label>
-                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>
+                                <label class="col-sm-4" >To City*</label>
+                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To City" required>
                             </div>
 
                          <div class="form-group row">
@@ -71,13 +75,32 @@
 
 
                                <div class="form-group row">
-                                <label class="col-sm-4" >Date of Journey*</label>
-                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" placeholder="Journey Date/Time" required>
+                                <label class="col-sm-4" >Journey Date From*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" placeholder="Journey Date From" required>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Journey Date To*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime_to" placeholder="Journey Date To" required>
                             </div>
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Booking Date*</label>
-                                 <input type="text" class="form-control col-sm-8 date-format" name="booking_datetime" placeholder="Booking Date/Time" required>
+                                 <input type="text" class="form-control col-sm-8 date-format" id="booking_datetime" name="booking_datetime" placeholder="Booking Date/Time" required>
+                            </div>
+
+                          <div class="form-group row">
+                                <label class="col-sm-4" >Assessment Code*</label>
+                                   <select name="assessment_code" id="assessment_code" class="form-control col-sm-8 myselect">
+                                        <option value="">Select Assessment Code </option>
+                                    </select>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Assessment City*</label>
+                                   <select name="assessment_city_id" id="assessment_city_id" class="form-control col-sm-8 myselect">
+                                        <option value="">Select Assessment City </option>
+                                    </select>
                             </div>
 
 
@@ -123,7 +146,7 @@
 
 
 
-            <div class="col-md-4">
+            <div class="col-md-7">
              <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>SPOC and Passanger Details</header>
@@ -136,8 +159,8 @@
                     <div class="card-body ">
 
                          <div class="form-group row">
-                                <label class="col-sm-4" >Select Spoc*</label>
-                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-8 myselect" required>
+                                <label class="col-sm-2" >Select Spoc*</label>
+                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-10 myselect" required>
                                       <option value="">Select Spoc </option>
                                   </select>
                             </div>
@@ -145,8 +168,8 @@
 
 
                                <div class="form-group row">
-                                <label class="col-sm-4" >Number Of Employees*</label>
-                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats myselect" required>
+                                <label class="col-sm-2" >Number Of Employees*</label>
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-10 no_of_seats myselect" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -157,57 +180,81 @@
                             </div>
 
                                <div class="form-group row" id="emp_row_1">
-                                    <label class="col-sm-4" >Employee 1</label>
-                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-8 myselect">
+                                    <label class="col-sm-2" >Employee 1</label>
+                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-2 myselect">
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
+                                    <input type="text" name="emp_id_1" id="emp_id_1" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_1" id="employee_name_1" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_1" id="employee_email_1" class="form-control col-sm-2" placeholder="Email">
                                 </div>
 
                               <div class="form-group row" id="emp_row_2">
-                                    <label class="col-sm-4" >Employee 2</label>
-                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-8 myselect">
+                                    <label class="col-sm-2" >Employee 2</label>
+                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-2 myselect">
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}" >{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
+                                   <input type="text" name="emp_id_2" id="emp_id_2" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_2" id="employee_name_2" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_2" id="employee_contact_2" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_2" id="employee_email_2" class="form-control col-sm-2" placeholder="Email">
                                 </div>
 
                               <div class="form-group row"  id="emp_row_3">
-                                    <label class="col-sm-4" >Employee 3</label>
-                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-8 myselect">
+                                    <label class="col-sm-2" >Employee 3</label>
+                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-2 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
+                                   <input type="text" name="emp_id_3" id="emp_id_3" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_3" id="employee_name_3" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_3" id="employee_contact_3" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_3" id="employee_email_3" class="form-control col-sm-2" placeholder="Email">
                                 </div>
 
                               <div class="form-group row"  id="emp_row_4" >
-                                    <label class="col-sm-4" >Employee 4</label>
-                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-8 myselect">
+                                    <label class="col-sm-2" >Employee 4</label>
+                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-2 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
+                                   <input type="text" name="emp_id_4" id="emp_id_4" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_4" id="employee_name_4" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_4" id="employee_contact_4" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_4" id="employee_email_4" class="form-control col-sm-2" placeholder="Email">
                                 </div>
 
                                <div class="form-group row"  id="emp_row_5" >
-                                    <label class="col-sm-4" >Employee 5</label>
-                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-8 myselect">
+                                    <label class="col-sm-2" >Employee 5</label>
+                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-2 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
+                                    <input type="text" name="emp_id_5" id="emp_id_5" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_5" id="employee_name_5" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_5" id="employee_contact_5" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_5" id="employee_email_5" class="form-control col-sm-2" placeholder="Email">
                                 </div>
 
                                <div class="form-group row"  id="emp_row_6" >
-                                    <label class="col-sm-4" >Employee 6</label>
-                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-8 myselect">
+                                    <label class="col-sm-2" >Employee 6</label>
+                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-2 myselect">
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
+                                    <input type="text" name="emp_id_6" id="emp_id_6" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_6" id="employee_name_6" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_6" id="employee_email_6" class="form-control col-sm-2" placeholder="Email">
                                 </div>
 
                           </div>
@@ -215,7 +262,7 @@
                   <div class="form-group">
                     <div class="offset-md-3 col-md-9">
                         <button type="submit" class="btn btn-info">Submit</button>
-                        <button type="button" class="btn btn-default">Cancel</button>
+                        <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                     </div>
                 </div>
 
@@ -247,7 +294,12 @@
 
 
 $(document).ready(function() {
-$(".js-example-basic-single").select2();
+
+  $('#emp_row_2').hide();
+  $('#emp_row_3').hide();
+  $('#emp_row_4').hide();
+  $('#emp_row_5').hide();
+  $('#emp_row_6').hide();
 
  var input = document.getElementById('pickup_location');
   var autocomplete = new google.maps.places.Autocomplete(input);
@@ -255,10 +307,59 @@ $(".js-example-basic-single").select2();
   var input = document.getElementById('drop_location');
   var autocomplete = new google.maps.places.Autocomplete(input);
 
-  $('#emp_row_2').hide();
-    $('#emp_row_3').hide();
-    $('#emp_row_4').hide();
+var today = moment().format('DD-MM-YYYY HH:mm:ss');
+document.getElementById("booking_datetime").value = today;
+
 });
+
+$("#employee_id_1").change(function()
+    {
+    	$("#emp_id_1").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_1").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_1").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_1").val($(this).find("option:selected").attr("emp_email"));
+    });
+
+$("#employee_id_2").change(function()
+    {
+    	$("#emp_id_2").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_2").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_2").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_2").val($(this).find("option:selected").attr("emp_email"));
+    });
+
+$("#employee_id_3").change(function()
+    {
+    	$("#emp_id_3").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_3").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_3").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_3").val($(this).find("option:selected").attr("emp_email"));
+    });
+
+$("#employee_id_4").change(function()
+    {
+    	$("#emp_id_4").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_4").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_4").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_4").val($(this).find("option:selected").attr("emp_email"));
+    });
+
+$("#employee_id_5").change(function()
+    {
+    	$("#emp_id_5").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_5").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_5").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_5").val($(this).find("option:selected").attr("emp_email"));
+    });
+
+    $("#employee_id_6").change(function()
+    {
+    	$("#emp_id_6").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_6").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_6").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_6").val($(this).find("option:selected").attr("emp_email"));
+    });
+
 
 $(".no_of_seats").change(function()
     {
@@ -290,11 +391,11 @@ $("#corporate_id").change(function(){
   $('#entity_id').empty();
 
    var corporate_id =  $(this).val();
-   var_url = '{{ API_BASE_URL }}'+'billing_entities'
+   var_url = '/api/'+'billing_entities'
 
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token {{request.session.access_token}}",
+                'Authorization': "Token {{request.session.agent_access_token}}",
                 'usertype': 10
             }
 
@@ -316,7 +417,7 @@ $("#corporate_id").change(function(){
        });
 
 <!--        For SPOC    -->
-    var_url_spoc = '{{ API_BASE_URL }}'+'spocs'
+    var_url_spoc = '/api/'+'spocs'
      $.post(var_url_spoc,{ corporate_id: corporate_id },
       function(data)
       {
@@ -333,6 +434,39 @@ $("#corporate_id").change(function(){
        }
        });
 
+<!--        For assessment_code   get_assessment_city -->
+    var_url_spoc = '/api/'+'get_assessment_code'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Spocs']);
+       if(data['AssCodes'].length != 0){
+        spocs = data['AssCodes']
+
+         for (var i=0;i<spocs.length;i++) {
+            $('#assessment_code').append($("<option value='"+spocs[i].id+"'>"+spocs[i].assessment_code+"</option>"));
+         }
+       }else{
+        alert('No Assessment Code Available')
+       }
+       });
+
+
+       <!--        For get_assessment_city -->
+    var_url_spoc = '/api/'+'get_assessment_city'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Spocs']);
+       if(data['AssCity'].length != 0){
+        spocs = data['AssCity']
+         for (var i=0;i<spocs.length;i++) {
+            $('#assessment_city_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].city_name+"</option>"));
+         }
+       }else{
+        alert('No Assessment City Available')
+       }
+       });
 
 });
 
@@ -349,15 +483,15 @@ $("#spoc_id").change(function(){
       $('#employee_id_6').empty();
     $.ajaxSetup({
             headers:{
-                'Authorization': "Token {{request.session.access_token}}",
-                'usertype': {{request.session.login_type}}
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
             }
 
         });
 
         //       For Employees
 
-    var_url_spoc_employee = '{{ API_BASE_URL }}'+'spoc_employee'
+    var_url_spoc_employee = '/api/'+'spoc_employee'
      $.post(var_url_spoc_employee,{ spoc_id: spoc_id[0] },
       function(data)
       {
@@ -371,13 +505,24 @@ $("#spoc_id").change(function(){
         $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
         $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
          for (var i=0;i<employee.length;i++) {
-            $('#employee_id_1').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-            $('#employee_id_2').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-            $('#employee_id_3').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-            $('#employee_id_4').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-            $('#employee_id_5').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-            $('#employee_id_6').append($("<option value='"+employee[i].id+"'>"+employee[i].employee_name+"</option>"));
-         }
+
+            $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_2').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_3').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_4').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_5').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_6').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+
+                }
+
+       var emp_len = data['Employees'].length;
+       for (var i=emp_len+1;i<7;i++) {
+       var valueToCompare = $("#no_of_seats option[value='"+i+"']").text();
+            if(valueToCompare == i) {
+                $("#no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
+            }
+       }
+
        }else{
         alert('No Employees Available')
        }

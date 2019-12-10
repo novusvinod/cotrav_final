@@ -2,7 +2,9 @@ from django.urls import path,include
 from Common.VIEW.Approver_2 import approver_2_views
 
 urlpatterns = [
+    path('Corporate/Approver_2/logout', approver_2_views.logout_action),
     path('Corporate/Approver_2/home', approver_2_views.homepage),
+    path('Corporate/Approver_2/user_profile', approver_2_views.user_profile),
     path('Corporate/Approver_2/company-billing_entities/<int:id>', approver_2_views.company_billing_entities),
     path('Corporate/Approver_2/company-rates/<int:id>', approver_2_views.company_rates),
     path('Corporate/Approver_2/company-groups/<int:id>', approver_2_views.company_groups),
@@ -37,4 +39,14 @@ urlpatterns = [
     path('Corporate/Approver_2/view-flight-booking/<int:id>', approver_2_views.view_flight_booking),
     path('Corporate/Approver_2/accept-flight-booking/<int:id>', approver_2_views.accept_flight_booking),
     path('Corporate/Approver_2/reject-flight-booking/<int:id>', approver_2_views.reject_flight_booking),
+
+    path('Corporate/Approver_2/download-taxi-bookings', approver_2_views.download_taxi_bookings),
+    path('Corporate/Approver_2/download-bus-bookings', approver_2_views.download_bus_bookings),
+    path('Corporate/Approver_2/download-train-bookings', approver_2_views.download_train_bookings),
+    path('Corporate/Approver_2/download-flight-bookings', approver_2_views.download_flight_bookings),
+    path('Corporate/Approver_2/download-hotel-bookings', approver_2_views.download_hotel_bookings),
+
+    path('Corporate/Approver_2/download-billing-entities', approver_2_views.download_billing_entities),
+    path('Corporate/Approver_2/download-rates', approver_2_views.download_rates),
+    path('Corporate/Approver_2/download-employees', approver_2_views.download_employees),
 ]

@@ -11,15 +11,16 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Group Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Do You Want To Deleted Employee </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/Corporate/Admin/add-employee/{{user.corporate_id}}" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="employee_id" id="delete_employee_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
                 <input type="hidden" name="delete_id" id="delete_id">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
 
                 <div class="modal-footer">
@@ -33,6 +34,7 @@
     </div>
 </div>
 
+{% include 'cotrav_alert_message.html' %}
 
 <!-- start page content -->
             <div class="page-content-wrapper">
@@ -44,11 +46,21 @@
                                 <div class="card-head">
                                     <header>ALL CORPORATE EMPLOYEE LIST</header>
                                        <div class="row p-b-20">
-                                        <div class="col-md-6 col-sm-6 col-6">
+                                            <div class="row">
+                                        <div class="col-md-10">
                                             <div class="btn-group">
                                                  <a class="btn btn-info" href="/Corporate/Admin/add-employee/0" > Add New <i class="fa fa-plus"></i> </a>
                                             </div>
                                         </div>
+
+                                                <div class="col-sm-2">
+                                                    <div class="btn-group">
+                                                       <a href="/Corporate/Admin/download-employees" class="btn btn-success pull-right">Download</a>
+
+                                              </div>
+                                              </div>
+
+                                            </div>
                                     </div>
 
 
@@ -60,8 +72,6 @@
                                 </div>
                                 <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
-
                  <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      All Employees
@@ -72,28 +82,32 @@
                                     <table id="example1" class="display full-width table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Spoc Name</th>
-                                                <th>Employee ID</th>
+
+                                                <th>Employee Company ID</th>
                                                 <th>Employee Name</th>
-                                                <th>Email</th>
-                                                <th>Contact</th>
+                                                <th>Contact No.</th>
+                                                <th>Email ID</th>
+                                                <th>Designation </th>
                                                 <th>Age </th>
                                                 <th>Gender</th>
+                                                <th>Spoc Name</th>
+                                                <th>Company Name</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                         {% for employee in employees %}
                                             <tr>
-                                                <td>{{ employee.id }}</td>
-                                                <td>{{ employee.user_name }}</td>
-                                                <td>{{ employee.employee_cid }}</td>
-                                                <td>{{ employee.employee_name }}</td>
-                                                <td>{{ employee.employee_email }}</td>
-                                                <td>{{ employee.employee_contact }}</td>
-                                                <td>{{ employee.age }}</td>
-                                                <td>{{ employee.gender }}</td>
+
+                                                <td>{{ employee.employee_cid|default:'' }}</td>
+                                                <td>{{ employee.employee_name|default:'' }}</td>
+                                                <td>{{ employee.employee_contact|default:'' }}</td>
+                                                <td>{{ employee.employee_email|default:'' }}</td>
+                                                <td>{{ employee.designation|default:'' }}</td>
+                                                <td>{{ employee.age|default:'' }}</td>
+                                                <td>{{ employee.gender|default:'' }}</td>
+                                                <td>{{ employee.user_name|default:'' }}</td>
+                                                 <td>{{ employee.corporate_name|default:'' }}</td>
 
                                                 <td>
                                                     <a href="/Corporate/Admin/add-employee/{{ employee.id }}" class="btn btn-tbl-edit btn-xs">

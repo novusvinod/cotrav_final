@@ -8614,3 +8614,11 @@ margin-left: 33px;
   display: block;
   overflow: scroll;
 }
+
+.blog-grid-simple p {
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 400; }
+
+
+.margin-10px-bottom {margin-bottom:20px;}

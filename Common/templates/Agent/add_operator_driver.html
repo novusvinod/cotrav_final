@@ -5,6 +5,7 @@
 
 {% if user %}
 			<!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -23,7 +24,7 @@
  <form method="post" action="/agents/add-operator-driver/0">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
             {% if operator_drivers %}
             {% for driver in operator_drivers %}
             <input type="hidden" class="col-sm-8 form-control" name="driver_id" value="{{driver.id }}">
@@ -135,7 +136,7 @@
                                         <div class="form-group">
                                             <div class="offset-md-3 col-md-9">
                                                 <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" class="btn btn-default">Cancel</button>
+                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                             </div>
                                         </div>
 

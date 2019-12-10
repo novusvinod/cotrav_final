@@ -5,6 +5,7 @@
 
 {% if user %}
 			<!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -21,7 +22,7 @@
  <form method="post" action="/agents/add-operator/0">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
             {% if operators %}
             {% for operator in operators %}
             <input type="hidden" class="col-sm-8 form-control" name="operator_id" value="{{operator.id }}">
@@ -194,16 +195,6 @@
 
                                             </div>
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Service Tax Number</label>
-                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="service_tax_number"  value="{{operator.service_tax_number}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="service_tax_number" placeholder="Service Tax Number">
-                                         {% endif %}
-                                        </div>
 
                                      <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Night Start Time</label>
@@ -274,7 +265,7 @@
                           <div class="form-group">
                                             <div class="offset-md-6 col-md-9">
                                                 <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" class="btn btn-default">Cancel</button>
+                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                             </div>
                                         </div>
 

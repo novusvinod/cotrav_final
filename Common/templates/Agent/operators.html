@@ -12,7 +12,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Group Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Operator ? </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -20,7 +20,7 @@
                 <input type="hidden" name="operator_id" id="operator_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="delete_id" value="1">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                     <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
@@ -32,7 +32,7 @@
     </div>
 </div>
 
-
+  {% include 'cotrav_alert_message.html' %}
 <!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="card-body ">
 
-                {% include 'cotrav_alert_message.html' %}
+
             <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      Operator Details
@@ -75,7 +75,7 @@
                                                 <th>Website</th>
 
                                                 <th>Is TAX Applicable</th>
-                                                <th>Tax No</th>
+
                                                 <th>TDS Rate</th>
                                                 <th>GST No</th>
                                                 <th>PAN No</th>
@@ -96,7 +96,7 @@
                                                 <td>{{ operator.website }}</td>
 
                                                 <td>{{ operator.is_service_tax_applicable }}</td>
-                                                <td>{{ operator.service_tax_number }}</td>
+
                                                 <td>{{ operator.tds_rate }}</td>
                                                 <td>{{ operator.gst_id }}</td>
                                                 <td>{{ operator.pan_no }}</td>

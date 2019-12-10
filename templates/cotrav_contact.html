@@ -3,7 +3,7 @@
 {% block content %}
 
 {% load static %}
-
+{% include 'cotrav_alert_contact.html' %}
   <!-- start page title section -->
         <section class="page-title-section2 bg-img cover-background"  data-background="{% static 'img/bg/bg_contactus.jpg' %}">
 
@@ -20,23 +20,23 @@
                             <h4>Let's talk about your business</h4>
                         </div>
                         <div class="contact-form-box margin-30px-top">
-                          <form method="post" action="{% static 'bat/rd-mailform.php' %}" class="mailform off2">
+                          <form method="post" action="contact" class="mailform off2">
                                 <input type="hidden" name="form-type" value="contact">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="text" name="name" placeholder=" Name:" data-constraints="@LettersOnly @NotEmpty">
+                                        <input type="text" name="contact_person_name" id="name" placeholder=" Name:" data-constraints="@LettersOnly @NotEmpty">
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="phone" placeholder="Company's Name:" data-constraints="@LettersOnly @NotEmpty">
+                                        <input type="text" name="corporate_name" id="comp_name" placeholder="Company's Name:" data-constraints="@LettersOnly @NotEmpty">
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="email" placeholder="Contact Number:" data-constraints=" @phone">
+                                        <input type="text" name="contact_person_no" id="contact_no" placeholder="Contact Number:" data-constraints=" @phone">
                                     </div>
                                      <div class="col-md-6">
-                                        <input type="text" name="email" placeholder="Email:" data-constraints="@Email @NotEmpty">
+                                        <input type="text" name="contact_person_email" id="email" placeholder="Email:" data-constraints="@Email @NotEmpty">
                                     </div>
                                     <div class="col-md-12">
-                                        <textarea name="message" rows="5" placeholder="Message:" data-constraints="@NotEmpty"></textarea>
+                                        <textarea name="message" rows="5" placeholder="Message:" id="message" data-constraints="@NotEmpty"></textarea>
                                     </div>
                                     <div class="mfControls col-md-12">
                                         <button type="submit" class="butn">Sumbit comment</button>

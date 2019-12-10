@@ -1,10 +1,11 @@
-{% extends 'Company/Employee/layout/header.html' %}
+date{% extends 'Company/Employee/layout/header.html' %}
 
 {% block content %}
 
 {% if user %}
 <!-- start page content -->
 
+{% include 'cotrav_alert_message.html' %}
 
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -14,6 +15,7 @@
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
             <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
             <input type="hidden" name="employee_id" value="{{user.id}}">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
         <div class="row">
             <div class="col-md-4">
@@ -76,7 +78,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Departure Date*</label>
-                                 <input type="text" class="form-control col-sm-8 date-format" name="departure_date" placeholder="Departure Date" required>
+                                 <input type="text" class="form-control col-sm-8 date" name="departure_date" placeholder="Departure Date" required>
                             </div>
 
                          <div class="form-group row">
@@ -84,6 +86,9 @@
                                  <input type="text" class="form-control col-sm-8" name="preferred_flight" placeholder="Preferred Flights">
                             </div>
 
+
+                        {% for corp_acces in corp_access %}
+                                {% if corp_acces.has_assessment_codes == 1 %}
 
                               <div class="form-group row">
                                     <label class="col-sm-4" >Assessment Code*</label>
@@ -107,7 +112,8 @@
 
                                         </div>
 
-
+                                {% endif %}
+                              {% endfor %}
 
                           <div class="form-group row">
                                 <label class="col-sm-4" >Booking Reason/ Comment*</label>
@@ -119,7 +125,7 @@
                                 <div class="form-group">
                                                <div class="offset-md-3 col-md-9">
                                                    <button type="submit" class="btn btn-info">Submit</button>
-                                                   <button type="button" class="btn btn-default">Cancel</button>
+                                                   <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                                </div>
                                            </div>
 
@@ -155,7 +161,7 @@
 {% endif %}
 
 
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <script type="text/javascript">
 
@@ -163,32 +169,11 @@ $(document).ready(function() {
 $(".js-example-basic-single").select2();
 });
 
+ var input = document.getElementById('pickup_location');
+ var autocomplete = new google.maps.places.Autocomplete(input);
 
-  <!--        For GET All Cities    -->
-  var city_Names = [];
-
-    {% for city in cities %}
-        city_Names.push('{{city.city_name}}'+', '+'{{city.state_name}}'+', '+'{{city.country_name}}');
-    {% endfor %}
-
-
-    $( "#pickup_city" ).autocomplete({
-      source: city_Names
-    });
-
-
-var pickup_city = document.getElementById('pickup_city');
-var pickup_location = document.getElementById('pickup_location');
-var drop_location = document.getElementById('drop_location');
-var options = {
- types: ['(cities)'],
- componentRestrictions: {country: 'in'}
-};
-
-   var auto1 = new google.maps.places.Autocomplete(pickup_city, options);
-   var auto2 = new google.maps.places.Autocomplete(pickup_location, options);
-   var auto3 = new google.maps.places.Autocomplete(drop_location, options);
-
+ var input = document.getElementById('drop_location');
+ var autocomplete = new google.maps.places.Autocomplete(input);
 
 
 </script>

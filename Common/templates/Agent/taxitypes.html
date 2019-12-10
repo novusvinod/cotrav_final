@@ -20,7 +20,7 @@
             <form action="/agents/taxi-types" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="taxitype_id" id="taxitype_id_add">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
 
                  <div class="form-group row" >
@@ -50,7 +50,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Taxi Type Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Taxi Type ?</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -71,6 +71,7 @@
     </div>
 </div>
 
+{% include 'cotrav_alert_message.html' %}
 
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -95,8 +96,6 @@
                         </div>
                     </div>
                     <div class="card-body ">
-
-                    {% include 'cotrav_alert_message.html' %}
             <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      Taxi Types Details

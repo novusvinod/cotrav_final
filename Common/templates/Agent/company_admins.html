@@ -13,7 +13,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title-status" id="delete_label">Add New Admin Form</h4>
+                <h4 class="modal-title-status" id="delete_label">Add New Company Admin Form</h4>
                 <button class="close" data-dismiss="modal" type="button">&times;</button>
             </div>
 
@@ -23,6 +23,7 @@
                 <input name="user_id" type="hidden" value="{{user.id}}">
                 <input name="corporate_id" type="hidden" value="{{user.corporate_id}}">
                 <input id="delete_id" name="delete_id" type="hidden">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <!-- Modal footer -->
                 <div class="modal-body">
 
@@ -43,7 +44,7 @@
                     <div class="form-group row" id="name1">
                         <label class="col-sm-5 control-label">Admin Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name" required
+                            <input class="form-control" id="name" name="name" placeholder="Admin Name" required
                                    type="text">
                         </div>
                     </div>
@@ -51,7 +52,7 @@
                     <div class="form-group row" id="email1">
                         <label class="col-sm-5 control-label">Admin Email</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email" required
+                            <input class="form-control" id="email" name="email" placeholder="Admin Email" required
                                    type="email">
                         </div>
                     </div>
@@ -180,7 +181,7 @@
     </div>
 </div>
 
-
+{% include 'cotrav_alert_message.html' %}
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -207,8 +208,6 @@
 
                                 </div>
                                 <div class="card-body ">
-
-                            {% include 'cotrav_alert_message.html' %}
          <div class="text-center">
              <div style="font-size:14px; font-weight:bold;">
                  All Companies Admins
@@ -274,6 +273,16 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
+<script>
+
+        $(".myselect").select2();
+
+        var mymod = $('#corporate_id');
+
+        mymod.select2();
+
+</script>
+
 
 <script type="text/javascript">
 $(function() {
@@ -307,7 +316,11 @@ $(function() {
     if(delete_id == 1){
 
     modal.find('#delete_id').val(1);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+
+
     modal.find('#name').val(name);
     modal.find('#email').val(email);
     modal.find('#cid').val(cid);
@@ -324,7 +337,7 @@ $(function() {
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
 
-    $('#delete_label').text("Do You Want to Delete This Record");
+    $('#delete_label').text("Do You Want to Delete Company Admin ?");
     $('#delete_btn').html("Yes");
 
     $('#corporate_id1').hide();
@@ -344,7 +357,9 @@ $(function() {
     $('#is_reverse_logistics1').hide();
 
     }else{
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
+        mymod.val(corporate_id);
+        mymod.trigger('change.select2');
+        
     modal.find('#name').val(name);
     modal.find('#email').val(email);
     modal.find('#cid').val(cid);
@@ -363,7 +378,7 @@ $(function() {
 
     modal.find('#delete_id').val('');
 
-    $('#delete_label').text("Group Details");
+    $('#delete_label').text("Company Admin Details");
     $('#delete_btn').html("Save");
 
     $('#group_auth_id1').show();

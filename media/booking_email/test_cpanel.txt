@@ -1,0 +1,80 @@
+
+http://167.71.225.194:2030
+SSL: https://167.71.225.194:2031
+---------------------
+Username: root
+password : Balwant@123
+Password: ssh server root password
+MySQL root Password: eRitMQZlWCaI
+
+IP Address: 167.71.225.194
+Web Panel Login: 
+Domain: cotrav.co.in
+Username: cotrav
+Password: MDU9Cow2
+Admin Email: vinod@taxivaxi.com
+
+chown -R root.root /usr/local/apache/cgi-bin
+chmod +x /usr/local/apache/cgi-bin/CoTrav/cotrav_test/manage.py
+
+dos2unix
+
+
+description "Django Project AutoStart"
+author      "CoTrav, www.cotrav.com"
+
+cd /opt/CoTravProject/
+source cotrav_env/bin/activate
+cd cotrav_test
+python manage.py runserver 157.245.98.189:8000
+
+
+
+
+Alias /static /root/CotravProject/cotrav_test/Common/static
+<Directory /root/CotravProject/cotrav_test/Common/static>
+    Require all granted
+</Directory>
+
+<Directory /root/CotravProject/cotrav_test>
+    <Files wsgi.py>
+        Require all granted
+    </Files>
+</Directory>
+
+WSGIDaemonProcess CotravProject python-path=/root/CotravProject:/root/CotravProject/CoTrav_env/lib/python2.7/site-packages
+WSGIProcessGroup CotravProject
+WSGIScriptAlias / /root/CotravProject/cotrav_test/wsgi.py
+
+
+/etc/nginx/conf.d/virtual.conf:12
+
+
+
+
+Go to CentOS WebPanel Admin GUI at http://SERVER_IP:2030/
+
+http://167.71.225.194:2030
+SSL: https://167.71.225.194:2031
+---------------------
+Username: root
+Password: ssh server root password
+MySQL root Password: 9CchAq2y72ET
+
+#########################################################
+          CentOS Web Panel MailServer Installer
+#########################################################
+SSL Cert name (hostname): test1.cotrav.co.in
+SSL Cert file location /etc/pki/tls/ private|certs
+
+
+Alias /static /opt/cotrav_project/static <Directory /opt/cotrav_project/static>  
+Require all granted </Directory> 
+<Directory /opt/cotrav_project/CoTrav>    
+<Files wsgi.py>        
+Require all granted    
+</Files> </Directory> 
+WSGIDaemonProcess CoTrav python-path=/opt/cotrav_project:/opt/cotrav_project/cotrav_env/lib64/python3.6/site-packages 
+WSGIProcessGroup CoTrav WSGIScriptAlias / /opt/cotrav_project/CoTrav/CoTrav/wsgi.py
+
+sudo systemctl restart httpd.service

@@ -3,6 +3,7 @@
 {% block content %}
 
 {% load static %}
+{% include 'cotrav_alert_signup.html' %}
 
  <!-- start main-wrapper section -->
     <div class="main-wrapper">
@@ -16,36 +17,59 @@
                                 <h3>Sign-Up</h3>
 
                             </div>
-                            <form class="registration-form">
+                            <form action="signup" method="POST" class="registration-form">
                                 <div class="row">
-                                    <div class="col-md-11">
-                                        <img src="{% static 'img/logos/1.png' %}" id="contact_icon1">
-                                        <input type="text" name="username" id="Name" required="required" placeholder="Name *" maxlength="70" class="medium-input input_signupform">
+                                     
+                                    <div class="col-11">
+                                         <img src="{% static 'img/logos/6.png' %}" id="contact_icon1">
+                                        <input type="text" name="corporate_name" id="company_Name" required="required" placeholder="Name Of Your Company *" maxlength="70" class="medium-input input_signupform">
+                                        <span class="err_msg">{{err_msg}}</span>
+                                    </div>
+
+                                       <div class="col-11">
+                                         <img src="{% static 'img/logos/7.png' %}" id="contact_icon1">
+                                        <input type="text" name="corporate_location" id="company_location" required="required" placeholder="Location *" value="{{city}}" maxlength="70" class="medium-input input_signupform">
+                                    </div>
+                                     <div class="col-11">
+                                         <img src="{% static 'img/logos/1.png' %}" id="contact_icon1">
+                                        <input type="text" name="contact_person_name" id="Name" required="required" placeholder="Contact Person *" value="{{name}}" maxlength="70" class="medium-input input_signupform">
+                                    </div>
+                                      <div class="col-11">
+                                            <img src="{% static 'img/logos/3.png' %}" id="contact_icon1">
+                                        <input type="text" name="contact_person_no" id="phone" placeholder="Contact Number" maxlength="10" value="{{number}}" class="medium-input input_signupform">
+                                    </div>
+                                    <div class="col-11">
+                                         <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
+                                        <input type="email" name="contact_person_email" id="Contact_email" required="required" placeholder="Contact Email *" value="{{email}}" maxlength="70" class="medium-input input_signupform">
                                     </div>
 
                                     <div class="col-11">
-                                         <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
-                                        <input type="email" name="email" id="email" required="required" placeholder="Email *" maxlength="70" class="medium-input input_signupform">
-                                    </div>
+                                        <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
+                                        <select name="Hear_About_Us" class="medium-input input_signupform" required>
+                                            <option value="">How Did You Hear About Us?</option>
+                                            <option value="Website">Website</option>
+                                            <option value="news paper">News Paper</option>
+                                            <option value="Email">Email</option>
+                                            <option value="mobile sms">Mobile SMS</option>
+                                        </select>
+
+                                   </div>
+                                    <input type="hidden" value="Sign Up" name="Lead_Source">
+
                                     <div class="col-11">
-                                            <img src="{% static 'img/logos/3.png' %}" id="contact_icon1">
-                                        <input type="text" name="phone" id="phone" placeholder="Phone" maxlength="10" class="medium-input input_signupform">
+                                       <img src="{% static 'img/logos/8.png' %}" id="contact_icon1">
+                                        <textarea name="message" rows="5" placeholder="Message:" data-constraints="@NotEmpty" value="{{message}}" class="medium-input input_signupform"></textarea>
                                     </div>
-                                    <div class="col-11">
-                                       <img src="{% static 'img/logos/4.png' %}" id="contact_icon1">
-                                        <input type="password" name="password" id="password" required="required" placeholder="Password *" maxlength="70" class="medium-input input_signupform">
-                                    </div>
-                                    <div class="col-11">
-                                        <img src="{% static 'img/logos/4.png' %}" id="contact_icon1">
-                                        <input type="password" name="confirmpassword" id="confirmpassword" required="required" placeholder="Confirm Password *" maxlength="70" class="medium-input input_signupform">
-                                    </div>
+                                 
                                     <div class="col-12">
                                         <button class="butn theme medium" type="submit"><span>Sign-Up</span></button>
-                                        <p class="no-margin float-right" ><a href="login.html" id="signup-txt-color">Already Register?</a></p>
+                
                                     </div>
                                 </div>
                             </form>
+                        
                         </div>
+                        
                     </div>
                 </div>
 
@@ -56,6 +80,12 @@
     </div>
     <!-- end main-wrapper section -->
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
+<script>
+  var company_location = document.getElementById('company_location');
+  var autocomplete = new google.maps.places.Autocomplete(company_location);
+
+</script>
 
 {% endblock %}

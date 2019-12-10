@@ -11,13 +11,14 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Group Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Company ? </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/agents/delete-company/{{user.id}}" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="corporate_id" id="company_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
@@ -38,18 +39,25 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title-status">Select Setting</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title-status ">Select Setting</h4>
+
             </div>
             <div class="modal-body">
 
-                <ol style="font-size:14px;">
-                    <li> <a href="/agents/rates/0">Company Rates</a> </li>
-                    <li> <a href="/agents/company-management-fees">Management Fees</a> </li>
-                    <li> <a href="/agents/company-operation-management">Operation Management</a> </li>
-                    <li> <a href="/agents/company-relationship-manager">Relationship Manager</a> </li>
 
-                </ol>
+                <div class="list-group">
+    <a href="/agents/rates/0" class="list-group-item list-group-item-info"> <i class="fa fa-inr" aria-hidden="true"></i> Company Rates</a>
+                    <div class="dropdown-divider"></div>
+    <a href="/agents/company-management-fees" class="list-group-item list-group-item-success"><i class="fa fa-money" aria-hidden="true"></i> Management Fees</a>
+                    <div class="dropdown-divider"></div>
+    <a href="/agents/company-operation-management" class="list-group-item list-group-item-warning"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Operation Management</a>
+                    <div class="dropdown-divider"></div>
+    <a href="/agents/company-relationship-manager" class="list-group-item list-group-item-danger"> <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Relationship Manager</a>
+  </div>
+
+
+
+
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
@@ -62,7 +70,7 @@
     </div>
 </div>
 
-
+{% include 'cotrav_alert_message.html' %}
 <!-- start page content -->
             <div class="page-content-wrapper">
                 <div class="page-content">
@@ -87,7 +95,6 @@
                                 </div>
                                 <div class="card-body ">
 
-                                {% include 'cotrav_alert_message.html' %}
 
          <div class="text-center">
              <div style="font-size:14px; font-weight:bold;">

@@ -91,7 +91,7 @@
 
                                     <!-- Menu Area -->
                                     <ul class="navbar-nav ml-auto" id="nav" class="nav_nav2" style="display: none;">
-                                <li><a href="/">Home</a> </li>
+                                <li><a href="index">Home</a> </li>
                                     <li><a href="about">About Us</a> </li>
                                       <li><a href="login">Login</a> </li>
                                       <li><a href="signup" >Sign Up</a> </li>
@@ -125,6 +125,7 @@
         <!-- start registration form -->
         <section class="parallax position-relative box-hover" data-overlay-dark="6" data-background="img/bg/bg-login.jpg">
             <div class="container">
+                {% include 'cotrav_alert_message.html' %}
                 <div class="row">
                     <div class="col-lg-6 center-col">
                         <div class="bg-white padding-30px-all sm-padding-20px-all border border-width-5">
@@ -136,20 +137,21 @@
                                 <div class="row">
 
                                     <div class="alert alert-primary" style="display: none;" role="alert"><p style="color:red; font-weight:bold;">{{error}}</p></div>
-                                   
-                                 
+
+
                                     <div class="col-11">
                                          <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
                                         <input type="email" name="email" id="email" required="required" placeholder="Email *" maxlength="70" class="medium-input input_signupform">
                                     </div>
-                                  
+
                                     <div class="col-11">
                                        <img src="{% static 'img/logos/4.png' %}" id="contact_icon1">
                                         <input type="password" name="password" id="password" required="required" placeholder="Password *" maxlength="70" class="form2" >
                                     </div>
-                                        <div class="col-11">
+
+                                     <div class="col-11">
                                        <img src="{% static 'img/logos/5.png' %}" id="contact_icon1">
-                                    <select class="form2 box_section" name="corporate_login_type" required>
+                                        <select class="form2 box_section" name="corporate_login_type" required>
                                             <option value="">Select Login Type (Admin/SPOC others)</option>
                                             <option value="1">Admin</option>
                                             <option value="2">Approver 1</option>
@@ -157,7 +159,7 @@
                                             <option value="4">SPOC</option>
                                             <option value="5">Flight Approver</option>
                                             <option value="6">Employee</option>
-                                                 
+
                                        </select>
                                     </div>
 
@@ -216,12 +218,12 @@
                           <div class="row">
                               <div class="col-md-6 no-padding-right xs-padding-15px-right">
                                   <ul class="footer-list xs-margin-5px-bottom">
-                                     <li><a href="cotrav/home">Home</a></li>
-                                      <li><a href="cotrav/about">About us</a></li>
-                                     <li><a href="cotrav/login">Login</a></li>
-                                      <li><a href="cotrav/signup">Sign Up</a></li>
-                                      <li><a href="cotrav/contact">Contact Us</a></li>
-                                      <li><a href="cotrav/support">Support</a></li>
+                                     <li><a href="home">Home</a></li>
+                                      <li><a href="about">About us</a></li>
+                                     <li><a href="login">Login</a></li>
+                                      <li><a href="signup">Sign Up</a></li>
+                                      <li><a href="contact">Contact Us</a></li>
+                                      <li><a href="support">Support</a></li>
                                   </ul>
                               </div>
                            </div>

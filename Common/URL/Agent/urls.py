@@ -1,11 +1,15 @@
 from django.urls import path,include
 from Common.VIEW.Agent import agent_views
+from landing.leads_generation import  lead_detail_view , leads , lead_update , lead_create , lead_delete, lead_assigned
 
 urlpatterns = [
     #Agent Path
     path('agents/login', agent_views.agent_login_action),
     path('agents/logout', agent_views.agent_logout_action),
     path('agents/agent_home', agent_views.agent_homepage),
+    path('agents/user_profile', agent_views.user_profile),
+    path('agents/upload', agent_views.upload_file_getpath),
+    path('agents/pdf', agent_views.generate_pdf_file),
 
     path('agents/taxi-types',agent_views.taxi_types),
     path('agents/taxi-models',agent_views.taxi_models),
@@ -56,6 +60,14 @@ urlpatterns = [
     path('agents/agents', agent_views.view_agents),
     path('agents/add-agent/<int:id>', agent_views.add_agent),
 
+    path('agents/hotels', agent_views.hotels),
+    path('agents/add-hotel/<int:id>', agent_views.add_hotel),
+    path('agents/hotel_contacts/<int:id>', agent_views.hotel_contacts),
+    path('agents/hotel_banks/<int:id>', agent_views.hotel_banks),
+
+    path('agents/hotel_booking_portals', agent_views.hotel_booking_portals),
+    path('agents/add-hotel-portals/<int:id>', agent_views.add_hotel_portals),
+
     path('agents/operators', agent_views.operators),
     path('agents/operator_contacts/<int:id>', agent_views.operator_contacts),
     path('agents/operator_banks/<int:id>', agent_views.operator_banks),
@@ -75,6 +87,7 @@ urlpatterns = [
     path('agents/view-taxi-booking/<int:id>', agent_views.view_taxi_booking),
     path('agents/accept-taxi-booking', agent_views.accept_taxi_booking),
     path('agents/assign-taxi-booking/<int:id>', agent_views.assign_taxi_booking),
+    path('agents/add-taxi-invoice/<int:id>', agent_views.add_taxi_invoice),
 
     path('agents/bus-bookings/<int:id>', agent_views.bus_bookings),
     path('agents/add-bus-booking/<int:id>', agent_views.add_bus_booking),
@@ -99,5 +112,30 @@ urlpatterns = [
     path('agents/view-flight-booking/<int:id>', agent_views.view_flight_booking),
     path('agents/accept-flight-booking', agent_views.accept_flight_booking),
     path('agents/assign-flight-booking/<int:id>', agent_views.assign_flight_booking),
+
+    path('agents/download-taxi-bookings', agent_views.download_taxi_bookings),
+    path('agents/download-bus-bookings', agent_views.download_bus_bookings),
+    path('agents/download-train-bookings', agent_views.download_train_bookings),
+    path('agents/download-flight-bookings', agent_views.download_flight_bookings),
+    path('agents/download-hotel-bookings', agent_views.download_hotel_bookings),
+
+    path('agents/lead/', leads, name='lead-list'),
+    path('agents/lead-detail/<int:pk>', lead_detail_view, name='lead-detail'),
+    path('agents/lead-create/', lead_create, name='lead-create'),
+    path('agents/lead-update/<int:pk>', lead_update, name='lead-update'),
+    path('agents/lead-delete/<int:pk>', lead_delete, name='lead-delete'),
+    path('agents/lead-edit/<int:pk>', lead_update, name='lead_edit'),
+    path('agents/lead-assigned', lead_assigned, name='lead_assigned'),
+
+    path('agents/download-billing-entities', agent_views.download_billing_entities),
+    path('agents/download-rates', agent_views.download_rates),
+    path('agents/download-assessment_cities', agent_views.download_assessment_cities),
+    path('agents/download-assessment_codes', agent_views.download_assessment_codes),
+    path('agents/download-groups', agent_views.download_groups),
+    path('agents/download-subgroups', agent_views.download_subgroups),
+    path('agents/download-admins', agent_views.download_admins),
+    path('agents/download-spocs', agent_views.download_spocs),
+    path('agents/download-employees', agent_views.download_employees),
+
 
 ]

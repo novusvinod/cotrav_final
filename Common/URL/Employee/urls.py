@@ -2,7 +2,9 @@ from django.urls import path,include
 from Common.VIEW.Employee import employee_views
 
 urlpatterns = [
+    path('Corporate/Employee/logout', employee_views.logout_action),
     path('Corporate/Employee/home', employee_views.homepage),
+    path('Corporate/Employee/user_profile', employee_views.user_profile),
     path('Corporate/Employee/company-billing_entities/<int:id>', employee_views.company_billing_entities),
     path('Corporate/Employee/company-rates/<int:id>', employee_views.company_rates),
     path('Corporate/Employee/company-groups/<int:id>', employee_views.company_groups),
@@ -32,5 +34,12 @@ urlpatterns = [
     path('Corporate/Employee/flight-bookings/<int:id>', employee_views.flight_bookings),
     path('Corporate/Employee/add-flight-booking/<int:id>', employee_views.add_flight_booking),
     path('Corporate/Employee/view-flight-booking/<int:id>', employee_views.view_flight_booking),
+
+    path('Corporate/Employee/download-taxi-bookings', employee_views.download_taxi_bookings),
+    path('Corporate/Employee/download-bus-bookings', employee_views.download_bus_bookings),
+    path('Corporate/Employee/download-train-bookings', employee_views.download_train_bookings),
+    path('Corporate/Employee/download-flight-bookings', employee_views.download_flight_bookings),
+    path('Corporate/Employee/download-hotel-bookings', employee_views.download_hotel_bookings),
+
 
 ]

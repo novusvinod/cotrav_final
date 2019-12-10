@@ -1,8 +1,13 @@
+import os
+
 from django.conf import settings
+from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect
 import requests
 import json
-from datetime import datetime
+import string
+import random
+from datetime import date, datetime
 from django.views.decorators.csrf import csrf_exempt
 from django_global_request.middleware import get_request
 # Create your views here.
@@ -12,11 +17,60 @@ from django.contrib.auth.hashers import make_password
 from Common.models import Corporate_Agent_Login_Access_Token
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from landing.cotrav_messeging import Excelexport, Render
+from django.core.mail import EmailMultiAlternatives, get_connection
+from openpyxl import Workbook
+from django.http import HttpResponse
 
 
-@login_required()
+def upload_file_getpath(request):
+    if request.method == 'POST':
+        file_up = request.FILES['email_attachment']
+        print("befour Upload")
+        get_path = file_upload_get_path(file_up)
+        print("After Upload")
+        print(get_path)
+        return render(request, 'Agent/upload.html', {})
+    else:
+        return render(request, 'Agent/upload.html', {})
+
+
+def generate_pdf_file(request):
+    render = Render()
+    name = {'abc':'abc','xyz':'xyz'}
+    path = render.render_to_file("Agent/xhtmltopdftest.html",name)
+    print(path)
+    connection = get_connection()  # uses SMTP server specified in settings.py
+    connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+    mail_to = "balwant@taxivaxi.in"
+    email_body = "Test"
+    email_subject = "Test"
+    html_content = path['1']
+    msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [mail_to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.attach_file(html_content)
+    res = msg.send(fail_silently=True)
+    print("email send")
+    connection.close()  # Cleanup
+    return 1
+
 def agent_homepage(request):
-    return render(request,'Agent/agent_home_page.html',{'user': request.user})
+    if 'agent_login_type' in request.session:
+        user_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        payload = {}
+        print("agents User type")
+        print(request.user)
+        print(user_type)
+        url = settings.API_BASE_URL + "agent_dashboard"
+        data = getDataFromAPI(user_type, access_token, url, payload)
+        dataDashboard = data['Dashboard']
+        return render(request,'Agent/agent_home_page.html',{'user': request.user,'dataDashboard':dataDashboard})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+def user_profile(request):
+    return render(request, 'Agent/user_profile.html', {'user': request.user})
 
 
 def agent_login_action(request):
@@ -31,30 +85,35 @@ def agent_login_action(request):
                 request.session.set_expiry(7200)  # sets the exp. value of the session
                 auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
                 messages.success(request, 'Login Successfully..!')
+                print("hjgjhfjfj")
+                print(user)
                 return redirect("/agents/agent_home")
         else:
-            context['error'] = "Invalid Email Or Password"
+            messages.error(request, 'Invalid Email Or Password..!')
             return render(request,'Agent/corporate_agent_login.html',context)
     else:
         return render(request,'Agent/corporate_agent_login.html',{})
 
 
 def agent_logout_action(request):
-    request = get_request()
-    access_token = request.session['access_token']
-    user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
-    user.expiry_date = datetime.now()  # change field
-    user.save()  # this will update only
-    logout(request)  # the user is now LogOut
-    return redirect("/agents/login")
+    if 'agent_login_type' in request.session:
+        request = get_request()
+        access_token = request.session['agent_access_token']
+        user = Corporate_Agent_Login_Access_Token.objects.get(access_token=access_token)
+        user.expiry_date = datetime.now()  # change field
+        user.save()  # this will update only
+        del request.session['agent_login_type']
+        del request.session['agent_access_token']
+        return redirect("/agents/login")
+    else:
+        return redirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def taxi_types(request):
     if request.method == "POST":
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             type_name = request.POST.get('type_name', '')
 
@@ -84,15 +143,15 @@ def taxi_types(request):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/taxi-types", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Taxi Type Operation Fails')
+                messages.error(request, taxi['message'])
                 return HttpResponseRedirect("/agents/taxi-types", {'message': "Operation Fails"})
 
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+        user_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "taxi_types"
         payload = {'': ''}
@@ -106,12 +165,11 @@ def taxi_types(request):
             return render(request, "Agent/taxitypes.html", {'Types': {}})
 
 
-@login_required(login_url='/agents/login')
 def taxi_models(request):
     if request.method == "POST":
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             brand_name = request.POST.get('brand_name', '')
             model_name = request.POST.get('model_name', '')
@@ -144,16 +202,15 @@ def taxi_models(request):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/taxi-models", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Taxi Model Operation Fails')
-
+                messages.error(request, taxi['message'])
                 return HttpResponseRedirect("/agents/taxi-models", {'message': "Operation Fails"})
 
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+        user_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "taxi_types"
         payload = {'': ''}
@@ -171,12 +228,11 @@ def taxi_models(request):
             return render(request, "Agent/taxi_models.html", {'Types': {}})
 
 
-@login_required(login_url='/agents/login')
 def taxis(request):
     if request.method == "POST":
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             model_id = request.POST.get('model_id', '')
             taxi_reg_no = request.POST.get('taxi_reg_no', '')
@@ -213,15 +269,15 @@ def taxis(request):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/taxis", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Taxis Operation Fails')
+                messages.error(request, taxi['message'])
                 return HttpResponseRedirect("/agents/taxis", {'message': "Operation Fails"})
 
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+        user_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "taxis"
         payload = {'': ''}
@@ -239,12 +295,12 @@ def taxis(request):
             return render(request, "Agent/taxis.html", {'Types': {}})
 
 
-@login_required(login_url='/agents/login')
+
 def add_company(request):
     if request.method == "POST":
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             corporate_name = request.POST.get('corporate_name', '')
             corporate_code = request.POST.get('corporate_code', '')
@@ -296,17 +352,18 @@ def add_company(request):
 
             url = settings.API_BASE_URL + "add_company"
             company = getDataFromAPI(user_type, access_token, url, payload)
+            print(company)
             if company['success'] == 1:
                 messages.success(request, 'Company Added Successfully..!')
                 return HttpResponseRedirect("/agents/companies", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add Company..!')
+                messages.success(request, 'Company Added Successfully..!')
                 return HttpResponseRedirect("/agents/companies", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
     else:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         payload = {'some': 'data'}
 
         url_city = settings.API_BASE_URL + "cities"
@@ -315,12 +372,12 @@ def add_company(request):
         return render(request, 'Agent/add_company.html', {'cities':cities})
 
 
-@login_required(login_url='/agents/login')
+
 def companies(request):
     request = get_request()
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         url = settings.API_BASE_URL+"companies"
         payload = {'some': 'data'}
         company = getDataFromAPI(login_type, access_token, url, payload)
@@ -333,12 +390,11 @@ def companies(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def edit_company(request, id):
     if request.method == "POST":
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             corporate_name = request.POST.get('corporate_name', '')
             corporate_code = request.POST.get('corporate_code', '')
@@ -382,9 +438,9 @@ def edit_company(request, id):
         else:
             return HttpResponseRedirect("/agents/login")
     else:
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "view_company"
             payload = {'corporate_id': id}
@@ -394,12 +450,12 @@ def edit_company(request, id):
         else:
             return HttpResponseRedirect("/agents/login")
 
-@login_required(login_url='/agents/login')
+
 def delete_company(request,id):
     request = get_request()
-    if 'login_type' in request.session:
-        user_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        user_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         corporate_id = request.POST.get('corporate_id', '')
         user_id = request.POST.get('user_id', '')
@@ -417,12 +473,11 @@ def delete_company(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def company_admins(request, id):
     request = get_request()
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "admins"
         payload = {'corporate_id': id}
@@ -442,13 +497,12 @@ def company_admins(request, id):
     else:
         return HttpResponseRedirect("/agents/login")
 
-    
-@login_required(login_url='/agents/login')
+
 def company_billing_entities(request, id):
     request = get_request()
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "billing_entities"
         payload = {'corporate_id': id}
@@ -471,13 +525,13 @@ def company_billing_entities(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_rates(request, id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "company_rates"
         payload = {'corporate_id': id}
@@ -493,23 +547,29 @@ def company_rates(request, id):
         url_taxi_type = settings.API_BASE_URL + "taxi_types"
         taxi_type = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
 
+## sanket added
+        payload = {}
+        url_taxi_packages = settings.API_BASE_URL + "taxi_packages"
+        taxi_packages = getDataFromAPI(login_type, access_token, url_taxi_packages, payload)
+        taxi_packages = taxi_packages['packages']
+
         if company['success'] == 1:
             company_rates = company['Corporate_Retes']
             cities = cities["Cities"]
             taxi_type = taxi_type['taxi_types']
-            return render(request, "Agent/company_rates.html", {'corporate_rates': company_rates,'companies':companies,'cities':cities,'taxi_types':taxi_type})
+            return render(request, "Agent/company_rates.html", {'corporate_rates': company_rates,'companies':companies,'cities':cities,'taxi_types':taxi_type,'taxi_packages':taxi_packages})
         else:
             return render(request, "Agent/company_rates.html", {'entities': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_groups(request, id):
     request = get_request()
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "groups"
         payload = {'corporate_id': id}
@@ -530,13 +590,13 @@ def company_groups(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_subgroups(request, id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "subgroups"
         payload = {'corporate_id': id}
@@ -561,13 +621,13 @@ def company_subgroups(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_spocs(request, id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "spocs"
         payload = {'corporate_id': id}
@@ -583,12 +643,12 @@ def company_spocs(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_employees(request, id):
     request = get_request()
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "employees"
         payload = {'corporate_id': id}
@@ -604,12 +664,12 @@ def company_employees(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_management_fees(request):
     request = get_request()
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         if request.method == 'POST':
             corporate_id = request.POST.get('corporate_id', '')
             user_id = request.POST.get('user_id', '')
@@ -640,7 +700,7 @@ def company_management_fees(request):
                 messages.success(request, operation_msg)
                 return HttpResponseRedirect("/agents/company-management-fees", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Record Not Added')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/company-management-fees", {'message': "Record Not Added"})
 
         else:
@@ -667,11 +727,11 @@ def company_management_fees(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_operation_management(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         user_id = request.user.id;
 
         if request.method == 'POST':
@@ -696,7 +756,7 @@ def company_operation_management(request):
                 messages.success(request, message)
                 return HttpResponseRedirect("/agents/company-operation-management", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Record Not Added')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/company-operation-management", {'message': "Record Not Added"})
 
         else:
@@ -727,11 +787,11 @@ def company_operation_management(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def company_relationship_manager(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         user_id = request.user.id;
 
         if request.method == 'POST':
@@ -757,7 +817,7 @@ def company_relationship_manager(request):
                 messages.success(request, message)
                 return HttpResponseRedirect("/agents/company-relationship-manager", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Record Not Added')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/company-relationship-manager", {'message': "Record Not Added"})
 
         else:
@@ -784,16 +844,17 @@ def company_relationship_manager(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def assessment_cities(request,id):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         user_id = request.user.id;
 
         if request.method == 'POST':
             corporate_id = request.POST.get('corporate_id', '')
             city_name = request.POST.get('city_name', '')
+            print(city_name)
 
             city_id = request.POST.get('city_id', '')
 
@@ -801,16 +862,18 @@ def assessment_cities(request,id):
 
             if city_id:
                 url = settings.API_BASE_URL + "update_assessment_cities"
+                opr_msg = "Assessment Cities Updated Successfully"
             else:
                 url = settings.API_BASE_URL + "add_assessment_cities"
+                opr_msg = "Assessment Cities Added Successfully"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
+            print(company)
             if company['success'] == 1:
-
-                messages.success(request, 'Added Successfully')
+                messages.success(request, opr_msg)
                 return HttpResponseRedirect("/agents/assessment_cities/0", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Record Not Added')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/assessment_cities/0", {'message': "Record Not Added"})
 
         else:
@@ -834,11 +897,10 @@ def assessment_cities(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def assessment_codes(request,id):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         user_id = request.user.id;
         if request.method == 'POST':
 
@@ -850,22 +912,24 @@ def assessment_codes(request,id):
             service_from = request.POST.get('service_from', '')
             service_to = request.POST.get('service_to', '')
 
-            city_id = request.POST.get('city_id', '')
+            code_id = request.POST.get('code_id', '')
 
             payload = {'corporate_id': corporate_id, 'assessment_code': assessment_code, 'code_desc': code_desc,'from_date':from_date,'to_date':to_date,
-                       'login_type': login_type, 'user_id': user_id,'service_from':service_from,'service_to':service_to}
+                       'login_type': login_type, 'user_id': user_id,'service_from':service_from,'service_to':service_to,'code_id':code_id}
 
-            if city_id:
+            if code_id:
                 url = settings.API_BASE_URL + "update_assessment_codes"
+                opr_msg = "Assessment Code Added Successfully...!"
             else:
                 url = settings.API_BASE_URL + "add_assessment_codes"
+                opr_msg = "Assessment Code Added Successfully...!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
             if company['success'] == 1:
-                messages.success(request, 'Assessment Code Added Successfully..!')
+                messages.success(request, opr_msg)
                 return HttpResponseRedirect("/agents/assessment_codes/0", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Assessment Code Add Operation Fails..!')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/assessment_codes/0", {'message': "Record Not Added"})
 
         else:
@@ -887,16 +951,16 @@ def assessment_codes(request,id):
     else:
         return HttpResponseRedirect("/agents/login")
 
-@login_required(login_url='/agents/login')
+
 def delete_assessment_codes(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         code_id = request.POST.get('code_id')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             payload = {'code_id': code_id, 'user_id': user_id, 'login_type': login_type}
             url = settings.API_BASE_URL + "delete_assessment_codes"
@@ -912,16 +976,16 @@ def delete_assessment_codes(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def delete_assessment_cities(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         city_id = request.POST.get('city_id')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             payload = {'city_id': city_id, 'user_id': user_id, 'login_type': login_type}
             url = settings.API_BASE_URL + "delete_assessment_cities"
@@ -937,18 +1001,19 @@ def delete_assessment_cities(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_company_rate(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
 
-        if 'login_type' in request.session:
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             package_name = request.POST.get('package_name', '')
+            package_name_txt = request.POST.get('package_name_txt', '')
             city_id = request.POST.get('city_id')
             taxi_type = request.POST.get('taxi_type', '')
             tour_type = request.POST.get('tour_type', '')
@@ -962,40 +1027,48 @@ def add_company_rate(request, id):
             delete_id = request.POST.get('delete_id')
             rate_id = request.POST.get('rate_id')
 
+            if not package_name:
+                package_name = package_name_txt
+
             payload = {'corporate_id': corporate_id,'package_name':package_name,'city_id':city_id,'taxi_type':taxi_type,
             'tour_type':tour_type,'kms':kms,'hours':hours,'km_rate':km_rate,'hour_rate':hour_rate,'base_rate':base_rate,'night_rate':night_rate,
             'user_id': user_id, 'user_type': user_type,'rate_id':rate_id,'is_delete': delete_id, }
 
+            print(payload)
+
             if rate_id:
                 url = settings.API_BASE_URL + "update_company_rates"
-
+                opr_msg = "Company Rate Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_company_rates"
+                    opr_msg = "Company Rate Deleted Successfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_company_rates"
+                opr_msg = "Company Rate Added Successfully..!"
 
             company = getDataFromAPI(user_type, access_token, url, payload)
+            print(company)
             if company['success'] == 1:
-                messages.success(request, 'Company Rate Added Successfully..!')
+                messages.success(request, opr_msg)
                 return HttpResponseRedirect("/agents/rates/0", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add Company Rate..!')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/rates/0", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_company_entity(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             entity_name = request.POST.get('entity_name', '')
             billing_city_id = request.POST.get('billing_city_id')
@@ -1039,28 +1112,49 @@ def add_company_entity(request, id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/billing_entities/0", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add Company Entity..!')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/billing_entities//0", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_company_group(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             group_name = request.POST.get('group_name', '')
             zone_name = request.POST.get('zone_name')
 
+            name = request.POST.get('name', '')
+            email = request.POST.get('email', '')
+            cid = request.POST.get('cid', '')
+            contact_no = request.POST.get('contact_no', '')
+
+            is_radio = request.POST.get('is_radio', '')
+            is_local = request.POST.get('is_local', '')
+            is_outstation = request.POST.get('is_outstation', '')
+            is_bus = request.POST.get('is_bus', '')
+            is_train = request.POST.get('is_train', '')
+            is_hotel = request.POST.get('is_hotel', '')
+            is_meal = request.POST.get('is_meal', '')
+            is_flight = request.POST.get('is_flight', '')
+            is_water_bottles = request.POST.get('is_water_bottles', '')
+            is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+            access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
+            password = make_password("taxi123")
+
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
-                       'access_token': access_token, 'group_name': group_name, 'zone_name': zone_name}
+                       'access_token': access_token, 'group_name': group_name, 'zone_name': zone_name,'access_token_auth':access_token_auth,'name':name,
+                       'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,
+                       'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles':is_water_bottles,'is_reverse_logistics':is_reverse_logistics,
+                       'password':password}
 
             url = settings.API_BASE_URL + "add_group"
             company = getDataFromAPI(login_type, access_token, url, payload)
@@ -1075,26 +1169,46 @@ def add_company_group(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def add_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             subgroup_name = request.POST.get('group_name', '')
             group_id = request.POST.get('group_id', '')
 
+            name = request.POST.get('name', '')
+            email = request.POST.get('email', '')
+            cid = request.POST.get('cid', '')
+            contact_no = request.POST.get('contact_no', '')
+
+            is_radio = request.POST.get('is_radio', '')
+            is_local = request.POST.get('is_local', '')
+            is_outstation = request.POST.get('is_outstation', '')
+            is_bus = request.POST.get('is_bus', '')
+            is_train = request.POST.get('is_train', '')
+            is_hotel = request.POST.get('is_hotel', '')
+            is_meal = request.POST.get('is_meal', '')
+            is_flight = request.POST.get('is_flight', '')
+            is_water_bottles = request.POST.get('is_water_bottles', '')
+            is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+            access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
+            password = make_password("taxi123")
+
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
-                       'access_token': access_token, 'subgroup_name': subgroup_name, 'group_id': group_id}
+                       'access_token': access_token, 'subgroup_name': subgroup_name, 'group_id': group_id,'name':name,
+                       'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,
+                       'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles':is_water_bottles,'is_reverse_logistics':is_reverse_logistics,
+                       'password':password,'access_token_auth':access_token_auth}
 
             url = settings.API_BASE_URL + "add_subgroup"
             company = getDataFromAPI(login_type, access_token, url, payload)
-
+            print(company)
             if company['success'] == 1:
                 messages.success(request, 'Company Sub-Group Added Successfully..!')
 
@@ -1106,16 +1220,15 @@ def add_company_subgroup(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def update_company_group(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         group_id = request.POST.get('group_id', '')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             group_name = request.POST.get('group_name', '')
             zone_name = request.POST.get('zone_name')
@@ -1136,16 +1249,16 @@ def update_company_group(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def update_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         subgroup_id = request.POST.get('subgroup_id', '')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             group_name = request.POST.get('group_name', '')
 
@@ -1166,23 +1279,23 @@ def update_company_subgroup(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def delete_company_group(request, id):
     if request.method == 'POST':
         request = get_request()
         user_id = request.POST.get('user_id', '')
         group_id = request.POST.get('group_id')
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-            access_token_auth = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            access_token_auth = request.session['agent_access_token']
 
             payload = {'group_id': group_id, 'user_id': user_id, 'login_type': login_type, 'access_token': access_token,
                        'access_token_auth': access_token_auth}
             url = settings.API_BASE_URL + "delete_group"
             company = getDataFromAPI(login_type, access_token, url, payload)
-
+            print(company)
             if company['success'] == 1:
                 messages.success(request, 'Copmany Group Deleted Successfully..!')
                 return HttpResponseRedirect("/agents/groups/" + str(id), {'message': "Delete Successfully"})
@@ -1193,17 +1306,17 @@ def delete_company_group(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def delete_company_subgroup(request, id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             user_id = request.POST.get('user_id', '')
             subgroup_id = request.POST.get('subgroup_id')
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-            access_token_auth = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            access_token_auth = request.session['agent_access_token']
 
             payload = {'subgroup_id': subgroup_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'access_token_auth': access_token_auth}
@@ -1220,18 +1333,18 @@ def delete_company_subgroup(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_company_group_auth(request, id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             user_id = request.POST.get('user_id', '')
             corporate_id = request.POST.get('corporate_id', '')
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
-            access_token_auth = request.session['access_token']
+            access_token_auth = request.session['agent_access_token']
 
             name = request.POST.get('name', '')
             email = request.POST.get('email', '')
@@ -1273,38 +1386,39 @@ def add_company_group_auth(request, id):
             url = ""
             if group_auth_id:
                 url = settings.API_BASE_URL + "update_group_auth"
-                print("in auth id")
+                opr_msg = "Group Authenticator Updated Suuccessfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_group_auth"
-                    print(url)
+                    opr_msg = "Group Authenticator Deleted Suuccessfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_group_auth"
+                opr_msg = "Group Authenticator Added Suuccessfully..!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Company Group Authentication Added Successfully')
+                messages.success(request, opr_msg)
                 return HttpResponseRedirect("/agents/view-company-group/" + group_id, {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to add company group auth..!')
+                messages.error(request,  company['message'])
                 return HttpResponseRedirect("/agents/view-company-group/" + group_id, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_company_subgroup_auth(request, id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             user_id = request.POST.get('user_id', '')
             corporate_id = request.POST.get('corporate_id', '')
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
-            access_token_auth = request.session['access_token']
+            access_token_auth = request.session['agent_access_token']
 
             name = request.POST.get('name', '')
             email = request.POST.get('email', '')
@@ -1346,39 +1460,39 @@ def add_company_subgroup_auth(request, id):
             url = ""
             if subgroup_auth_id:
                 url = settings.API_BASE_URL + "update_subgroup_auth"
-                print("in auth id")
+                opr_msg = "Subgroup Authenticator Updated Suuccessfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_subgroup_auth"
-                    print(url)
+                    opr_msg = "Subgroup Authenticator Deleted Suuccessfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_subgroup_auth"
+                opr_msg = "Subgroup Authenticator Added Suuccessfully..!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
             print(url)
             print(company)
             if company['success'] == 1:
-                messages.success(request, 'Company Sub-Group Auth Added Successfully..!')
+                messages.success(request, opr_msg)
                 return HttpResponseRedirect("/agents/view-company-subgroup/" + subgroup_id,{'message': "Added Successfully"})
             else:
-
-                messages.error(request, 'Fail to Add Company Sub-Group Auth..!')
+                messages.error(request,  company['success'])
                 return HttpResponseRedirect("/agents/view-company-subgroup/" + subgroup_id, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_company_admins(request, id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             user_id = request.POST.get('user_id', '')
             corporate_id = request.POST.get('corporate_id', '')
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-            access_token_auth = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
 
             name = request.POST.get('name', '')
             email = request.POST.get('email', '')
@@ -1432,22 +1546,22 @@ def add_company_admins(request, id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/admins/" + str(id), {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail To Add company Admins..!')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/admins/" + str(id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_spocs(request, id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             user_id = request.POST.get('user_id', '')
             corporate_id = request.POST.get('corporate_id', '')
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             group_id = request.POST.get('group_id', '')
             subgroup_id = request.POST.get('subgroup_id', '')
@@ -1456,9 +1570,9 @@ def add_spocs(request, id):
             user_name = request.POST.get('user_name', '')
             user_contact = request.POST.get('user_contact', '')
             email = request.POST.get('email', '')
-            username = request.POST.get('username', '')
+            username = request.POST.get('email', '')
             budget = request.POST.get('budget', '')
-            expense = request.POST.get('expense', '')
+            expense = request.POST.get('budget', '')
 
             is_radio = request.POST.get('is_radio', '')
             is_local = request.POST.get('is_local', '')
@@ -1496,7 +1610,10 @@ def add_spocs(request, id):
                 operation_message= "Spoc Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_spoc"
-                    operation_message= "Spoc Deleted Successfully..!"
+                    operation_message= "Spoc In-Active Successfully..!"
+                if delete_id == '0':
+                    url = settings.API_BASE_URL + "delete_spoc"
+                    operation_message= "Spoc Active Successfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_spoc"
@@ -1507,18 +1624,18 @@ def add_spocs(request, id):
             print(company)
             if company['success'] == 1:
                 messages.success(request, operation_message)
-                return HttpResponseRedirect("/agents/spocs/" + str(id), {'message': "Added Successfully"})
+                return HttpResponseRedirect("/agents/spocs/0", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add Spocs..!')
-                return HttpResponseRedirect("/agents/spocs/" + str(id), {'message': "Record Not Added"})
+                messages.error(request, company['message'])
+                return HttpResponseRedirect("/agents/spocs/0", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
     else:
         request = get_request()
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             url_spoc = settings.API_BASE_URL + "view_spoc"
             payload = {'spoc_id': id}
             r = requests.post(url_spoc, data=payload, headers=headers)
@@ -1551,16 +1668,16 @@ def add_spocs(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_employee(request, id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             user_id = request.POST.get('user_id', '')
             corporate_id = request.POST.get('corporate_id', '')
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             spoc_id = request.POST.get('spoc_id', '')
             billing_entity_id = request.POST.get('billing_entity_id', '')
@@ -1569,6 +1686,7 @@ def add_employee(request, id):
 
             employee_name = request.POST.get('employee_name', '')
             employee_email = request.POST.get('employee_email', '')
+            username = request.POST.get('employee_email', '')
             employee_contact = request.POST.get('employee_contact', '')
             age = request.POST.get('age')
             gender = request.POST.get('gender')
@@ -1582,8 +1700,19 @@ def add_employee(request, id):
             designation = request.POST.get('designation', '')
             home_city = request.POST.get('home_city', '')
             home_address = request.POST.get('home_address', '')
-            assistant_id = request.POST.get('assistant_id', '')
+
             date_of_birth = request.POST.get('date_of_birth', '')
+            if date_of_birth and date_of_birth != 'None':
+                age = calculate_age(date_of_birth)
+            else:
+                age = 0
+
+            if is_cxo == '1':
+                assistant_id = request.POST.get('assistant_id', '')
+                if assistant_id == ' ':
+                    assistant_id =0
+            else:
+                assistant_id = 0
 
             employee_id = request.POST.get('employee_id')
 
@@ -1600,7 +1729,7 @@ def add_employee(request, id):
                        'employee_contact':employee_contact,'age':age,'gender':gender,'id_proof_type':id_proof_type,'id_proof_no':id_proof_no,
                        'is_active':is_active,'has_dummy_email':has_dummy_email,'fcm_regid':fcm_regid,'is_cxo':is_cxo,'employee_id': employee_id,
                        'designation':designation,'home_city':home_city,'home_address':home_address,'assistant_id':assistant_id,'date_of_birth':date_of_birth,
-                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id}
+                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id,'username':username}
 
             url = ""
             print(payload)
@@ -1619,21 +1748,21 @@ def add_employee(request, id):
             print(company)
             if company['success'] == 1:
                 messages.success(request, operation_message)
-                return HttpResponseRedirect("/agents/employees/" + str(id), {'message': "Added Successfully"})
+                return HttpResponseRedirect("/agents/employees/0", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail To Add Employee..!')
-                return HttpResponseRedirect("/agents/employees/" + str(id), {'message': "Record Not Added"})
+                messages.error(request, company['message'])
+                return HttpResponseRedirect("/agents/employees/0", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
     else:
         request = get_request()
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url_emp = settings.API_BASE_URL + "view_employee"
-            payload = {'employee_id': id}
+            payload = {'employee_id': id,'corporate_id': 0}
             company_emp = getDataFromAPI(login_type, access_token, url_emp, payload)
             employees = company_emp['Employee']
 
@@ -1641,32 +1770,39 @@ def add_employee(request, id):
             companies = getDataFromAPI(login_type, access_token, url_companies, payload)
             companies = companies['Corporates']
 
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['Cities']
+
             url_spoc = settings.API_BASE_URL + "spocs"
-            payload_spoc = {'corporate_id': 0}
-            company_spoc = getDataFromAPI(login_type, access_token, url_spoc, payload_spoc)
+            company_spoc = getDataFromAPI(login_type, access_token, url_spoc, payload)
             spocs = company_spoc['Spocs']
 
             url_entity = settings.API_BASE_URL + "billing_entities"
-            payload_entity = {'corporate_id': 0}
-            company_entity = getDataFromAPI(login_type, access_token, url_entity, payload_entity)
+            company_entity = getDataFromAPI(login_type, access_token, url_entity, payload)
             entitys = company_entity['Entitys']
 
+            url_emp = settings.API_BASE_URL + "employees"
+            employees1 = getDataFromAPI(login_type, access_token, url_emp, payload)
+            employeess = employees1['Employees']
+
+
             if id:
-                return render(request, 'Agent/add_employee.html', {'employee':employees,'spocs':spocs,'entitys':entitys,'companies':companies})
+                return render(request, 'Agent/add_employee.html', {'employee':employees,'companies':companies,'cities':cities,'spocs':spocs,'entitys':entitys,'employeess':employeess})
             else:
-                return render(request, 'Agent/add_employee.html', {'spocs':spocs,'entitys':entitys,'companies':companies})
+                return render(request, 'Agent/add_employee.html', {'companies':companies,'cities':cities,'spocs':spocs,'entitys':entitys,'employeess':employeess})
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_agent(request,id):
     if request.method == 'POST':
         request = get_request()
 
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             user_id = request.POST.get('user_id', '')
 
@@ -1691,7 +1827,7 @@ def add_agent(request,id):
             has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
             is_super_admin = request.POST.get('is_super_admin', '')
 
-            agent_id = request.POST.get('agents_id','')
+            agent_id = request.POST.get('agent_id','')
 
             delete_id = request.POST.get('delete_id')
 
@@ -1725,7 +1861,7 @@ def add_agent(request,id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/agents", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add Agent..!')
+                messages.error(request, company['message'])
                 return HttpResponseRedirect("/agents/agents", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
@@ -1734,9 +1870,9 @@ def add_agent(request,id):
         request = get_request()
         if id:
 
-            if 'login_type' in request.session:
-                login_type = request.session['login_type']
-                access_token = request.session['access_token']
+            if 'agent_login_type' in request.session:
+                login_type = request.session['agent_login_type']
+                access_token = request.session['agent_access_token']
 
                 url_agent = settings.API_BASE_URL + "view_agent"
                 payload = {'agent_id': id}
@@ -1749,13 +1885,13 @@ def add_agent(request,id):
             return render(request, 'Agent/add_agent.html', {})
 
 
-@login_required(login_url='/agents/login')
+
 def view_company_group(request, id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_group"
         payload = {'group_id': id}
@@ -1774,13 +1910,13 @@ def view_company_group(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_company_subgroup(request, id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_subgroup"
         payload = {'subgroup_id': id}
@@ -1799,13 +1935,13 @@ def view_company_subgroup(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_agents(request):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL+"agents"
         payload = {'some': 'data'}
@@ -1819,13 +1955,324 @@ def view_agents(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+def hotels(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL+"hotels"
+        payload = {}
+        hotels = getDataFromAPI(login_type, access_token, url, payload)
+        if hotels['success'] == 1:
+            hotels = hotels['Hotels']
+            return render(request,"Agent/hotels.html",{'hotels':hotels})
+        else:
+            return render(request,"Agent/hotels.html",{'hotels':{}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def hotel_booking_portals(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL+"hotel_booking_portals"
+        payload = {}
+        hotels = getDataFromAPI(login_type, access_token, url, payload)
+        if hotels['success'] == 1:
+            hotels = hotels['Portals']
+            return render(request,"Agent/hotel_booking_portals.html",{'portals':hotels})
+        else:
+            return render(request,"Agent/hotel_booking_portals.html",{'hotels':{}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def add_hotel(request,id):
+    if request.method == 'POST':
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
+
+            hotel_name = request.POST.get('hotel_name', '')
+            hotel_email = request.POST.get('hotel_email', '')
+            hotel_contact = request.POST.get('hotel_contact', '')
+            website = request.POST.get('website', '')
+
+            hotel_address = request.POST.get('hotel_address', '')
+            contact_name = request.POST.get('contact_name', '')
+            contact_email = request.POST.get('contact_email', '')
+            contact_no = request.POST.get('contact_no', '')
+
+            beneficiary_name = request.POST.get('beneficiary_name', '')
+            beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+            bank_name = request.POST.get('bank_name', '')
+            ifsc_code = request.POST.get('ifsc_code', '')
+
+            is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
+            tds_rate = request.POST.get('tds_rate', '')
+            gst_id = request.POST.get('gst_id', '')
+            pan_no = request.POST.get('pan_no', '')
+
+            hotel_id = request.POST.get('hotel_id', '')
+            delete_id = request.POST.get('delete_id')
+
+            payload = {'type':type,'hotel_name':hotel_name,'hotel_email':hotel_email,'hotel_contact':hotel_contact,'hotel_address':hotel_address,'contact_name':contact_name,
+                       'website':website,'beneficiary_account_no':beneficiary_account_no,'ifsc_code':ifsc_code,'bank_name':bank_name,
+                       'is_service_tax_applicable':is_service_tax_applicable,'contact_email':contact_email,'contact_no':contact_no,
+                       'beneficiary_name':beneficiary_name,'tds_rate':tds_rate,'gst_id':gst_id,'pan_no':pan_no,'hotel_id':hotel_id,'user_id':cotrav_agent_id,'user_type':login_type}
+
+            url = ""
+
+            if hotel_id:
+                url = settings.API_BASE_URL + "update_hotel"
+                operation_message = "Operator Updated Successully..!"
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_hotel"
+                    operation_message = "Operator Deleted Successully..!"
+            else:
+                url = settings.API_BASE_URL + "add_hotel"
+                operation_message = "Operator Added Successully..!"
+
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print(operator)
+            if operator['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect("/agents/hotels", {'message': "Added Successfully"})
+            else:
+                messages.error(request, operator['message'])
+                return HttpResponseRedirect("/agents/hotels", {'message': "Record Not Added"})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        request = get_request()
+        if 'agent_login_type' in request.session:
+            if id:
+                login_type = request.session['agent_login_type']
+                access_token = request.session['agent_access_token']
+                payload = {'hotel_id':id}
+                url = settings.API_BASE_URL + "view_hotel"
+                operator = getDataFromAPI(login_type, access_token, url, payload)
+                operator = operator['Hotels']
+                return render(request, 'Agent/add_hotel.html', {'operators':operator})
+            else:
+                return render(request, 'Agent/add_hotel.html', {})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
+def add_hotel_portals(request, id):
+    if request.method == 'POST':
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
+
+            hotel_name = request.POST.get('hotel_name', '')
+            hotel_email = request.POST.get('hotel_email', '')
+            hotel_contact = request.POST.get('hotel_contact', '')
+            website = request.POST.get('website', '')
+
+            hotel_address = request.POST.get('hotel_address', '')
+            contact_name = request.POST.get('contact_name', '')
+            contact_email = request.POST.get('contact_email', '')
+            contact_no = request.POST.get('contact_no', '')
+
+            beneficiary_name = request.POST.get('beneficiary_name', '')
+            beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+            bank_name = request.POST.get('bank_name', '')
+            ifsc_code = request.POST.get('ifsc_code', '')
+
+            is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
+            tds_rate = request.POST.get('tds_rate', '')
+            gst_id = request.POST.get('gst_id', '')
+            pan_no = request.POST.get('pan_no', '')
+
+            hotel_id = request.POST.get('hotel_id', '')
+            delete_id = request.POST.get('delete_id')
+            portal_vendor_id = request.POST.get('portal_vendor_id')
+
+            payload = {'type':6,'hotel_name':hotel_name,'hotel_email':hotel_email,'hotel_contact':hotel_contact,'hotel_address':hotel_address,'contact_name':contact_name,
+                       'website':website,'beneficiary_account_no':beneficiary_account_no,'ifsc_code':ifsc_code,'bank_name':bank_name,
+                       'is_service_tax_applicable':is_service_tax_applicable,'contact_email':contact_email,'contact_no':contact_no,
+                       'beneficiary_name':beneficiary_name,'tds_rate':tds_rate,'gst_id':gst_id,'pan_no':pan_no,'hotel_id':hotel_id,
+                       'user_id':cotrav_agent_id,'user_type':login_type,'portal_vendor_id':portal_vendor_id}
+
+            url = ""
+            print(payload)
+
+            if hotel_id:
+                url = settings.API_BASE_URL + "update_hotel_portal"
+                operation_message = "Operator Updated Successully..!"
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_hotel_portal"
+                    operation_message = "Operator Deleted Successully..!"
+            else:
+                url = settings.API_BASE_URL + "add_hotel_portal"
+                operation_message = "Operator Added Successully..!"
+
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print(operator)
+            if operator['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect("/agents/hotel_booking_portals", {'message': "Added Successfully"})
+            else:
+                messages.error(request, operator['message'])
+                return HttpResponseRedirect("/agents/hotel_booking_portals", {'message': "Record Not Added"})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+    else:
+        request = get_request()
+        if 'agent_login_type' in request.session:
+            if id:
+                login_type = request.session['agent_login_type']
+                access_token = request.session['agent_access_token']
+                payload = {'hotel_id':id}
+                url = settings.API_BASE_URL + "view_hotel_portal"
+                operator = getDataFromAPI(login_type, access_token, url, payload)
+                operator = operator['Portals']
+                return render(request, 'Agent/add_hotel_portal.html', {'operators':operator})
+            else:
+                return render(request, 'Agent/add_hotel_portal.html', {})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
+def hotel_contacts(request, id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+
+            hotel_id = request.POST.get('hotel_id', '')
+            operator_address = request.POST.get('operator_address', '')
+            contact_name = request.POST.get('contact_name', '')
+            contact_email = request.POST.get('contact_email', '')
+            contact_no = request.POST.get('contact_no', '')
+
+            contact_id = request.POST.get('contact_id', '')
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+            url = ""
+            payload = {}
+
+            if contact_id:
+                if delete_id == '1':
+                    print("in delete")
+                    url = settings.API_BASE_URL + "delete_hotel_contact"
+                    payload = {'contact_id':contact_id,'user_id':user_id,'user_type':user_type}
+                    operation_message= "Hotel Contact Deleted Successfully..!"
+                else:
+                    print("in edit")
+                    url = settings.API_BASE_URL + "update_hotel_contact"
+                    payload = {'contact_id':contact_id,'hotel_id':hotel_id,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,
+                               'contact_no':contact_no,'user_id':user_id,'user_type':user_type}
+                    operation_message = "Hotel Contact Updated Successfully..!"
+            else:
+                url = settings.API_BASE_URL + "add_hotel_contact"
+                payload = {'hotel_id':hotel_id,'operator_address':operator_address,'contact_name':contact_name,'contact_email':contact_email,
+                               'contact_no':contact_no,'user_id':user_id,'user_type':user_type}
+                operation_message = "Hotel Contact Added Successfully..!"
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+
+            if taxi['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect("/agents/hotel_contacts/"+str(id), {'message': "Added Successfully"})
+            else:
+                messages.error(request, taxi['message'])
+                return HttpResponseRedirect("/agents/hotel_contacts/"+str(id), {'message': "Added Successfully"})
+        else:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+
+            url = settings.API_BASE_URL+"hotel_contacts"
+            payload = {'hotel_id':id}
+            operator_contacts = getDataFromAPI(login_type, access_token, url, payload)
+
+            if operator_contacts['success'] == 1:
+                operator_contacts = operator_contacts['HotelContacts']
+                return render(request,"Agent/hotel_contacts.html",{'hotel_contacts':operator_contacts,'hotel_id':id})
+            else:
+                return render(request,"Agent/hotel_contacts.html",{'hotel_contacts':{}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def hotel_banks(request,id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+
+            hotel_id = request.POST.get('hotel_id', '')
+            beneficiary_name = request.POST.get('beneficiary_name', '')
+            beneficiary_account_no = request.POST.get('beneficiary_account_no', '')
+            bank_name = request.POST.get('bank_name', '')
+            ifsc_code = request.POST.get('ifsc_code', '')
+
+            bank_id = request.POST.get('bank_id', '')
+            user_id = request.POST.get('user_id', '')
+            delete_id = request.POST.get('delete_id', '')
+
+            url = ""
+            payload = {}
+
+            if bank_id:
+                if delete_id == '1':
+                    print("in delete")
+                    url = settings.API_BASE_URL + "delete_hotel_bank"
+                    payload = {'bank_id': bank_id, 'user_id': user_id, 'user_type': user_type}
+                    operation_message = "Hotel Bank Deleted Successfully..!"
+                else:
+                    print("in edit")
+                    url = settings.API_BASE_URL + "update_hotel_bank"
+                    payload = {'bank_id': bank_id, 'hotel_id': hotel_id,'beneficiary_name':beneficiary_name,
+                               'beneficiary_account_no':beneficiary_account_no,'bank_name':bank_name,'ifsc_code':ifsc_code,
+                               'user_id': user_id, 'user_type': user_type}
+                    operation_message = "Hotel Bank Updated Successfully..!"
+            else:
+                url = settings.API_BASE_URL + "add_hotel_bank"
+                payload = {'hotel_id': hotel_id,'beneficiary_name':beneficiary_name,'beneficiary_account_no':beneficiary_account_no,'bank_name':bank_name,'ifsc_code':ifsc_code,
+                           'user_id': user_id, 'user_type': user_type}
+                operation_message = "Hotel Bank Added Successfully..!"
+
+            taxi = getDataFromAPI(user_type, access_token, url, payload)
+            print(taxi)
+
+            if taxi['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect("/agents/hotel_banks/"+str(id), {'message': "Added Successfully"})
+            else :
+                messages.error(request,taxi['message'])
+                return HttpResponseRedirect("/agents/hotel_banks/"+str(id), {'message': "Operation Fails"})
+
+        else:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+
+            url = settings.API_BASE_URL + "hotel_banks"
+            payload = {'hotel_id': id}
+            operator_banks = getDataFromAPI(login_type, access_token, url, payload)
+            if operator_banks['success'] == 1:
+                operator_banks = operator_banks['HotelBanks']
+                return render(request, "Agent/hotel_banks.html", {'operator_banks': operator_banks,'hotel_id':id})
+            else:
+                return render(request, "Agent/hotel_banks.html", {'operator_contacts': {}})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
 def operators(request):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL+"operators"
         payload = {}
@@ -1839,12 +2286,12 @@ def operators(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def operator_contacts(request, id):
-    if 'login_type' in request.session:
+    if 'agent_login_type' in request.session:
         if request.method == 'POST':
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             operator_id = request.POST.get('operator_id', '')
             operator_address = request.POST.get('operator_address', '')
@@ -1881,9 +2328,12 @@ def operator_contacts(request, id):
             if taxi['success'] == 1:
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/operator_contacts/"+str(id), {'message': "Added Successfully"})
+            else:
+                messages.error(request, taxi['message'])
+                return HttpResponseRedirect("/agents/operator_contacts/"+str(id), {'message': "Added Successfully"})
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL+"operator_contacts"
             payload = {'operator_id':id}
@@ -1898,12 +2348,12 @@ def operator_contacts(request, id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def operator_banks(request,id):
-    if 'login_type' in request.session:
+    if 'agent_login_type' in request.session:
         if request.method == 'POST':
-            user_type = request.session['login_type']
-            access_token = request.session['access_token']
+            user_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             operator_id = request.POST.get('operator_id', '')
             beneficiary_name = request.POST.get('beneficiary_name', '')
@@ -1944,12 +2394,12 @@ def operator_banks(request,id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/operator_banks/"+str(id), {'message': "Added Successfully"})
             else :
-                messages.error(request, 'Fail To Add Operator Bank..!')
+                messages.error(request,taxi['message'])
                 return HttpResponseRedirect("/agents/operator_banks/"+str(id), {'message': "Operation Fails"})
 
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "operator_banks"
             payload = {'operator_id': id}
@@ -1963,13 +2413,13 @@ def operator_banks(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def delete_operator(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         operator_id = request.POST.get('operator_id', '')
         user_id = request.POST.get('user_id', '')
 
@@ -1986,12 +2436,12 @@ def delete_operator(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_operator(request,id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
 
             type = request.POST.get('type', '')
@@ -2037,22 +2487,22 @@ def add_operator(request,id):
                 operation_message = "Operator Added Successully..!"
 
             operator = getDataFromAPI(login_type, access_token, url, payload)
-
+            print(operator)
             if operator['success'] == 1:
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/operators", {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add Operator..!')
+                messages.error(request, operator['message'])
                 return HttpResponseRedirect("/agents/operators", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             if id:
-                login_type = request.session['login_type']
-                access_token = request.session['access_token']
+                login_type = request.session['agent_login_type']
+                access_token = request.session['agent_access_token']
                 payload = {'operator_id':id}
                 url = settings.API_BASE_URL + "view_operator"
                 operator = getDataFromAPI(login_type, access_token, url, payload)
@@ -2064,11 +2514,11 @@ def add_operator(request,id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def operator_rates(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "operator_rates"
         payload = {}
@@ -2082,18 +2532,21 @@ def operator_rates(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_operator_rate(request,id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             user_id = request.POST.get('cotrav_agent_id', '')
 
             operator_id = request.POST.get('operator_id', '')
             city_id = request.POST.get('city_id', '')
             taxi_type_id = request.POST.get('taxi_type_id', '')
             package_name = request.POST.get('package_name', '')
+            package_name_txt = request.POST.get('package_name_txt', '')
+            if not package_name:
+                package_name = package_name_txt
             tour_type = request.POST.get('tour_type', '')
             kms = request.POST.get('kms', '')
             hours = request.POST.get('hours', '')
@@ -2104,6 +2557,8 @@ def add_operator_rate(request,id):
             fuel_rate = request.POST.get('fuel_rate', '')
 
             rate_id = request.POST.get('rate_id', '')
+
+
 
             payload = {'operator_id':operator_id,'city_id':city_id,'taxi_type_id':taxi_type_id,'package_name':package_name,'tour_type':tour_type,
                        'kms':kms,'hours':hours,'km_rate':km_rate,'hour_rate':hour_rate,'base_rate':base_rate,'night_rate':night_rate,'fuel_rate':fuel_rate,
@@ -2137,17 +2592,21 @@ def add_operator_rate(request,id):
                 taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
                 taxi_types = taxi_types['taxi_types']
 
-                return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types})
+                url_taxi_packages = settings.API_BASE_URL + "taxi_packages"
+                taxi_packages = getDataFromAPI(login_type, access_token, url_taxi_packages, payload)
+                taxi_packages = taxi_packages['packages']
+
+                return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types,'taxi_packages':taxi_packages})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             if id:
-                if 'login_type' in request.session:
-                    login_type = request.session['login_type']
-                    access_token = request.session['access_token']
+                if 'agent_login_type' in request.session:
+                    login_type = request.session['agent_login_type']
+                    access_token = request.session['agent_access_token']
                     payload = {'rate_id': id}
                     url = settings.API_BASE_URL + "view_operator_rate"
                     op_rates = getDataFromAPI(login_type, access_token, url, payload)
@@ -2165,13 +2624,17 @@ def add_operator_rate(request,id):
                     taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
                     taxi_types = taxi_types['taxi_types']
 
-                    return render(request, 'Agent/add_operator_rate.html', {'operator_rates': op_rates,'operators':operators,'cities':cities,'taxi_types':taxi_types})
+                    url_taxi_packages = settings.API_BASE_URL + "taxi_packages"
+                    taxi_packages = getDataFromAPI(login_type, access_token, url_taxi_packages, payload)
+                    taxi_packages = taxi_packages['packages']
+
+                    return render(request, 'Agent/add_operator_rate.html', {'operator_rates': op_rates,'operators':operators,'cities':cities,'taxi_types':taxi_types,'taxi_packages':taxi_packages})
                 else:
                     return HttpResponseRedirect("/agents/login")
             else:
-                if 'login_type' in request.session:
-                    login_type = request.session['login_type']
-                    access_token = request.session['access_token']
+                if 'agent_login_type' in request.session:
+                    login_type = request.session['agent_login_type']
+                    access_token = request.session['agent_access_token']
 
                     payload = {'operator_id': id}
                     url = settings.API_BASE_URL + "operators"
@@ -2186,18 +2649,22 @@ def add_operator_rate(request,id):
                     taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
                     taxi_types = taxi_types['taxi_types']
 
-                    return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types})
+                    url_taxi_packages = settings.API_BASE_URL + "taxi_packages"
+                    taxi_packages = getDataFromAPI(login_type, access_token, url_taxi_packages, payload)
+                    taxi_packages = taxi_packages['packages']
+
+                    return render(request, 'Agent/add_operator_rate.html', {'operators':operators,'cities':cities,'taxi_types':taxi_types,'taxi_packages':taxi_packages})
                 else:
                     return HttpResponseRedirect("/agents/login")
         else:
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def delete_operator_rate(request,id):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         rate_id = request.POST.get('rate_id', '')
         user_id = request.POST.get('user_id', '')
 
@@ -2215,9 +2682,9 @@ def delete_operator_rate(request,id):
 
 
 def operator_drivers(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "operator_drivers"
         payload = {}
@@ -2231,12 +2698,12 @@ def operator_drivers(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_operator_driver(request,id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             user_id = request.POST.get('cotrav_agent_id', '')
 
             operator_id = request.POST.get('operator_id', '')
@@ -2271,18 +2738,18 @@ def add_operator_driver(request,id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect("/agents/operator-drivers", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Fail To Add Operator Driver..!')
+                messages.error(request, op_drivers['message'])
                 return HttpResponseRedirect("/agents/operator-drivers", {'message': "Operation Fails"})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
+        if 'agent_login_type' in request.session:
             if id:
-                if 'login_type' in request.session:
-                    login_type = request.session['login_type']
-                    access_token = request.session['access_token']
+                if 'agent_login_type' in request.session:
+                    login_type = request.session['agent_login_type']
+                    access_token = request.session['agent_access_token']
                     payload = {'driver_id': id}
                     url = settings.API_BASE_URL + "view_operator_driver"
                     op_drivers = getDataFromAPI(login_type, access_token, url, payload)
@@ -2296,9 +2763,9 @@ def add_operator_driver(request,id):
                 else:
                     return HttpResponseRedirect("/agents/login")
             else:
-                if 'login_type' in request.session:
-                    login_type = request.session['login_type']
-                    access_token = request.session['access_token']
+                if 'agent_login_type' in request.session:
+                    login_type = request.session['agent_login_type']
+                    access_token = request.session['agent_access_token']
 
                     payload = {'operator_id': id}
                     url = settings.API_BASE_URL + "operators"
@@ -2312,11 +2779,11 @@ def add_operator_driver(request,id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def delete_operator_driver(request,id):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
         driver_id = request.POST.get('driver_id', '')
         user_id = request.POST.get('user_id', '')
 
@@ -2334,34 +2801,39 @@ def delete_operator_driver(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def taxi_bookings(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "agent_taxi_bookings"
         payload = {'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
+        url = settings.API_BASE_URL + "companies"
+        payload = {'some': 'data'}
+        company1 = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company1['Corporates']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/taxi_bookings.html",{'bookings': booking,'booking_type':id})
+            return render(request, "Agent/taxi_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
         else:
             return render(request, "Agent/taxi_bookings.html", {'': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_taxi_booking(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_taxi_booking"
         payload = {'booking_id': id}
@@ -2376,14 +2848,25 @@ def view_taxi_booking(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_taxi_booking(request,id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             user_id = request.POST.get('user_id', '')
+
+            global booking_email
+            booking_email = ''
+            if request.FILES:
+                    file_up = request.FILES.get('email_attachment',False)
+                    if file_up:
+                        file_up = request.FILES['email_attachment']
+                        booking_email = file_upload_get_path(file_up)
+                    else:
+                        booking_email = 0
+
 
             corporate_id = request.POST.get('corporate_id', '')
             entity_id = request.POST.get('entity_id', '')
@@ -2404,9 +2887,13 @@ def add_taxi_booking(request,id):
             package_id = request.POST.get('package_id', '')
             no_of_days = request.POST.get('no_of_days', '')
             actual_city_id = request.POST.get('current_city_id', '')
+            assessment_code = request.POST.get('assessment_code', '')
+            assessment_city_id = request.POST.get('assessment_city_id', '')
 
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
+            is_email = request.POST.get('is_email', '')
+            is_sms = request.POST.get('is_sms', '')
 
             employees = []
             no_of_emp = int(no_of_seats) + 1
@@ -2417,25 +2904,27 @@ def add_taxi_booking(request,id):
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'entity_id':entity_id,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,
                        'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'booking_datetime':booking_datetime,'taxi_type':taxi_type,
-                       'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees}
+                       'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,
+                       'is_sms':is_sms,'is_email':is_email,'assessment_code': assessment_code, 'assessment_city_id': assessment_city_id,'booking_email':booking_email}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_taxi_booking"
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
-
+            print(booking)
             if booking['success'] == 1:
-
                 messages.success(request, 'Taxi Booking Added Successfully..!')
-
-                return HttpResponseRedirect("/agents/taxi-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/taxi-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Taxi Booking Not Added Successfully..!')
+                return HttpResponseRedirect("/agents/taxi-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "companies"
             payload = {'some': 'data'}
@@ -2458,11 +2947,11 @@ def add_taxi_booking(request,id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def accept_taxi_booking(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
@@ -2493,12 +2982,12 @@ def accept_taxi_booking(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def assign_taxi_booking(request,id):
-    if 'login_type' in request.session:
+    if 'agent_login_type' in request.session:
         if request.method == 'POST':
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             current_url = request.POST.get('current_url', '')
 
             booking_id = request.POST.get('booking_id', '')
@@ -2506,18 +2995,64 @@ def assign_taxi_booking(request,id):
 
             vendor_booking_id = request.POST.get('vendor_booking_id', '')
             operator_id = request.POST.get('operator_id', '')
+            driver_contact = request.POST.get('driver_contact', '')
             driver_id = request.POST.get('driver_id', '')
-            taxi_id= request.POST.get('taxi_id', '')
+            taxi_id = request.POST.get('taxi_id', '')
+            taxi_types = request.POST.get('taxi_types', '')
+            taxi_model = request.POST.get('taxi_model', '')
+            tour_type = request.POST.get('tour_typ_save', '')
+
+            taxi_type_id =0
+            taxi_model_id= 0
+            taxi_act_id =0
+            oper_id= 0
+            driver_id_id=0
+            taxi_types_url = {'operator_id':operator_id, 'type_name':taxi_types,'user_type':login_type,'user_id':user_id}
+            url_add = settings.API_BASE_URL + "add_taxi_type"
+            country_id = getDataFromAPI(login_type, access_token, url_add, taxi_types_url)
+            for conty_id in country_id['id']:
+                taxi_type_id = conty_id['id']
+
+            taxi_model_data = {'brand_name': "NA", 'model_name': taxi_model,'taxitype_id':taxi_type_id,'no_of_seats':4,'user_type':login_type,'user_id':user_id}
+            url_add_model = settings.API_BASE_URL + "add_taxi_model"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                taxi_model_id = conty_id['id']
+
+            taxi_model_data = {'model_id': taxi_model_id, 'taxi_reg_no': taxi_id,'make_year':0,'garage_location':"0", 'garage_distance':0,'user_type':login_type,'user_id':user_id}
+            print(taxi_model_data)
+            url_add_model = settings.API_BASE_URL + "add_taxi"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                taxi_act_id = conty_id['id']
+
+            taxi_model_data = {'operator_name':operator_id, 'operator_email':"NA",'operator_contact':"NA",'type':tour_type, 'user_type': login_type,
+                               'user_id': user_id,'username':"NA", 'password':"NA",'is_service_tax_applicable':0}
+
+            url_add_model = settings.API_BASE_URL + "add_operator"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                oper_id = conty_id['id']
+
+            taxi_model_data = {'operator_id':oper_id, 'driver_name':driver_id,'driver_contact':driver_contact, 'user_type': login_type,
+                               'user_id': user_id,'fcm_regid':0,'password':"NA"}
+
+            url_add_model = settings.API_BASE_URL + "add_operator_driver"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                driver_id_id = conty_id['id']
 
             is_client_sms = request.POST.get('is_client_sms', '')
             is_client_email = request.POST.get('is_client_email', '')
             is_driver_sms = request.POST.get('is_driver_sms', '')
 
             url = settings.API_BASE_URL + "assign_taxi_booking"
-            payload = {'vendor_booking_id':vendor_booking_id,'operator_id':operator_id,'driver_id':driver_id,'taxi_id':taxi_id,'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
-
+            payload = {'vendor_booking_id':vendor_booking_id,'operator_id':oper_id,'driver_id':driver_id_id,'is_client_sms':is_client_sms,
+                       'is_client_email':is_client_email,'is_driver_sms':is_driver_sms,
+                       'taxi_id':taxi_act_id,'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
+            print(payload)
             company = getDataFromAPI(login_type, access_token, url, payload)
-
+            print(company)
             if company['success'] == 1:
                 messages.success(request, 'Taxi Booking Assigned..!')
                 return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
@@ -2525,8 +3060,8 @@ def assign_taxi_booking(request,id):
                 messages.error(request, 'Fail to Assign Taxi Booking..!')
                 return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             payload = {'booking_id': id}
             opr_url = settings.API_BASE_URL + "operators"
             operators = getDataFromAPI(login_type, access_token, opr_url, payload)
@@ -2560,36 +3095,136 @@ def assign_taxi_booking(request,id):
     else:
         return HttpResponseRedirect("/agents/login")
 
+
+def add_taxi_invoice(request,id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
+
+            booking_id = request.POST.get('booking_id', '')
+            user_id = request.POST.get('user_id', '')
+
+            tax_on_management_fee = request.POST.get('tax_on_management_fee', '')
+            tax_on_management_fee_percentage = request.POST.get('tax_on_management_fee_percentage', '')
+            management_fee_igst = request.POST.get('management_fee_igst', '')
+            management_fee_cgst= request.POST.get('management_fee_cgst', '')
+            management_fee_sgst = request.POST.get('management_fee_sgst', '')
+            management_fee_igst_rate = request.POST.get('management_fee_igst_rate', '')
+            management_fee_cgst_rate = request.POST.get('management_fee_cgst_rate', '')
+            management_fee_sgst_rate = request.POST.get('management_fee_sgst_rate', '')
+            igst_amount = request.POST.get('igst_amount', '')
+            cgst_amount = request.POST.get('cgst_amount', '')
+            sgst_amount = request.POST.get('sgst_amount', '')
+
+            hours_done = request.POST.get('hours_done')
+            allowed_hours = request.POST.get('allowed_hours')
+            extra_hours = request.POST.get('extra_hours')
+            charge_hour = request.POST.get('charge_hour')
+            days = request.POST.get('days')
+            start_km = request.POST.get('start_km')
+            end_km = request.POST.get('end_km')
+            kms_done = request.POST.get('kms_done')
+            allowed_kms = request.POST.get('allowed_kms')
+            extra_kms = request.POST.get('extra_kms')
+            extra_km_rate = request.POST.get('extra_km_rate')
+
+            cotrav_billing_entity = request.POST.get('cotrav_billing_entity')
+            bb_entity = request.POST.get('bb_entity')
+            radio_rate = request.POST.get('radio_rate')
+
+            base_rate = request.POST.get('base_rate')
+            extra_hr_charges = request.POST.get('extra_hr_charges')
+            extra_km_charges = request.POST.get('extra_km_charges')
+            driver_allowance = request.POST.get('driver_allowance')
+            total_excluding_tax = request.POST.get('total_excluding_tax')
+            other_charges = request.POST.get('other_charges')
+            total = request.POST.get('total')
+            sub_total = request.POST.get('sub_total')
+
+            url = settings.API_BASE_URL + "add_taxi_invoice"
+            payload = {'booking_id': booking_id,'user_id':user_id,'user_type':login_type,'tax_on_management_fee':tax_on_management_fee,'tax_on_management_fee_percentage':tax_on_management_fee_percentage,
+                      'management_fee_igst':management_fee_igst,'management_fee_cgst':management_fee_cgst,'management_fee_sgst':management_fee_sgst,'management_fee_igst_rate':management_fee_igst_rate,
+                       'management_fee_sgst_rate':management_fee_sgst_rate,'igst_amount':igst_amount,'cgst_amount':cgst_amount,'sgst_amount':sgst_amount,'hours_done':hours_done,
+                       'extra_hours':extra_hours,'charge_hour':charge_hour,'days':days,'start_km':start_km,'end_km':end_km,'kms_done':kms_done,'allowed_kms':allowed_kms,
+                       'cotrav_billing_entity':cotrav_billing_entity,'bb_entity':bb_entity,'radio_rate':radio_rate,'base_rate':base_rate,'extra_hr_charges':extra_hr_charges,
+                       'extra_km_charges':extra_km_charges,'driver_allowance':driver_allowance,'total_excluding_tax':total_excluding_tax,'other_charges':other_charges,
+                       'total':total,'sub_total':sub_total,'management_fee_cgst_rate':management_fee_cgst_rate,'extra_kms':extra_kms,'extra_km_rate':extra_km_rate,'allowed_hours':allowed_hours}
+            print(payload)
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, 'Taxi Invoice Added Successfully..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Fail to Added Taxi Invoice..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+        else:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+
+            url = settings.API_BASE_URL + "view_taxi_booking"
+            payload = {'booking_id': id}
+            booking = getDataFromAPI(login_type, access_token, url, payload)
+            booking = booking['Bookings']
+
+            billing_entity = booking[0]['billing_entity_id']
+            if billing_entity:
+                url_hotels = settings.API_BASE_URL + "view_billing_entitie"
+                payload = {'entity_id': billing_entity}
+                bus_entity = getDataFromAPI(login_type, access_token, url_hotels, payload)
+                bus_operators = bus_entity['Entitys']
+                be_name = bus_operators[0]['entity_name']
+                be_gst = bus_operators[0]['gst_id']
+            else:
+                be_name = ""
+                be_gst = ""
+
+            url = settings.API_BASE_URL + "get_cotrav_billing_entities"
+            c_entity = getDataFromAPI(login_type, access_token, url, payload)
+            c_entity = c_entity['Enitity']
+
+            return render(request, 'Agent/add_taxi_invoice.html', {'bookings': booking,'be_name':be_name,'be_gst':be_gst,'c_entitys':c_entity })
+
+    else:
+        return HttpResponseRedirect("/agents/login")
+
 ############################## BUS  ######################################
 
-@login_required(login_url='/agents/login')
+
 def bus_bookings(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "agent_bus_bookings"
         payload = {'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
+        url = settings.API_BASE_URL + "companies"
+        payload = {'some': 'data'}
+        company1 = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company1['Corporates']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/bus_bookings.html",{'bookings': booking,'booking_type':id})
+            return render(request, "Agent/bus_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
         else:
             return render(request, "Agent/bus_bookings.html", {'': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_bus_booking(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_bus_booking"
         payload = {'booking_id': id}
@@ -2604,14 +3239,24 @@ def view_bus_booking(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_bus_booking(request,id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             user_id = request.POST.get('user_id', '')
+
+            global booking_email
+            booking_email = ''
+            if request.FILES:
+                file_up = request.FILES.get('email_attachment', False)
+                if file_up:
+                    file_up = request.FILES['email_attachment']
+                    booking_email = file_upload_get_path(file_up)
+                else:
+                    booking_email = 0
 
             corporate_id = request.POST.get('corporate_id', '')
             spoc_id = request.POST.get('spoc_id', '')
@@ -2626,11 +3271,16 @@ def add_bus_booking(request,id):
             bus_type = request.POST.get('bus_type', '')
             booking_datetime = request.POST.get('booking_datetime', '')
             journey_datetime = request.POST.get('journey_datetime', '')
+            journey_datetime_to = request.POST.get('journey_datetime_to', '')
             entity_id = request.POST.get('entity_id', '')
             preferred_bus = request.POST.get('preferred_bus', '')
+            assessment_code = request.POST.get('assessment_code', '')
+            assessment_city_id = request.POST.get('assessment_city_id', '')
 
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
+            is_email = request.POST.get('is_email', '')
+            is_sms = request.POST.get('is_sms', '')
 
             employees = []
             no_of_emp = int(no_of_seats) + 1
@@ -2640,7 +3290,9 @@ def add_bus_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'bus_type':bus_type,'booking_datetime':booking_datetime,
-            'journey_datetime':journey_datetime,'entity_id':entity_id,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'preferred_bus':preferred_bus,'employees':employees}
+            'journey_datetime':journey_datetime,'journey_datetime_to':journey_datetime_to,'entity_id':entity_id,'reason_booking':reason_booking,'no_of_seats':no_of_seats,
+                       'preferred_bus':preferred_bus,'employees':employees,'is_email':is_email,'is_sms':is_sms,
+                       'assessment_code': assessment_code, 'assessment_city_id': assessment_city_id,'booking_email':booking_email}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_bus_booking"
@@ -2648,18 +3300,18 @@ def add_bus_booking(request,id):
             print(booking)
             if booking['success'] == 1:
                 messages.success(request, 'Bus Booking Added Successfully..!')
-                return HttpResponseRedirect("/agents/bus-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/bus-bookings/2", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fails to Add Bus Booking..!')
-                return HttpResponseRedirect("/agents/bus-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/bus-bookings/2", {'message': "Operation Fails"})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "companies"
             payload = {'some': 'data'}
@@ -2678,11 +3330,11 @@ def add_bus_booking(request,id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def accept_bus_booking(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         if request.method == 'POST':
             booking_id = request.POST.get('booking_id', '')
@@ -2699,7 +3351,7 @@ def accept_bus_booking(request):
 
             if reject_id == '1':
                 url = settings.API_BASE_URL + "reject_bus_booking"
-                operation_message="Bus Booking Accepted Successfully..!"
+                operation_message="Bus Booking Rejected Successfully..!"
 
             payload = {'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
 
@@ -2717,13 +3369,15 @@ def accept_bus_booking(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
-def assign_bus_booking(request,id):
-    if 'login_type' in request.session:
-        if request.method == 'POST':
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
 
+def assign_bus_booking(request,id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
+            client_ticket_path=''
+            vender_ticket_path=''
             booking_id = request.POST.get('booking_id', '')
             user_id = request.POST.get('user_id', '')
 
@@ -2736,28 +3390,95 @@ def assign_bus_booking(request,id):
             operator_contact = request.POST.get('operator_contact', '')
             boarding_point = request.POST.get('boarding_point', '')
             boarding_datetime = request.POST.get('boarding_datetime', '')
-            #boarding_datetime = datetime.strptime(boarding_datetime, '%d/%m/%Y %H:%M:%S')
 
             is_client_sms = request.POST.get('is_client_sms', '')
             is_client_email = request.POST.get('is_client_email', '')
             is_driver_sms = request.POST.get('is_driver_sms', '')
 
+            ticket_price = request.POST.get('ticket_price', '')
+            management_fee = request.POST.get('management_fee', '')
+            tax_mng_amt = request.POST.get('tax_mng_amt', '')
+            tax_on_management_fee = request.POST.get('tax_on_management_fee', '')
+            tax_on_management_fee_percentage = request.POST.get('tax_on_management_fee_percentage', '')
+            sub_total = request.POST.get('sub_total', '')
+            management_fee_igst = request.POST.get('management_fee_igst', '')
+            management_fee_cgst = request.POST.get('management_fee_cgst', '')
+            management_fee_sgst = request.POST.get('management_fee_sgst', '')
+            management_fee_igst_rate = request.POST.get('management_fee_igst_rate', '')
+            management_fee_cgst_rate = request.POST.get('management_fee_cgst_rate', '')
+            management_fee_sgst_rate = request.POST.get('management_fee_sgst_rate', '')
+            cgst = request.POST.get('cgst', '')
+            sgst = request.POST.get('sgst', '')
+            igst = request.POST.get('igst', '')
+
+            oper_ticket_price = request.POST.get('oper_ticket_price', '')
+
+            oper_commission = request.POST.get('operator_commission', '')
+
+            oper_commission_type = request.POST.get('oper_commission_type', '')
+
+            oper_cotrav_billing_entity = request.POST.get('oper_cotrav_billing_entity', '')
+            cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+
+            oper_cgst = request.POST.get('oper_cgst', '')
+            oper_sgst = request.POST.get('oper_sgst', '')
+            oper_igst = request.POST.get('oper_igst', '')
+
+            igst_amount = request.POST.get('igst_amount', '')
+            cgst_amount = request.POST.get('cgst_amount', '')
+            sgst_amount = request.POST.get('sgst_amount', '')
+
+            if request.FILES:
+                    file_up = request.FILES.get('busticketToUpload',False)
+                    if file_up:
+                        save_path = os.path.join(settings.MEDIA_ROOT, 'bus/client_ticket', str(file_up))
+                        path1 = default_storage.save(save_path, request.FILES['busticketToUpload'])
+                        client_ticket_path = path1
+                    else:
+                        client_ticket_path = "no_ticket.jpg"
+
+                    file_up2 = request.FILES.get('vendorticketToUpload',False)
+                    if file_up2:
+                        save_path = os.path.join(settings.MEDIA_ROOT, 'bus/vender_ticket', str(file_up2))
+                        path2 = default_storage.save(save_path, request.FILES['vendorticketToUpload'])
+                        vender_ticket_path = path2
+                    else:
+                        vender_ticket_path = ""
+
+            client_ticket = request.POST.get('client_ticket')
+
             url = settings.API_BASE_URL + "assign_bus_booking"
-            payload = {'ticket_no':ticket_no,'pnr_no':pnr_no,'assign_bus_type_id':assign_bus_type_id,'seat_no':seat_no,'portal_used':portal_used
-                ,'operator_name':operator_name,'operator_contact':operator_contact,'boarding_point':boarding_point,'boarding_datetime':boarding_datetime,
-                       'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
+            payload = {'ticket_no': ticket_no, 'pnr_no': pnr_no, 'assign_bus_type_id': assign_bus_type_id,
+                       'seat_no': seat_no, 'portal_used': portal_used
+                , 'operator_name': operator_name, 'operator_contact': operator_contact,
+                       'boarding_point': boarding_point, 'boarding_datetime': boarding_datetime,
+                       'booking_id': booking_id, 'user_id': user_id, 'user_type': login_type,
+                       'ticket_price': ticket_price, 'management_fee': management_fee, 'tax_mng_amt': tax_mng_amt
+                , 'tax_on_management_fee': tax_on_management_fee,
+                       'tax_on_management_fee_percentage': tax_on_management_fee_percentage, 'sub_total': sub_total,
+                       'management_fee_igst': management_fee_igst, 'management_fee_cgst': management_fee_cgst,
+                       'management_fee_sgst': management_fee_sgst, 'management_fee_igst_rate': management_fee_igst_rate,
+                       'management_fee_cgst_rate': management_fee_cgst_rate,
+                       'management_fee_sgst_rate': management_fee_sgst_rate,'cgst':cgst,'sgst':sgst,'igst':igst,
+                       'oper_ticket_price': oper_ticket_price, 'oper_commission':oper_commission ,
+                       'oper_commission_type':oper_commission_type ,'oper_cotrav_billing_entity':oper_cotrav_billing_entity ,
+                       'oper_cgst':oper_cgst,'oper_sgst':oper_sgst,'oper_igst':oper_igst,'client_ticket_path':client_ticket_path,
+                       'vender_ticket_path':vender_ticket_path,'cotrav_billing_entity':cotrav_billing_entity,'is_client_sms':is_client_sms,
+                       'is_client_email':is_client_email,'is_driver_sms':is_driver_sms,'igst_amount': igst_amount,'cgst_amount': cgst_amount,
+                       'sgst_amount': sgst_amount,'client_ticket':client_ticket}
+
 
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
                 messages.success(request, 'Bus Booking Assign successfully..!')
-                return HttpResponseRedirect("/agents/bus-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Assign Bus Booking..1')
-                return HttpResponseRedirect("/agents/bus-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             payload = {'booking_id': id}
 
             url = settings.API_BASE_URL + "view_bus_booking"
@@ -2765,12 +3486,37 @@ def assign_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url, payload)
             booking = booking['Bookings']
 
-            url_hotels = settings.API_BASE_URL + "operators"
-            payload = {'operator_type': 'hotel'}
+            billing_entity = booking[0]['billing_entity_id']
+            if billing_entity:
+                url_hotels = settings.API_BASE_URL + "view_billing_entitie"
+                payload = {'entity_id': billing_entity}
+                bus_entity = getDataFromAPI(login_type, access_token, url_hotels, payload)
+                bus_operators = bus_entity['Entitys']
+                be_name = bus_operators[0]['entity_name']
+                be_gst = bus_operators[0]['gst_id']
+            else:
+                be_name = ""
+                be_gst = ""
+
+            url_hotels = settings.API_BASE_URL + "get_operators_by_service_type"
+            payload = {'service_type': 4}
             hotels = getDataFromAPI(login_type, access_token, url_hotels, payload)
             bus_operators = hotels['Operators']
 
-            return render(request, 'Agent/assign_bus_booking.html', {'bookings': booking,'bus_operators':bus_operators})
+            url_hotels_port = settings.API_BASE_URL + "bus_booking_portals"
+            payload = {}
+            hotels1 = getDataFromAPI(login_type, access_token, url_hotels_port, payload)
+            bus_portal = hotels1['Portals']
+
+            ######################
+            payload = {}
+            url = settings.API_BASE_URL + "get_cotrav_billing_entities"
+            c_entity = getDataFromAPI(login_type, access_token, url, payload)
+            c_entity = c_entity['Enitity']
+
+            #########################
+
+            return render(request, 'Agent/assign_bus_booking.html', {'bookings': booking,'bus_operators':bus_operators,'c_entitys':c_entity,'be_name':be_name,'be_gst':be_gst,'bus_portal':bus_portal})
 
     else:
         return HttpResponseRedirect("/agents/login")
@@ -2778,34 +3524,39 @@ def assign_bus_booking(request,id):
 
 ############################## TRAIN  ######################################
 
-@login_required(login_url='/agents/login')
+
 def train_bookings(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "agent_train_bookings"
         payload = {'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
+        url = settings.API_BASE_URL + "companies"
+        payload = {'some': 'data'}
+        company1 = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company1['Corporates']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/train_bookings.html",{'bookings': booking,'booking_type':id})
+            return render(request, "Agent/train_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
         else:
             return render(request, "Agent/train_bookings.html", {'': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_train_booking(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_train_booking"
         payload = {'booking_id': id}
@@ -2820,14 +3571,24 @@ def view_train_booking(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_train_booking(request,id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             user_id = request.POST.get('user_id', '')
+
+            global booking_email
+            booking_email = ''
+            if request.FILES:
+                file_up = request.FILES.get('email_attachment', False)
+                if file_up:
+                    file_up = request.FILES['email_attachment']
+                    booking_email = file_upload_get_path(file_up)
+                else:
+                    booking_email = 0
 
             corporate_id = request.POST.get('corporate_id', '')
             spoc_id = request.POST.get('spoc_id', '')
@@ -2842,11 +3603,17 @@ def add_train_booking(request,id):
             train_type = request.POST.get('train_type', '')
             booking_datetime = request.POST.get('booking_datetime', '')
             journey_datetime = request.POST.get('journey_datetime', '')
+            journey_datetime_to = request.POST.get('journey_datetime_to', '')
             entity_id = request.POST.get('entity_id', '')
             preferred_train = request.POST.get('preferred_train', '')
+            assessment_code = request.POST.get('assessment_code', '')
+            assessment_city_id = request.POST.get('assessment_city_id', '')
 
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
+
+            is_email = request.POST.get('is_email', '')
+            is_sms = request.POST.get('is_sms', '')
 
             employees = []
             no_of_emp = int(no_of_seats) + 1
@@ -2856,29 +3623,28 @@ def add_train_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'train_type':train_type,'booking_datetime':booking_datetime,
-            'journey_datetime':journey_datetime,'entity_id':entity_id,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'preferred_train':preferred_train,'employees':employees}
+            'journey_datetime':journey_datetime,'journey_datetime_to':journey_datetime_to,'entity_id':entity_id,'reason_booking':reason_booking,'no_of_seats':no_of_seats,
+                       'preferred_train':preferred_train,'employees':employees,'is_email':is_email,'is_sms':is_sms,'assessment_code': assessment_code,
+                       'assessment_city_id': assessment_city_id,'booking_email':booking_email}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_train_booking"
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
             print(booking)
             if booking['success'] == 1:
-
                 messages.success(request, 'Train Booking Added Successfully..!')
-
-                return HttpResponseRedirect("/agents/train-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/train-bookings/2", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Add Train Booking..!')
-
-                return HttpResponseRedirect("/agents/train-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/train-bookings/2", {'message': "Operation Fails"})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "companies"
             payload = {'some': 'data'}
@@ -2907,11 +3673,11 @@ def add_train_booking(request,id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def accept_train_booking(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         if request.method == 'POST':
             booking_id = request.POST.get('booking_id', '')
@@ -2945,16 +3711,17 @@ def accept_train_booking(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
-def assign_train_booking(request,id):
-    if 'login_type' in request.session:
-        if request.method == 'POST':
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
 
+def assign_train_booking(request,id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             booking_id = request.POST.get('booking_id', '')
             user_id = request.POST.get('user_id', '')
 
+            train_name = request.POST.get('train_name', '')
             ticket_no = request.POST.get('ticket_no', '')
             pnr_no = request.POST.get('pnr_no', '')
             assign_bus_type_id = request.POST.get('assign_bus_type_id', '')
@@ -2970,51 +3737,123 @@ def assign_train_booking(request,id):
             is_client_email = request.POST.get('is_client_email', '')
             is_driver_sms = request.POST.get('is_driver_sms', '')
 
+            client_ticket_path = ''
+
+            ticket_price = request.POST.get('ticket_price', '')
+            management_fee = request.POST.get('management_fee', '')
+            tax_mng_amt = request.POST.get('tax_mng_amt', '')
+            tax_on_management_fee = request.POST.get('tax_on_management_fee', '')
+            tax_on_management_fee_percentage = request.POST.get('tax_on_management_fee_percentage', '')
+            sub_total = request.POST.get('sub_total', '')
+            management_fee_igst = request.POST.get('management_fee_igst', '')
+            management_fee_cgst = request.POST.get('management_fee_cgst', '')
+            management_fee_sgst = request.POST.get('management_fee_sgst', '')
+            management_fee_igst_rate = request.POST.get('management_fee_igst_rate', '')
+            management_fee_cgst_rate = request.POST.get('management_fee_cgst_rate', '')
+            management_fee_sgst_rate = request.POST.get('management_fee_sgst_rate', '')
+            cgst = request.POST.get('cgst', '')
+            sgst = request.POST.get('sgst', '')
+            igst = request.POST.get('igst', '')
+            cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+
+
+            if request.FILES:
+                file_up = request.FILES.get('busticketToUpload', False)
+                if file_up:
+                    save_path = os.path.join(settings.MEDIA_ROOT, 'train/client_ticket', str(file_up))
+                    path1 = default_storage.save(save_path, request.FILES['busticketToUpload'])
+                    client_ticket_path = path1
+                else:
+                    client_ticket_path = "no_ticket.jpg"
+
             url = settings.API_BASE_URL + "assign_train_booking"
+
+
             payload = {'ticket_no':ticket_no,'pnr_no':pnr_no,'assign_bus_type_id':assign_bus_type_id,'seat_no':seat_no,'portal_used':portal_used
                 ,'operator_name':operator_name,'operator_contact':operator_contact,'boarding_point':boarding_point,'boarding_datetime':boarding_datetime,
-                       'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
-
+                       'booking_id': booking_id,'user_id':user_id,'user_type':login_type,'train_name':train_name , 'ticket_price': ticket_price, 'management_fee': management_fee, 'tax_mng_amt': tax_mng_amt
+                , 'tax_on_management_fee': tax_on_management_fee,
+                       'tax_on_management_fee_percentage': tax_on_management_fee_percentage, 'sub_total': sub_total,
+                       'management_fee_igst': management_fee_igst, 'management_fee_cgst': management_fee_cgst,
+                       'management_fee_sgst': management_fee_sgst, 'management_fee_igst_rate': management_fee_igst_rate,
+                       'management_fee_cgst_rate': management_fee_cgst_rate,'cotrav_billing_entity':cotrav_billing_entity,
+                       'management_fee_sgst_rate': management_fee_sgst_rate,'cgst':cgst,'sgst':sgst,'igst':igst,'client_ticket_path':client_ticket_path,
+                       'is_client_sms':is_client_sms,'is_client_email':is_client_email}
+            print(payload)
             company = getDataFromAPI(login_type, access_token, url, payload)
-
+            print(company)
             if company['success'] == 1:
                 messages.success(request, 'Train Booking assigned Successfully..!')
-                return HttpResponseRedirect("/agents/train-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+
             else:
                 messages.error(request, 'Fail To assign Train Booking..!')
-                return HttpResponseRedirect("/agents/train-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             payload = {'booking_id': id}
 
             url = settings.API_BASE_URL + "view_train_booking"
             payload = {'booking_id': id}
             booking = getDataFromAPI(login_type, access_token, url, payload)
             booking = booking['Bookings']
+            print(booking)
+
+            for pasg_id in booking[0]['Passangers']:
+
+                print("passenger id is ")
+                print(pasg_id['id'])
 
             url_train = settings.API_BASE_URL + "train_types"
             trains = getDataFromAPI(login_type, access_token, url_train, payload)
             types = trains['Types']
 
-            return render(request, 'Agent/assign_train_booking.html',
-                          {'bookings': booking,'types':types})
+            payload = {}
+            url = settings.API_BASE_URL + "get_cotrav_billing_entities"
+            c_entity = getDataFromAPI(login_type, access_token, url, payload)
+            c_entity = c_entity['Enitity']
+
+            billing_entity = booking[0]['billing_entity_id']
+            if billing_entity:
+                url_hotels = settings.API_BASE_URL + "view_billing_entitie"
+                payload = {'entity_id': billing_entity}
+                bus_entity = getDataFromAPI(login_type, access_token, url_hotels, payload)
+                bus_operators = bus_entity['Entitys']
+                be_name = bus_operators[0]['entity_name']
+                be_gst = bus_operators[0]['gst_id']
+            else:
+                be_name = ""
+                be_gst = ""
+
+            return render(request, 'Agent/assign_train_booking.html',{'bookings': booking,'types':types,'c_entitys':c_entity,'be_gst':be_gst,'be_name':be_name})
 
     else:
         return HttpResponseRedirect("/agents/login")
 
 ############################## HOTELS  ######################################
 
-@login_required(login_url='/agents/login')
+
 def add_hotel_booking(request, id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             user_id = request.POST.get('user_id', '')
             corporate_id = request.POST.get('corporate_id', '')
-            # spoc_id = request.POST.get('spoc_id', '')
 
+            global booking_email
+            booking_email = ''
+            if request.FILES:
+                file_up = request.FILES.get('email_attachment', False)
+                if file_up:
+                    file_up = request.FILES['email_attachment']
+                    booking_email = file_upload_get_path(file_up)
+                else:
+                    booking_email = 0
+
+            # spoc_id = request.POST.get('spoc_id', '')
+            current_url = request.POST.get('current_url', '')
             spoc_id = request.POST.get('spoc_id', '')
             spoc_details = [x.strip() for x in spoc_id.split(',')]
 
@@ -3035,13 +3874,13 @@ def add_hotel_booking(request, id):
             preferred_hotel = request.POST.get('preferred_hotel')
             booking_date = request.POST.get('booking_datetime')
 
-            assessment_code = request.POST.get('assessment_code')
+            assessment_code = request.POST.get('assessment_code', '')
+            assessment_city_id = request.POST.get('assessment_city_id', '')
 
-            assessment_city = request.POST.get('assessment_city')
             billing_entity = request.POST.get('billing_entity')
             reason_for_booking = request.POST.get('reason_for_booking')
-            send_sms = request.POST.get('send_sms')
-            send_email = request.POST.get('send_email')
+            is_email = request.POST.get('is_email', '')
+            is_sms = request.POST.get('is_sms', '')
             no_of_seats = request.POST.get('no_of_seats')
 
             # post variables end
@@ -3059,8 +3898,9 @@ def add_hotel_booking(request, id):
                        'checkout_datetime': check_out_date, 'bucket_priority_1': room_type_priority1,
                        'bucket_priority_2': room_type_priority2, 'room_type_id': room_occupancy,
                        'preferred_hotel': preferred_hotel, 'booking_datetime': booking_date,
-                       'assessment_code': assessment_code, 'assessment_city_id': assessment_city,
-                       'billing_entity_id': billing_entity, 'employees': employees,'reason_booking':reason_for_booking,'no_of_seats':no_of_seats}
+                       'assessment_code': assessment_code, 'assessment_city_id': assessment_city_id,
+                       'billing_entity_id': billing_entity, 'employees': employees,'reason_booking':reason_for_booking,'no_of_seats':no_of_seats,
+                       'is_email':is_email,'is_sms':is_sms,'booking_email':booking_email}
 
             print(payload)
             url_taxi_booking = settings.API_BASE_URL + "add_hotel_booking"
@@ -3068,19 +3908,19 @@ def add_hotel_booking(request, id):
             if booking['success'] == 1:
                 messages.success(request, 'Hotel Booking Accepted Successfully..!')
 
-                return HttpResponseRedirect("/agents/hotel-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/hotel-bookings/2", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Accept Hotel Booking..!')
 
-                return HttpResponseRedirect("/agents/hotel-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/hotel-bookings/2", {'message': "Operation Fails"})
         else:
                 return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "companies"
             payload = {'some': 'data'}
@@ -3099,34 +3939,39 @@ def add_hotel_booking(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def hotel_bookings(request, id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "agent_hotel_bookings"
         payload = {'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
+        url = settings.API_BASE_URL + "companies"
+        payload = {'some': 'data'}
+        company1 = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company1['Corporates']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/hotel_bookings.html", {'bookings': booking, 'booking_type':id})
+            return render(request, "Agent/hotel_bookings.html", {'bookings': booking, 'booking_type':id,'corporates':companies})
         else:
             return render(request, "Agent/hotel_bookings.html", {'': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_hotel_booking(request,id):
     request = get_request()
 
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_hotel_booking"
         payload = {'booking_id': id}
@@ -3141,11 +3986,11 @@ def view_hotel_booking(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def accept_hotel_booking(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         if request.method == 'POST':
             booking_id = request.POST.get('booking_id', '')
@@ -3179,21 +4024,25 @@ def accept_hotel_booking(request):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
-def assign_hotel_booking(request, id):
-    if 'login_type' in request.session:
-        if request.method == 'POST':
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
 
+def assign_hotel_booking(request, id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             assign_hotel_id = request.POST.get('assign_hotel_id', '')
 
-            assign_room_type = request.POST.get('room_type', '')
+            assign_room_type = request.POST.get('assign_room_type', '')
             is_ac_room = request.POST.get('is_ac_room', '')
             daily_brakefast = request.POST.get('daily_brakefast', '')
             is_prepaid = request.POST.get('is_prepaid', '')
             agent_booking_id = request.POST.get('agent_booking_id', '')
             comment = request.POST.get('comment', '')
+
+            vender_ticket_path = ''
+
+            client_ticket_path = ''
 
             total_room_price = request.POST.get('total_room_price', '')
             voucher_number = request.POST.get('voucher_number', '')
@@ -3203,36 +4052,117 @@ def assign_hotel_booking(request, id):
             user_id = request.POST.get('user_id')
             booking_id = request.POST.get('booking_id')
 
+            ticket_price = request.POST.get('ticket_price', '')
+            management_fee = request.POST.get('management_fee', '')
+            tax_mng_amt = request.POST.get('tax_mng_amt', '')
+            tax_on_management_fee = request.POST.get('tax_on_management_fee', '')
+            tax_on_management_fee_percentage = request.POST.get('tax_on_management_fee_percentage', '')
+            sub_total = request.POST.get('sub_total', '')
+            management_fee_igst = request.POST.get('management_fee_igst', '')
+            management_fee_cgst = request.POST.get('management_fee_cgst', '')
+            management_fee_sgst = request.POST.get('management_fee_sgst', '')
+            management_fee_igst_rate = request.POST.get('management_fee_igst_rate', '')
+            management_fee_cgst_rate = request.POST.get('management_fee_cgst_rate', '')
+            management_fee_sgst_rate = request.POST.get('management_fee_sgst_rate', '')
+            cgst = request.POST.get('cgst', '')
+            sgst = request.POST.get('sgst', '')
+            igst = request.POST.get('igst', '')
+
+            oper_ticket_price = request.POST.get('oper_ticket_price', '')
+
+            oper_commission = request.POST.get('operator_commission', '')
+
+            oper_commission_type = request.POST.get('oper_commission_type', '')
+
+            oper_cotrav_billing_entity = request.POST.get('oper_cotrav_billing_entity', '')
+            cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+
+            oper_cgst = request.POST.get('oper_cgst', '')
+            oper_sgst = request.POST.get('oper_sgst', '')
+            oper_igst = request.POST.get('oper_igst', '')
+            igst_amount = request.POST.get('igst_amount', '')
+            cgst_amount = request.POST.get('cgst_amount', '')
+            sgst_amount = request.POST.get('sgst_amount', '')
+
+            is_client_sms = request.POST.get('is_client_sms', '')
+            is_client_email = request.POST.get('is_client_email', '')
+
+            if request.FILES:
+                file_up = request.FILES.get('busticketToUpload', False)
+                if file_up:
+                    save_path = os.path.join(settings.MEDIA_ROOT, 'bus/client_ticket', str(file_up))
+                    path1 = default_storage.save(save_path, request.FILES['busticketToUpload'])
+                    client_ticket_path = path1
+                else:
+                    client_ticket_path = "no_ticket.jpg"
+
+                file_up2 = request.FILES.get('vendorticketToUpload', False)
+                if file_up2:
+                    save_path = os.path.join(settings.MEDIA_ROOT, 'bus/vender_ticket', str(file_up2))
+                    path2 = default_storage.save(save_path, request.FILES['vendorticketToUpload'])
+                    vender_ticket_path = path2
+                else:
+                    vender_ticket_path = "no_ticket.jpg"
+
+            client_ticket = request.POST.get('client_ticket')
+            print(client_ticket)
+
+            vender_ticket = request.POST.get('vender_ticket')
+            print(vender_ticket)
+
             url = settings.API_BASE_URL + "assign_hotel_booking"
 
             payload = {'assign_hotel_id': assign_hotel_id,'assign_room_type':assign_room_type,'is_ac_room':is_ac_room,'daily_brakefast':daily_brakefast,
             'is_prepaid':is_prepaid,'agent_booking_id':agent_booking_id,'comment':comment,'user_id':user_id,'user_type': login_type,'total_room_price':total_room_price,
-            'voucher_number':voucher_number,'portal_used':portal_used,'commission_earned':commission_earned,'booking_id':booking_id}
-
+            'voucher_number':voucher_number,'portal_used':portal_used,'commission_earned':commission_earned,'booking_id':booking_id,
+                       'ticket_price': ticket_price, 'management_fee': management_fee, 'tax_mng_amt': tax_mng_amt
+                , 'tax_on_management_fee': tax_on_management_fee,'cotrav_billing_entity':cotrav_billing_entity,
+                       'tax_on_management_fee_percentage': tax_on_management_fee_percentage, 'sub_total': sub_total,
+                       'management_fee_igst': management_fee_igst, 'management_fee_cgst': management_fee_cgst,
+                       'management_fee_sgst': management_fee_sgst, 'management_fee_igst_rate': management_fee_igst_rate,
+                       'management_fee_cgst_rate': management_fee_cgst_rate,
+                       'management_fee_sgst_rate': management_fee_sgst_rate, 'cgst': cgst, 'sgst': sgst, 'igst': igst,
+                       'oper_ticket_price': oper_ticket_price, 'oper_commission': oper_commission,
+                       'oper_commission_type': oper_commission_type,'client_ticket':client_ticket,'vender_ticket':vender_ticket,
+                       'oper_cotrav_billing_entity': oper_cotrav_billing_entity,
+                       'oper_cgst': oper_cgst, 'oper_sgst': oper_sgst, 'oper_igst': oper_igst,
+                       'client_ticket_path': client_ticket_path,'is_client_sms':is_client_sms,'is_client_email':is_client_email,
+                       'vender_ticket_path': vender_ticket_path,'igst_amount': igst_amount,'cgst_amount': cgst_amount,'sgst_amount': sgst_amount
+                       }
+            print(payload)
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             print(company)
 
             if company['success'] == 1:
                 messages.success(request, 'Hotel Booking Assigned Successfully..!')
-                return HttpResponseRedirect("/agents/hotel-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+
             else:
                 messages.error(request, 'Fails To Assign hotel Booking..!')
-                return HttpResponseRedirect("/agents/hotel-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             payload = {'booking_id': id}
 
             url = settings.API_BASE_URL + "view_hotel_booking"
             payload = {'booking_id': id}
             booking = getDataFromAPI(login_type, access_token, url, payload)
+
             booking = booking['Bookings']
 
-            url_hotels = settings.API_BASE_URL + "operators"
-            payload = {'operator_type': 'hotel'}
-            hotels = getDataFromAPI(login_type, access_token, url_hotels, payload)
-            hotels = hotels['Operators']
+            billing_entity = booking[0]['billing_entity_id']
+            if billing_entity:
+                url_hotels = settings.API_BASE_URL + "view_billing_entitie"
+                payload = {'entity_id': billing_entity}
+                bus_entity = getDataFromAPI(login_type, access_token, url_hotels, payload)
+                bus_operators = bus_entity['Entitys']
+                be_name = bus_operators[0]['entity_name']
+                be_gst = bus_operators[0]['gst_id']
+            else:
+                be_name = ""
+                be_gst = ""
 
             url_room_types = settings.API_BASE_URL + "hotel_types"
             payload = {'booking_id': id}
@@ -3244,37 +4174,57 @@ def assign_hotel_booking(request, id):
             portals = getDataFromAPI(login_type, access_token, url_room_types, payload)
             portals = portals['Portals']
 
-            return render(request, 'Agent/assign_hotel_booking.html',{'bookings': booking, 'hotels': hotels,'portals':portals,'room_types':room_types})
+            url_hotels = settings.API_BASE_URL + "get_operators_by_service_type"
+            payload = {'service_type': 6}
+            hotels = getDataFromAPI(login_type, access_token, url_hotels, payload)
+            hotel_operators = hotels['Operators']
+
+            ######################
+            payload = {}
+            url = settings.API_BASE_URL + "get_cotrav_billing_entities"
+            c_entity = getDataFromAPI(login_type, access_token, url, payload)
+            c_entity = c_entity['Enitity']
+            print(c_entity)
+
+            #########################
+
+            return render(request, 'Agent/assign_hotel_booking.html',{'bookings': booking,'portals':portals,'room_types':room_types,
+             'c_entitys':c_entity,'hotel_operators':hotel_operators,'be_name':be_name,'be_gst':be_gst})
 
     else:
         return HttpResponseRedirect("/agents/login")
 
 
 ############################## FLIGHT  ######################################
-@login_required(login_url='/agents/login')
+
 def flight_bookings(request,id):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "agent_flight_bookings"
         payload = {'booking_type': id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
+        url = settings.API_BASE_URL + "companies"
+        payload = {'some': 'data'}
+        company1 = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company1['Corporates']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/flight_bookings.html",{'bookings': booking,'booking_type':id})
+            return render(request, "Agent/flight_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
         else:
             return render(request, "Agent/flight_bookings.html", {'': {}})
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def view_flight_booking(request,id):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         url = settings.API_BASE_URL + "view_flight_booking"
         payload = {'booking_id': id}
@@ -3289,14 +4239,24 @@ def view_flight_booking(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
+
 def add_flight_booking(request, id):
     if request.method == 'POST':
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             user_id = request.POST.get('user_id', '')
+
+            global booking_email
+            booking_email =''
+            if request.FILES:
+                file_up = request.FILES.get('email_attachment', False)
+                if file_up:
+                    file_up = request.FILES['email_attachment']
+                    booking_email = file_upload_get_path(file_up)
+                else:
+                    booking_email = 0
 
             corporate_id = request.POST.get('corporate_id', '')
             entity_id = request.POST.get('entity_id', '')
@@ -3319,6 +4279,11 @@ def add_flight_booking(request, id):
             billing_entity_id = request.POST.get('billing_entity_id', '')
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
+            assessment_code = request.POST.get('assessment_code', '')
+            assessment_city_id = request.POST.get('assessment_city_id', '')
+
+            is_email = request.POST.get('is_email', '')
+            is_sms = request.POST.get('is_sms', '')
 
             employees = []
             no_of_emp = int(no_of_seats) + 1
@@ -3328,8 +4293,9 @@ def add_flight_booking(request, id):
 
             payload = {'user_id':user_id,'user_type':login_type,'corporate_id':corporate_id,'entity_id':entity_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'usage_type':usage_type,'trip_type':trip_type,'seat_type':seat_type,'from_city':from_city,'to_city':to_city,
-                       'booking_datetime':booking_datetime,'departure_datetime':departure_datetime,'preferred_flight':preferred_flight,'assessment_code':assessment_code,
-                       'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'billing_entity_id':billing_entity_id}
+                       'booking_datetime':booking_datetime,'departure_datetime':departure_datetime,'preferred_flight':preferred_flight,
+                       'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'billing_entity_id':billing_entity_id,
+                       'is_email':is_email,'is_sms':is_sms,'assessment_code': assessment_code, 'assessment_city_id': assessment_city_id,'booking_email':booking_email}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_flight_booking"
@@ -3337,18 +4303,18 @@ def add_flight_booking(request, id):
 
             if booking['success'] == 1:
                 messages.success(request, 'Flight Booking Added Successfully..!')
-                return HttpResponseRedirect("/agents/flight-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/flight-bookings/2", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fails To Add Flight Booking..!')
-                return HttpResponseRedirect("/agents/flight-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/flight-bookings/2", {'message': "Operation Fails"})
         else:
             return HttpResponseRedirect("/agents/login")
 
     else:
         request = get_request()
-        if 'login_type' in request.session:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
 
             url = settings.API_BASE_URL + "companies"
             payload = {'some': 'data'}
@@ -3367,16 +4333,18 @@ def add_flight_booking(request, id):
             return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def assign_flight_booking(request,id):
-    if 'login_type' in request.session:
+    if 'agent_login_type' in request.session:
         if request.method == 'POST':
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
-
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
             booking_id = request.POST.get('booking_id', '')
             user_id = request.POST.get('user_id', '')
             no_of_passanger = request.POST.get('no_of_passanger', '')
+
+            client_ticket_path = ''
+            vender_ticket_path = ''
 
             meal_is_include = request.POST.get('meal_is_include', '')
             fare_type = request.POST.get('fare_type', '')
@@ -3402,23 +4370,104 @@ def assign_flight_booking(request,id):
             is_client_email = request.POST.get('is_client_email', '')
             is_driver_sms = request.POST.get('is_driver_sms', '')
 
+            ticket_price = request.POST.get('ticket_price', '')
+            management_fee = request.POST.get('management_fee', '')
+            tax_mng_amt = request.POST.get('tax_mng_amt', '')
+            tax_on_management_fee = request.POST.get('tax_on_management_fee', '')
+            tax_on_management_fee_percentage = request.POST.get('tax_on_management_fee_percentage', '')
+            sub_total = request.POST.get('sub_total', '')
+            management_fee_igst = request.POST.get('management_fee_igst', '')
+            management_fee_cgst = request.POST.get('management_fee_cgst', '')
+            management_fee_sgst = request.POST.get('management_fee_sgst', '')
+            management_fee_igst_rate = request.POST.get('management_fee_igst_rate', '')
+            management_fee_cgst_rate = request.POST.get('management_fee_cgst_rate', '')
+            management_fee_sgst_rate = request.POST.get('management_fee_sgst_rate', '')
+            cgst = request.POST.get('cgst', '')
+            sgst = request.POST.get('sgst', '')
+            igst = request.POST.get('igst', '')
+
+            oper_ticket_price = request.POST.get('oper_ticket_price', '')
+
+            oper_commission = request.POST.get('operator_commission', '')
+
+            oper_commission_type = request.POST.get('oper_commission_type', '')
+
+            oper_cotrav_billing_entity = request.POST.get('oper_cotrav_billing_entity', '')
+            cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+
+            oper_cgst = request.POST.get('oper_cgst', '')
+            oper_sgst = request.POST.get('oper_sgst', '')
+            oper_igst = request.POST.get('oper_igst', '')
+
+            igst_amount = request.POST.get('igst_amount', '')
+            cgst_amount = request.POST.get('cgst_amount', '')
+            sgst_amount = request.POST.get('sgst_amount', '')
+
+            if not igst_amount.isdigit():
+                igst_amount =0
+
+            if not cgst_amount.isdigit():
+                cgst_amount =0
+
+            if not sgst_amount.isdigit():
+                sgst_amount =0
+
+            if request.FILES:
+                file_up = request.FILES.get('busticketToUpload', False)
+                if file_up:
+                    save_path = os.path.join(settings.MEDIA_ROOT, 'flight/client_ticket', str(file_up))
+                    path1 = default_storage.save(save_path, request.FILES['busticketToUpload'])
+                    client_ticket_path = path1
+                else:
+                    client_ticket_path = ""
+
+                file_up2 = request.FILES.get('vendorticketToUpload', False)
+                if file_up2:
+                    save_path = os.path.join(settings.MEDIA_ROOT, 'flight/vender_ticket', str(file_up2))
+                    path2 = default_storage.save(save_path, request.FILES['vendorticketToUpload'])
+                    vender_ticket_path = path2
+                else:
+                    vender_ticket_path = ""
+
+            client_ticket = request.POST.get('client_ticket')
+            print(client_ticket)
+
+            vender_ticket = request.POST.get('vender_ticket')
+            print(vender_ticket)
+
             url = settings.API_BASE_URL + "assign_flight_booking"
             payload = {'ticket_no':ticket_number,'pnr_no':pnr_no,'portal_used':portal_used
                 ,'booking_id': booking_id,'user_id':user_id,'user_type':login_type,'flight_no':flight_no,'flight_name':flight_name,'arrival_time':arrival_time,
                        'departure_time':departure_time,'flight_to':flight_to,'flight_from':flight_from,'no_of_stops':no_of_stops,'seat_type':seat_type,'flight_type':flight_type,
-                       'trip_type':trip_type,'fare_type':fare_type,'meal_is_include':meal_is_include,'no_of_passanger':no_of_passanger,'employee_booking_id':employee_booking_id}
+                       'trip_type':trip_type,'fare_type':fare_type,'meal_is_include':meal_is_include,'no_of_passanger':no_of_passanger,'employee_booking_id':employee_booking_id,
+                       'ticket_price': ticket_price, 'management_fee': management_fee, 'tax_mng_amt': tax_mng_amt
+                , 'tax_on_management_fee': tax_on_management_fee,
+                       'tax_on_management_fee_percentage': tax_on_management_fee_percentage, 'sub_total': sub_total,
+                       'management_fee_igst': management_fee_igst, 'management_fee_cgst': management_fee_cgst,
+                       'management_fee_sgst': management_fee_sgst, 'management_fee_igst_rate': management_fee_igst_rate,
+                       'management_fee_cgst_rate': management_fee_cgst_rate,
+                       'management_fee_sgst_rate': management_fee_sgst_rate, 'cgst': cgst, 'sgst': sgst, 'igst': igst,
+                       'oper_ticket_price': oper_ticket_price, 'oper_commission': oper_commission,
+                       'oper_commission_type': oper_commission_type,
+                       'oper_cotrav_billing_entity': oper_cotrav_billing_entity,'cotrav_billing_entity':cotrav_billing_entity,
+                       'oper_cgst': oper_cgst, 'oper_sgst': oper_sgst, 'oper_igst': oper_igst,
+                       'client_ticket_path': client_ticket_path,'client_ticket':client_ticket,'vender_ticket':vender_ticket,
+                       'vender_ticket_path': vender_ticket_path,'is_client_sms':is_client_sms,'is_client_email':is_client_email,
+                       'igst_amount': igst_amount,'cgst_amount': cgst_amount,'sgst_amount': sgst_amount
+                       }
             print(payload)
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
                 messages.success(request, 'Operation Successfully')
-                return HttpResponseRedirect("/agents/flight-bookings/1", {'message': "Operation Successfully"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+
             else:
                 messages.error(request, 'Operation Fails')
-                return HttpResponseRedirect("/agents/flight-bookings/1", {'message': "Operation Fails"})
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
-            login_type = request.session['login_type']
-            access_token = request.session['access_token']
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
             payload = {'booking_id': id}
 
             url = settings.API_BASE_URL + "view_flight_booking"
@@ -3426,17 +4475,40 @@ def assign_flight_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url, payload)
             booking = booking['Bookings']
 
-            return render(request, 'Agent/assign_flight_booking.html',{'bookings': booking,})
+            billing_entity = booking[0]['billing_entity_id']
+            if billing_entity:
+                url_hotels = settings.API_BASE_URL + "view_billing_entitie"
+                payload = {'entity_id': billing_entity}
+                bus_entity = getDataFromAPI(login_type, access_token, url_hotels, payload)
+                bus_operators = bus_entity['Entitys']
+                be_name = bus_operators[0]['entity_name']
+                be_gst = bus_operators[0]['gst_id']
+            else:
+                be_name = ""
+                be_gst = ""
+
+            payload = {}
+            url = settings.API_BASE_URL + "get_cotrav_billing_entities"
+            c_entity = getDataFromAPI(login_type, access_token, url, payload)
+            c_entity = c_entity['Enitity']
+            print(c_entity)
+
+            url_hotels = settings.API_BASE_URL + "get_operators_by_service_type"
+            payload = {'service_type': 7}
+            hotels = getDataFromAPI(login_type, access_token, url_hotels, payload)
+            flight_operators = hotels['Operators']
+
+            return render(request, 'Agent/assign_flight_booking.html',{'bookings': booking,
+            'c_entitys':c_entity,'be_name':be_name,'be_gst':be_gst,'flight_operators':flight_operators})
 
     else:
         return HttpResponseRedirect("/agents/login")
 
 
-@login_required(login_url='/agents/login')
 def accept_flight_booking(request):
-    if 'login_type' in request.session:
-        login_type = request.session['login_type']
-        access_token = request.session['access_token']
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
 
         if request.method == 'POST':
             booking_id = request.POST.get('booking_id', '')
@@ -3469,6 +4541,2390 @@ def accept_flight_booking(request):
         return HttpResponseRedirect("/agents/login")
 
 
+def dateonly(dt=''):
+    try:
+        if(dt):
+            datetime_str = dt
+            datetime_object = datetime.strptime(datetime_str, '%d-%m-%Y %H:%M')
+            booking_date = str(datetime_object.day) + "-" + str(datetime_object.month) + "-" + str(datetime_object.year)
+            return booking_date
+        else:
+            return ''
+    except ValueError:
+        return ''
+
+
+def timeonly(dt=''):
+    try:
+        if(dt):
+            datetime_str = dt
+            datetime_object = datetime.strptime(datetime_str, '%d-%m-%Y %H:%M')
+            booking_time = str(datetime_object.hour) + ":" + str(datetime_object.hour)
+            return booking_time
+        else:
+            return ''
+    except ValueError :
+        return ''
+
+
+def download_taxi_bookings(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        user_id = request.POST.get('user_id', '')
+        filter_by = request.POST.get('filter_by', '')
+        booking_from_datetime = request.POST.get('booking_from_datetime', '')
+        booking_to_datetime = request.POST.get('booking_to_datetime', '')
+        booking_status = request.POST.get('booking_status', '')
+        company_name = request.POST.get('company_name', '')
+
+        url = settings.API_BASE_URL + "report_taxi_booking"
+        payload = {'filter_by': filter_by, 'booking_from_datetime': booking_from_datetime,
+                   'booking_to_datetime': booking_to_datetime, 'booking_status': booking_status,
+                   'company_name': company_name,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename={date}-taxi-bookings.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Taxi Bookings'
+
+    # Define the titles for columns
+
+    columns = [
+        'Booking ID',
+        'City',
+        'Assessment Code',
+        'Assessment City',
+        'Reason for Booking',
+        'Zone',
+        'Group Name',
+        'Subgroup Name',
+        'SPOC Name',
+        'Passengers',
+        'Booking Date',
+        'Booking Time',
+        'SPOC Status',
+        'Approver Name',
+        'Approved Date',
+        'Approved Time',
+        'Approver Status',
+        'Pickup Location',
+        'Drop Location',
+        'Pickup Date',
+        'Pickup Time',
+        'Drop Date',
+        'Drop Time',
+        'Package Name',
+        'Tour Type',
+        'Vehicle Type',
+        'Driver Name',
+        'Driver Contact',
+        'Taxi Reg No.',
+        'No. Of Seats',
+        'Assign Date',
+        'Assign Time',
+        'Rejected By',
+        'Reject Reason',
+        'Reject Date',
+        'Reject Time',
+        'Current Booking Status',
+        'Hours Done',
+        'Allowed Hours',
+        'Extra Hours',
+        'Rate per Hour',
+        'Extra Hour Charge',
+        'Rate per Hour',
+        'Kms Done',
+        'Allowed Kms',
+        'Extra Kms',
+        'Rate Per Km',
+        'Driver/Night Charge',
+        'Base Price',
+        'Reimbursement Tax',
+        'Extras',
+        'Usage Charge',
+        'Client Management Fee',
+        'Client Tax On Management Fee',
+        'Client Sub Total',
+        'Client Cotrav Billing Entity',
+        'Client IGST',
+        'Client CGST',
+        'Client SGST',
+        'Client Management Fee IGST',
+        'Client Management Fee CGST',
+        'Client Management Fee SGST',
+        'Client Management Fee IGST Rate',
+        'Client Management Fee CGST Rate',
+        'Client Management Fee SGST Rate',
+
+        'Is Auto Approved',
+        'Bill ID',
+        'Bill Date',
+        'Billing Entity',
+        'Cotrav Status',
+        'Client Status',
+    ]
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+
+    for bk in booking:
+        row_num += 1
+        passanger_list = ''
+        created_by = ''
+        created_date = ''
+        accepted_by = ''
+        accepted_date = ''
+        approved_by = ''
+        approved_date = ''
+        approved_status = ''
+        assigned_by = ''
+        assigned_date = ''
+        canceled_by = ''
+        canceled_date = ''
+        spoc_status=''
+        if bk['spoc_status'] == 1:
+            spoc_status = "In-Active"
+        else:
+            spoc_status = "Active"
+
+
+        if (bk['Passangers']):
+            if len(bk['Passangers']) > 1:
+                print(bk['Passangers'])
+                for psg in bk['Passangers']:
+                    passanger_list = passanger_list + str(psg['employee_name']) + ","
+            else:
+                passanger_list = bk['Passangers'][0]['employee_name']
+        if len(bk['Actions']) >= 0:
+            for act in bk['Actions']:
+                if (act['action'] == 1):
+                    print('created')
+                    created_by = act['employee_name']
+                    created_date = act['action_date']
+                if (act['action'] == 2):
+                    print('accepted')
+                    accepted_by = act['employee_name']
+                    accepted_date = act['action_date']
+                if (act['action'] == 2):
+                    print('approved')
+                    approved_by = act['employee_name']
+                    approved_date = act['action_date']
+                    print("approver date")
+                    print(approved_date)
+                    approved_status = 'Accepted'
+
+                if (act['action'] == 3):
+                    print('canceled')
+                    canceled_by = act['employee_name']
+                    canceled_date = act['action_date']
+
+                if (act['action'] == 4):
+                    print('assigned')
+                    assigned_by = act['employee_name']
+                    assigned_date = act['action_date']
+
+        row = [bk['reference_no'],
+               bk['city_name'],
+               bk['assessment_code'],
+               bk['assessment_city_id'],
+               bk['reason_booking'],
+               bk['zone_name'],
+               bk['group_name'],
+               bk['subgroup_name'],
+               bk['spoc_name'],
+               passanger_list,
+               dateonly(bk['booking_date']),
+               timeonly(bk['booking_date']),
+               spoc_status,
+               approved_by,
+               dateonly(approved_date),
+               timeonly(approved_date),
+               approved_status,
+               bk['pickup_location'],
+               bk['drop_location'],
+               dateonly(bk['pickup_datetime']),
+               timeonly(bk['pickup_datetime']),
+               '',
+               '',
+               bk['package_name'],
+
+               bk['tour_type'],
+
+               bk['taxi_type_name'],
+               bk['driver_name'],
+               bk['driver_contact'],
+               bk['licence_no'],
+               bk['no_of_seats'],
+               dateonly(assigned_date),
+               timeonly(assigned_date),
+               canceled_by,
+               '',
+               dateonly(canceled_date),
+               timeonly(canceled_date),
+               bk['last_action_by'],
+               bk['ci_hours_done'],
+               bk['ci_allowed_hours'],
+               bk['ci_extra_hours'],
+               bk['ci_charge_hour'],
+               bk['ci_extra_hr_charges'],
+               bk['ci_charge_hour'],
+               bk['ci_kms_done'],
+               bk['ci_allowed_kms'],
+               bk['ci_extra_kms'],
+               bk['ci_extra_kms'],
+               bk['ci_driver_allowance'],
+               bk['ci_base_rate'],
+               '',
+               bk['ci_extra_kms'],
+               bk['ci_extra_km_rate'],
+               bk['ci_management_fee'],
+               bk['ci_tax_on_management_fee'],
+               bk['ci_sub_total'],
+               bk['ci_cotrav_billing_entity'],
+               bk['ci_igst'],
+               bk['ci_cgst'],
+               bk['ci_sgst'],
+               bk['ci_management_fee_igst'],
+               bk['ci_management_fee_cgst'],
+               bk['ci_management_fee_sgst'],
+               bk['ci_management_fee_igst_rate'],
+               bk['ci_management_fee_cgst_rate'],
+               bk['ci_management_fee_sgst_rate'],
+               '',
+               '',
+               '',
+               bk['billing_entity_id'],
+               bk['cotrav_status'],
+               bk['client_status'],
+
+               ]
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_bus_bookings(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        user_id = request.POST.get('user_id', '')
+        filter_by = request.POST.get('filter_by', '')
+        booking_from_datetime = request.POST.get('booking_from_datetime', '')
+        booking_to_datetime = request.POST.get('booking_to_datetime', '')
+        booking_status = request.POST.get('booking_status', '')
+        company_name = request.POST.get('company_name', '')
+
+        url = settings.API_BASE_URL + "report_bus_booking"
+        payload = {'filter_by': filter_by, 'booking_from_datetime': booking_from_datetime,
+                   'booking_to_datetime': booking_to_datetime, 'booking_status': booking_status,
+                   'company_name': company_name,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+
+            #print(booking)
+
+            response = HttpResponse(
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            )
+            response['Content-Disposition'] = 'attachment; filename={date}-bus-bookings.xlsx'.format(
+                date=datetime.now().strftime('%Y-%m-%d'),
+            )
+            workbook = Workbook()
+
+            # Get active worksheet/tab
+            worksheet = workbook.active
+            worksheet.title = 'Bus Bookings'
+
+            # Define the titles for columns
+
+            columns = [
+                "Booking ID",
+                "Assessment Code",
+                "Assessment City",
+                "Zone",
+                "Group Name",
+                "Subgroup Name",
+                "SPOC Name",
+                "Passenger Name",
+                "Booking Date",
+                "Booking Time",
+                "SPOC Status",
+                "Approver Name",
+                "Approved Date",
+                "Approved Time",
+                "Approver Status",
+                "Pickup City",
+                "Drop City",
+                "Journey Date",
+                "Journey Time",
+                "Cotrav Status",
+                "Assign Date",
+                "Assign Time",
+                "Rejected By",
+                "Reject Reason",
+                "Reject Date",
+                "Reject Time",
+                "Current Booking Status",
+                "Bus Type Allocated",
+                "PNR Number",
+
+                'Ticket No',
+                'Vendor Booking Id',
+                'Voucher No',
+                'Booking Eail',
+                'Pickup To Datetime',
+                'Preferred Bus',
+                'Boarding Point',
+                'Boarding Datetime',
+                'Bus Type Priority 1',
+                'Bus Type Priority 2',
+                'Bus Type Priority 3',
+                'No Of Seats',
+                'Last Action By',
+                'Operator Name',
+                'Operator Contact',
+                'Assign Bus Type ID',
+                'Seat No',
+                'Portal Used',
+                'Status Client',
+                'Status Cotrav',
+                'Invoice Generated',
+                'Invoice ID',
+                'Group ID',
+                'Subgroup ID',
+                'Spoc ID',
+                'Corporate ID',
+                'Billing Entity ID',
+                'Reason Booking',
+                'Cotrav Agent Name',
+
+
+                'Client Ticket Price',
+                'Client Management Fee',
+                'Client Tax On Mng. fee',
+                'Client Sub Total',
+                'Client Cotrav Billing Entity',
+                'Client IGST',
+                'Client CGST',
+                'Client SGST',
+                'Client IGST Mng. Fee',
+                'Client CGST Mng. Fee',
+                'Client SGST Mng. Fee',
+                'Client IGST Mng. Fee Rate',
+                'Client CGST Mng. Fee Rate',
+                'Client SGST Mng. Fee Rate',
+
+
+                "Cancellation Charge",
+                "Service Tax on Cancellation",
+                "Is Auto Approved",
+                "Bill ID",
+
+                'Cotrav Status',
+                'Client Status',
+
+            ]
+            row_num = 1
+
+            # Assign the titles for each cell of the header
+            for col_num, column_title in enumerate(columns, 1):
+                cell = worksheet.cell(row=row_num, column=col_num)
+                cell.value = column_title
+
+            # Iterate through all movies
+            for bk in booking:
+                row_num += 1
+                passanger_list = ''
+                created_by = ''
+                created_date = ''
+                accepted_by = ''
+                accepted_date = ''
+                approved_by = ''
+                approved_date = ''
+                approved_status = ''
+                assigned_by = ''
+                assigned_date = ''
+                canceled_by = ''
+                canceled_date = ''
+                b_date = ''
+                b_time = ''
+                spoc_status = ''
+                if bk['spoc_status'] == 1:
+                    spoc_status = "In-Active"
+                else:
+                    spoc_status = "Active"
+
+
+                if (bk['Passangers']):
+                    if len(bk['Passangers']) > 1:
+                        print(bk['Passangers'])
+                        for psg in bk['Passangers']:
+                            passanger_list = passanger_list + str(psg['employee_name']) + ","
+                    else:
+                        passanger_list = bk['Passangers'][0]['employee_name']
+                if len(bk['Actions']) >= 0:
+                    for act in bk['Actions']:
+                        if (act['action'] == 1):
+                            print('created')
+                            created_by = act['employee_name']
+                            created_date = act['action_date']
+                        if (act['action'] == 2):
+                            print('accepted')
+                            accepted_by = act['employee_name']
+                            accepted_date = act['action_date']
+                        if (act['action'] == 2):
+                            print('approved')
+                            approved_by = act['employee_name']
+                            approved_date = act['action_date']
+                            approved_status = 'accepted'
+
+                        if (act['action'] == 3):
+                            print('canceled')
+                            canceled_by = act['employee_name']
+                            canceled_date = act['action_date']
+
+                        if (act['action'] == 4):
+                            print('assigned')
+                            assigned_by = act['employee_name']
+                            assigned_date = act['action_date']
+
+
+                row = [
+                    bk['reference_no'],
+                    bk['assessment_code'],
+                    bk['assessment_city_id'],
+                    bk['zone_name'],
+                    bk['group_name'],
+                    bk['subgroup_name'],
+                    bk['spoc_name'],
+                    passanger_list,
+                    b_date,
+                    b_time,
+                    spoc_status,
+                    approved_by,
+                    dateonly(approved_date),
+                    timeonly(approved_date),
+                    approved_status,
+                    bk['pickup_location'],
+                    bk['drop_location'],
+                    bk['pickup_from_datetime'],
+                    dateonly(bk['boarding_datetime']),
+                    bk['cotrav_status'],
+
+                    dateonly(assigned_date),
+                    timeonly(assigned_date),
+                    canceled_by,
+                    '',
+                    dateonly(canceled_date),
+                    timeonly(canceled_date),
+                    bk['status_cotrav'],
+                    bk['assign_bus_type_id'],
+                    bk['pnr_no'],
+
+                    bk['ticket_no'],
+                    bk['vendor_booking_id'],
+                    bk['voucher_no'],
+                    bk['booking_email'],
+                    bk['pickup_to_datetime'],
+                    bk['preferred_bus'],
+                    bk['boarding_point'],
+                    bk['boarding_datetime'],
+                    bk['bus_type_priority_1'],
+                    bk['bus_type_priority_2'],
+                    bk['bus_type_priority_3'],
+                    bk['no_of_seats'],
+                    bk['last_action_by'],
+                    bk['operator_name'],
+                    bk['operator_contact'],
+                    bk['assign_bus_type_id'],
+                    bk['seat_no'],
+                    bk['portal_used'],
+                    bk['status_client'],
+                    bk['status_cotrav'],
+                    bk['is_invoice'],
+                    bk['invoice_id'],
+                    bk['group_id'],
+                    bk['subgroup_id'],
+                    bk['spoc_id'],
+                    bk['corporate_id'],
+                    bk['billing_entity_id'],
+                    bk['reason_booking'],
+                    bk['cotrav_agent_name'],
+
+
+                    bk['client_ticket_price'],
+                    bk['client_mang_fee'],
+                    bk['client_tax_on_mang_fee'],
+                    bk['client_sub_total'],
+                    bk['client_cotrav_billing_entity'],
+                    bk['client_igst'],
+                    bk['client_cgst'],
+                    bk['client_sgst'],
+                    bk['client_mng_fee_igst'],
+                    bk['client_mng_fee_cgst'],
+                    bk['client_mng_fee_sgst'],
+                    bk['client_mng_fee_igst_rate'],
+                    bk['client_mng_fee_cgst_rate'],
+                    bk['client_mng_fee_sgst_rate'],
+
+
+                    "",
+                    "",
+                    "",
+                    "",
+
+                    bk['client_status'],
+                    bk['cotrav_status'],
+
+                ]
+
+                # Assign the data for each cell of the row
+                for col_num, cell_value in enumerate(row, 1):
+                    cell = worksheet.cell(row=row_num, column=col_num)
+                    cell.value = cell_value
+
+        workbook.save(response)
+
+        return response
+
+
+def download_train_bookings(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        user_id = request.POST.get('user_id', '')
+        filter_by = request.POST.get('filter_by', '')
+        booking_from_datetime = request.POST.get('booking_from_datetime', '')
+        booking_to_datetime = request.POST.get('booking_to_datetime', '')
+        booking_status = request.POST.get('booking_status', '')
+        company_name = request.POST.get('company_name', '')
+
+        url = settings.API_BASE_URL + "report_train_booking"
+        payload = {'filter_by': filter_by, 'booking_from_datetime': booking_from_datetime,
+                   'booking_to_datetime': booking_to_datetime, 'booking_status': booking_status,
+                   'company_name': company_name,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+
+            #print(booking)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename={date}-train-bookings.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Train Bookings'
+
+    # Define the titles for columns
+
+    columns = [
+        "Booking ID",
+        "Assessment Code",
+        "Travel Request Code",
+        "From City",
+        "To City",
+        "SPOC Name",
+        "Passengers",
+        "Passenger IDs",
+        "Boarding Date",
+        "Boarding Time",
+        "Booking Date",
+        "Booking Time",
+        "Boarding Point",
+        "Train Name",
+        "Train No.",
+        "PNR No.",
+        "Coach Type",
+        "Quota Used",
+
+        "Ticket Price",
+        "Surcharge",
+        'Client Ticket Price',
+        'Client Management Fee',
+        'Client Tax On Mng. fee',
+        'Client Sub Total',
+        'Client Cotrav Billing Entity',
+        'Client IGST',
+        'Client CGST',
+        'Client SGST',
+        'Client IGST Mng. Fee',
+        'Client CGST Mng. Fee',
+        'Client SGST Mng. Fee',
+        'Client IGST Mng. Fee Rate',
+        'Client CGST Mng. Fee Rate',
+        'Client SGST Mng. Fee Rate',
+
+        "Vendor Taxable Amount",
+        "Vendor GST Amount",
+        "Vendor Bill Date",
+        "Vendor Bill No.",
+        "Vendor GSTIN",
+        "HSN/SAC Code",
+        "Invoice Created",
+
+        "Client Status",
+        "Cotrav Status",
+    ]
+
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    for bk in booking:
+        row_num += 1
+        passanger_list = ''
+        created_by = ''
+        created_date = ''
+        accepted_by = ''
+        accepted_date = ''
+        approved_by = ''
+        approved_date = ''
+        approved_status = ''
+        assigned_by = ''
+        assigned_date = ''
+        canceled_by = ''
+        canceled_date = ''
+
+
+
+        if (bk['Passangers']):
+            if len(bk['Passangers']) > 1:
+                print(bk['Passangers'])
+                for psg in bk['Passangers']:
+                    passanger_list = passanger_list + str(psg['employee_name']) + ","
+            else:
+                passanger_list = bk['Passangers'][0]['employee_name']
+        if len(bk['Actions']) >= 0:
+            for act in bk['Actions']:
+                if (act['action'] == 1):
+                    print('created')
+                    created_by = act['employee_name']
+                    created_date = act['action_date']
+                if (act['action'] == 2):
+                    print('accepted')
+                    accepted_by = act['employee_name']
+                    accepted_date = act['action_date']
+                if (act['action'] == 2):
+                    print('approved')
+                    approved_by = act['employee_name']
+                    approved_date = act['action_date']
+                    approved_status = 'accepted'
+
+                if (act['action'] == 3):
+                    print('canceled')
+                    canceled_by = act['employee_name']
+                    canceled_date = act['action_date']
+
+                if (act['action'] == 4):
+                    print('assigned')
+                    assigned_by = act['employee_name']
+                    assigned_date = act['action_date']
+
+
+
+        # Define the data for each cell in the row
+        row = [
+
+            bk['reference_no'],
+            bk['assessment_code'],
+            "",
+            bk['pickup_location'],
+            bk['drop_location'],
+            bk['spoc_name'],
+            passanger_list,
+            "",
+            dateonly(bk['boarding_datetime']),
+            timeonly(bk['boarding_datetime']),
+            bk['booking_datetime'],
+            bk['boarding_datetime'],
+            bk['boarding_point'],
+            bk['train_name'],
+            bk['train_name'],
+            bk['pnr_no'],
+            bk['seat_no'],
+            "",
+
+            bk['client_ticket_price'],
+            "",
+            bk['client_ticket_price'],
+            bk['client_mang_fee'],
+            bk['client_tax_on_mang_fee'],
+            bk['client_sub_total'],
+            bk['client_cotrav_billing_entity'],
+            bk['client_igst'],
+            bk['client_cgst'],
+            bk['client_sgst'],
+            bk['client_mng_fee_igst'],
+            bk['client_mng_fee_cgst'],
+            bk['client_mng_fee_sgst'],
+            bk['client_mng_fee_igst_rate'],
+            bk['client_mng_fee_cgst_rate'],
+            bk['client_mng_fee_sgst_rate'],
+
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+
+            bk['client_status'],
+            bk['cotrav_status'],
+
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+
+def download_flight_bookings(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        user_id = request.POST.get('user_id', '')
+        filter_by = request.POST.get('filter_by', '')
+        booking_from_datetime = request.POST.get('booking_from_datetime', '')
+        booking_to_datetime = request.POST.get('booking_to_datetime', '')
+        booking_status = request.POST.get('booking_status', '')
+        company_name = request.POST.get('company_name', '')
+
+        url = settings.API_BASE_URL + "report_flight_booking"
+        payload = {'filter_by': filter_by, 'booking_from_datetime': booking_from_datetime,
+                   'booking_to_datetime': booking_to_datetime, 'booking_status': booking_status,
+                   'company_name': company_name,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+
+            #print(booking)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename={date}-flight-bookings.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Flight Bookings'
+
+    # Define the titles for columns
+
+    columns = [
+        'Booking ID',
+        'Assessment Code',
+        'Assessment City',
+        'Booking Date',
+        'Usage Type',
+        'Trip Type',
+        'Flight Type',
+        'Seat Type',
+        'From City',
+        'To City',
+        'Departure Date',
+        'Departure Time',
+        'Passengers',
+        'Approved Date',
+        'Approved Time',
+        'Reject Date',
+        'Reject Time',
+        'Assign Date',
+        'Assign Time',
+        'Zone',
+        'Group Name',
+        'Subgroup Name',
+        'SPOC Name',
+
+        'First Flight Name',
+        'First Flight No',
+        'First PNR No',
+        'First Flight From City',
+        'First Flight To City',
+        'First Flight Departure Datetime',
+        'First Flight Arrival Datetime',
+
+        'Second Flight Name',
+        'Second Flight No',
+        'Second PNR No',
+        'Second Flight From City',
+        'Second Flight To City',
+        'Second Flight Departure Datetime',
+        'Second Flight Arrival Datetime',
+
+        'Third Flight Name',
+        'Third Flight No',
+        'Third PNR No',
+        'Third Flight From City',
+        'Third Flight To City',
+        'Third Flight Departure Datetime',
+        'Third Flight Arrival Datetime',
+
+        'Client Ticket Price',
+        'Client Management Fee',
+        'Client Tax On Mng. fee',
+        'Client Sub Total',
+        'Client Cotrav Billing Entity',
+        'Client IGST',
+        'Client CGST',
+        'Client SGST',
+        'Client IGST Mng. Fee',
+        'Client CGST Mng. Fee',
+        'Client SGST Mng. Fee',
+        'Client IGST Mng. Fee Rate',
+        'Client CGST Mng. Fee Rate',
+        'Client SGST Mng. Fee Rate',
+
+        'SPOC Comment',
+        'Meal Charges',
+        'Cancellation Charge',
+        'Tax On Cancellation',
+        'Is Auto Approved',
+        'Bill ID',
+        'Cotrav Status',
+        'Client Status',
+
+    ]
+
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    for bk in booking:
+        row_num += 1
+        passanger_list = ''
+        created_by = ''
+        created_date = ''
+        accepted_by = ''
+        accepted_date = ''
+        approved_by = ''
+        approved_date = ''
+        approved_status = ''
+        assigned_by = ''
+        assigned_date = ''
+        canceled_by = ''
+        canceled_date = ''
+
+        flight_name1 = ''
+        flight_no1 = ''
+        pnr_no1 = ''
+        from_city1 = ''
+        to_city1 = ''
+        departure_datetime1 = ''
+        arrival_datetime1 = ''
+
+        flight_name2 = ''
+        flight_no2 = ''
+        pnr_no2 = ''
+        from_city2 = ''
+        to_city2 = ''
+        departure_datetime2 = ''
+        arrival_datetime2 = ''
+
+        flight_name3 = ''
+        flight_no3 = ''
+        pnr_no3 = ''
+        from_city3 = ''
+        to_city3 = ''
+        departure_datetime3 = ''
+        arrival_datetime3 = ''
+
+        if len(bk['Flights']) == 1:
+            flight_name1 = bk['Flights'][0]['flight_name']
+            flight_no1 = bk['Flights'][0]['flight_no']
+            pnr_no1 = bk['Flights'][0]['pnr_no']
+            from_city1 = bk['Flights'][0]['from_city']
+            to_city1 = bk['Flights'][0]['to_city']
+            departure_datetime1 = bk['Flights'][0]['departure_datetime']
+            arrival_datetime1 = bk['Flights'][0]['arrival_datetime']
+
+        if len(bk['Flights']) == 2:
+            flight_name1 = bk['Flights'][0]['flight_name']
+            flight_no1 = bk['Flights'][0]['flight_no']
+            pnr_no1 = bk['Flights'][0]['pnr_no']
+            from_city1 = bk['Flights'][0]['from_city']
+            to_city1 = bk['Flights'][0]['to_city']
+            departure_datetime1 = bk['Flights'][0]['departure_datetime']
+            arrival_datetime1 = bk['Flights'][0]['arrival_datetime']
+
+            flight_name2 = bk['Flights'][1]['flight_name']
+            flight_no2 = bk['Flights'][1]['flight_no']
+            pnr_no2 = bk['Flights'][1]['pnr_no']
+            from_city2 = bk['Flights'][1]['from_city']
+            to_city2 = bk['Flights'][1]['to_city']
+            departure_datetime2 = bk['Flights'][1]['departure_datetime']
+            arrival_datetime2 = bk['Flights'][1]['arrival_datetime']
+
+        if len(bk['Flights']) == 3:
+            flight_name1 = bk['Flights'][0]['flight_name']
+            flight_no1 = bk['Flights'][0]['flight_no']
+            pnr_no1 = bk['Flights'][0]['pnr_no']
+            from_city1 = bk['Flights'][0]['from_city']
+            to_city1 = bk['Flights'][0]['to_city']
+            departure_datetime1 = bk['Flights'][0]['departure_datetime']
+            arrival_datetime1 = bk['Flights'][0]['arrival_datetime']
+
+            flight_name2 = bk['Flights'][1]['flight_name']
+            flight_no2 = bk['Flights'][1]['flight_no']
+            pnr_no2 = bk['Flights'][1]['pnr_no']
+            from_city2 = bk['Flights'][1]['from_city']
+            to_city2 = bk['Flights'][1]['to_city']
+            departure_datetime2 = bk['Flights'][1]['departure_datetime']
+            arrival_datetime2 = bk['Flights'][1]['arrival_datetime']
+
+            flight_name3 = bk['Flights'][2]['flight_name']
+            flight_no3 = bk['Flights'][2]['flight_no']
+            pnr_no3 = bk['Flights'][2]['pnr_no']
+            from_city3 = bk['Flights'][2]['from_city']
+            to_city3 = bk['Flights'][2]['to_city']
+            departure_datetime3 = bk['Flights'][2]['departure_datetime']
+            arrival_datetime3 = bk['Flights'][2]['arrival_datetime']
+
+        if (bk['booking_datetime']):
+            datetime_str = bk['booking_datetime']
+            datetime_object = datetime.strptime(datetime_str, '%d-%m-%Y %H:%M')
+            booking_date = str(datetime_object.day) +"/"+ str(datetime_object.month) + "/" + str(datetime_object.year)
+            booking_time = str(datetime_object.hour) +":" + str(datetime_object.hour)
+
+
+        if (bk['Passangers']):
+            if len(bk['Passangers']) > 1:
+                print(bk['Passangers'])
+                for psg in bk['Passangers']:
+                    passanger_list = passanger_list + str(psg['employee_name']) + ","
+            else:
+                passanger_list = bk['Passangers'][0]['employee_name']
+        if len(bk['Actions']) >= 0:
+            for act in bk['Actions']:
+                if (act['action'] == 1):
+                    print('created')
+                    created_by = act['employee_name']
+                    created_date = act['action_date']
+                if (act['action'] == 2):
+                    print('accepted')
+                    accepted_by = act['employee_name']
+                    accepted_date = act['action_date']
+                if (act['action'] == 2):
+                    print('approved')
+                    approved_by = act['employee_name']
+                    approved_date = act['action_date']
+                    approved_status = 'accepted'
+
+                if (act['action'] == 3):
+                    print('canceled')
+                    canceled_by = act['employee_name']
+                    canceled_date = act['action_date']
+
+                if (act['action'] == 4):
+                    print('assigned')
+                    assigned_by = act['employee_name']
+                    assigned_date = act['action_date']
+
+        # Define the data for each cell in the row
+        row = [
+
+            bk['reference_no'],
+            bk['assessment_code'],
+            bk['assessment_city'],
+            dateonly(bk['booking_datetime']),
+            bk['usage_type'],
+            bk['trip_type'],
+            bk['flight_type'],
+            bk['seat_type'],
+            bk['from_location'],
+            bk['to_location'],
+            dateonly(bk['departure_datetime']),
+            timeonly(bk['departure_datetime']),
+            passanger_list,
+            dateonly(approved_date),
+            timeonly(approved_date),
+            dateonly(canceled_date),
+            timeonly(canceled_date),
+            dateonly(assigned_date),
+            timeonly(assigned_date),
+            bk['zone_name'],
+            bk['group_name'],
+            bk['subgroup_name'],
+            bk['spoc_name'],
+
+            flight_name1 ,
+            flight_no1 ,
+            pnr_no1 ,
+            from_city1 ,
+            to_city1 ,
+            departure_datetime1 ,
+            arrival_datetime1 ,
+
+            flight_name2,
+            flight_no2,
+            pnr_no2,
+            from_city2,
+            to_city2,
+            departure_datetime2,
+            arrival_datetime2,
+
+            flight_name3,
+            flight_no3,
+            pnr_no3,
+            from_city3,
+            to_city3,
+            departure_datetime3,
+            arrival_datetime3,
+
+            bk['client_ticket_price'],
+            bk['client_mang_fee'],
+            bk['client_tax_on_mang_fee'],
+            bk['client_sub_total'],
+            bk['client_cotrav_billing_entity'],
+            bk['client_igst'],
+            bk['client_cgst'],
+            bk['client_sgst'],
+            bk['client_mng_fee_igst'],
+            bk['client_mng_fee_cgst'],
+            bk['client_mng_fee_sgst'],
+            bk['client_mng_fee_igst_rate'],
+            bk['client_mng_fee_cgst_rate'],
+            bk['client_mng_fee_sgst_rate'],
+
+
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            bk['cotrav_status'],
+            bk['client_status'],
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+
+def download_hotel_bookings(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    if 'login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        user_id = request.POST.get('user_id', '')
+        filter_by = request.POST.get('filter_by', '')
+        booking_from_datetime = request.POST.get('booking_from_datetime', '')
+        booking_to_datetime = request.POST.get('booking_to_datetime', '')
+        booking_status = request.POST.get('booking_status', '')
+        company_name = request.POST.get('company_name', '')
+
+        url = settings.API_BASE_URL + "report_hotel_booking"
+        payload = {'filter_by': filter_by, 'booking_from_datetime': booking_from_datetime,
+                   'booking_to_datetime': booking_to_datetime, 'booking_status': booking_status,
+                   'company_name': company_name,'user_id':user_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+
+            #print(booking)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename={date}-hotel-bookings.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Hotel Bookings'
+
+    # Define the titles for columns
+
+    columns = [
+        'Booking ID',
+        'Billing Entity',
+        'Travel request Code',
+        'Assessment Code',
+        'Assessment City',
+        'Zone',
+        'Group Name',
+        'Subgroup Name',
+        'From City',
+        'To City',
+        'SPOC Name',
+        'Booking Date',
+        'Booking Time',
+        'SPOC Status',
+        'Approver Name',
+        'Approved Date',
+        'Approved Time',
+        'Approver Status',
+        'Bucket Request Date',
+        'Bucket Request Time',
+        'Bucket Approved Date',
+        'Bucket Approved Time',
+        'Preferred Hotel',
+        'Assigned Hotel',
+        'Assigned Hotel Address',
+        'Hotel Contact',
+        'Assign Date',
+        'Assign Time',
+        'TaxiVaxi Status',
+        'Employees Name',
+        'No. of Persons',
+        'Check IN Date',
+        'Check IN Time',
+        'Check OUT Date',
+        'Check OUT Time',
+        'Booking Reason',
+        'Higher Bucket Requested',
+        'Reason for Higher Bucket',
+        'Rejected By',
+        'Reject Reason',
+        'Reject Date',
+        'Reject Time',
+        'Current Booking Status',
+        'No. of Nights',
+        'Room Type',
+        'Room Occupancy',
+        'Per Night Price',
+        'Total Room Price',
+        'Tax On Room Cancellation Charge',
+        'Client Management Fee',
+        'Client Tax On Mng. fee',
+        'Client Sub Total',
+        'Client Cotrav Billing Entity',
+        'Client IGST',
+        'Client CGST',
+        'Client SGST',
+        'Client IGST Mng. Fee',
+        'Client CGST Mng. Fee',
+        'Client SGST Mng. Fee',
+        'Client IGST Mng. Fee Rate',
+        'Client CGST Mng. Fee Rate',
+        'Client SGST Mng. Fee Rate',
+        'Is Auto Approved',
+        'Bill ID',
+        'Is TBA Booking',
+        'Is Offline Booking',
+        'Daily Breakfast',
+        'Is Room AC',
+
+        "Client Status",
+        "Cotrav Status",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    for bk in booking:
+        row_num += 1
+
+        passanger_list = ''
+        created_by = ''
+        created_date = ''
+        accepted_by = ''
+        accepted_date = ''
+        approved_by = ''
+        approved_date = ''
+        approved_status = ''
+        assigned_by = ''
+        assigned_date = ''
+        canceled_by = ''
+        canceled_date = ''
+        approver1 = ''
+        approver1_date = ''
+        approver1_action = ''
+
+        approver2 = ''
+        approver2_date = ''
+        approver2_action = ''
+
+        spoc_status = ''
+        is_prepaid = ''
+        daily_brakefast = ''
+        is_ac_room = ''
+
+        if bk['spoc_status'] == 1:
+            spoc_status = "In-Active"
+        else:
+            spoc_status = "Active"
+        if bk['is_prepaid'] == 1:
+            is_prepaid = "Yes"
+        else:
+            is_prepaid = "No"
+        if bk['daily_brakefast'] == 1:
+            daily_brakefast = "Yes"
+        else:
+            daily_brakefast = "No"
+        if bk['is_ac_room'] == 1:
+            is_ac_room = "Yes"
+        else:
+            is_ac_room = "No"
+
+        if (bk['Passangers']):
+            if len(bk['Passangers']) > 1:
+                print(bk['Passangers'])
+                for psg in bk['Passangers']:
+                    passanger_list = passanger_list + str(psg['employee_name']) + ","
+            else:
+                passanger_list = bk['Passangers'][0]['employee_name']
+        if len(bk['Actions']) >= 0:
+            for act in bk['Actions']:
+                if (act['user_type'] == 2):
+                    approver1 = act['employee_name']
+                    approver1_date = act['action_date']
+                    approver1_action = "Accept"
+
+                if (act['user_type'] == 3):
+                    approver2 = act['employee_name']
+                    approver2_date = act['action_date']
+                    approver2_action = "Reject"
+
+                if (act['action'] == 1):
+                    print('created')
+                    created_by = act['employee_name']
+                    created_date = act['action_date']
+                if (act['action'] == 2):
+                    print('accepted')
+                    accepted_by = act['employee_name']
+                    accepted_date = act['action_date']
+                if (act['action'] == 2):
+                    print('approved')
+                    approved_by = act['employee_name']
+                    approved_date = act['action_date']
+                    approved_status = 'accepted'
+
+                if (act['action'] == 3):
+                    print('canceled')
+                    canceled_by = act['employee_name']
+                    canceled_date = act['action_date']
+
+                if (act['action'] == 4):
+                    print('assigned')
+                    assigned_by = act['employee_name']
+                    assigned_date = act['action_date']
+
+        # Define the data for each cell in the row
+        row = [
+
+            bk['reference_no'],
+            '',
+            '',
+            bk['assessment_code'],
+            bk['assessment_city_id'],
+            bk['zone_name'],
+            bk['group_name'],
+            bk['subgroup_name'],
+            bk['from_city_name'],
+
+            bk['from_area_id_name'],
+            bk['spoc_name'],
+            dateonly(bk['booking_datetime']),
+            timeonly(bk['booking_datetime']),
+
+            spoc_status,
+
+            approver1,
+
+            dateonly(approved_date),
+
+            timeonly(approved_date),
+
+            approved_by,
+
+            '',
+            '',
+            '',
+            '',
+
+            bk['preferred_hotel'],
+            bk['assign_hotel_id'],
+            bk['operator_name'],
+            bk['operator_contact'],
+            dateonly(assigned_date),
+            timeonly(assigned_date),
+            bk['status_cotrav'],
+            passanger_list,
+            bk['no_of_seats'],
+            dateonly(bk['checkin_datetime']),
+            timeonly(bk['checkin_datetime']),
+            dateonly(bk['checkout_datetime']),
+            timeonly(bk['checkout_datetime']),
+            bk['reason_booking'],
+            bk['bucket_priority_1'],
+            bk['bucket_priority_2'],
+            canceled_by,
+            '',
+            dateonly(canceled_date),
+            timeonly(canceled_date),
+            bk['status_cotrav'],
+            '',
+            bk['room_type_name'],
+            bk['hotel_type_name'],
+            bk['bucket_price_1'],
+            bk['bucket_price_1'],
+            '',
+            bk['ticket_price'],
+
+            bk['management_fee'],
+            bk['tax_on_management_fee'],
+            bk['sub_total'],
+            bk['billing_entity_id'],
+            bk['igst'],
+            bk['cgst'],
+            bk['sgst'],
+            bk['management_fee_igst'],
+            bk['management_fee_cgst'],
+            bk['management_fee_sgst'],
+            bk['management_fee_igst_rate'],
+            bk['management_fee_cgst_rate'],
+            bk['management_fee_sgst_rate'],
+
+            '',
+            '',
+
+            is_prepaid,
+            daily_brakefast,
+            is_ac_room,
+
+            bk['client_status'],
+            bk['cotrav_status'],
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_billing_entities(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "billing_entities"
+        payload = {'corporate_id': 0}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Entitys']
+
+            # print(booking)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=BillingEntitys.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Billing Entitys'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Billing City",
+        "Entity Name",
+        "Contact Person Name",
+        "Contact Person Email",
+        "Contact Person Phone No",
+        "Address Line 1",
+        "Address Line 2",
+        "Address Line 3",
+        "GST NO",
+        "PAN No",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['billing_city'],
+            bk['entity_name'],
+            bk['contact_person_name'],
+            bk['contact_person_email'],
+            bk['contact_person_no'],
+            bk['address_line_1'],
+            bk['address_line_2'],
+            bk['address_line_3'],
+            bk['gst_id'],
+            bk['pan_no'],
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_rates(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "company_rates"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Corporate_Retes']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=CompanyRates.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Company Rates'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "City",
+        "Taxi Type",
+        "Tour Type",
+        "KMS",
+        "HOURS",
+        "KM Rate",
+        "HR Rate",
+        "Base Rate",
+        "Night Rate",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        if bk['tour_type'] == 2:
+            tour_type = "Local"
+        else:
+            tour_type = "Outstation"
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['city_name'],
+            bk['taxi_type'],
+            tour_type,
+            bk['kms'],
+            bk['hours'],
+            bk['km_rate'],
+            bk['hour_rate'],
+            bk['base_rate'],
+            bk['night_rate'],
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_assessment_cities(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "assessment_cities"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Cities']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=AssessmentCities.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Assessment Cities'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "City Name",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['city_name'],
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_assessment_codes(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "assessment_codes"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Codes']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=AssessmentCodes.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Assessment Codes'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Assessment Code",
+        "Code Description",
+        "From Date",
+        "To Date",
+        "Service From Date",
+        "Service To Date",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_active'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['assessment_code'],
+            bk['code_desc'],
+            bk['from_date'],
+            bk['to_date'],
+            bk['service_from'],
+            bk['service_to'],
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_groups(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "groups"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Groups']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=CompanyGroups.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Company Groups'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Group Name",
+        "Zone Name",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['group_name'],
+            bk['zone_name'],
+
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_subgroups(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "subgroups"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Subgroups']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=CompanySubGroups.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Company SubGroups'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Group Name",
+        "Subgoup Name",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['group_name'],
+            bk['subgroup_name'],
+
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_admins(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "admins"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Admins']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=CompanyAdmins.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Company Admins'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Admin Name",
+        "Admin Email",
+        "Admin Contact No ",
+        "Last Login ",
+        "Is Radio booking",
+        "Is Local booking",
+        "Is Outstation booking",
+        "Is Bus booking",
+        "Is Train booking",
+        "Is Hotel booking",
+        "Is Flight booking",
+        "Is Water Bottles booking",
+        "Is Reverse Logistics booking",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        if bk['is_radio'] == 0:
+            is_radio = "No"
+        else:
+            is_radio = "Yes"
+
+        if bk['is_local'] == 0:
+            is_local = "No"
+        else:
+            is_local = "Yes"
+
+        if bk['is_outstation'] == 0:
+            is_outstation = "No"
+        else:
+            is_outstation = "Yes"
+        if bk['is_bus'] == 0:
+            is_bus = "No"
+        else:
+            is_bus = "Yes"
+        if bk['is_train'] == 0:
+            is_train = "No"
+        else:
+            is_train = "Yes"
+        if bk['is_hotel'] == 0:
+            is_hotel = "No"
+        else:
+            is_hotel = "Yes"
+        if bk['is_flight'] == 0:
+            is_flight = "No"
+        else:
+            is_flight = "Yes"
+        if bk['is_water_bottles'] == 0:
+            is_water_bottles = "No"
+        else:
+            is_water_bottles = "Yes"
+        if bk['is_reverse_logistics'] == 0:
+            is_reverse_logistics = "No"
+        else:
+            is_reverse_logistics = "Yes"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['name'],
+            bk['email'],
+            bk['contact_no'],
+            bk['last_login'],
+            is_radio,
+            is_local,
+            is_outstation,
+            is_bus,
+            is_train,
+            is_hotel,
+            is_flight,
+            is_water_bottles,
+            is_reverse_logistics,
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_spocs(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "spocs"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Spocs']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=CompanySpocs.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Company Spocs'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Group Name",
+        "Subgroup Name",
+        "Spoc Company ID",
+        "Spoc Name",
+        "Spoc Email",
+        "Spoc Contact No ",
+        "Login UserName ",
+        "Last Login ",
+        "Is Radio booking",
+        "Is Local booking",
+        "Is Outstation booking",
+        "Is Bus booking",
+        "Is Train booking",
+        "Is Hotel booking",
+        "Is Flight booking",
+        "Is Water Bottles booking",
+        "Is Reverse Logistics booking",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        if bk['is_radio'] == 0:
+            is_radio = "No"
+        else:
+            is_radio = "Yes"
+
+        if bk['is_local'] == 0:
+            is_local = "No"
+        else:
+            is_local = "Yes"
+
+        if bk['is_outstation'] == 0:
+            is_outstation = "No"
+        else:
+            is_outstation = "Yes"
+        if bk['is_bus'] == 0:
+            is_bus = "No"
+        else:
+            is_bus = "Yes"
+        if bk['is_train'] == 0:
+            is_train = "No"
+        else:
+            is_train = "Yes"
+        if bk['is_hotel'] == 0:
+            is_hotel = "No"
+        else:
+            is_hotel = "Yes"
+        if bk['is_flight'] == 0:
+            is_flight = "No"
+        else:
+            is_flight = "Yes"
+        if bk['is_water_bottles'] == 0:
+            is_water_bottles = "No"
+        else:
+            is_water_bottles = "Yes"
+        if bk['is_reverse_logistics'] == 0:
+            is_reverse_logistics = "No"
+        else:
+            is_reverse_logistics = "Yes"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['group_name'],
+            bk['subgroup_name'],
+            bk['user_cid'],
+            bk['user_name'],
+            bk['email'],
+            bk['user_contact'],
+            bk['username'],
+            bk['last_login'],
+            is_radio,
+            is_local,
+            is_outstation,
+            is_bus,
+            is_train,
+            is_hotel,
+            is_flight,
+            is_water_bottles,
+            is_reverse_logistics,
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+def download_employees(request):
+    """
+    Downloads all movies as Excel file with a single worksheet
+    """
+    request = get_request()
+
+    booking = ''
+
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "employees"
+        payload = {'corporate_id': request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Employees']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=CompanyEmployees.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Company Employees'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr No",
+        "Corporate Name",
+        "Spoc Name",
+        "Core Employee ID",
+        "Employee Company ID",
+        "Employee Name",
+        "Employee Email",
+        "Employee Phone No",
+        "Login UserName",
+        "Age",
+        "Gender",
+        "ID Proof Type",
+        "ID No",
+        "Is CXO",
+        "Designation",
+        "Home City",
+        "Home Address",
+        "Assistant ID",
+        "Date Of Birth",
+        "Billing Entity",
+        "Last Login",
+        "Is Active",
+    ]
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+        if bk['is_deleted'] == 0:
+            is_deleted = "Active"
+        else:
+            is_deleted = "In-Active"
+
+        if bk['is_cxo'] == 0:
+            is_cxo = "No"
+        else:
+            is_cxo = "Yes"
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_name'],
+            bk['user_name'],
+            bk['core_employee_id'],
+            bk['core_employee_id'],
+            bk['employee_cid'],
+            bk['employee_name'],
+            bk['employee_email'],
+            bk['employee_contact'],
+            bk['username'],
+            bk['age'],
+            bk['gender'],
+            bk['id_proof_type'],
+            bk['id_proof_no'],
+            is_cxo,
+            bk['designation'],
+            bk['home_city'],
+            bk['home_address'],
+            bk['assistant_id'],
+            bk['date_of_birth'],
+            bk['billing_entity_id'],
+            bk['last_login'],
+            is_deleted,
+
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
 def getDataFromAPI(login_type, access_token, url, payload):
     headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
     r = requests.post(url, data=payload, headers=headers)
@@ -3483,5 +6939,23 @@ def dictfetchall(cursor):
             dict(zip([col[0] for col in desc], row))
             for row in cursor.fetchall()
     ]
+
+
+def calculate_age(born):
+    print(born)
+    dt_str = datetime.strptime(born, '%d-%m-%Y')
+    today = date.today()
+    return today.year - dt_str.year - ((today.month, today.day) < (dt_str.month, dt_str.day))
+
+
+def pdftest(request):
+    return None
+
+
+def file_upload_get_path(file_name):
+    save_path = os.path.join(settings.MEDIA_ROOT, 'booking_email', str(file_name))
+    path = default_storage.save(save_path, file_name)
+    download_path = os.path.join(settings.MEDIA_URL,'booking_email/', str(file_name))
+    return download_path
 
 

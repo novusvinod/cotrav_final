@@ -4,6 +4,7 @@
 
 {% if user %}
 <!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
   <div class="text-center">
@@ -16,6 +17,7 @@
          </div>
    </div>
         <form method="post" action="/agents/add-agent/0">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
 
@@ -110,11 +112,13 @@
                                         {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_billing_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_billing_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -128,11 +132,13 @@
                                         {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_voucher_payment_access == 0 %} selected {%endif%}>No</option>
+                                        <option value="1" {% if agent.has_voucher_payment_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -146,11 +152,13 @@
                                         {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_voucher_approval_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_voucher_approval_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -159,13 +167,15 @@
                                 <label class="col-sm-4 control-label">Super Admin</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="is_super_admin">
-                                         <option value="0">No</option>
+
                                         {% if agent %}
                                         {% for agent in agent %}
+                                         <option value="0" {% if agent.is_super_admin == 0 %} selected {%endif%}>No</option>
                                          <option value="1" {% if agent.is_super_admin == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
-                                         <option value="1">No</option>
+                                        <option value="0">No</option>
+                                         <option value="1">Yes</option>
                                         {% endif %}
                                     </select>
                                 </div>
@@ -196,11 +206,13 @@
                                         {% if agent %}
                                         {% for agent in agent %}
                                             <option value="0" {% if agent.has_radio_booking_access == 0 %} selected {%endif%}>No</option>
+                                            <option value="1" {% if agent.has_radio_booking_access == 1 %} selected {%endif%}>Yes</option>
                                         {% endfor %}
                                         {% else %}
+                                        <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         {% endif %}
-                                        <option value="1">Yes</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -213,11 +225,13 @@
                                         {% if agent %}
                                         {% for agent in agent %}
                                         <option value="0" {% if agent.has_local_booking_access == 0 %} selected {%endif%}>No</option>
+                                        <option value="1" {% if agent.has_local_booking_access == 1 %} selected {%endif%}>Yes</option>
                                         {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
+                                         <option value="1">Yes</option>
                                         {% endif %}
-                                        <option value="1">Yes</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -231,11 +245,13 @@
                                         {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_outstation_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_outstation_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -248,11 +264,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_bus_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_bus_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -265,11 +283,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_train_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_train_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -283,11 +303,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_hotel_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_hotel_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -301,11 +323,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_flight_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_flight_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -318,11 +342,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_meal_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_meal_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -335,11 +361,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_water_bottles_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_water_bottles_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -352,11 +380,13 @@
                                          {% if agent %}
                                         {% for agent in agent %}
                                          <option value="0" {% if agent.has_reverse_logistics_booking_access == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.has_reverse_logistics_booking_access == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="0">No</option>
-                                        {% endif %}
                                         <option value="1">Yes</option>
+                                        {% endif %}
+
                                     </select>
                                 </div>
                             </div>
@@ -367,7 +397,7 @@
                             <div class="form-group">
                                 <div class="offset-md-3 col-md-9">
                                     <button type="submit" class="btn btn-info">Submit</button>
-                                    <button type="button" class="btn btn-default">Cancel</button>
+                                    <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                                 </div>
                             </div>
 
@@ -386,12 +416,6 @@
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
 
-<script type="text/javascript">
- $(function() {
-
- });
-
-</script>
 
 
 {% endblock %}

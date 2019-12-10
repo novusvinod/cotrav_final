@@ -5,20 +5,29 @@
 
 {% if user %}
 <!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
+
             <div class="page-content-wrapper">
                 <div class="page-content">
 
-                                     <div class="text-center">
-                 <div style="font-size:14px; font-weight:bold;">
-                     Corporate Rate
-                     </div>
-            </div>
+
 
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-topline-aqua">
                                 <div class="card-head">
                                     <header>ALL CORPORATE RATES LIST</header>
+
+                                     <div class="row p-b-20">
+                             <div class="row">
+                             <div class="col-sm-2">
+                                        <div class="btn-group">
+                                           <a href="/Corporate/Admin/download-rates" class="btn btn-success pull-right">Download</a>
+
+                                  </div>
+                                  </div>
+                        </div></div>
+
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -26,9 +35,11 @@
                                     </div>
                                 </div>
                                 <div class="card-body ">
-
-                                    {% include 'cotrav_alert_message.html' %}
-
+  <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                     Corporate Rates
+                     </div>
+            </div>
                                   <div class="table-scrollable table-bordered">
                                     <table id="example1" class="display full-width table-striped">
                                         <thead>
@@ -56,13 +67,21 @@
                                                 <td>{{ corporate_rate.package_name }}</td>
                                                 <td>{{ corporate_rate.city_name }}</td>
                                                 <td>{{ corporate_rate.taxi_type }}</td>
-                                                <td>{{ corporate_rate.tour_type }}</td>
-                                                <td>{{ corporate_rate.kms }}</td>
-                                                <td>{{ corporate_rate.hours }} hrs</td>
-                                                <td>{{ corporate_rate.km_rate }}</td>
-                                                <td>{{ corporate_rate.hour_rate }}</td>
-                                                <td>{{ corporate_rate.base_rate }}</td>
-                                                <td>{{ corporate_rate.night_rate }}</td>
+
+                                                {% if corporate_rate.tour_type == 1 %}
+                                                <td>Local</td>
+                                                {% elif corporate_rate.tour_type == 2 %}
+                                                <td>Radio</td>
+                                                {% else %}
+                                                <td>Outstation</td>
+                                                {% endif %}
+
+                                                <td>{{ corporate_rate.kms|default:'0' }}</td>
+                                                <td>{{ corporate_rate.hours|default:'0' }} hrs</td>
+                                                <td>{{ corporate_rate.km_rate|default:'0' }}</td>
+                                                <td>{{ corporate_rate.hour_rate|default:'0' }}</td>
+                                                <td>{{ corporate_rate.base_rate|default:'0' }}</td>
+                                                <td>{{ corporate_rate.night_rate|default:'0' }}</td>
 
 
                                             </tr>

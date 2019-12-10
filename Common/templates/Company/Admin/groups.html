@@ -13,13 +13,14 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4  class="modal-title-status">Group Details </h4>
+                <h4  class="modal-title-status">Group and Authenticater Details </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/Corporate/Admin/add-company-group/{{user.corporate_id}}" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="group_id" >
                 <input type="hidden" name="user_id" value="{{user.id}}">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Group Name</label>
@@ -32,6 +33,140 @@
                             <div class="col-sm-7">
                                 <input class="form-control" name="zone_name" placeholder="Zone Name" type="text" required>
                             </div>
+                    </div>
+
+                 <div class="form-group row" id="name1">
+                        <label class="col-sm-5 control-label">Authenticater Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name" required
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="email1">
+                        <label class="col-sm-5 control-label">Authenticater Email</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email" required
+                                   type="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="cid1">
+                        <label class="col-sm-5 control-label">Authenticater Company ID</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="cid" name="cid" placeholder="Authenticater Company ID"
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="contact_no1">
+                        <label class="col-sm-5 control-label">Contact</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="contact_no" name="contact_no" placeholder="Contact" required
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_radio1">
+                        <label class="col-sm-5 control-label">Radio Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_radio">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_local1">
+                        <label class="col-sm-5 control-label">Local Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_local">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_outstation1">
+                        <label class="col-sm-5 control-label">Outstation Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_outstation">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_bus1">
+                        <label class="col-sm-5 control-label">Bus Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_bus">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_train1">
+                        <label class="col-sm-5 control-label">Train Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_train">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row" id="is_hotel1">
+                        <label class="col-sm-5 control-label">Hotel Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_hotel">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row" id="is_flight1">
+                        <label class="col-sm-5 control-label">Flight Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_flight">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_meal1">
+                        <label class="col-sm-5 control-label">Meal Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_meal">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_water_bottles1">
+                        <label class="col-sm-5 control-label">Water Bottles Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_water_bottles">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_reverse_logistics1">
+                        <label class="col-sm-5 control-label">Reverse Logistics Bookings</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_reverse_logistics">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
                     </div>
 
                 <div class="modal-footer">
@@ -53,14 +188,14 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 id="delete_label" class="modal-title-status">Group Details </h4>
+                <h4 id="delete_label" class="modal-title-status">Do You Want to Delete This Group ?</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/Corporate/Admin/delete-company-group/{{user.corporate_id}}" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="group_id" id="group_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
 
                 <div class="modal-footer">
@@ -74,6 +209,7 @@
     </div>
 </div>
 
+{% include 'cotrav_alert_message.html' %}
 
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -84,12 +220,20 @@
                     <div class="card-head">
                         <header>ALL CORPORATE GROUP LIST</header>
                          <div class="row p-b-20">
-                            <div class="col-md-6 col-sm-6 col-6">
+                              <div class="row">
+                            <div class="col-md-10">
                                 <div class="btn-group">
                                     <a class="btn btn-info" href="#" data-toggle="modal"
                                        data-target="#add_group_model"> Add New <i class="fa fa-plus"></i> </a>
                                 </div>
                             </div>
+                                   <div class="col-sm-2">
+                                        <div class="btn-group">
+                                           <a href="/Corporate/Admin/download-groups" class="btn btn-success pull-right">Download</a>
+
+                                  </div>
+                                  </div>
+                              </div>
                         </div>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
@@ -99,7 +243,6 @@
                     </div>
                     <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
                  <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      All Groups
@@ -112,7 +255,7 @@
                                     <th>ID</th>
                                     <th>Group Name</th>
                                     <th>Zone Name</th>
-
+                                    <th>Authenticaters</th>
                                     <th>Action</th>
 
                                 </tr>
@@ -121,10 +264,13 @@
                                 {% for group in groups %}
                                 <tr>
                                     <td>{{ group.id }}</td>
-
                                     <td>{{ group.group_name }}</td>
                                     <td>{{ group.zone_name }}</td>
-
+                                    <td>
+                                        <a href="/Corporate/Admin/view-company-group/{{ group.id }}" class="btn btn-tbl-edit btn-xs">
+                                            <i class="fa fa-users"></i>
+                                        </a>
+                                    </td>
                                     <td>
                                         <a href="/Corporate/Admin/view-company-group/{{ group.id }}" class="btn btn-tbl-edit btn-xs">
                                             <i class="fa fa-pencil"></i>

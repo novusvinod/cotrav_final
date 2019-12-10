@@ -6,7 +6,7 @@
 {% if user %}
 <!-- start page content -->
 
-
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
                           <div class="text-center">
@@ -21,6 +21,7 @@
             <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
             <input type="hidden" name="no_of_seats" value="1">
             <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
+             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
         <div class="row">
             <div class="col-md-6">
@@ -38,7 +39,7 @@
                          <div class="col-md-12 col-sm-12">
 
                              <div class="form-group row">
-                                <label class="col-sm-4" >From*</label>
+                                <label class="col-sm-4" >From City*</label>
 <!--                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>-->
                                   <select name="from" id="pickup_location" class="form-control col-sm-8 myselect" required>
                                          <option value="">Select From Station</option>
@@ -49,7 +50,7 @@
                             </div>
 
                               <div class="form-group row">
-                                <label class="col-sm-4" >To*</label>
+                                <label class="col-sm-4" >To City*</label>
 <!--                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>-->
                                    <select name="to" id="drop_location" class="form-control col-sm-8 myselect" required>
                                          <option value="">Select To Station</option>
@@ -74,11 +75,18 @@
                                  <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Train">
                             </div>
 
-                               <div class="form-group row">
-                                <label class="col-sm-4" >Date of Journey*</label>
-                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" id="min-date1" placeholder="Journey Date/Time" required>
+                                <div class="form-group row">
+                                <label class="col-sm-4" >Journey Date From*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" placeholder="Journey Date From" required>
                             </div>
 
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Journey Date To*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime_to" placeholder="Journey Date To" required>
+                            </div>
+
+                             {% for corp_acces in corp_access %}
+                                {% if corp_acces.has_assessment_codes == 1 %}
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
@@ -99,6 +107,9 @@
                                         {% endfor %}
                                     </select>
                             </div>
+
+                              {% endif %}
+                              {% endfor %}
 
 
                                <div class="form-group row">
@@ -121,7 +132,7 @@
                       <div class="form-group">
                     <div class="offset-md-3 col-md-9">
                         <button type="submit" class="btn btn-info">Submit</button>
-                        <button type="button" class="btn btn-default">Cancel</button>
+                        <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
                     </div>
                 </div>
                 </div>

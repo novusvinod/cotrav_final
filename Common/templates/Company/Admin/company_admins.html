@@ -23,6 +23,7 @@
                 <input name="user_id" type="hidden" value="{{user.id}}">
                 <input name="corporate_id" type="hidden" value="{{user.corporate_id}}">
                 <input id="delete_id" name="delete_id" type="hidden">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <!-- Modal footer -->
                 <div class="modal-body">
 
@@ -30,7 +31,7 @@
                     <div class="form-group row" id="name1">
                         <label class="col-sm-5 control-label">Admin Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="name" name="name" placeholder="Authenticater Name" required
+                            <input class="form-control" id="name" name="name" placeholder="Admin Name" required
                                    type="text">
                         </div>
                     </div>
@@ -38,7 +39,7 @@
                     <div class="form-group row" id="email1">
                         <label class="col-sm-5 control-label">Admin Email</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="email" name="email" placeholder="Authenticater Email" required
+                            <input class="form-control" id="email" name="email" placeholder="Admin Email" required
                                    type="email">
                         </div>
                     </div>
@@ -167,15 +168,12 @@
     </div>
 </div>
 
+{% include 'cotrav_alert_message.html' %}
 
             <div class="page-content-wrapper">
                 <div class="page-content">
 
-            <div class="text-center">
-                 <div style="font-size:14px; font-weight:bold;">
-                     Company Admin
-                     </div>
-            </div>
+
 
                     <div class="row">
                         <div class="col-md-12">
@@ -183,12 +181,20 @@
                                 <div class="card-head">
                                     <header><b>Company Admins List</b></header>
                                      <div class="row p-b-20">
-                                            <div class="col-md-6 col-sm-6 col-6">
+                                         <div class="row">
+                                            <div class="col-md-10">
                                                 <div class="btn-admin">
                                                     <a class="btn btn-info" data-target="#model_add_new_group" data-toggle="modal"
                                                        href="#"> Add New Admin <i class="fa fa-plus"></i> </a>
                                                 </div>
                                             </div>
+                                              <div class="col-sm-2">
+                                        <div class="btn-group">
+                                           <a href="/Corporate/Admin/download-admins" class="btn btn-success pull-right">Download</a>
+
+                                  </div>
+                                  </div>
+                                         </div>
                                         </div>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
@@ -199,8 +205,11 @@
                                 </div>
                                 <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
-
+ <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
+                     Company Admin
+                     </div>
+            </div>
                                   <div class="table-scrollable table-bordered">
                                    <table id="example1" class="display full-width table-striped">
                                         <thead>
@@ -347,7 +356,7 @@ $(function() {
 
     modal.find('#delete_id').val('');
 
-    $('#delete_label').text("Group Details");
+    $('#delete_label').text("Company Admin Details");
     $('#delete_btn').html("Save");
 
     $('#group_auth_id1').show();

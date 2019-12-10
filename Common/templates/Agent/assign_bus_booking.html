@@ -4,13 +4,39 @@
 
 {% if user %}
 <!-- start page content -->
-
+{% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
+         <div class="text-center">
+     <div style="font-size:14px; font-weight:bold;">
+         Assign Bus Booking
+         </div>
+   </div>
+
 {% for booking in bookings %}
+    <form method="post" action="/agents/assign-bus-booking/{{booking.id}}" enctype="multipart/form-data">
+    <input type="hidden" name="booking_id" value="{{booking.id}}">
+    <input type="hidden" name="user_id" value="{{user.id}}">
+    <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+    <input type="hidden" name="checkin" id="checkin" value="{{ booking.checkin_datetime }}">
+    <input type="hidden" name="checkout" id="checkout" value="{{ booking.checkout_datetime }}">
+    <input type="hidden" name="tax_on_management_fee" id="tax_on_management_fee" value="0">
+    <input type="hidden" name="tax_on_management_fee_percentage" id="tax_on_management_fee_percentage" value="0">
+    <input type="hidden" name="management_fee_igst" id="management_fee_igst" value="0">
+    <input type="hidden" name="management_fee_cgst" id="management_fee_cgst" value="0">
+    <input type="hidden" name="management_fee_sgst" id="management_fee_sgst" value="0">
+    <input type="hidden" name="management_fee_igst_rate" id="management_fee_igst_rate" value="0">
+    <input type="hidden" name="management_fee_cgst_rate" id="management_fee_cgst_rate" value="0">
+    <input type="hidden" name="management_fee_sgst_rate" id="management_fee_sgst_rate" value="0">
+
+             <input type="hidden" name="igst_amount" id="igst_amount" value="0">
+    <input type="hidden" name="cgst_amount" id="cgst_amount" value="0">
+    <input type="hidden" name="sgst_amount" id="sgst_amount" value="0">
+
+
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-head card-topline-aqua">
                         <header>Basic Details</header>
@@ -25,18 +51,17 @@
                             </div>
                         </div>
 
-
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">City Name</label>
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Tour Type</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="City Name"
-                                     readonly  type="text" value="{{ booking.city_name }}">
+                                <input class="form-control" name="group_name" placeholder="Group Name"
+                                     readonly  type="text" value="Bus">
                             </div>
                         </div>
 
+
                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Pickup Location</label>
+                            <label class="col-sm-5 control-label">Pickup City</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="pickup_location" placeholder="Pickup Location"
                                      readonly  type="text" value="{{ booking.pickup_location }}">
@@ -44,29 +69,43 @@
                         </div>
 
                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Drop Location</label>
+                            <label class="col-sm-5 control-label">Drop City</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="drop_location" placeholder="Drop Location"
                                      readonly  type="text" value="{{ booking.drop_location }}">
                             </div>
                         </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Pickup Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control " name="pickup_datetime" placeholder="Pickup Datetime"
-                                     readonly  type="text" value="{{ booking.pickup_to_datetime }}">
-                            </div>
-                        </div>
-
-
-                         <div class="form-group row">
+                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Booking Date</label>
                             <div class="col-sm-7">
                                 <input class="form-control" name="booking_date" placeholder="Booking Date"
                                      readonly  type="text" value="{{ booking.booking_datetime }}">
                             </div>
                         </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Journey DateTime (Requested)</label>
+                            <div class="col-sm-7">
+                                <input class="form-control " name="pickup_datetime" placeholder="Pickup Datetime"
+                                     readonly  type="text" value="{{ booking.pickup_from_datetime }}">
+                                <input type="text" class="form-control" value="To" readonly>
+                                <input class="form-control " name="pickup_datetime" placeholder="Pickup Datetime"
+                                     readonly  type="text" value="{{ booking.pickup_to_datetime }}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label class="col-sm-5 control-label">Bus Type (Priorities)</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="no_of_seats" placeholder="No Of Seats"
+                                     readonly  type="text" value="{{ booking.bus_type_priority_1 }}">
+                                <input type="text" class="form-control" value="{{ booking.bus_type_priority_2 }}" readonly>
+
+                            </div>
+                        </div>
+
+
 
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">No Of Seats</label>
@@ -90,9 +129,7 @@
             </div>
 
 
-
-
-            <div class="col-md-4">
+            <div class="col-md-3">
 
                 <div class="card">
                     <div class="card-head card-topline-aqua">
@@ -100,10 +137,10 @@
                     </div>
                     <div class="card-body no-padding height-9">
 
-                     <form method="post" action="/agents/assign-bus-booking/{{booking.id}}">
+
                           <input type="hidden" class="col-sm-8 form-control" name="user_id"  value="{{user.id }}">
                           <input type="hidden" class="col-sm-8 form-control" name="booking_id"  value="{{booking.id}}">
-
+                         <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                           <div class="form-group row">
                             <label class="col-sm-5 control-label">Ticket Number</label>
@@ -135,14 +172,13 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Operator Name</label>
                             <div class="col-sm-7">
-                               <input class="form-control" type="text" name="operator_name" placeholder="Operator Name">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Operator Contact</label>
-                            <div class="col-sm-7">
-                               <input class="form-control" type="text" name="operator_contact" placeholder="Operator Contact">
+                               <select name="operator_name" id="operator_id" class="form-control myselect" required>
+                                    <option value="">Select Operator Name</option>
+                                    {% for operator in bus_operators %}
+                                        <option value="{{operator.id}}" gst="{{operator.gst_id}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="hidden" id="operator_gst_id">
                             </div>
                         </div>
 
@@ -156,27 +192,29 @@
                             <div class="form-group row">
                             <label class="col-sm-5 control-label">Portal Used</label>
                             <div class="col-sm-7">
-                               <input class="form-control" type="text" name="portal_used" placeholder="Portal Used">
+                                <select name="portal_used" class="form-control myselect" required>
+                                    <option value="">Select</option>
+                                    {% for bus_port in bus_portal %}
+                                        <option value="{{bus_port.id}}">{{bus_port.name}}</option>
+                                    {% endfor %}
+                                </select>
+
                             </div>
                         </div>
 
                            <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Point</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_point" type="text" value="{{ booking.boarding_point|default:'' }}">
+                                <input class="form-control" name="boarding_point" type="text">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control date-format" name="boarding_datetime" type="text" value="{{ booking.boarding_datetime|default:'' }}">
+                                <input class="form-control date-format" name="boarding_datetime" type="text">
                             </div>
                         </div>
-
-
-
-
 
 
                          <div class="form-group row">
@@ -199,24 +237,8 @@
                             </div>
                         </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Send Driver SMS</label>
-                            <div class="col-sm-7">
-                                <select class="form-control" name="is_driver_sms">
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                         <div class="form-group">
-                            <div class="offset-md-3 col-md-9">
-                                <button type="submit" class="btn btn-info">Assign</button>
-                            </div>
-                        </div>
 
 
-                        </form>
                     </div>
                 </div>
 
@@ -224,7 +246,224 @@
             </div>
 
 
-             <div class="col-md-4">
+             <div class="col-md-3">
+
+                    <div class="card">
+                      <div class="card-head card-topline-aqua">
+                          <header>Billing Details</header>
+                      </div>
+                      <div class="card-body no-padding height-9">
+
+                          <div class="form-group row">
+                              <label class="col-sm-6 control-label">Ticket Price:</label>
+                              <div class="col-sm-6">
+                                    <input type="number" name="ticket_price" id="ticket_price" class="form-control" required >
+                              </div>
+                          </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">Management_fee:</label>
+                                <div class="col-sm-6">
+                                        <input type="text" name="management_fee" id="mng_fee" class="form-control" readonly >
+                                </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">Tax amount management fee:</label>
+                                <div class="col-sm-6">
+                                        <input type="text" name="tax_mng_amt" id="tax_mng_amt" class="form-control" readonly >
+
+
+                                </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">Total billing amount</label>
+                                <div class="col-sm-6">
+                                        <input type="text" name="sub_total" id="total_billing_amt" class="form-control" readonly >
+                                </div>
+                        </div>
+
+
+                      {% for c_enttity in c_entitys %}
+
+                          <div class="form-group row">
+                                <label class="col-sm-6 control-label">Select Cotrav Billing Entity</label>
+                                <div class="col-sm-6">
+
+                                        <select class="form-control" id="cotrav_billing_entity" required name="cotrav_billing_entity">
+
+
+                                                <option value="{{c_enttity.id}}" gst="{{c_enttity.gst_id}}">{{c_enttity.entity_name}} </option>
+
+
+                                        </select>
+
+                                </div>
+                        </div>
+
+                       {% endfor %}
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">Booking Billing Entity</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text" class="form-control" name="bb_entity" gst="{{be_gst}}" id="booking_billing_entity" value="{{be_name}}">
+
+                                </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">CGST (perscentage)</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text" class="form-control" name="cgst" id="cgst"  readonly>
+
+                                </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">SGST (perscentage)</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text"  class="form-control" name="sgst" id="sgst"  readonly>
+
+                                </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">IGST (perscentage)</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text" class="form-control" name="igst" id="igst"  readonly>
+
+                                </div>
+                        </div>
+
+                          <div class="form-group row browse" >
+
+                          <input class="client_ticket form-control" type="checkbox" name="client_ticket" value="1" onchange="valueChanged()"/>
+                            Generate System Ticket
+                          </div>
+                          <div class="form-group row" id="client-tkt" >
+                                <label class="col-sm-6 control-label">Browse Bus Ticket</label>
+                                <div class="col-sm-6">
+
+                                        <input type="file" class="form-control" name="busticketToUpload" id="bus-ticket">
+                                </div>
+                           </div>
+
+
+                       </div>
+                  </div>
+              </div>
+
+<!--- operator billing details ---->
+             <div class="col-md-3">
+
+                    <div class="card">
+                      <div class="card-head card-topline-aqua">
+                          <header>Operator Billing Details</header>
+                      </div>
+                      <div class="card-body no-padding height-9">
+
+                          <div class="form-group row">
+                              <label class="col-sm-6 control-label">Ticket Price:</label>
+                              <div class="col-sm-6">
+                                    <input type="number" class="form-control" name="oper_ticket_price" id="oper_ticket_price" required >
+                              </div>
+                          </div>
+
+                          <div class="form-group row">
+                              <label class="col-sm-6 control-label">Commission:</label>
+                              <div class="col-sm-6">
+                                    <input type="number" class="form-control" name="operator_commission" id="operator_commission" required>
+                              </div>
+                          </div>
+
+                          <div class="form-group row">
+                                <label class="col-sm-6 control-label">Commission Type</label>
+                                <div class="col-sm-6">
+                                        <select class="form-control" id="oper_commission_type" name="oper_commission_type">
+                                                <option value="1">Percent</option>
+                                                <option value="1">Fixed</option>
+                                        </select>
+                                </div>
+                        </div>
+
+                      {% for c_enttity in c_entitys %}
+
+                          <div class="form-group row">
+                                <label class="col-sm-6 control-label">Select Cotrav Billing Entity</label>
+                                <div class="col-sm-6">
+
+                                        <select class="form-control" id="oper_cotrav_billing_entity" name="oper_cotrav_billing_entity">
+
+
+                                                <option value="{{c_enttity.id}}" gst="{{c_enttity.gst_id}}">{{c_enttity.entity_name}} </option>
+
+
+                                        </select>
+
+                                </div>
+                        </div>
+
+                       {% endfor %}
+
+
+                           <div class="form-group row">
+                                <label class="col-sm-6 control-label">CGST (perscentage)</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text" class="form-control" name="oper_cgst" id="oper_cgst"  readonly>
+
+                                </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">SGST (perscentage)</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text"  class="form-control" name="oper_sgst" id="oper_sgst"  readonly>
+
+                                </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-6 control-label">IGST (perscentage)</label>
+                                <div class="col-sm-6">
+
+                                        <input type="text" class="form-control" name="oper_igst" id="oper_igst"  readonly>
+
+                                </div>
+                        </div>
+
+
+                          <div class="form-group row" >
+                                <label class="col-sm-6 control-label">Browse Vendor Ticket</label>
+                                <div class="col-sm-6">
+
+                                        <input type="file" class="form-control" name="vendorticketToUpload" id="vendor-bus-ticket">
+                                </div>
+                           </div>
+
+
+
+                       </div>
+
+                           <div class="form-group">
+                            <div class="offset-md-3 col-md-9">
+                                <button type="submit" class="btn btn-info">Assign</button>
+                            </div>
+                        </div>
+                  </div>
+              </div>
+
+            <!---------- end -------------------->
+
+             <div class="col-md-3">
 
                   <div class="card">
                     <div class="card-head card-topline-aqua">
@@ -235,27 +474,23 @@
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Point</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="boarding_point" type="text" value="{{ booking.boarding_point|default:'' }}">
+                                <input class="form-control" name="boarding_point1" type="text" value="{{ booking.boarding_point|default:'' }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Boarding Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control date-format" name="boarding_datetime" type="text" value="{{ booking.boarding_datetime|default:'' }}">
+                                <input class="form-control date-format" name="boarding_datetime1" type="text" value="{{ booking.boarding_datetime|default:'' }}">
                             </div>
                         </div>
-
-
 
                     </div>
                 </div>
             </div>
 
 
-
-
-             <div class="col-md-4">
+             <div class="col-md-3">
 
                  <div class="card">
                     <div class="card-head card-topline-aqua">
@@ -314,11 +549,7 @@
             </div>
 
 
-
-
-
-
-            <div class="col-md-4">
+            <div class="col-md-3">
 
                   <div class="card">
                     <div class="card-head card-topline-aqua">
@@ -347,10 +578,9 @@
                             </div>
                         </div>
 
-
-
-
                     </div>
+
+
                 </div>
             </div>
 
@@ -362,7 +592,7 @@
 
 
 
-
+</form>
 
  {% endfor %}
 
@@ -393,6 +623,231 @@ $('#taxi_details').change(function(){
      }
 });
  </script>
+
+<script type="text/javascript">
+function valueChanged()
+{
+
+    if($('.client_ticket').is(":checked"))
+        $("#client-tkt").hide();
+    else
+        $("#client-tkt").show();
+
+
+}
+</script>
+
+
+<script>
+
+        $( document ).ready(function() {
+
+            var corporate_id =  1;
+
+            var service_type = 1;
+
+            var url = '{{ API_BASE_URL }}'+'get_corporate_management_fee'
+
+    $.ajaxSetup({
+            headers:{
+                    'Authorization': "Token {{request.session.agent_access_token}}",
+                    'usertype': {{request.session.login_type}}
+                }
+        });
+
+        $.post( url,{ corporate_id: corporate_id , service_type: service_type },
+      function(data)
+      {
+         //alert(data)
+      management_fee = data["Fees"][0].service_fees_type_value
+      $('#mng_fee').val(management_fee);
+      $('#oper_mng_fee').val(management_fee);
+       });
+
+
+
+            $('#ticket_price').keyup(function(event){
+                if(event.which != 8 && isNaN(String.fromCharCode(event.which))){
+                        event.preventDefault(); //stop character from entering input
+                }else{
+
+                    var ticket_price = this.value;
+                    var management_fee = $('#mng_fee').val();
+                    var tax_perscent_on_management_fee = 18;
+                    var tax_perscentage = 0.18
+                    var tax_amount_on_management_fee = 0;
+                    var total_billing_amount = 0;
+                    var cgst = 0.0;
+                    var sgst = 0.0;
+                    var igst = 0.0;
+
+                    if ($('#mng_fee').val() == "")
+                    {
+                        management_fee = 100
+                        $('#mng_fee').val(management_fee);
+                    }
+
+                    tax_amount_on_management_fee =  management_fee * tax_perscentage ;
+
+                    management_fee_with_tax =  parseFloat(management_fee) + parseFloat(tax_amount_on_management_fee);
+
+                    total_billing_amount = parseFloat(ticket_price) + parseFloat(management_fee_with_tax)
+
+                    $('#tax_mng_amt').val(tax_amount_on_management_fee);
+
+                    $('#total_billing_amt').val(total_billing_amount);
+
+                    val1 = $("#booking_billing_entity").attr("gst");
+                    val2 = $('option:selected',"#cotrav_billing_entity").attr("gst");
+
+                    console.log(val1);
+                    console.log(val2);
+
+                    //alert(val1);
+                    //alert(val2);
+
+                    match = val1.localeCompare(val2);
+
+                    var v1 = val1.substring(0, 2);
+
+                    var v2 = val2.substring(0, 2);
+
+                    if(v1 == v2)
+                    {
+                       // alert("value matched");
+                        cgst = 9;
+                        sgst = 9;
+
+                     $('#management_fee_cgst').val(cgst);
+                        $('#management_fee_sgst').val(sgst);
+                        var cgst_rate = tax_amount_on_management_fee/2;
+                        $('#management_fee_cgst_rate').val(cgst_rate);
+                        $('#management_fee_sgst_rate').val(cgst_rate);
+
+
+                    }else{
+
+                        igst = 18;
+
+                        $('#management_fee_igst').val(igst);
+                        $('#management_fee_igst_rate').val(tax_amount_on_management_fee);
+                    }
+
+                    $('#cgst').val(cgst);
+
+                    $('#sgst').val(sgst);
+
+                    $('#igst').val(igst);
+
+                    $('#tax_on_management_fee').val(tax_amount_on_management_fee);
+
+                    $('#tax_on_management_fee_percentage').val(tax_perscent_on_management_fee);
+
+                }
+            });
+
+
+             $('#oper_ticket_price').keyup(function(event){
+                if(event.which != 8 && isNaN(String.fromCharCode(event.which))){
+                        event.preventDefault(); //stop character from entering input
+                }else{
+
+                  var oper_ticket_price = $('#oper_ticket_price').val();
+                    var amount = parseFloat(oper_ticket_price) * 0.18;
+                 var operator_gst_id = $('#operator_gst_id').val();
+
+                  var operator_commission = $('#operator_commission').val();
+
+                  var cgst_val = $('#oper_cgst').val();
+
+                  var sgst_val = $('#oper_sgst').val();
+
+                  var igst_val = $('#oper_igst').val();
+
+                  var gst_tax = 0.0;
+
+                   var val2 = $('option:selected',"#cotrav_billing_entity").attr("gst");
+                  var val1 = $('option:selected',"#operator_id").attr("gst");
+
+                  match = val1.localeCompare(val2);
+                    var v1 = val1.substring(0, 2);
+                    var v2 = val2.substring(0, 2);
+                    if(v1 == v2)
+                    {
+
+                        $('#cgst_amount').val(amount/2);
+                        $('#sgst_amount').val(amount/2);
+                    }else{
+                         $('#igst_amount').val(amount);
+                    }
+
+                  if(cgst_val == 0.0)
+                  {
+                    gst_tax = 0.18;
+                  }
+                  else{
+                    gst_tax = 0.9;
+                  }
+
+                  var gst_paid =  parseFloat(oper_ticket_price) * parseFloat(gst_tax);
+
+                  $('#gst_paid').val(gst_paid);
+
+                }
+            });
+
+
+        });
+
+$("#operator_id").change(function(){
+var opr_gst = $('option:selected', this).attr('gst');
+//alert(opr_gst);
+
+var cgst = 0.0;
+var sgst = 0.0;
+var igst = 0.0;
+
+ val1 = opr_gst ;
+ val2 = $('option:selected',"#oper_cotrav_billing_entity").attr('gst');
+
+    console.log(val1);
+    console.log(val2);
+
+    //alert(val1);
+    //alert(val2);
+
+    match = val1.localeCompare(val2);
+    var v1 = val1.substring(0, 2);
+    var v2 = val2.substring(0, 2);
+
+     var oper_ticket_price = parseFloat($('#oper_ticket_price').val());
+     var amount = parseFloat(oper_ticket_price) * 0.18;
+
+    if(v1 == v2)
+    {
+       // alert("value matched");
+        cgst = 9;
+        sgst = 9;
+       // alert(cgst);
+       // alert(sgst);
+
+       $('#cgst_amount').val(amount/2);
+        $('#sgst_amount').val(amount/2);
+
+    }else{
+
+        igst = 18;
+
+        $('#igst_amount').val(amount);
+
+    }
+
+     $('#oper_cgst').val(cgst);
+     $('#oper_sgst').val(sgst);
+     $('#oper_igst').val(igst);
+
+});
+</script>
 
 
  {% endblock %}

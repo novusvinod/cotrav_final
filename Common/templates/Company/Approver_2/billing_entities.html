@@ -7,15 +7,6 @@
 {% if user %}
 <!-- start page content -->
 
-{% if message %}
-
-<div class="alert label-success alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
-    {{message}}
-</div>
-
-{% endif %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
@@ -24,6 +15,10 @@
                 <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>ALL CORPORATE BILLING ENTITIES LIST</header>
+                        <div class="btn-group">
+                                           <a href="/Corporate/Approver_2/download-billing-entities" class="btn btn-success pull-right">Download</a>
+
+                                  </div>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
                             <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -32,7 +27,6 @@
                     </div>
                     <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
                          <div class="text-center">
                  <div style="font-size:14px; font-weight:bold;">
                      Comapny Biling Entitie's

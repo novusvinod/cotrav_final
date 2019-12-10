@@ -13,14 +13,14 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4  class="modal-title-status">Assessment Codes Details </h4>
+                <h4  class="modal-title-status">Operation Relationship Manager Details </h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <form action="/agents/company-relationship-manager" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="rms_id" id="oms_id_edit">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-
+ <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <div class="form-group row" id="corporate_id1">
                         <label class="col-sm-5 control-label">Company Name</label>
                         <div class="col-sm-7">
@@ -38,7 +38,7 @@
 
 
                  <div class="form-group row">
-                        <label class="col-sm-5 control-label">Agent Name</label>
+                        <label class="col-sm-5 control-label">Agent Name Level 1</label>
                         <div class="col-sm-7">
 
                             <select class="form-control myselect" name="rm_level_1_id" id="agent_level_1" style="width:100%;" required>
@@ -52,7 +52,7 @@
                     </div>
 
                 <div class="form-group row">
-                        <label class="col-sm-5 control-label">Agent Name</label>
+                        <label class="col-sm-5 control-label">Agent Name Level 2</label>
                         <div class="col-sm-7">
 
                             <select class="form-control myselect" name="rm_level_2_id" id="agent_level_2" style="width:100%;" required>
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-
+  {% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
 
@@ -118,7 +118,6 @@
                     </div>
                     <div class="card-body ">
 
-{% include 'cotrav_alert_message.html' %}
    <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">
          All Corporate Relationship Manager Details
@@ -168,6 +167,20 @@
 <!-- end page content -->
 <script type="text/javascript">
    $(".myselect").select2();
+
+   var mymod = $('#corporate_id');
+   mymod.select2();
+
+  var agentlevel1Select = $('#agent_level_1');
+  var agentlevel2Select =  $('#agent_level_2');
+  var isactiveSelect =  $('#is_active');
+
+  agentlevel1Select.select2();
+  agentlevel2Select.select2();
+  isactiveSelect.select2();
+
+
+
 </script>
 
 {% else %}
@@ -187,10 +200,20 @@ $(function() {
 
     var modal = $(this);
     modal.find('#oms_id_edit').val(id);
-    modal.find('#corporate_id').val(corporate_id).trigger('change');
-    modal.find('#agent_level_1').val(agent_level_1).trigger('change');
-    modal.find('#agent_level_2').val(agent_level_2).trigger('change');
-    modal.find('#is_active').val(is_active).trigger('change');;
+
+    mymod.val(corporate_id);
+    mymod.trigger('change.select2');
+
+    agentlevel1Select.val(agent_level_1);
+    agentlevel1Select.trigger('change.select2');
+
+    agentlevel2Select.val(agent_level_2);
+    agentlevel2Select.trigger('change.select2');
+
+    isactiveSelect.val(is_active);
+    isactiveSelect.trigger('change.select2');
+
+
     });
 
 });
