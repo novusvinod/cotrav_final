@@ -8619,3 +8619,62 @@ margin-left: 33px;
     margin-left: -96px;
     width: 280px;
 }
+.txt-underline{
+  text-decoration: underline;
+  font-size: 20px;
+}
+.m-bootom{
+  margin-bottom: -40px;
+}
+.font-txt{
+  font-size:42px;
+  width: 100%;
+   font-weight: 600;
+}
+.font-txt_weight{
+  font-weight: 400;
+    font-size: 19px;
+}
+.width-100{
+  width: 100%;
+}
+.info_txt{
+  line-height: 60px;
+    font-size: 17px;
+    font-weight: 600;
+    color: black;
+}
+.text-center{
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.model1{
+  margin-top: 90px;
+  border-top: solid 5px #3366cc;
+  border-radius: 10px;
+}
+.model2{
+   margin-top: 100px;
+}
+.btn-align{
+  margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.form-cont{
+  width: 303px;
+    line-height: 11px;
+}
+
+.logo-color{
+
+     color: #427cd1;
+    font-size: 31px;
+    margin-bottom: 8px;
+    margin-left: -5px;
+}
+.align_height{
+line-height:20px;
+}

@@ -363,7 +363,7 @@ def add_company_rate(request, id):
                 messages.success(request, 'Company Rate Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Admin/company-rates/" + id, {'message': "Added Successfully"})
             else:
-                messages.error(request, "Operation Fail")
+                messages.error(request, "This Rate Already Exists. Try with another data..!")
                 return HttpResponseRedirect("/Corporate/Admin/company-rates/" + id, {'message': "Operation Fails"})
         else:
             return HttpResponseRedirect("/login")
@@ -422,7 +422,7 @@ def add_company_entity(request, id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect(current_url,{})
             else:
-                messages.error(request, 'Fail To Add Company Entity..!')
+                messages.error(request, 'This Billing Entity Already Exists. Try with another data..!')
                 return HttpResponseRedirect(current_url,{})
         else:
             return HttpResponseRedirect("/login")
@@ -473,7 +473,7 @@ def add_company_group(request, id):
                 messages.success(request, 'Company Group Added Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail To Add Because Group already exists..!')
+                messages.error(request, 'This Group Already Exists. Try with another data..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -524,7 +524,7 @@ def add_company_subgroup(request, id):
                 messages.success(request, 'Add Company Subgroup Added Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
             else:
-                messages.error(request, 'Fail to Add company Subgroup..!')
+                messages.error(request, 'This Subgroup Already Exists. Try with another data..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -712,7 +712,7 @@ def add_company_group_auth(request, id):
                 messages.success(request, oper_msg)
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
             else:
-                messages.error(request, "")
+                messages.error(request, "Authenticator Already Exists. Try with another data..!")
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -785,7 +785,7 @@ def add_company_subgroup_auth(request, id):
                 messages.success(request, operation_msg)
                 return HttpResponseRedirect(current_url,{'message': "Added Successfully"})
             else:
-                messages.error(request, "Operation Fail")
+                messages.error(request, "Authenticator Already Exists. Try with another data..!")
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -855,7 +855,7 @@ def add_company_admins(request, id):
                 messages.success(request, opration_msg)
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
             else:
-                messages.error(request, "Operation Fail")
+                messages.error(request, "Admin Already Exists. Try with another data..!")
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -934,7 +934,7 @@ def add_spocs(request, id):
                 messages.success(request, success_msg)
                 return HttpResponseRedirect("/Corporate/Admin/company-spoc/"+str(corporate_id), {'message': "Added Successfully"})
             else:
-                messages.error(request, "Operation Fail")
+                messages.error(request, "Spoc Already Exists. Try with another data..!")
                 return HttpResponseRedirect("/Corporate/Admin/company-spoc/"+str(corporate_id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -1053,7 +1053,7 @@ def add_employee(request, id):
                 messages.success(request, success_msg)
                 return HttpResponseRedirect("/Corporate/Admin/company-employees/"+str(corporate_id), {'message': "Added Successfully"})
             else:
-                messages.error(request, "Operation Fail")
+                messages.error(request, "Employee Already Exists. Try with another data..!")
                 return HttpResponseRedirect("/Corporate/Admin/company-employees/"+str(corporate_id), {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")

@@ -78,14 +78,14 @@
                 </div>
                 <!-- End Top Search -->
                 <div class="container">
-                    <div class="row align-items-center">
+                    <div class="row align-items-center align_height">
                         <div class="col-12 col-lg-12">
                             <div class="menu_area alt-font">
                                 <nav class="navbar navbar-expand-lg navbar-light no-padding">
 
                                     <div class="navbar-header navbar-header-custom">
                                         <!-- Start Logo -->
-                                        <a href="/" class="navbar-brand logodefault"><img id="logo" src="{% static 'assets/img/cotrav_logo.png' %}" alt="logo"></a>
+                                      <a href="#" class="navbar-brand logodefault"><img id="logo" src="{% static 'img/logos/logo.png' %}" alt="logo" class="pg-logo logo-color" > <span class="logo-color">COTRAV</span></a>
                                         <!-- End Logo -->
                                     </div>
 
@@ -172,14 +172,54 @@ New Delhi - 110030</span>
                          </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6">
                         <div class="padding-30px-left sm-no-padding-left">
-                            <h3 class="text-white">Newsletter</h3>
-                            <p class="margin-20px-bottom">Nemo enim enim voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequr.</p>
-                            <form>
+                            <h3 class="text-white">Contact</h3>
+                            <p class="margin-20px-bottom text-center">Send Any Queries</p>
+                           <form>
+                          <button type="button" class="butn-style3 theme grey-hover butn_theme_white btn-align" data-toggle="modal" data-target="#myModal">
+                          Get A Demo
+                     </button>
 
+<!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog model1 form-cont" role="document">
+                  <div class="modal-content">
+                   <div class="modal-header">
+                   <h5 class="modal-title" id="exampleModalLabel">Contact Us</h5>
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+              </div>
+               <div class="modal-body">
+                                      <div class="col-sm-12">
+                                        <input type="text" name="name" placeholder=" Name:" data-constraints="@LettersOnly @NotEmpty">
+                                    </div>
 
-                                    <a class="butn theme grey-hover butn_theme_white " id="butn_theme_feedback"><span>Feedback</span></a>
+                                    <div class="col-sm-12">
+                                        <input type="text" name="email" placeholder="Phone Number:" data-constraints=" @phone">
+                                    </div>
+                                     <div class="col-sm-12">
+                                        <input type="text" name="email" placeholder="Email:" data-constraints="@Email @NotEmpty">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <textarea name="message" rows="5" placeholder="Message:" data-constraints="@NotEmpty"></textarea>
+                                    </div>
+
+                                </div>
+                        <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Submit</button>
+
+             </div>
+           </div>
+             </div>
+                </div>
+
+            <script>
+             $('#myModal').on('shown.bs.modal', function () {
+               $('#myInput').trigger('focus')
+             })
+         </script>
 
                             </form>
                         </div>

@@ -1,6 +1,7 @@
 import random
 import string
 
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render , redirect , get_object_or_404
 from django_global_request.middleware import get_request
@@ -127,13 +128,14 @@ def my_handler(sender, instance , created , **kwargs):
                 login_type = request.session['agent_login_type']
                 access_token = request.session['agent_access_token']
                 access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
+                password = make_password("taxi123")
                 payload = {'corporate_id': company.pk, 'user_id': request.user.id, 'login_type': login_type,
                            'access_token': access_token, 'name': contact_person_name, 'email': contact_person_email, 'cid': '',
                            'contact_no': contact_person_no,
                            'is_radio': 0, 'is_local': 1, 'is_outstation': 1, 'is_bus': 1,
                            'is_train': 1, 'is_hotel': 1, 'is_meal': 0, 'is_flight': 1,
                            'is_water_bottles': 1, 'is_reverse_logistics': 1,
-                           'access_token_auth': access_token_auth}
+                           'access_token_auth': access_token_auth,'password': password}
                 url = settings.API_BASE_URL + "add_admin"
                 company = getDataFromAPI(login_type, access_token, url, payload)
 

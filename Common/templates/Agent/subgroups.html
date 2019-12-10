@@ -37,7 +37,7 @@
                 <div class="form-group row" >
                        <label class="col-sm-5 control-label">Select Group</label>
                             <div class="col-sm-7">
-                                <select class="form-control myselect" name="group_id" id="group_id" style="width:100%;" required>
+                                <select class="form-control myselect" name="group_id" id="group_id" style="width:100%;">
                                 <option value="">Select Group</option>
                                 {% for group in groups %}
                                 <option value="{{group.id}}">{{group.group_name}}</option>

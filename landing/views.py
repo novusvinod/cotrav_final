@@ -105,7 +105,7 @@ def contact(request):
 
         Newcompany.save()
         messages.success(request,
-                         "A Cotrav Official would be contacting you in 24 hours to discuss business solutions for your team. In the meantime, would you like to go back to the portal..!")
+                         "A Cotrav Official would be contacting you in 24 hours to discuss business solutions for your team..!")
         return redirect('contact')
 
     else:

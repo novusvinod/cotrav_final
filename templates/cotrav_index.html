@@ -5,74 +5,74 @@
 {% load static %}
 
 
-        <!-- start revolution slideshow-->
-        <div class="rev_slider_wrapper fullscreen custom-controls">
-            <div id="rev_slider_2" class="rev_slider fullscreenbanner" style="display: none;" data-version="5.4.5">
-                <ul>
-
-                    <li>
-                    <img src="{% static 'img/bg/bg222.png' %}"  alt="Responsive image">
-
-
-                          <div class="display-table height-100 text-center center-col">
-                            <div class="display-table-cell vertical-align-middle story-video">
-                                <div class="display-inline-block vertical-align-middle z-index-1 text-left margin-30px-bottom alignment">
-
-                                    <a class="video video_btn videobtn-align" href="{% static 'video/down-time.mp4' %}" ><i class="fas fa-play font-size18 xs-font-size16" ></i>
-                                 </a>
-                                </div>
-                                <div class="vertical-align-middle display-inline-block margin-ten-left">
-                                    <a href="{% static 'video/down-time.mp4' %}" class="text-theme-color border-bottom border-color-light-white">
-                                  </a>
-
-                                </div>
-                            </div>
+       <!-- start home slider -->
+        <div class="home-business-slider text-center owl-carousel">
+            <div class=" screen-height bg-img" data-overlay-dark="2" data-background="{% static 'img/bg/bg-home.jpg' %}">
+                <div class="opacity-extra-medium bg-extra-dark-gray z-index-2"></div>
+                <div class="absolute-middle-center z-index-3 width-60 md-width-95 sm-width-100 padding-15px-lr">
+                    <div class="banner-desc margin-40px-top">
+                        <div class="square-title margin-10px-bottom">
+                            <h1 class="alt-font text-uppercase text-black font-weight-600 no-margin font-size50 md-font-size42 sm-font-size32 width-100 font-txt">Corporate Travel Simplified</h1>
                         </div>
+                        <p class="text-center text-black center-col fontsize16 font-weight-300 margin-10px-bottom line-height-28 width-55 sm-width-75 xs-width-95 width-100 font-txt_weight">Book and  Manage all your corporate travel at one place.</p>
+
+                         <button type="button" class="butn-style3 theme grey-hover butn_theme_white btn-align" data-toggle="modal" data-target="#myModal">
+                          Get A Demo
+                  </button>
+
+<!-- Modal -->
+               <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal2Label" aria-hidden="true">
+                <div class="modal-dialog model2" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="myModal2Label">Modal title</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+      </div>
+      <div class="modal-body">
+          <div class="col-sm-12">
+                                        <input type="text" name="name" placeholder=" Name:" data-constraints="@LettersOnly @NotEmpty">
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <input type="text" name="email" placeholder="Phone Number:" data-constraints=" @phone">
+                                    </div>
+                                     <div class="col-sm-12">
+                                        <input type="text" name="email" placeholder="Email:" data-constraints="@Email @NotEmpty">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <textarea name="message" rows="5" placeholder="Message:" data-constraints="@NotEmpty"></textarea>
+                                    </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            <script>
+             $('#myModal2').on('shown.bs.modal', function () {
+               $('#myInput').trigger('focus')
+             })
+         </script>
+
+                  </form>
 
 
-                        <!-- start layer 1 -->
-                        <div class="tp-caption tp-resizeme alt-font font-weight-700 text-extra-dark-gray "data-y="center" data-voffset="[-100,-120,-130,-140]" data-fontsize="48,48,36,32]" data-lineheight="[60,52,40,36]" data-width="[none, none, none, 300]" data-whitespace="[nowrap, nowrap, nowrap, normal]" data-frames='[{
-                                    "delay":1500,
-                                    "speed":1400,
-                                    "frame":"0",
-                                    "from":"y:150px;opacity:0;",
-                                    "ease":"Power3.easeOut",
-                                    "to":"o:1;"
-                                    },{
-                                    "delay":"wait",
-                                    "speed":1000,
-                                    "frame":"999",
-                                    "to":"opacity:0;","ease":"Power3.easeOut"
-                                }]' data-splitout="none">Corporate Travel Simplified
-                        </div>
-                        <!-- end layer 1 -->
+                      <p class="info_txt"> Call US : +919881102875</p>
 
-                        <!-- layer nr. 2 -->
-                        <div class="tp-caption tp-resizeme slider-text" data-x="30" data-y="center" data-voffset="[-5,-10,-30,-15]" data-fontsize="[21,21,21,21]" data-lineheight="34" data-width="[600, 500, 400, 300]" data-whitespace="[nowrap, nowrap, nowrap, normal]" data-frames='[{
-                                    "delay":1700,
-                                    "speed":1400,
-                                    "frame":"0",
-                                    "from":"y:150px;opacity:0;",
-                                    "ease":"Power3.easeOut",
-                                    "to":"o:1;"
-                                    },{
-                                    "delay":"wait",
-                                    "speed":1000,
-                                    "frame":"999",
-                                    "to":"opacity:0;","ease":"Power3.easeOut"
-                                }]'>
-                            <p class="white-space">Book and  Manage all your corporate travel at one place.</p>
-                        </div>
-                        <!-- END LAYER 2 -->
+                    </div>
 
-                        <!-- layer nr. 3 -->
-                       -->
-
-                    </li>
-
-                </ul>
+               </div>
             </div>
         </div>
+
+       <!-- end home slider -->
+
 
  <section class="bg-light-gray">
             <div class="container">
