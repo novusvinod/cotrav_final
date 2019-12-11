@@ -292,6 +292,32 @@
 <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
 
 <script type="text/javascript">
+$(window).on("load", function () {
+var_url = '/api/'+'railway_stations'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.admin_access_token}}",
+                'usertype': 1
+            }
+
+        });
+
+     $.post(var_url,{},
+      function(data)
+      {
+       //alert(data['Cities']);
+       if(data['Stations'].length != 0){
+        entities = data['Stations'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#pickup_location').append($("<option value='"+entities[i].id+"'>"+entities[i].station_name+" ("+entities[i].station_code+")</option>"));
+            $('#drop_location').append($("<option value='"+entities[i].id+"'>"+entities[i].station_name+" ("+entities[i].station_code+")</option>"));
+         }
+       }
+       });
+
+});
+
 $( document ).ready(function() {
 
     $('#emp_row_2').hide();

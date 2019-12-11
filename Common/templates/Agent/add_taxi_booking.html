@@ -339,6 +339,32 @@
 
 <script type="text/javascript">
 
+$(window).on("load", function () {
+var_url = '/api/'+'cities'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+     $.post(var_url,{},
+      function(data)
+      {
+       //alert(data['Cities']);
+       if(data['Cities'].length != 0){
+        entities = data['Cities'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#current_city_id').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+         }
+       }
+
+       });
+
+});
+
 $( document ).ready(function() {
     $('#tr_taxi_type').hide();
     $('#tr_package').hide();

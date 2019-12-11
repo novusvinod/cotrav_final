@@ -2889,6 +2889,7 @@ def add_admin(request):
                     cursor.callproc('addNewCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
                                                              is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id])
                     company = dictfetchall(cursor)
+                    
                     if company:
                         data = {'success': 0, 'message': company}
                     else:

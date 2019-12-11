@@ -306,17 +306,10 @@
 
 
  <script>
-      var input = document.getElementById('pickup_city');
-      var autocomplete = new google.maps.places.Autocomplete(input);
 
-      google.maps.event.addListener(autocomplete, 'place_changed', function() {
+$(window).on("load", function () {
 
-      var search_str = $("#pickup_city").val();
-
-      var_url = '/api/'+'get_city_id'
-
-      //var_url = 'http://localhost:8000/api/testpath'
-
+var_url = '/api/'+'cities'
     $.ajaxSetup({
             headers:{
                 'Authorization': "Token {{request.session.admin_access_token}}",
@@ -325,15 +318,24 @@
 
         });
 
-     $.post(var_url,{ search_string: search_str },
+     $.post(var_url,{},
       function(data)
       {
-       var city_id = data['city_id'][0]['id'];
-       $('#current_city_id').val(city_id);
-
+       //alert(data['Cities']);
+       if(data['Cities'].length != 0){
+        entities = data['Cities'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#current_city_id').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
        });
 
 });
+
+
 
   var pickup_location = document.getElementById('pickup_location');
       var autocomplete = new google.maps.places.Autocomplete(pickup_location);

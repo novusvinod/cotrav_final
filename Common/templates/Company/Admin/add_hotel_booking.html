@@ -66,12 +66,13 @@
 
                                             <div class="form-group row">
                                                     <label class="col-sm-4">Preferred Hotel Area</label>
-                                                    <select class="col-sm-8 form-control myselect" name="preferred_hotel_area" id="preferred_hotel_area"  required>
-                                                        <option value="">Select Hotel Area</option>
-                                                        {% for city in cities %}
-                                                            <option value="{{city.id}}">{{city.city_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
+                                                <input type="text" class="col-sm-8 form-control" name="preferred_hotel_area" id="preferred_hotel_area">
+<!--                                                    <select class="col-sm-8 form-control myselect" name="preferred_hotel_area" id="preferred_hotel_area"  required>-->
+<!--                                                        <option value="">Select Hotel Area</option>-->
+<!--                                                        {% for city in cities %}-->
+<!--                                                            <option value="{{city.id}}">{{city.city_name}}</option>-->
+<!--                                                        {% endfor %}-->
+<!--                                                    </select>-->
                                                 
                                             </div>
 
@@ -331,6 +332,34 @@
 {% endif %}
 
 <script>
+$(window).on("load", function () {
+var_url = '/api/'+'cities'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.admin_access_token}}",
+                'usertype': 1
+            }
+
+        });
+
+     $.post(var_url,{},
+      function(data)
+      {
+       //alert(data['Cities']);
+       if(data['Cities'].length != 0){
+        entities = data['Cities'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#from_city').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+            $('#city_area').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+});
+
 $('#emp_row_2').hide();
 $('#emp_row_3').hide();
 $('#emp_row_4').hide();

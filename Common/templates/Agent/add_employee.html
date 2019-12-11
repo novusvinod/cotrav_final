@@ -317,7 +317,7 @@
                                 <label class="col-sm-4" >Home City</label>
                                 {% if employee %}
                                 {% for employe in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="home_city" required>
+                                    <select class="col-sm-8 form-control myselect" name="home_city" id="city_id" required>
                                         <option value="">Select Home City</option>
                                         {% for citie in cities %}
                                         <option value="{{citie.id}}" {% if employe.home_city == citie.id %} selected {%endif%}>{{citie.city_name}}</option>
@@ -326,7 +326,7 @@
                                 {% endfor %}
                                 {% else %}
 
-                                     <select class="col-sm-8 form-control myselect" name="home_city" required>
+                                     <select class="col-sm-8 form-control myselect" name="home_city" id="city_id_edit"  required>
                                         <option value="">Select Home City</option>
                                         {% for citie in cities %}
                                         <option value="{{citie.id}}">{{citie.city_name}}</option>
@@ -433,6 +433,33 @@
 
 
 <script type="text/javascript">
+$(window).on("load", function () {
+var_url = '/api/'+'cities'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+     $.post(var_url,{},
+      function(data)
+      {
+       //alert(data['Cities']);
+       if(data['Cities'].length != 0){
+        entities = data['Cities'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#city_id').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+            $('#city_id_edit').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+});
 
  var getValue=$('#is_cxo').val();
     if(getValue == '1'){

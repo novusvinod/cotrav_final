@@ -62,21 +62,21 @@ class Corporate_Agent_Form(forms.ModelForm):
 
 
 class LeadGenerationModelForm(forms.ModelForm):
-    Contact_Name = forms.CharField(label='Contact_Name', max_length=100 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Name"}))
-    Company_Name = forms.CharField(label='Company_Name', max_length=100 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Name"}))
-    Contact_Number = forms.CharField(label='Contact_Number', max_length=10 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Number"}))
-    Contact_Email = forms.EmailField(label='Contact_Email', max_length=100 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Email"}))
-    Company_Location = forms.CharField(label='Company_Location', max_length=100 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location"}))
-    Contact_Address = forms.CharField(label='Contact_Address', max_length=100 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
-    Company_Website = forms.CharField(label='Company_Website', max_length=100 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
-    Message = forms.CharField(label='Message', max_length=100 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
-    Assigned_Sales_Person = forms.CharField(max_length=3 ,widget = forms.Select( choices=abc,attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}),)
-    Status = forms.CharField(label='Status' , max_length=100 , widget = forms.Select(choices=sts,attrs={'class': "form-control col-sm-8 myselect",'id':"status"}),)
-    Lead_Source = forms.CharField(label='Lead_Source', max_length=100 , widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
+    Contact_Name = forms.CharField(label='Contact_Name', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Name"}))
+    Company_Name = forms.CharField(label='Company_Name', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Name"}))
+    Contact_Number = forms.CharField(label='Contact_Number', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Number"}))
+    Contact_Email = forms.EmailField(label='Contact_Email', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Email"}))
+    Company_Location = forms.CharField(label='Company_Location', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location"}))
+    Contact_Address = forms.CharField(label='Contact_Address', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
+    Company_Website = forms.CharField(label='Company_Website', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
+    Message = forms.CharField(label='Message', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
+    Assigned_Sales_Person = forms.CharField(max_length=255 ,widget = forms.Select( choices=abc,attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}),)
+    Status = forms.CharField(label='Status' , max_length=255 , widget = forms.Select(choices=sts,attrs={'class': "form-control col-sm-8 myselect",'id':"status"}),)
+    Lead_Source = forms.CharField(label='Lead_Source', max_length=255 , widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
     Attachments = forms.FileField(required=False)
-    Lead_Communication = forms.CharField(label='Lead_Communication', max_length=100 , required=False , widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
-    Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=100 , required=False , widget = forms.Select(choices=hear_about,attrs={'class': "form-control col-sm-8 myselect",'id':"Hear_About_Us"}),)
-    Comments = forms.CharField(label='Comments', max_length=100 , widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
+    Lead_Communication = forms.CharField(label='Lead_Communication', max_length=255 , required=False , widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
+    Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255 , required=False , widget = forms.Select(choices=hear_about,attrs={'class': "form-control col-sm-8 myselect",'id':"Hear_About_Us"}),)
+    Comments = forms.CharField(label='Comments', max_length=255 , widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
 
 
     class Meta:
@@ -85,21 +85,21 @@ class LeadGenerationModelForm(forms.ModelForm):
 
 
 class LeadUpdateForm(forms.ModelForm):
-    Contact_Name = forms.CharField(label='Contact_Name', max_length=100,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Name"}))
-    Company_Name = forms.CharField(label='Company_Name', max_length=100,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Name"}))
-    Contact_Number = forms.CharField(label='Contact_Number', max_length=100,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Number"}))
-    Contact_Email = forms.EmailField(label='Contact_Email', max_length=100,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Email"}))
-    Company_Location = forms.CharField(label='Company_Location', max_length=100,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location"}))
-    Contact_Address = forms.CharField(label='Contact_Address', max_length=100, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
-    Company_Website = forms.CharField(label='Company_Website', max_length=100, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
-    Message = forms.CharField(label='Message', max_length=100,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
-    Assigned_Sales_Person = forms.CharField(max_length=3, widget=forms.Select(choices=abc, attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}), )
-    Status = forms.CharField(label='Status', max_length=100,widget=forms.Select(choices=sts, attrs={'class': "form-control col-sm-8 myselect",'id':"status"}), )
-    Lead_Source = forms.CharField(label='Lead_Source', max_length=100,widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
+    Contact_Name = forms.CharField(label='Contact_Name', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Name"}))
+    Company_Name = forms.CharField(label='Company_Name', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Name"}))
+    Contact_Number = forms.CharField(label='Contact_Number', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Number"}))
+    Contact_Email = forms.EmailField(label='Contact_Email', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Email"}))
+    Company_Location = forms.CharField(label='Company_Location', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location"}))
+    Contact_Address = forms.CharField(label='Contact_Address', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
+    Company_Website = forms.CharField(label='Company_Website', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
+    Message = forms.CharField(label='Message', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
+    Assigned_Sales_Person = forms.CharField(max_length=255, widget=forms.Select(choices=abc, attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}), )
+    Status = forms.CharField(label='Status', max_length=255,widget=forms.Select(choices=sts, attrs={'class': "form-control col-sm-8 myselect",'id':"status"}), )
+    Lead_Source = forms.CharField(label='Lead_Source', max_length=255,widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
     Attachments = forms.FileField(required=False)
-    Lead_Communication = forms.CharField(label='Lead_Communication', max_length=100, required=False,widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
-    Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=100, required=False,widget = forms.Select(choices=hear_about,attrs={'class': "form-control col-sm-8 myselect",'id':"Hear_About_Us"}),)
-    Comments = forms.CharField(label='Comments', max_length=100,widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
+    Lead_Communication = forms.CharField(label='Lead_Communication', max_length=255, required=False,widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
+    Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255, required=False,widget = forms.Select(choices=hear_about,attrs={'class': "form-control col-sm-8 myselect",'id':"Hear_About_Us"}),)
+    Comments = forms.CharField(label='Comments', max_length=255,widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
 
     class Meta:
         model = Leadgeneration

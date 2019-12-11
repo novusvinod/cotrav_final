@@ -1321,9 +1321,10 @@ def add_taxi_booking(request,id):
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
             cities = cities['AssCity']
 
-            url_city1 = settings.API_BASE_URL + "cities"
-            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
-            citiess = cities1['Cities']
+            # url_city1 = settings.API_BASE_URL + "cities"
+            # cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            # citiess = cities1['Cities']
+            citiess = ""
 
             url_access = settings.API_BASE_URL + "view_company"
             data = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -1702,9 +1703,10 @@ def add_train_booking(request,id):
             bus_type = getDataFromAPI(login_type, access_token, url_bus_type, payload)
             train_types = bus_type['Types']
 
-            url_railway_stations = settings.API_BASE_URL + "railway_stations"
-            trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
-            railway_stations = trains1['Stations']
+            # url_railway_stations = settings.API_BASE_URL + "railway_stations"
+            # trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
+            # railway_stations = trains1['Stations']
+            railway_stations = ""
 
             url_access = settings.API_BASE_URL + "view_company"
             data = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -1890,9 +1892,10 @@ def add_hotel_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
+            # url_city = settings.API_BASE_URL + "cities"
+            # cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            # cities = cities['Cities']
+            cities = ""
 
             url_enty = settings.API_BASE_URL + "billing_entities"
             entys = getDataFromAPI(login_type, access_token, url_enty, payload)
@@ -2093,10 +2096,6 @@ def add_flight_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             url_enty = settings.API_BASE_URL + "billing_entities"
             entys = getDataFromAPI(login_type, access_token, url_enty, payload)
             entities = entys['Entitys']
@@ -2118,7 +2117,7 @@ def add_flight_booking(request,id):
             spocs = spoc['Spocs']
 
             if id:
-                return render(request, 'Company/Admin/add_flight_booking.html', {'employees':employees,'cities':cities,'entities':entities,
+                return render(request, 'Company/Admin/add_flight_booking.html', {'employees':employees,'entities':entities,
                             'assessments':ass_code,'cities_ass':cities_ass, 'corp_access':access,'spocs':spocs})
             else:
                 return render(request, 'Company/Admin/add_flight_booking.html', {})

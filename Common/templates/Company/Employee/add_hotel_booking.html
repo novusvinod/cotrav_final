@@ -58,12 +58,13 @@
 
                                             <div class="form-group row">
                                                     <label class="col-sm-4" >City Area</label>
-                                                    <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>
-                                                       <option value="">Select Area</option>
-                                                       {% for city in cities %}
-                                                            <option value="{{city.id}}">{{city.city_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
+                                                <input type="text" class="col-sm-8 form-control" name="preferred_hotel_area" id="preferred_hotel_area">
+<!--                                                    <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>-->
+<!--                                                       <option value="">Select Area</option>-->
+<!--                                                       {% for city in cities %}-->
+<!--                                                            <option value="{{city.id}}">{{city.city_name}}</option>-->
+<!--                                                        {% endfor %}-->
+<!--                                                    </select>-->
 
                                             </div>
 
@@ -198,7 +199,33 @@
 $(document).ready(function() {
 $(".js-example-basic-single").select2();
 });
+$(window).on("load", function () {
+var_url = '/api/'+'cities'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.employee_access_token}}",
+                'usertype': 6
+            }
 
+        });
+
+     $.post(var_url,{},
+      function(data)
+      {
+       //alert(data['Cities']);
+       if(data['Cities'].length != 0){
+        entities = data['Cities'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#from_city').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+            $('#city_area').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+});
 </script>
 
 {% endblock %}

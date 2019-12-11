@@ -116,7 +116,7 @@ left:50%;
                                                 <label class="col-sm-4">City</label>
                                              {% if operator_rates %}
                                             {% for rate in operator_rates %}
-	                                                 <select class="col-sm-8 form-control myselect" name="city_id" required>
+	                                                 <select class="col-sm-8 form-control myselect" name="city_id" id="city_id_edit" required>
                                                          <option value="">Select City</option>
                                                          {% for city in cities %}
                                                      <option value="{{city.id}}" {%if rate.city_id == city.id %} selected {%endif%}>{{city.city_name}}</option>
@@ -125,7 +125,7 @@ left:50%;
                                             {% endfor %}
                                               {% else %}
 
-                                                <select class="col-sm-8 form-control myselect" name="city_id" required>
+                                                <select class="col-sm-8 form-control myselect" name="city_id" id="city_id" required>
                                                     <option value="">Select City</option>
 	                                                {% for city in cities %}
                                                      <option value="{{city.id}}" >{{city.city_name}}</option>
@@ -331,6 +331,34 @@ left:50%;
 {% endif %}
 
 <script>
+$(window).on("load", function () {
+var_url = '/api/'+'cities'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+     $.post(var_url,{},
+      function(data)
+      {
+       //alert(data['Cities']);
+       if(data['Cities'].length != 0){
+        entities = data['Cities'];
+        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#city_id').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+            $('#city_id_edit').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+});
+
 function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/

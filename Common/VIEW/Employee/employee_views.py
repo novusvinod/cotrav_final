@@ -355,9 +355,10 @@ def add_taxi_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            url_city1 = settings.API_BASE_URL + "cities"
-            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
-            citiess = cities1['Cities']
+            # url_city1 = settings.API_BASE_URL + "cities"
+            # cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            # citiess = cities1['Cities']
+            citiess = ""
 
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
@@ -636,9 +637,10 @@ def add_train_booking(request,id):
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
-            url_railway_stations = settings.API_BASE_URL + "railway_stations"
-            trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
-            railway_stations = trains1['Stations']
+            # url_railway_stations = settings.API_BASE_URL + "railway_stations"
+            # trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
+            # railway_stations = trains1['Stations']
+            railway_stations = ""
 
             url_access = settings.API_BASE_URL + "view_company"
             data = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -788,9 +790,10 @@ def add_hotel_booking(request,id):
             ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
             ass_code = ass_code['AssCodes']
 
-            url_city1 = settings.API_BASE_URL + "cities"
-            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
-            cities = cities1['Cities']
+            # url_city1 = settings.API_BASE_URL + "cities"
+            # cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            # cities = cities1['Cities']
+            cities = ""
 
             url_access = settings.API_BASE_URL + "view_company"
             data = getDataFromAPI(login_type, access_token, url_access, payload)

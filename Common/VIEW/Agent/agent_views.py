@@ -1770,9 +1770,10 @@ def add_employee(request, id):
             companies = getDataFromAPI(login_type, access_token, url_companies, payload)
             companies = companies['Corporates']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
+            # url_city = settings.API_BASE_URL + "cities"
+            # cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            # cities = cities['Cities']
+            cities = ""
 
             url_spoc = settings.API_BASE_URL + "spocs"
             company_spoc = getDataFromAPI(login_type, access_token, url_spoc, payload)
@@ -2584,9 +2585,10 @@ def add_operator_rate(request,id):
                 operators = getDataFromAPI(login_type, access_token, url, payload)
                 operators = operators['Rates']
 
-                url_cities = settings.API_BASE_URL + "cities"
-                cities = getDataFromAPI(login_type, access_token, url_cities, payload)
-                cities = cities['Cities']
+                # url_cities = settings.API_BASE_URL + "cities"
+                # cities = getDataFromAPI(login_type, access_token, url_cities, payload)
+                # cities = cities['Cities']
+                cities = ""
 
                 url_taxi_type = settings.API_BASE_URL + "taxi_types"
                 taxi_types = getDataFromAPI(login_type, access_token, url_taxi_type, payload)
@@ -2931,9 +2933,10 @@ def add_taxi_booking(request,id):
             company = getDataFromAPI(login_type, access_token, url, payload)
             companies = company['Corporates']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
+            #url_city = settings.API_BASE_URL + "cities"
+            #cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            #cities = cities['Cities']
+            cities = ""
 
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
@@ -3318,14 +3321,10 @@ def add_bus_booking(request,id):
             company = getDataFromAPI(login_type, access_token, url, payload)
             companies = company['Corporates']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             if id:
-                return render(request, 'Agent/add_bus_booking.html', {'companies':companies,'cities':cities})
+                return render(request, 'Agent/add_bus_booking.html', {'companies':companies})
             else:
-                return render(request, 'Agent/add_bus_booking.html', {'companies':companies,'cities':cities})
+                return render(request, 'Agent/add_bus_booking.html', {'companies':companies})
         else:
             return HttpResponseRedirect("/agents/login")
 
@@ -3651,24 +3650,21 @@ def add_train_booking(request,id):
             company = getDataFromAPI(login_type, access_token, url, payload)
             companies = company['Corporates']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             url_train = settings.API_BASE_URL + "train_types"
             trains = getDataFromAPI(login_type, access_token, url_train, payload)
             types = trains['Types']
 
-            url_railway_stations = settings.API_BASE_URL + "railway_stations"
-            trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
-            railway_stations = trains1['Stations']
+            # url_railway_stations = settings.API_BASE_URL + "railway_stations"
+            # trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
+            # railway_stations = trains1['Stations']
+            railway_stations = ""
 
             if id:
 
-                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types,'railway_stations':railway_stations})
+                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'types':types,'railway_stations':railway_stations})
             else:
 
-                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'cities':cities,'types':types,'railway_stations':railway_stations})
+                return render(request, 'Agent/add_train_booking.html', {'companies':companies,'types':types,'railway_stations':railway_stations})
         else:
             return HttpResponseRedirect("/agents/login")
 
@@ -3927,9 +3923,10 @@ def add_hotel_booking(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
             companies = company['Corporates']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
+            # url_city = settings.API_BASE_URL + "cities"
+            # cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            # cities = cities['Cities']
+            cities = ""
 
             if id:
                 return render(request, 'Agent/add_hotel_booking.html', {'companies': companies, 'cities': cities, })
@@ -4321,14 +4318,10 @@ def add_flight_booking(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
             companies = company['Corporates']
 
-            url_city = settings.API_BASE_URL + "cities"
-            cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            cities = cities['Cities']
-
             if id:
-                return render(request, 'Agent/add_flight_booking.html', {'companies':companies,'cities':cities,})
+                return render(request, 'Agent/add_flight_booking.html', {'companies':companies,})
             else:
-                return render(request, 'Agent/add_flight_booking.html', {'companies':companies,'cities':cities,})
+                return render(request, 'Agent/add_flight_booking.html', {'companies':companies})
         else:
             return HttpResponseRedirect("/agents/login")
 

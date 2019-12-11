@@ -26,6 +26,7 @@ def approver_1_taxi_bookings(request):
                         cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
+                        e['booking_type'] = booking_type
                         cursor1.close()
                     except Exception as e:
                         data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -131,6 +132,7 @@ def approver_1_bus_bookings(request):
                         cursor1.callproc('getAllBusBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
+                        e['booking_type'] = booking_type
                         cursor1.close()
                     data = {'success': 1, 'Bookings': emp}
                     return JsonResponse(data)
@@ -237,6 +239,7 @@ def approver_1_train_bookings(request):
                         cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
+                        e['booking_type'] = booking_type
                         cursor1.close()
                     data = {'success': 1, 'Bookings': emp}
                     return JsonResponse(data)
@@ -344,6 +347,7 @@ def approver_1_hotel_bookings(request):
                         cursor1.callproc('getAllHotelBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
+                        e['booking_type'] = booking_type
                         cursor1.close()
                     data = {'success': 1, 'Bookings': emp}
                     return JsonResponse(data)
@@ -450,6 +454,7 @@ def approver_1_flight_bookings(request):
                         cursor1.callproc('getAllFlightBookingPassangers', [booking_id])
                         passanger = dictfetchall(cursor1)
                         e['Passangers'] = passanger
+                        e['booking_type'] = booking_type
                         cursor1.close()
                     data = {'success': 1, 'Bookings': emp}
                     return JsonResponse(data)
