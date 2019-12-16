@@ -82,6 +82,8 @@ urlpatterns = [
     path('agents/add-operator-driver/<int:id>', agent_views.add_operator_driver),
     path('agents/delete-operator-driver/<int:id>', agent_views.delete_operator_driver),
 
+    path('agents/assign-operator-taxi-booking', agent_views.assign_operator_taxi_boooking),
+
     path('agents/taxi-bookings/<int:id>', agent_views.taxi_bookings),
     path('agents/add-taxi-booking/<int:id>', agent_views.add_taxi_booking),
     path('agents/view-taxi-booking/<int:id>', agent_views.view_taxi_booking),

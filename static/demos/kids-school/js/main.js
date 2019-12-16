@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------
 
-    Theme Name: Fabrex - School Education and Children Kids Template
+    Theme Name: CoTrav - School Education and Children Kids Template
     Description: School Education and Children Kids Template
     Author: Chitrakoot Web
 

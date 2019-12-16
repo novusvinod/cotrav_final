@@ -280,18 +280,18 @@
 
                         {% if booking.tour_type == 1 %}
                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Base rate</label>
+                            <label class="col-sm-5 control-label">Base Rate</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="radio_rate" name="radio_rate" placeholder="Start Km" type="text">
+                                <input class="form-control" id="radio_rate" name="radio_rate" placeholder="Base Rate" type="text">
                             </div>
                         </div>
                         {% endif %}
 
 {% if booking.tour_type == 2 or booking.tour_type == 3 %}
                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Base rate</label>
+                            <label class="col-sm-5 control-label">Base Rate</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="base_rate" name="base_rate" placeholder="Start Km" type="text" value="{{booking.base_rate}}">
+                                <input class="form-control" id="base_rate" name="base_rate" placeholder="Base Rate" type="text" value="{{booking.base_rate}}">
                             </div>
                         </div>
 
@@ -346,7 +346,7 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Others (Parking, etc.)</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="other_charges" name="other_charges" placeholder="Others (Parking, etc.)" type="text">
+                                <input class="form-control" id="other_charges" name="other_charges" placeholder="Others (Parking, etc.)" required type="text">
                             </div>
                         </div>
 
@@ -393,6 +393,73 @@
                 </div>
             </div>
 
+{% if booking.tour_type == 2 or booking.tour_type == 3 %}
+             <div class="col-md-3">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Package Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+
+
+                          <div class="form-group row">
+                                <label class="col-sm-6 control-label">Package Name</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.package_name}}" readonly>
+                                </div>
+                        </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-6 control-label">Include Kms</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.kms}}" readonly>
+                                </div>
+                        </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-6 control-label">Include Hours</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.hours}}" readonly>
+                                </div>
+                        </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-6 control-label">Km Rate</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.km_rate}}" readonly>
+                                </div>
+                        </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-6 control-label">Hour Rate</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.hour_rate}}" readonly>
+                                </div>
+                        </div>
+
+
+                         <div class="form-group row">
+                                <label class="col-sm-6 control-label">Base Rate</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.base_rate}}" readonly>
+                                </div>
+                        </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-6 control-label">Night Rate</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" value="{{booking.night_rate}}" readonly>
+                                </div>
+                        </div>
+
+
+
+                         </div>
+                </div>
+            </div>
+            {% endif %}
+
 
         </div>
 
@@ -423,6 +490,8 @@
   $("#drop_datetime").val(data[0]);
   $("#drop_time").val("00:00");
 
+$( document ).ready(function() {
+
 $('#taxi_details').change(function(){
      var taxi_detail = $('#taxi_details option:selected').data('details');
     temp = taxi_detail.split(',');
@@ -441,7 +510,7 @@ $('#taxi_details').change(function(){
 
 $("#days").hover(function(){
 
-var pickup_datetime = $("#pickup_datetime").val();
+  var pickup_datetime = $("#pickup_datetime").val();
   var drop_datetime = $("#drop_datetime").val();
   var pickup_time = $("#pickup_time").val();
   var drop_time = $("#drop_time").val();
@@ -453,8 +522,8 @@ var pickup_datetime = $("#pickup_datetime").val();
 
   var drop_datetime1 = new Date(b);
     // To calculate the time difference of two dates
-    var Difference_In_hours = drop_datetime1.getDate() - pickup_datetime1.getDate();
-    $("#days").val(Difference_In_hours+1);
+    var Difference_In_hours = Math.ceil(Math.abs(drop_datetime1-pickup_datetime1)/36e5);
+    $("#days").val(Difference_In_hours);
 
     var base_rate = $("#base_rate").val();
     var days = $("#days").val();
@@ -465,8 +534,30 @@ var pickup_datetime = $("#pickup_datetime").val();
 });
 
 
+$("#kms_done,#days,#driver_allowance,#total_excluding_tax,#other_charges,#end_km,#days,#hours_done,#start_km,#end_km,#pickup_datetime,#drop_datetime,#pickup_time,#drop_time").change(function(){
+  var start_km = $("#start_km").val();
+  var end_km = $("#end_km").val();
 
-$("#hours_done").click(function(){
+  $("#kms_done").val(parseInt(end_km) - parseInt(start_km));
+  var kms_done = $("#kms_done").val();
+  var allowed_kms = $("#allowed_kms").val();
+
+var hours_done = parseInt(kms_done) - parseInt(allowed_kms);
+if(hours_done <= 0){
+     $("#extra_kms").val(0);
+  }else{
+     $("#extra_kms").val(hours_done);
+  }
+
+
+var extra_hours =  $("#extra_hours").val();
+var charge_hour =  $("#charge_hour").val();
+
+
+
+var extra_kms =  $("#extra_kms").val();
+var extra_km_rate =  $("#extra_km_rate").val();
+
   var pickup_datetime = $("#pickup_datetime").val();
   var drop_datetime = $("#drop_datetime").val();
   var pickup_time = $("#pickup_time").val();
@@ -480,9 +571,22 @@ $("#hours_done").click(function(){
   var drop_datetime1 = new Date(b);
 
     // To calculate the time difference of two dates
-    var Difference_In_hours = drop_datetime1.getHours() - pickup_datetime1.getHours();
+ var Difference_In_hours = 0;
 
-  $("#hours_done").val(Difference_In_hours);
+    if (pickup_datetime1 > drop_datetime1) {
+   Difference_In_hours = 0;
+} else {
+   Difference_In_hours = Math.ceil(Math.abs(drop_datetime1 - pickup_datetime1)/36e5);
+}
+
+
+
+if(Difference_In_hours <= 0){
+     $("#hours_done").val(0);
+  }else{
+     $("#hours_done").val(Difference_In_hours);
+  }
+
 
   var hr_done = $("#hours_done").val();
   var allow_hr = $("#allowed_hours").val();
@@ -518,29 +622,6 @@ else
 {
     $('#driver_allowance').val('0');
 }
-
-
-
-
-});
-
-$("#kms_done,#days,#driver_allowance,#total_excluding_tax,#other_charges,#end_km,#days").change(function(){
-  var start_km = $("#start_km").val();
-  var end_km = $("#end_km").val();
-
-  $("#kms_done").val(parseInt(end_km) - parseInt(start_km));
-  var kms_done = $("#kms_done").val();
-  var allowed_kms = $("#allowed_kms").val();
-  $("#extra_kms").val(parseInt(kms_done) - parseInt(allowed_kms));
-
-
-var extra_hours =  $("#extra_hours").val();
-var charge_hour =  $("#charge_hour").val();
-
-
-
-var extra_kms =  $("#extra_kms").val();
-var extra_km_rate =  $("#extra_km_rate").val();
 
   var ext_hr = parseInt(extra_hours) * parseInt(charge_hour)
   if(ext_hr <= 0){
@@ -613,6 +694,8 @@ $("#sub_total").val(parseFloat(management_fee) + parseFloat(service_tax_rate_mgm
 
 
 
+
+});
 
 
 

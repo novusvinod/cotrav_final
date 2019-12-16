@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from Common.models import Corporate
@@ -5,7 +7,8 @@ from Common.models import Corporate
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from datetime import timedelta
-
+import requests
+import socket
 from landing.forms import LeadGenerationModelForm
 from landing.models import Leadgeneration, LeadComments, LeadLog
 from django.contrib import messages
@@ -172,3 +175,43 @@ def pdf_render_test(request):
     #return render(request,'train_email_temp.html')
 
     return HttpResponse(pdf, content_type='application/pdf')
+
+
+def Create_Token(request):
+    if request.method == 'POST':
+        try:
+            url = "http://auth.ksofttechnology.com/API/AUTH"
+            payload = {
+                "TYPE": "AUTH",
+                "NAME": "GET_AUTH_TOKEN",
+                "STR": [
+                    {
+                        "A_ID": "27286260",
+                        "U_ID": "test",
+                        "PWD": "test",
+                        "MODULE": "B2B",
+                        "HS": "D"
+                    }
+                ]
+            }
+
+            headers = {}
+            print("IP ADDEREEE ")
+            host_name = "cotrav.in"
+            host_ip = socket.gethostbyname_ex(host_name)
+
+            print(socket.gethostbyname(socket.gethostname()))
+            r = requests.post(url, data=payload)
+            print(r)
+            api_response = json.loads(r.text)
+            print("response")
+            print(api_response)
+            messages.success(request, api_response)
+            messages.success(request, host_name)
+            messages.success(request, host_ip)
+            return redirect('create_token')
+        except Exception as e:
+            messages.error(request, e)
+            return redirect('create_token')
+    else:
+        return render(request, 'api_call.html')

@@ -48,6 +48,9 @@ urlpatterns = [
     path('', include('Common.URL.Agent.urls')),
 ######################### END AGENTS URLS ################
 
+######################### OPERATOR URLS ############################
+    path('', include('Common.URL.Operator.urls')),
+######################### END AGENTS URLS ################
 
 ######################### API URLS ############################
     path('', include('Common.URL.Api.urls')),

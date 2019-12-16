@@ -10,6 +10,7 @@ urlpatterns = [
     path('', include('Common.URL.Api.approver_1_urls')),
     path('', include('Common.URL.Api.approver_2_urls')),
     path('', include('Common.URL.Api.agent_urls')),
+    path('', include('Common.URL.Api.operator_urls')),
 ######################### END CORPORATE URLS ####################
 
     path('api/login', api_views.login),
@@ -21,6 +22,7 @@ urlpatterns = [
     path('api/spoc_dashboard', api_views.spoc_dashboard),
     path('api/admin_dashboard', api_views.admin_dashboard),
     path('api/agent_dashboard', api_views.agent_dashboard),
+    path('api/operator_dashboard', api_views.operator_dashboard),
 
 
     path('api/cities', api_views.cities),

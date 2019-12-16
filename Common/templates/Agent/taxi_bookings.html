@@ -36,6 +36,52 @@
 </div>
 
 
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_action_assign_oper">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title-status">Booking Assign Operator Action</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/assign-operator-taxi-booking" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="booking_id" id="booking_id_ass">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="operator_contact" id="operator_contact">
+                <input type="hidden" name="operator_email" id="operator_email">
+
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <div class="form-group row" >
+                       <label class="col-sm-5 control-label">Select Operator Name</label>
+                            <div class="col-sm-7">
+                                <select name="operator_id" id="operator_id" class="form-control myselect" required>-->
+                                    <option value="">Select Operator Name</option>
+                                    {% for operator in operators %}
+                                    {% if operator.service_type_id == 2 or operator.service_type_id == 3 or operator.service_type_id == 1  %}
+                                        <option value="{{operator.id}}" contact="{{operator.operator_contact}}" email="{{operator.operator_email}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                    </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <!-- Modal Download Taxi Report -->
 
 <div class="modal fade" role="dialog" id="modalDownloadTaxiReport">
@@ -245,6 +291,7 @@
 
                                         {% if booking.status_cotrav == 2 %}
                                         <a title="Assign Booking" href="/agents/assign-taxi-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;">  <i class="fa fa-pencil"></i> </a>
+
                                         {% endif %}
 
                                     {% if booking.status_cotrav == 4 %}
@@ -256,7 +303,15 @@
                                     {% if booking.operator_name %}
                                     <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
                                     {% else %}
-                                    <td></td>
+                                    <td>
+
+                                        {% if booking.status_cotrav == 2 %}
+
+                                        <a title="Assign Operator" style="background:cadetblue; color:white;" data-target="#model_action_assign_oper" data-id="{{booking.id}}" data-accept_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
+                                        {% endif %}
+
+                                    </td>
                                     {% endif %}
 
 
@@ -321,10 +376,26 @@ $(function() {
 
     });
 
+    $('#model_action_assign_oper').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('#booking_id_ass').val(id);
+
+    });
+
 });
 
 
 
+
+$("#operator_id").change(function(){
+var contact = $('option:selected',"#operator_id").attr("contact");
+var email = $('option:selected',"#operator_id").attr("email");
+$("#operator_contact").val(contact);
+$("#operator_email").val(email);
+});
 </script>
 
 

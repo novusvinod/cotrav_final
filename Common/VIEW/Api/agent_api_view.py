@@ -940,8 +940,8 @@ def update_operator(request):
                     cursor = connection.cursor()
                     cursor.callproc('updateOperator', [type,username,operator_name,operator_email,operator_contact,website,is_service_tax_applicable,service_tax_number,
                                                     night_start_time,night_end_time,tds_rate,gst_id,pan_no,operator_id,user_id,user_type])
-                    emp = dictfetchall(cursor)
                     company = dictfetchall(cursor)
+                    print(company)
                     if company:
                         data = {'success': 0, 'message': company}
                     else:
@@ -1362,6 +1362,11 @@ def operator_rates(request):
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
 
+        user_id = request.POST.get('user_id', '')
+        if user_id:
+            pass
+        else:
+            user_id = 0
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -1369,7 +1374,7 @@ def operator_rates(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllOperatorRates', [])
+                    cursor.callproc('getAllOperatorRates', [user_id])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'Rates': emp}
                     return JsonResponse(data)
@@ -1569,6 +1574,13 @@ def operator_drivers(request):
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
 
+        user_id = request.POST.get('user_id', '')
+        if user_id:
+            pass
+        else:
+            user_id =0
+
+
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -1576,7 +1588,7 @@ def operator_drivers(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllOperatorDrivers', [])
+                    cursor.callproc('getAllOperatorDrivers', [user_id])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'Drivers': emp}
                     return JsonResponse(data)
@@ -1926,6 +1938,49 @@ def reject_taxi_booking(request):
                         data = {'success': 0, 'message': company}
                     else:
                         data = {'success': 1, 'message': "Taxi Booking Rejected Successfully"}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def assign_operator_taxi_boooking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        booking_id = request.POST.get('booking_id', '')
+        operator_id = request.POST.get('operator_id', '')
+        user_id = request.POST.get('user_id', '')
+        operator_contact = request.POST.get('operator_contact', '')
+        operator_email = request.POST.get('operator_email', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('assignOperatorTaxiBooking',[operator_id, booking_id, user_id, user_type])
+                    company = dictfetchall(cursor)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        # communication = Assign_Booking_Email()
+                        # resp1 = communication.send_client_sms("", "Taxi")
+                        # resp1 = communication.is_client_email("", "Taxi", "")
+                        data = {'success': 1, 'message': "Taxi Booking Assign Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:

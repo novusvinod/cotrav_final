@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------
 
-    Theme Name: Fabrex - Charity Nonprofit Template
+    Theme Name: CoTrav - Charity Nonprofit Template
     Description: Charity Nonprofit Template
     Author: Chitrakoot Web
 

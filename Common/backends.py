@@ -6,6 +6,7 @@ from Common.models import Corporate_Spoc_Login
 from Common.models import Corporate_Employee_Login
 from Common.models import Corporate_Approves_1_Login
 from Common.models import Corporate_Approves_2_Login
+from Common.models import Operator_Login
 from django.contrib.auth.hashers import check_password
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
@@ -20,6 +21,7 @@ from Common.models import Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
+from Common.models import Operator_Login_Access_Token
 
 
 class CustomCompanyUserAuth(object):
@@ -72,6 +74,12 @@ class CustomCompanyUserAuth(object):
 
                 except Corporate_Agent.DoesNotExist:
                     user = None
+            elif login_type == '7':
+                try:
+                    user = Operator_Login.objects.get(username=username)
+
+                except Operator_Login.DoesNotExist:
+                    user = None
             else:
                 return None
 
@@ -106,7 +114,10 @@ class CustomCompanyUserAuth(object):
                         insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user.id, access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
                         request.session['agent_access_token'] = insert_data.access_token
                         request.session['agent_login_type'] = login_type
-                        print("Agent Save Session")
+                    elif login_type == '7':
+                        insert_data = Operator_Login_Access_Token.objects.create(operator_id=user.id,access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
+                        request.session['operator_access_token'] = insert_data.access_token
+                        request.session['operator_login_type'] = login_type
 
                     return user
                 else:
@@ -140,6 +151,8 @@ class CustomCompanyUserAuth(object):
                     user = Corporate_Employee_Login.objects.get(pk=user_id)
                 elif ac_user[0] == "agents":
                     user = Corporate_Agent.objects.get(pk=user_id)
+                elif ac_user[0] == "operator":
+                    user = Operator_Login.objects.get(pk=user_id)
                 else:
                     return None
             else:

@@ -2820,9 +2820,13 @@ def taxi_bookings(request,id):
         company1 = getDataFromAPI(login_type, access_token, url, payload)
         companies = company1['Corporates']
 
+        opr_url = settings.API_BASE_URL + "operators"
+        operators = getDataFromAPI(login_type, access_token, opr_url, payload)
+        operators = operators['Operators']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/taxi_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
+            return render(request, "Agent/taxi_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies,'operators':operators})
         else:
             return render(request, "Agent/taxi_bookings.html", {'': {}})
     else:
@@ -2849,6 +2853,32 @@ def view_taxi_booking(request,id):
     else:
         return HttpResponseRedirect("/agents/login")
 
+
+def assign_operator_taxi_boooking(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        operator_id = request.POST.get('operator_id', '')
+        user_id = request.POST.get('user_id', '')
+        operator_contact = request.POST.get('operator_contact', '')
+        operator_email = request.POST.get('operator_email', '')
+
+        url = settings.API_BASE_URL + "assign_operator_taxi_boooking"
+        payload = {'operator_id':operator_id,'operator_email':operator_email,'operator_contact':operator_contact,'booking_id': booking_id,'user_id':user_id,'login_type':login_type}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            messages.success(request, "Operator Assign Successfully..!")
+            return HttpResponseRedirect(current_url, {})
+        else:
+            messages.success(request, "Fail To Assign Operator")
+            return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
 
 
 def add_taxi_booking(request,id):

@@ -288,3 +288,37 @@ class Corporate_Agent_Login_Access_Token(models.Model):
 
     class Meta:
         db_table = "corporate_agent_access_tokens"
+
+
+class Operator_Login(models.Model):
+    operator_name = models.CharField(max_length=200)
+    service_type_id = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
+    password = models.CharField(max_length=100)
+    operator_email = models.CharField(max_length=100)
+    operator_contact = models.CharField(max_length=100)
+    last_login = models.DateTimeField(max_length=100)
+    class Meta:
+        db_table = "operators"
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+
+class Operator_Login_Access_Token(models.Model):
+    operator_id = models.CharField(default=True, max_length=10)
+    access_token = models.CharField(default=True,max_length=200)
+    expiry_date = models.DateTimeField(max_length=100)
+    user_agent = models.CharField(default=True, max_length=200)
+
+    class Meta:
+        db_table = "operator_login_access_tokens"

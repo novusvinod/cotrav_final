@@ -10,6 +10,8 @@ from Common.models import Corporate_Employee_Login
 from Common.models import Corporate_Approves_1_Login
 from Common.models import Corporate_Approves_2_Login
 from Common.models import Corporate_Agent
+from Common.models import Operator_Login
+
 
 from Common.models import Corporate_Login_Access_Token
 from Common.models import Corporate_Spoc_Login_Access_Token
@@ -17,6 +19,8 @@ from Common.models import Corporate_Employee_Login_Access_Token
 from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
+from Common.models import Operator_Login_Access_Token
+
 from django.contrib.auth.hashers import check_password
 import string
 import random
@@ -5558,6 +5562,40 @@ def agent_dashboard(request):
         return JsonResponse(data)
 
 
+def operator_dashboard(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        operator_id = request.POST.get('operator_id', '')
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('OperatorHomePage', [operator_id])
+                    company = dictfetchall(cursor)
+                    print(company)
+                    cursor.close()
+
+                    data = {'success': 1, 'Dashboard': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def get_cotrav_billing_entities(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -5965,6 +6003,8 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
             user = Corporate_Employee_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '10':
             user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '7':
+            user = Operator_Login_Access_Token.objects.get(access_token=user_token)
 
         timezone.activate(pytz.timezone("Asia/Kolkata"))
         present = timezone.localtime(timezone.now())
@@ -5974,12 +6014,7 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
         else:
 
             if user_type == '1':
-                print("sdsds 1")
-                print(user)
                 user_info = Corporate_Login.objects.get(id=user.corporate_login_id)
-                print("sdsds sad31")
-                print(user)
-                print(user_info)
             elif user_type == '2':
                 user_info = Corporate_Approves_1_Login.objects.get(id=user.subgroup_authenticater_id)
             elif user_type == '3':
@@ -5990,6 +6025,9 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
                 user_info = Corporate_Employee_Login.objects.get(id=user.employee_id)
             elif user_type == '10':
                 user_info = Corporate_Agent.objects.get(id=user.agent_id)
+            elif user_type == '7':
+                print(user)
+                user_info = Operator_Login.objects.get(id=user.operator_id)
             else:
                 return None
 

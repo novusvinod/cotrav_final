@@ -64,7 +64,7 @@ urlpatterns = [
     path('api/assign_taxi_booking', agent_api_view.assign_taxi_booking),
 
     path('api/add_taxi_invoice', agent_api_view.add_taxi_invoice),
-
+    path('api/assign_operator_taxi_boooking', agent_api_view.assign_operator_taxi_boooking),
 
     path('api/agent_bus_bookings', agent_api_view.agent_bus_bookings),
     path('api/accept_bus_booking', agent_api_view.accept_bus_booking),

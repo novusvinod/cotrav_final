@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------
 
-    Theme Name: Fabrex - University of Education
+    Theme Name: CoTrav - University of Education
     Description: University of Education
     Author: Chitrakoot Web
 

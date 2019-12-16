@@ -172,7 +172,7 @@ list-style:
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Operator Name</label>
                             <div class="col-sm-7">
-                                 <input id="operators"  class="form-control" type="text" name="operator_id" value="" autocomplete="off" placeholder="Operator Name">
+                                 <input id="operators"  class="form-control" type="text" name="operator_id" value="{{booking.operator_name}}" autocomplete="off" placeholder="Operator Name">
 <!--
  <select name="operator_id" class="form-control myselect" required>-->
 <!--                                    <option value="">Select</option>-->
@@ -188,7 +188,7 @@ list-style:
                            <div class="form-group row">
                             <label class="col-sm-5 control-label">Driver Name</label>
                             <div class="col-sm-7">
-                                 <input id="driver_id"  class="form-control" type="text" name="driver_id" value="" autocomplete="off" placeholder="Driver Name">
+                                 <input id="driver_id"  class="form-control" type="text" name="driver_id" something="9999999999" value="" autocomplete="off" placeholder="Driver Name">
 <!--                               <select name="driver_id" class="form-control myselect" required>-->
 <!--                                   <option value="">Select</option>-->
 <!--                                    {% for operator_driver in operator_drivers %}-->
@@ -201,7 +201,7 @@ list-style:
                           <div class="form-group row">
                             <label class="col-sm-5 control-label">Driver Contact</label>
                             <div class="col-sm-7">
-                               <input class="form-control" name="driver_contact" placeholder="Driver Contact">
+                               <input class="form-control" name="driver_contact" id="driver_contact" placeholder="Driver Contact">
                             </div>
                         </div>
 
@@ -442,7 +442,7 @@ function autocomplete(inp, arr) {
   var currentFocus;
   /*execute a function when someone writes in the text field:*/
   inp.addEventListener("input", function(e) {
-      var a, b, i, val = this.value;
+      var a, b, i, val = this.value ;
       /*close any already open lists of autocompleted values*/
       closeAllLists();
       if (!val) { return false;}
@@ -454,20 +454,38 @@ function autocomplete(inp, arr) {
       /*append the DIV element as a child of the autocomplete container:*/
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
+
       for (i = 0; i < arr.length; i++) {
         /*check if the item starts with the same letters as the text field value:*/
+
         if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+
+             var arr2 = arr[i].split("|");
+
           /*create a DIV element for each matching element:*/
           b = document.createElement("DIV");
           /*make the matching letters bold:*/
           b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += arr[i].substr(val.length);
+          b.innerHTML += arr2[0].substr(val.length);
           /*insert a input field that will hold the current array item's value:*/
           b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
           /*execute a function when someone clicks on the item value (DIV element):*/
           b.addEventListener("click", function(e) {
               /*insert the value for the autocomplete text field:*/
-              inp.value = this.getElementsByTagName("input")[0].value;
+                val2 = this.getElementsByTagName("input")[0].value;
+
+                 var arr = val2.split("|");
+
+              inp.value = arr[0];
+
+              if (inp.id == "driver_id")
+                {
+                    $('#driver_contact').val(arr[1]);
+                    $('#taxi_id').val(arr[2]);
+                    $('#taxi_model').val(arr[3]);
+                    $('#taxi_types').val(arr[4]);
+                }
+
               /*close the list of autocompleted values,
               (or any other open lists of autocompleted values:*/
               closeAllLists();
@@ -542,7 +560,7 @@ var operators = [
 
 var drivers = [
 {% for drivers in operator_drivers %}
-"{{drivers.driver_name}}",
+"{{drivers.driver_name}}|{{drivers.driver_contact}}|{{drivers.taxi_reg_no}}|{{drivers.brand_name}} {{drivers.model_name}}|{{drivers.name}}",
 {% endfor %}
 ]
 

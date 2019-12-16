@@ -48,12 +48,18 @@ $(document).ready(function()
 			({
 			    time: false,
 				format: 'DD-MM-YYYY',
+			}).on('change', function(e, date)
+			{
+				$('.date').bootstrapMaterialDatePicker('setMinDate', date);
 			});
 			$('.time').bootstrapMaterialDatePicker
 			({
 			    date: false,
 				format: 'HH:mm'
-			});
+			}).on('change', function(e, date)
+			{
+				$('.time').bootstrapMaterialDatePicker('setMinDate', date);
+			});;
 
 			$('#date-fr').bootstrapMaterialDatePicker
 			({
