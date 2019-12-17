@@ -40,6 +40,8 @@ urlpatterns = [
     path('Corporate/Spoc/view-flight-booking/<int:id>', spoc_views.view_flight_booking),
     path('Corporate/Spoc/reject-flight-booking/<int:id>', spoc_views.reject_flight_booking),
 
+    path('Corporate/Spoc/add-flight-booking-self/<int:id>', spoc_views.add_flight_booking_self),
+
     path('Corporate/Spoc/download-taxi-bookings', spoc_views.download_taxi_bookings),
     path('Corporate/Spoc/download-bus-bookings', spoc_views.download_bus_bookings),
     path('Corporate/Spoc/download-train-bookings', spoc_views.download_train_bookings),

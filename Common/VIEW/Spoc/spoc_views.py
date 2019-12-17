@@ -1,5 +1,5 @@
 from datetime import date, datetime
-
+from dateutil.parser import parse
 from django.conf import settings
 from django.shortcuts import render, redirect
 import requests
@@ -1040,6 +1040,80 @@ def add_flight_booking(request,id):
         else:
             return HttpResponseRedirect("/login")
 
+
+def add_flight_booking_self(request,id):
+    if request.method == 'POST':
+        if 'spoc_login_type' in request.session:
+            login_type = request.session['spoc_login_type']
+            access_token = request.session['spoc_access_token']
+
+            user_id = request.POST.get('spoc_id', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            group_id = request.POST.get('group_id', '')
+            subgroup_id = request.POST.get('subgroup_id', '')
+
+            from_city = request.POST.get('from_city', '')
+            to_city = request.POST.get('to_city', '')
+            departure_date = request.POST.get('departure_date', '')
+            d_date = parse(departure_date).strftime("%Y-%m-%d")
+
+            no_of_seats = request.POST.get('no_of_seats', '')
+
+            booking_data = {'user_id':user_id,'user_type':login_type,'corporate_id':corporate_id,'spoc_id':spoc_id,'group_id':group_id,
+                       'subgroup_id':subgroup_id,'from_city':from_city,'to_city':to_city,
+                       'departure_datetime':departure_date,'no_of_seats':no_of_seats}
+
+            url = "http://mdt.ksofttechnology.com/API/FLIGHT"
+            payload = {
+                "TYPE": "AIR",
+                "NAME": "GET_FLIGHT",
+                "STR": [
+                    {
+                        "AUTH_TOKEN": "c8fc0220-e120-4900-bb59-2a4fe02e3c9f",
+                        "SESSION_ID": "qky2y29bbgluh8k25r6tk2x5475wzhqb",
+                        "TRIP": "1",
+                        "SECTOR": "D",
+                        "SRC": from_city,
+                        "DES": to_city,
+                        "DEP_DATE": d_date,
+                        "RET_DATE": "",
+                        "ADT": no_of_seats,
+                        "CHD": "0",
+                        "INF": "0",
+                        "PC": "",
+                        "PF": "",
+                        "HS": "D"
+                    }
+                ]
+            }
+
+            headers = {}
+            r = requests.post(url, json=payload)
+            print(r)
+            api_response = r.json()
+            print(api_response)
+            return render(request, 'Company/Spoc/flight_booking_search_result.html',{'booking_datas': booking_data,'flights':api_response['FLIGHT']})
+
+        else:
+            return HttpResponseRedirect("/login")
+    else:
+        if 'spoc_login_type' in request.session:
+            request = get_request()
+            login_type = request.session['spoc_login_type']
+            access_token = request.session['spoc_access_token']
+            payload = {'corporate_id': id,'spoc_id':request.user.id}
+
+            url_access = settings.API_BASE_URL + "get_airports"
+            data = getDataFromAPI(login_type, access_token, url_access, payload)
+            airports = data['Airports']
+
+            if id:
+                return render(request, 'Company/Spoc/add_flight_booking_self.html', {'airports':airports})
+            else:
+                return render(request, 'Company/Spoc/add_flight_booking_self.html', {})
+        else:
+            return HttpResponseRedirect("/login")
 
 ####################### Download MIS ##################################
 

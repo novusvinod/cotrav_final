@@ -1,4 +1,5 @@
 import json
+import socket
 
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
@@ -8,7 +9,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from datetime import timedelta
 import requests
-import socket
 from landing.forms import LeadGenerationModelForm
 from landing.models import Leadgeneration, LeadComments, LeadLog
 from django.contrib import messages
@@ -196,22 +196,59 @@ def Create_Token(request):
             }
 
             headers = {}
-            print("IP ADDEREEE ")
-            host_name = "cotrav.in"
-            host_ip = socket.gethostbyname_ex(host_name)
-
-            print(socket.gethostbyname(socket.gethostname()))
-            r = requests.post(url, data=payload)
+            r = requests.post(url, json=payload)
             print(r)
-            api_response = json.loads(r.text)
+            api_response = r.json()
             print("response")
-            print(api_response)
+            print(socket.gethostname())
             messages.success(request, api_response)
-            messages.success(request, host_name)
-            messages.success(request, host_ip)
-            return redirect('create_token')
+            return render(request, 'api_call.html', {'response': api_response})
         except Exception as e:
             messages.error(request, e)
             return redirect('create_token')
     else:
+
+        return render(request, 'api_call.html')
+
+
+def get_flights(request):
+    if request.method == 'POST':
+        try:
+            url = "http://mdt.ksofttechnology.com/API/FLIGHT"
+            payload = {
+                "TYPE": "AIR",
+                "NAME": "GET_FLIGHT",
+                "STR": [
+                    {
+                        "AUTH_TOKEN": "c8fc0220-e120-4900-bb59-2a4fe02e3c9f",
+                        "SESSION_ID": "0vv5ycqeaxmndcdqhtatcscx",
+                        "TRIP": "1",
+                        "SECTOR": "D",
+                        "SRC": "DEL",
+                        "DES": "BOM",
+                        "DEP_DATE": "2019-12-20",
+                        "RET_DATE": "",
+                        "ADT": "1",
+                        "CHD": "0",
+                        "INF": "1",
+                        "PC": "",
+                        "PF": "",
+                        "HS": "D"
+                    }
+                ]
+            }
+
+            headers = {}
+            r = requests.post(url, json=payload)
+            print(r)
+            api_response = r.json()
+            print("response")
+            print(socket.gethostname())
+            messages.success(request, api_response)
+            return render(request, 'api_call.html', {'response': api_response})
+        except Exception as e:
+            messages.error(request, e)
+            return redirect('create_token')
+    else:
+
         return render(request, 'api_call.html')

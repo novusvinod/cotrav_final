@@ -1,0 +1,94 @@
+{% extends 'Company/Spoc/layout/header.html' %}
+
+{% block content %}
+
+{% if user %}
+<!-- start page content -->
+
+{% include 'cotrav_alert_message.html' %}
+
+<div class="page-content-wrapper">
+
+                    <div class="page-content">
+
+                        <div class="row">
+                        <div class="col-sm-12 margin_auto">
+                            <div class="card card-box">
+
+                                <div class="card-body " id="bar-parent10">
+                                    <form class="form-inline Seats-search_border" method="post" action="/Corporate/Spoc/add-flight-booking-self/{{user.id}}">
+
+                                        <input type="hidden" name="user_id" value="{{user.id}}">
+                                        <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
+                                        <input type="hidden" name="spoc_id" value="{{user.id}}">
+                                        <input type="hidden" name="group_id" value="{{user.group_id}}">
+                                        <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
+                                         <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+                                          <div class="col-sm-4 " style="border-right: solid 1px ">
+                                                <div class="lable_hotel_block"> <i class="fa fa-map-marker" aria-hidden="true"></i> From</div>
+                                                <select class="form-control myselect" name="from_city" style="width: 100%; margin-left: -8px;" >
+                                                    <option value="">Select From City</option>-->
+                                                    {% for airport in airports %}
+                                                    <option value="{{airport.code}}">{{airport.city_name}}, {{airport.country_name}}</option>
+                                                    {% endfor %}
+                                           </select>
+                                                <span class="lable_hotel_block  mar_20">India</span>
+                                            </div>
+
+
+                                                  <div class="col-sm-4">
+                                                <div class="lable_hotel_block"> <i class="fa fa-map-marker" aria-hidden="true"></i> To</div>
+                                                <select class="form-control myselect select2_style" name="to_city" style="width: 100%; margin-left: -8px; font-size:30px;" >
+                                                    <option value="">Select To City</option>-->
+                                                    {% for airport in airports %}
+                                                    <option value="{{airport.code}}">{{airport.city_name}}, {{airport.country_name}}</option>
+                                                    {% endfor %}
+                                           </select>
+                                                <span class="lable_hotel_block  mar_20">India</span>
+                                            </div>
+
+
+                                              <div class="col-sm-2" style="border-left: solid 1px gray; ">
+                                              <div class="lable_hotel_block hotel_block2"><i class="fa fa-calendar"></i>
+                                              Departure </div>
+                                             <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                                         <input class = "input3 formgrp-1 date" type = "text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
+                                        <label for="sample1" class="mdl-textfield__label"></label>
+
+                                         </div>
+                                                   <span class="lable_hotel_block mar_20">India</span>
+                                            </div>
+
+
+
+                                         <button type="submit" class="btn btn-primary btn_prp btn_prp1 btn_12">Search</button>
+                                    </form>
+
+                                </div>
+                             </div>
+                         </div>
+                      </div>
+
+
+</div>
+<!-- end page content -->
+
+
+
+
+
+{% else %}
+    <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
+{% endif %}
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+var today = moment().format('DD-MM-YYYY');
+document.getElementById("departure_date").value = today;
+});
+</script>
+
+
+{% endblock %}

@@ -7,6 +7,12 @@
 <div class="main-wrapper">
     <!-- start registration form -->
 <!-- start registration form -->
+ {{response}}
+
+    {% for k, v in response.items %}
+        <li>{{ k }}: {{ v }}</li>
+    {% endfor %}
+
 <section class="parallax position-relative box-hover" data-overlay-dark="6" data-background="img/bg/bg-login.jpg">
    <div class="container">
        <div class="row">

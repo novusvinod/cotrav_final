@@ -28,6 +28,7 @@ path('voucher',views.voucher, name="voucher"),
 path('export',views.export_movies_to_xlsx, name="export"),
 
 path('create_token',views.Create_Token, name="create_token"),
+path('get_flights',views.get_flights, name="get_flights"),
 
 
 

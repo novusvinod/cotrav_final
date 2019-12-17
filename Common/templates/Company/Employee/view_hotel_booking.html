@@ -32,6 +32,7 @@
                                     </div>
 								</div>
 								<div class="card-body row">
+
 						            <div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                     <input class = "mdl-textfield__input" type = "text" name="boarding_datetime" value="{{ booking.boarding_datetime }}" readonly>
@@ -102,10 +103,6 @@
 						</div>
 					</div>
 {% endif %}
-
-
-
-
 
                      <div class="row">
 						<div class="col-sm-12">
@@ -182,6 +179,32 @@
 					                  </div>
 						            </div>
 
+									{% for act in booking.ActionLogs %}
+									{% if act.action == 2 and user_type != 10 %}
+									<div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" id = "approval_date" name="booking_datetime" value="{{ act.action_date }}" readonly>
+					                     <label class = "mdl-textfield__label">Approval Date / Time</label>
+					                  </div>
+						            </div>
+
+									<div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" id = "approval_name" name="booking_datetime" value="{{ act.employee_name }}" readonly>
+					                     <label class = "mdl-textfield__label">Approved By</label>
+					                  </div>
+						            </div>
+
+									{% endif %}
+								{% endfor %}
+
+									<div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" id = "preferred_hotel" name="preferred_hotel"  value="{{ booking.preferred_hotel | default:0 }}" readonly>
+					                     <label class = "mdl-textfield__label">Preffered Hotel</label>
+					                  </div>
+						            </div>
+
 
                                     <div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
@@ -189,12 +212,29 @@
 					                     <label class = "mdl-textfield__label">No Of Seats</label>
 					                  </div>
 						            </div>
-                                    <div class="col-lg-2 p-t-20">
+
+									<div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "reason_booking" name="reason_booking"  value="{{ booking.reason_booking }}" readonly>
+					                     <input class = "mdl-textfield__input" type = "text" id = "assessment_code" name="assessment_code"  value="{{ booking.assessment_code }}" readonly>
+					                     <label class = "mdl-textfield__label">Assessment Code</label>
+					                  </div>
+						            </div>
+
+									<div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" id = "assessment_city" name="assessment_city"  value="{{ booking.assessment_city_id }}" readonly>
+					                     <label class = "mdl-textfield__label">assessment City</label>
+					                  </div>
+						            </div>
+
+									 <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" id = "reason_booking1" name="reason_booking"  value="{{ booking.reason_booking }}" readonly>
 					                     <label class = "mdl-textfield__label">Booking Reason</label>
 					                  </div>
 						            </div>
+
+
                                     <div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                     <input class = "mdl-textfield__input" type = "text" id = "client_status" name="client_status"  value="{{ booking.client_status }}" readonly>
@@ -205,6 +245,20 @@
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                     <input class = "mdl-textfield__input" type = "text" id = "cotrav_status" name="cotrav_status"  value="{{ booking.cotrav_status }}" readonly>
 					                     <label class = "mdl-textfield__label">CoTrav Status</label>
+					                  </div>
+						            </div>
+
+									<div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+					                     {% if booking.booking_email == "" %}
+										  <input class = "mdl-textfield__input" type = "text" id = "attachment3" name="attachment"  value="attachment" hidden>
+										  <span color="red">No booking Email Attachment</span>
+										  {% else %}
+										  <input class = "mdl-textfield__input" type = "text" id = "attachment2" name="attachment"  value="attachment" hidden>
+										  <a  href="{{ booking.booking_email }}" alt="Booking Email" >Attachment</a>
+										  {% endif %}
+											<label class = "mdl-textfield__label">Booking Email</label>
 					                  </div>
 						            </div>
 
@@ -294,7 +348,7 @@
 
 									<div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "hotel_type_name" name="hotel_type_name" value="{{ booking.hotel_type_name }}" readonly>
+					                     <input class = "mdl-textfield__input" type = "text" id = "hotel_type_name1" name="hotel_type_name" value="{{ booking.hotel_type_name }}" readonly>
 					                     <label class = "mdl-textfield__label">Room Type</label>
 					                  </div>
 						            </div>
@@ -343,14 +397,14 @@
 								<div class="card-body row">
 						            <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="operator_name"  id = "operator_name" value="{{ booking.operator_name }}" readonly>
+					                     <input class = "mdl-textfield__input" type = "text" name="operator_name"  id = "operator_name1" value="{{ booking.operator_name }}" readonly>
 					                     <label class = "mdl-textfield__label">Operator Name</label>
 					                  </div>
 						            </div>
 
 						            <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "operator_contact" name="operator_contact" value="{{ booking.operator_contact }}" readonly>
+					                     <input class = "mdl-textfield__input" type = "text" id = "operator_contact1" name="operator_contact" value="{{ booking.operator_contact }}" readonly>
 					                     <label class = "mdl-textfield__label">Contact Number</label>
 					                  </div>
 						            </div>
