@@ -1,6 +1,12 @@
 from datetime import datetime
+import socket
+from dateutil.parser import parse
+
+import requests
 from django.utils import timezone
 import pytz
+from django.contrib import messages
+from django.shortcuts import render , redirect
 
 from django.http import JsonResponse
 from django.db import connection
@@ -291,6 +297,8 @@ def add_companies(request):
         is_flight = request.POST.get('is_flight', '')
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        has_self_booking_access = request.POST.get('has_self_booking_access', '')
+        will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
         is_spoc = request.POST.get('is_spoc', '')
 
         cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
@@ -305,7 +313,8 @@ def add_companies(request):
                     cursor = connection.cursor()
                     cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
                       address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
-                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type,billing_city_id])
+                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type,
+                    billing_city_id,has_self_booking_access,will_do_realtime_payment])
                     company = dictfetchall(cursor)
                     print(company)
                     cursor.close()
@@ -359,6 +368,8 @@ def update_company(request):
         is_flight = request.POST.get('is_flight', '')
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        has_self_booking_access = request.POST.get('has_self_booking_access', '')
+        will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
 
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
@@ -372,7 +383,8 @@ def update_company(request):
                     cursor = connection.cursor()
                     cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
                       has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
-                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type])
+                       is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type,
+                                                       has_self_booking_access,will_do_realtime_payment])
                     company = dictfetchall(cursor)
                     cursor.close()
                     company = dictfetchall(cursor)
@@ -5608,9 +5620,7 @@ def operator_dashboard(request):
                     cursor = connection.cursor()
                     cursor.callproc('OperatorHomePage', [operator_id])
                     company = dictfetchall(cursor)
-                    print(company)
                     cursor.close()
-
                     data = {'success': 1, 'Dashboard': company}
                     return JsonResponse(data)
                 except Exception as e:
@@ -6006,14 +6016,268 @@ def report_hotel_booking(request):
         return JsonResponse(data)
 
 
+def get_auth_token(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    url = "http://auth.ksofttechnology.com/API/AUTH"
+                    payload = {
+                        "TYPE": "AUTH",
+                        "NAME": "GET_AUTH_TOKEN",
+                        "STR": [
+                            {
+                                "A_ID": "27286260",
+                                "U_ID": "test",
+                                "PWD": "test",
+                                "MODULE": "B2B",
+                                "HS": "D"
+                            }
+                        ]
+                    }
+
+                    headers = {}
+                    r = requests.post(url, json=payload)
+                    api_response = r.json()
+                    data = {'success': 1, 'Data': api_response}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'Data': ''}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
+def get_flight_search(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        AUTH_TOKEN = request.POST.get('auth_token', '')
+        SESSION_ID = request.POST.get('session_id', '')
+
+        from_city = request.POST.get('from_city', '')
+        to_city = request.POST.get('to_city', '')
+        departure_date = request.POST.get('departure_date', '')
+        d_date = parse(departure_date).strftime("%Y-%m-%d")
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    url = "http://mdt.ksofttechnology.com/API/FLIGHT"
+                    payload = {
+                        "TYPE": "AIR",
+                        "NAME": "GET_FLIGHT",
+                        "STR": [
+                            {
+                                "AUTH_TOKEN": AUTH_TOKEN,
+                                "SESSION_ID": SESSION_ID,
+                                "TRIP": "1",
+                                "SECTOR": "D",
+                                "SRC": str(from_city),
+                                "DES": str(to_city),
+                                "DEP_DATE": str(d_date),
+                                "RET_DATE": "",
+                                "ADT": "",
+                                "CHD": "",
+                                "INF": "",
+                                "PC": "",
+                                "PF": "",
+                                "HS": "D"
+                            }
+                        ]
+                    }
+
+                    headers = {}
+                    r = requests.post(url, json=payload)
+                    api_response = r.json()
+                    data = {'success': 1, 'Data': api_response}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'Data': ''}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
+def get_flight_fare_search(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        trip_string = request.POST.get('trip_string', '')
+        UID = request.POST.get('UID', '')
+        ID = request.POST.get('ID', '')
+        TID = request.POST.get('TID', '')
+        src = request.POST.get('D_NAME', '')
+        des = request.POST.get('A_NAME', '')
+        dep_date = request.POST.get('A_DATE', '')
+        d_date = parse(dep_date).strftime("%Y-%m-%d")
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    url = "http://mdt.ksofttechnology.com/API/AVLT"
+                    payload = {
+                        "NAME": "FARE_CHECK",
+                        "STR": [
+                            {
+                                "FLIGHT": {
+                                    "UID": str(UID),
+                                    "ID": str(ID),
+                                    "TID": str(TID)
+                                },
+                                "PARAM": {
+                                    "src": str(src),
+                                    "des": str(des),
+                                    "dep_date": str(d_date),
+                                    "ret_date": "",
+                                    "adt": "",
+                                    "chd": "",
+                                    "inf": "",
+                                    "L_OW": "",
+                                    "H_OW": "",
+                                    "T_TIME": "",
+                                    "Trip_String": trip_string
+                                }
+                            }
+                        ],
+                        "TYPE": "AIR"
+                    }
+
+                    headers = {}
+                    r = requests.post(url, json=payload)
+                    api_response = r.json()
+                    data = {'success': 1, 'Data': api_response}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'Data': ''}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
+def save_flight_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
+        flightdata = request.POST.get('flightdata', '')
+        employee_id_1 = request.POST.get('employee_id_1', '')
+        flightdata = flightdata.replace("'", '"')
+        flightdata = flightdata.replace("None", "null")
+        flightdata = flightdata.replace("False", "null")
+        flightdata = flightdata.replace("True", "null")
+        flightdata = flightdata.replace('"FEE": "', '"FEE": ')
+        flightdata = flightdata.replace('", "TAG":', ', "TAG":')
+        # print(flightdata[3840])
+        va = json.loads(flightdata)
 
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    url = "http://mdt.ksofttechnology.com/API/flight"
+                    payload = {
+                        "STATUS": [
+                            {
+                                "status": "T"
+                            }
+                        ],
+                        "FLIGHT": va['FLIGHT'],
+                        "CON_FLIGHT": va['CON_FLIGHT'],
+                        "FARE": va['FARE'],
+                        "PARAM": va['PARAM'],
+                        "Deal": va['Deal'],
+                        "FARE_RULE": va['FARE_RULE'],
+                        "PAX": [
+                            {
+                                "apnr": "",
+                                "baggage": "",
+                                "dob": "",
+                                "fare": "",
+                                "ffn": "",
+                                "fn": str(employee_id_1),
+                                "gpnr": "",
+                                "ln": str(employee_id_1),
+                                "meal": "",
+                                "mn": "",
+                                "nat": "",
+                                "other_info": "",
+                                "pi": "",
+                                "refundable": "",
+                                "status": "",
+                                "tc": "",
+                                "tktno": "",
+                                "ttl": "Mr",
+                                "type": "adult",
+                                "year": ""
+                            },
+
+                        ],
+                        "TYPE": "DC",
+                        "NAME": "PNR_CREATION",
+                        "Others": [
+                            {
+                                "REMARK": "OTHER INFO FOR FUTURE/LEAVE BLANK FOR NOW",
+                                "CUSTOMER_EMAIL": "vinod@taxivaxi.in",
+                                "CUSTOMER_MOBILE": "9717163216"
+                            }
+                        ]
+                    }
+
+                headers = {}
+                    r = requests.post(url, json=payload)
+                    api_response = r.json()
+                    data = {'success': 1, 'Data': api_response}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'Data': ''}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):

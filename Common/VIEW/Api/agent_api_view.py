@@ -1650,6 +1650,7 @@ def add_operator_driver(request):
         licence_no = request.POST.get('licence_no', '')
         password = request.POST.get('password', '')
         fcm_regid = request.POST.get('fcm_regid', '')
+        taxi_id = request.POST.get('taxi_id', '')
 
         user = {}
         user_token = req_token.split()
@@ -1658,7 +1659,7 @@ def add_operator_driver(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('addOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,password,fcm_regid,user_id,user_type])
+                    cursor.callproc('addOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,password,fcm_regid,user_id,user_type,taxi_id])
                     emp = dictfetchall(cursor)
                     print(emp)
                     data = {'success': 1, 'message': "Operator Driver Added Successfully",'id':emp}
@@ -1693,6 +1694,7 @@ def update_operator_driver(request):
         driver_email = request.POST.get('driver_email', '')
         licence_no = request.POST.get('licence_no', '')
         fcm_regid = request.POST.get('fcm_regid', '')
+        taxi_id = request.POST.get('taxi_id', '')
 
         user = {}
         user_token = req_token.split()
@@ -1701,7 +1703,7 @@ def update_operator_driver(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('updateOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,fcm_regid,driver_id,user_id,user_type])
+                    cursor.callproc('updateOperatorDriver', [operator_id,driver_name,driver_contact,driver_email,licence_no,fcm_regid,driver_id,user_id,user_type,taxi_id])
                     emp = dictfetchall(cursor)
                     company = dictfetchall(cursor)
                     if company:
@@ -3020,6 +3022,7 @@ def assign_flight_booking(request):
         no_of_passanger = request.POST.get('no_of_passanger', '')
         finalpass = int(no_of_passanger)
 
+        operator_id = request.POST.get('operator_id', '')
         meal_is_include = request.POST.get('meal_is_include', '')
         fare_type = request.POST.get('fare_type', '')
         trip_type = request.POST.get('trip_type', '')
@@ -3108,7 +3111,7 @@ def assign_flight_booking(request):
                 try:
                     cursor = connection.cursor()
                     print("i m here")
-                    cursor.callproc('assignFlightBooking', [flight_type,seat_type,trip_type,no_of_stops,booking_id,meal_is_include,fare_type,user_id,user_type,ticket_price,management_fee,tax_on_management_fee,tax_on_management_fee_percentage,sub_total,cotrav_billing_entity,igst,cgst,sgst,management_fee_igst,management_fee_cgst,management_fee_sgst,management_fee_igst_rate,management_fee_cgst_rate,management_fee_sgst_rate,tax_mng_amt,oper_ticket_price,oper_commission,oper_commission_type,oper_cotrav_billing_entity,oper_igst,oper_cgst,oper_sgst,client_ticket_path,vender_ticket_path,igst_amount,cgst_amount,sgst_amount])
+                    cursor.callproc('assignFlightBooking', [flight_type,seat_type,trip_type,no_of_stops,booking_id,meal_is_include,fare_type,user_id,user_type,ticket_price,management_fee,tax_on_management_fee,tax_on_management_fee_percentage,sub_total,cotrav_billing_entity,igst,cgst,sgst,management_fee_igst,management_fee_cgst,management_fee_sgst,management_fee_igst_rate,management_fee_cgst_rate,management_fee_sgst_rate,tax_mng_amt,oper_ticket_price,oper_commission,oper_commission_type,oper_cotrav_billing_entity,oper_igst,oper_cgst,oper_sgst,client_ticket_path,vender_ticket_path,igst_amount,cgst_amount,sgst_amount,operator_id])
                     result = dictfetchall(cursor)
 
                     cursor.close()

@@ -1,7 +1,7 @@
 {% extends 'Operator/layout/header.html' %}
 
 {% block content %}
-
+{{dataDashboard}}
 {% for Dashboard in dataDashboard %}
 {% if user %}
 {% include 'cotrav_alert_message.html' %}
@@ -16,8 +16,8 @@
 			                        <div class="info-box bg-b-purple">
 							            <span class="info-box-icon"><i class="material-icons">person</i></span>
 							            <div class="info-box-content">
-							              <span class="info-box-text">Total Active Users</span>
-							              <span class="info-box-number">{{Dashboard.total_active_users}}</span>
+							              <span class="info-box-text">Total Rates</span>
+							              <span class="info-box-number">{{Dashboard.rate_count}}</span>
 							            </div>
 							          </div>
 								  </div>
@@ -26,8 +26,8 @@
 			                        <div class="info-box bg-b-green">
 							            <span class="info-box-icon"><i class="material-icons">alarm_on</i></span>
 							            <div class="info-box-content">
-							              <span class="info-box-text">Total Bookings Done</span>
-							              <span class="info-box-number">{{Dashboard.total_bookings_count}}</span>
+							              <span class="info-box-text">Total Bank Account</span>
+							              <span class="info-box-number">{{Dashboard.bank_count}}</span>
 							            </div>
 							          </div>
 								  </div>
@@ -36,8 +36,8 @@
 			                        <div class="info-box bg-b-black">
 							            <span class="info-box-icon"><i class="material-icons">new_releases</i></span>
 							            <div class="info-box-content">
-							              <span class="info-box-text">Upcoming Trips</span>
-							              <span class="info-box-number">{{Dashboard.uc_total_bookings_count}}</span>
+							              <span class="info-box-text">Total Contacts</span>
+							              <span class="info-box-number">{{Dashboard.contact_count}}</span>
 							            </div>
 							          </div>
 								  </div>
@@ -46,8 +46,8 @@
 			                        <div class="info-box bg-b-yellow">
 							            <span class="info-box-icon"><i class="material-icons">report</i></span>
 							            <div class="info-box-content">
-							              <span class="info-box-text">Bookings- Pending</span>
-							              <span class="info-box-number">{{Dashboard.tom_total_bookings_count}}</span>
+							              <span class="info-box-text">Total Driver </span>
+							              <span class="info-box-number">{{Dashboard.driver_count}}</span>
 							            </div>
 							          </div>
 								  </div>
@@ -56,8 +56,8 @@
 			                        <div class="info-box bg-b-blue">
 							            <span class="info-box-icon"><i class="material-icons">info</i></span>
 							            <div class="info-box-content">
-							              <span class="info-box-text">Invoice- Pending</span>
-							              <span class="info-box-number">{{Dashboard.pi_total_bookings_count}}</span>
+							              <span class="info-box-text">Total Booking</span>
+							              <span class="info-box-number">{{Dashboard.total_booking_count}}</span>
 							            </div>
 							          </div>
 								  </div>

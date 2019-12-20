@@ -109,6 +109,28 @@
                                          {% endif %}
                                         </div>
 
+                                    <div class="form-group row">
+                                                <label class="col-sm-4">Select Taxi</label>
+                                             {% if operator_drivers %}
+                                            {% for driver in operator_drivers %}
+	                                                 <select class="col-sm-8 form-control myselect" name="taxi_id" required>
+                                                         <option value="">Select Taxi</option>
+                                                    {% for taxi in taxies %}
+                                                     <option value="{{taxi.id}}" {%if driver.taxi_id == taxi.id %} selected {%endif%}>{{taxi.taxi_reg_no}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                            {% endfor %}
+                                              {% else %}
+
+                                                <select class="col-sm-8 form-control myselect" name="taxi_id" required>
+                                                    <option value="">Select Taxi</option>
+	                                                {% for taxi in taxies %}
+                                                     <option value="{{taxi.id}}" >{{taxi.taxi_reg_no}}</option>
+                                                    {% endfor %}
+	                                            </select>
+                                             {% endif %}
+                                            </div>
+
 
 
                                         <div class="form-group">

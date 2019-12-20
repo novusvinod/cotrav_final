@@ -122,6 +122,18 @@
                         <header>ALL CORPORATE FLIGHT BOOKINGS</header>
                             <div class="row p-b-20">
                                  <div class="row">
+
+                                     {% for corp_acces in corp_access %}
+                                     {% if corp_acces.has_self_booking_access == 1 %}
+
+                                      <div class="col-md-10">
+                                            <div class="btn-group">
+                                                <a class="btn btn-info" href="/Corporate/Spoc/add-flight-booking-self/{{user.corporate_id}}" > Add Self Bookings <i class="fa fa-plus"></i> </a>
+                                            </div>
+                                        </div>
+
+                                     {% else %}
+
                                      {% if user.is_flight == 1 %}
                                      <div class="col-md-10">
                                             <div class="btn-group">
@@ -130,12 +142,14 @@
                                         </div>
                                      {% endif %}
 
+                                     {% endif %}
+                                     {% endfor %}
+
                                        <div class="col-sm-2">
                                         <div class="btn-group">
                                     <a data-toggle="modal" data-target="#modalDownloadTaxiReport" >
                                          <button class="btn btn-success pull-right"><i class="fa fa-download"></i>&nbsp;&nbsp;&nbsp;Download</button></a>
 
-                                            <a class="btn btn-info" href="/Corporate/Spoc/add-flight-booking-self/{{user.corporate_id}}" > Add Self Bookings <i class="fa fa-plus"></i> </a>
 
                                   </div>
                                   </div>

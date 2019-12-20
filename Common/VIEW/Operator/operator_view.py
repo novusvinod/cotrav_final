@@ -240,6 +240,7 @@ def add_operator_driver(request,id):
             driver_email = request.POST.get('driver_email', '')
             licence_no = request.POST.get('licence_no', '')
             fcm_regid = request.POST.get('fcm_regid', '')
+            taxi_id = request.POST.get('taxi_id', '')
 
             driver_id = request.POST.get('driver_id', '')
             if driver_id:
@@ -249,7 +250,7 @@ def add_operator_driver(request,id):
                 driver_id = 0
 
             payload = {'operator_id':operator_id,'driver_name':driver_name,'driver_contact':driver_contact,'driver_email':driver_email,'licence_no':licence_no,
-                          'fcm_regid':fcm_regid,'password':password,'driver_id':driver_id,'user_id':user_id,'login_type':login_type}
+                          'fcm_regid':fcm_regid,'taxi_id':taxi_id,'password':password,'driver_id':driver_id,'user_id':user_id,'login_type':login_type}
 
             url = ""
 
@@ -287,7 +288,11 @@ def add_operator_driver(request,id):
                     operators = getDataFromAPI(login_type, access_token, url, payload)
                     operators = operators['Operators']
 
-                    return render(request, 'Operator/add_operator_driver.html', {'operator_drivers': op_drivers,'operators':operators})
+                    url_taxi = settings.API_BASE_URL + "taxis"
+                    taxi = getDataFromAPI(login_type, access_token, url_taxi, payload)
+                    taxi = taxi['Taxis']
+
+                    return render(request, 'Operator/add_operator_driver.html', {'operator_drivers': op_drivers,'operators':operators,'taxies':taxi})
                 else:
                     return HttpResponseRedirect("/operator/login")
             else:
@@ -300,7 +305,11 @@ def add_operator_driver(request,id):
                     operators = getDataFromAPI(login_type, access_token, url, payload)
                     operators = operators['Operators']
 
-                    return render(request, 'Operator/add_operator_driver.html', {'operators':operators})
+                    url_taxi = settings.API_BASE_URL + "taxis"
+                    taxi = getDataFromAPI(login_type, access_token, url_taxi, payload)
+                    taxi = taxi['Taxis']
+
+                    return render(request, 'Operator/add_operator_driver.html', {'operators':operators,'taxies':taxi})
                 else:
                     return HttpResponseRedirect("/operator/login")
         else:
@@ -391,6 +400,120 @@ def reject_taxi_booking(request,id):
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/operator/login')
+
+
+def assign_taxi_booking(request,id):
+    if 'operator_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['operator_login_type']
+            access_token = request.session['operator_access_token']
+            current_url = request.POST.get('current_url', '')
+
+            booking_id = request.POST.get('booking_id', '')
+            user_id = request.POST.get('user_id', '')
+
+            vendor_booking_id = request.POST.get('vendor_booking_id', '')
+            operator_id = request.POST.get('operator_id', '')
+            driver_contact = request.POST.get('driver_contact', '')
+            driver_id = request.POST.get('driver_id', '')
+            taxi_id = request.POST.get('taxi_id', '')
+            taxi_types = request.POST.get('taxi_types', '')
+            taxi_model = request.POST.get('taxi_model', '')
+            tour_type = request.POST.get('tour_typ_save', '')
+
+            taxi_type_id =0
+            taxi_model_id= 0
+            taxi_act_id =0
+            oper_id= 0
+            driver_id_id=0
+            taxi_types_url = {'operator_id':operator_id, 'type_name':taxi_types,'user_type':login_type,'user_id':user_id}
+            url_add = settings.API_BASE_URL + "add_taxi_type"
+            country_id = getDataFromAPI(login_type, access_token, url_add, taxi_types_url)
+            for conty_id in country_id['id']:
+                taxi_type_id = conty_id['id']
+
+            taxi_model_data = {'brand_name': "NA", 'model_name': taxi_model,'taxitype_id':taxi_type_id,'no_of_seats':4,'user_type':login_type,'user_id':user_id}
+            url_add_model = settings.API_BASE_URL + "add_taxi_model"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                taxi_model_id = conty_id['id']
+
+            taxi_model_data = {'model_id': taxi_model_id, 'taxi_reg_no': taxi_id,'make_year':0,'garage_location':"0", 'garage_distance':0,'user_type':login_type,'user_id':user_id}
+            print(taxi_model_data)
+            url_add_model = settings.API_BASE_URL + "add_taxi"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                taxi_act_id = conty_id['id']
+
+            taxi_model_data = {'operator_name':operator_id, 'operator_email':"NA",'operator_contact':"NA",'type':tour_type, 'user_type': login_type,
+                               'user_id': user_id,'username':"NA", 'password':"NA",'is_service_tax_applicable':0}
+
+            url_add_model = settings.API_BASE_URL + "add_operator"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                oper_id = conty_id['id']
+
+            taxi_model_data = {'operator_id':oper_id, 'driver_name':driver_id,'driver_contact':driver_contact, 'user_type': login_type,
+                               'user_id': user_id,'fcm_regid':0,'password':"NA"}
+
+            url_add_model = settings.API_BASE_URL + "add_operator_driver"
+            country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
+            for conty_id in country_id['id']:
+                driver_id_id = conty_id['id']
+
+            is_client_sms = request.POST.get('is_client_sms', '')
+            is_client_email = request.POST.get('is_client_email', '')
+            is_driver_sms = request.POST.get('is_driver_sms', '')
+
+            url = settings.API_BASE_URL + "assign_taxi_booking"
+            payload = {'vendor_booking_id':vendor_booking_id,'operator_id':oper_id,'driver_id':driver_id_id,'is_client_sms':is_client_sms,
+                       'is_client_email':is_client_email,'is_driver_sms':is_driver_sms,
+                       'taxi_id':taxi_act_id,'booking_id': booking_id,'user_id':user_id,'user_type':login_type}
+            print(payload)
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, 'Taxi Booking Assigned..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Fail to Assign Taxi Booking..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+        else:
+            login_type = request.session['operator_login_type']
+            access_token = request.session['operator_access_token']
+            payload = {'booking_id': id}
+            opr_url = settings.API_BASE_URL + "operators"
+            operators = getDataFromAPI(login_type, access_token, opr_url, payload)
+            operators = operators['Operators']
+
+            drivers_url = settings.API_BASE_URL + "operator_drivers"
+            operator_drivers = getDataFromAPI(login_type, access_token, drivers_url, payload)
+            operator_drivers = operator_drivers['Drivers']
+
+            url_taxi = settings.API_BASE_URL + "taxi_models"
+            taxis = getDataFromAPI(login_type, access_token, url_taxi, payload)
+            models = taxis['Models']
+
+            url_taxi_types = settings.API_BASE_URL + "taxi_types"
+            url_taxi_types = getDataFromAPI(login_type, access_token, url_taxi_types, payload)
+            taxi_types = url_taxi_types['taxi_types']
+
+            url_taxis = settings.API_BASE_URL + "taxis"
+            url_taxis = getDataFromAPI(login_type, access_token, url_taxis, payload)
+            taxis = url_taxis['Taxis']
+
+            url = settings.API_BASE_URL + "view_taxi_booking"
+            payload = {'booking_id': id}
+            booking = getDataFromAPI(login_type, access_token, url, payload)
+            booking = booking['Bookings']
+
+            return render(request, 'Operator/assign_taxi_booking.html',
+                          {'bookings': booking, 'operators': operators, 'operator_drivers': operator_drivers,
+                           'models': models,'taxi_types':taxi_types,'taxis':taxis})
+
+    else:
+        return HttpResponseRedirect("/operator/login")
+
 
 ############################################# BUS #########################################
 
@@ -534,7 +657,7 @@ def flight_bookings(request,id):
         access_token = request.session['operator_access_token']
         user_id = request.user.id
 
-        url = settings.API_BASE_URL + "spoc_flight_bookings"
+        url = settings.API_BASE_URL + "operator_flight_bookings"
         payload = {'operator_id': user_id,'booking_type':id}
         company = getDataFromAPI(login_type, access_token, url, payload)
 

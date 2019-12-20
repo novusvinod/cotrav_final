@@ -15,7 +15,7 @@ def get_access_details_by_corporate_name(request):
         user_type = ''
         get_user_from_type = request.path
         ac_user = get_user_from_type.split("/")[1:]
-        if get_user_from_type == '/login' or get_user_from_type == '/' or get_user_from_type == '/index' or get_user_from_type == '/about' or get_user_from_type == '/signup' or get_user_from_type == '/contact' or get_user_from_type == '/support' or ac_user[0] == "agents" or ac_user[0] == "operator" or ac_user[0]=='create_token':
+        if get_user_from_type == '/login' or get_user_from_type == '/' or get_user_from_type == '/index' or get_user_from_type == '/about' or get_user_from_type == '/signup' or get_user_from_type == '/contact' or get_user_from_type == '/support' or ac_user[0] == "agents" or ac_user[0] == "operator" or ac_user[0]=='create_token' or ac_user[0]== 'get_flights':
             return {}
         else:
             if ac_user[1] == "Admin":

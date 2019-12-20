@@ -40,7 +40,7 @@
                         <div class="col-md-12">
                             <div class="card card-topline-aqua">
                                 <div class="card-head">
-                                    <header>ALL OPERATORS RATES</header>
+                                    <header>ALL OPERATORS DRIVERS</header>
                                         <div class="row p-b-20">
                                         <div class="col-md-6 col-sm-6 col-6">
                                             <div class="btn-group">
@@ -73,6 +73,7 @@
                                                 <th>Driver Email</th>
                                                 <th>Driver Licence_no </th>
                                                 <th>Fcm Regid</th>
+                                                <th>Taxi No</th>
 
                                                 <th>Action</th>
                                             </tr>
@@ -87,6 +88,7 @@
                                                 <td>{{ driver.driver_email|default:'' }}</td>
                                                 <td>{{ driver.licence_no|default:'' }}</td>
                                                 <td>{{ driver.fcm_regid|default:'' }}</td>
+                                                <td>{{ driver.taxi_reg_no|default:'' }}</td>
 
                                                  <td>
                                                     <a href="/operator/add-operator-driver/{{ driver.id }}" class="btn btn-tbl-edit btn-xs">

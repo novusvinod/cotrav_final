@@ -180,8 +180,8 @@
                                     <th>Operator Details</th>
                                     <th>Taxi/Driver Assign</th>
                                     <th>Spoc Details</th>
-
                                     <th>Passenger Details</th>
+                                    <th>Action</th>
 
                                     <th>Details</th>
 
@@ -241,6 +241,13 @@
                                         {% for passanger in booking.Passangers %}
                                         {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
                                         {% endfor %}
+                                    </td>
+
+                                    <td>
+                                    {% if booking.status_cotrav == 2 %}
+                                        <a title="Assign Booking" href="/operator/assign-taxi-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;">  <i class="fa fa-pencil"></i> </a>
+
+                                    {% endif %}
                                     </td>
 
                                     <td>

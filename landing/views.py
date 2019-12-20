@@ -220,7 +220,7 @@ def get_flights(request):
                 "NAME": "GET_FLIGHT",
                 "STR": [
                     {
-                        "AUTH_TOKEN": "c8fc0220-e120-4900-bb59-2a4fe02e3c9f",
+                        "AUTH_TOKEN": "faddc27a-6463-4a72-81b7-d6750e944f69",
                         "SESSION_ID": "0vv5ycqeaxmndcdqhtatcscx",
                         "TRIP": "1",
                         "SECTOR": "D",
@@ -237,6 +237,39 @@ def get_flights(request):
                     }
                 ]
             }
+
+            headers = {}
+            r = requests.post(url, json=payload)
+            print(r)
+            api_response = r.json()
+            print("response")
+            print(socket.gethostname())
+            messages.success(request, api_response)
+            return render(request, 'api_call.html', {'response': api_response})
+        except Exception as e:
+            messages.error(request, e)
+            return redirect('create_token')
+    else:
+
+        return render(request, 'api_call.html')
+
+
+def get_pnr(request):
+    if request.method == 'POST':
+        try:
+            url = "http://mdt.ksofttechnology.com/API/FLIGHT"
+            payload = {
+                    "NAME": "PNR_RETRIVE",
+                    "STR": [
+                        {
+                            "BOOKINGID": "APIU637124397889286020Ua2e9",
+                            "CLIENT_SESSIONID": "069764a1-8a35-42ff-baed-ab168d0b1341",
+                            "HS": "D",
+                            "MODULE": "B2B"
+                        }
+                    ],
+                    "TYPE": "DC"
+                }
 
             headers = {}
             r = requests.post(url, json=payload)

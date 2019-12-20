@@ -1070,15 +1070,15 @@ def add_flight_booking_self(request,id):
                 "NAME": "GET_FLIGHT",
                 "STR": [
                     {
-                        "AUTH_TOKEN": "c8fc0220-e120-4900-bb59-2a4fe02e3c9f",
-                        "SESSION_ID": "qky2y29bbgluh8k25r6tk2x5475wzhqb",
+                        "AUTH_TOKEN": "7c666861-1c94-4173-ab3d-dbdd130dcab3",
+                        "SESSION_ID": "0vv5ycqeaxmndcdqhtatcscx",
                         "TRIP": "1",
                         "SECTOR": "D",
-                        "SRC": from_city,
-                        "DES": to_city,
-                        "DEP_DATE": d_date,
+                        "SRC": str(from_city),
+                        "DES": str(to_city),
+                        "DEP_DATE": str(d_date),
                         "RET_DATE": "",
-                        "ADT": no_of_seats,
+                        "ADT": "1",
                         "CHD": "0",
                         "INF": "0",
                         "PC": "",
@@ -1089,7 +1089,10 @@ def add_flight_booking_self(request,id):
             }
 
             headers = {}
+            print("PAYLOAD LLL ")
+            print(payload)
             r = requests.post(url, json=payload)
+            print("RESPONSE ")
             print(r)
             api_response = r.json()
             print(api_response)
@@ -1114,6 +1117,163 @@ def add_flight_booking_self(request,id):
                 return render(request, 'Company/Spoc/add_flight_booking_self.html', {})
         else:
             return HttpResponseRedirect("/login")
+
+
+def add_flight_booking_self_conformation(request,id):
+    if 'spoc_login_type' in request.session:
+        login_type = request.session['spoc_login_type']
+        access_token = request.session['spoc_access_token']
+
+        UID = request.POST.get('UID', '')
+        ID = request.POST.get('ID', '')
+        TID = request.POST.get('TID', '')
+        src = request.POST.get('D_NAME', '')
+        des = request.POST.get('A_NAME', '')
+        dep_date = request.POST.get('A_DATE', '')
+        d_date = parse(dep_date).strftime("%Y-%m-%d")
+
+        booking_data = {}
+
+        url = "http://mdt.ksofttechnology.com/API/AVLT"
+        payload = {
+                "NAME": "FARE_CHECK",
+                "STR": [
+                    {
+                        "FLIGHT": {
+                            "UID": str(UID),
+                            "ID": str(ID),
+                            "TID": str(TID)
+                        },
+                        "PARAM": {
+                            "src": str(src),
+                            "des": str(des),
+                            "dep_date": str(d_date),
+                            "ret_date": "",
+                            "adt": "1",
+                            "chd": "1",
+                            "inf": "1",
+                            "L_OW": "8685",
+                            "H_OW": "44548",
+                            "T_TIME": "12.5937506",
+                            "Trip_String": "1D0vv5ycqeaxmndcdqhtatcscx~2019-11-21 11:00:09.428~edb894bd-a294-4a05-bcac-e210415f5f7f******B2B*182.73.146.154*D*NOCLASS*ALL*D*API_HIT*5"
+                        }
+                    }
+                ],
+                "TYPE": "AIR"
+            }
+
+        headers = {}
+        print(payload)
+        r = requests.post(url, json=payload)
+        api_response = r.json()
+        payload = {'corporate_id': request.user.corporate_id, 'spoc_id': request.user.id}
+        url_enty = settings.API_BASE_URL + "billing_entities"
+        entys = getDataFromAPI(login_type, access_token, url_enty, payload)
+        entities = entys['Entitys']
+
+        url_ass_code = settings.API_BASE_URL + "get_assessment_code"
+        ass_code = getDataFromAPI(login_type, access_token, url_ass_code, payload)
+        ass_code = ass_code['AssCodes']
+
+        url_cities_ass = settings.API_BASE_URL + "get_assessment_city"
+        cities_ass = getDataFromAPI(login_type, access_token, url_cities_ass, payload)
+        cities = cities_ass['AssCity']
+
+        url_emp = settings.API_BASE_URL + "spoc_employee"
+        company_emp = cities_ass = getDataFromAPI(login_type, access_token, url_emp, payload)
+        employees = company_emp['Employees']
+
+        return render(request, 'Company/Spoc/add_flight_booking_conformation.html',{'booking_datas': booking_data,'flights':api_response,
+                'employees':employees,'cities_ass':cities,'entities':entities,'assessments':ass_code})
+
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def add_flight_booking_self_final(request, id):
+    if 'spoc_login_type' in request.session:
+        login_type = request.session['spoc_login_type']
+        access_token = request.session['spoc_access_token']
+
+        flightdata = request.POST.get('flightdata', '')
+        employee_id_1 = request.POST.get('employee_id_1', '')
+        flightdata = flightdata.replace("'", '"')
+        flightdata = flightdata.replace("None", "null")
+        flightdata = flightdata.replace("False", "null")
+        flightdata = flightdata.replace("True", "null")
+        flightdata = flightdata.replace('"FEE": "', '"FEE": ')
+        flightdata = flightdata.replace('", "TAG":', ', "TAG":')
+        #print(flightdata[3840])
+        va = json.loads(flightdata)
+        #print(va)
+        print(va['FLIGHT'])
+
+        url = "http://mdt.ksofttechnology.com/API/flight"
+        payload = {
+    "STATUS": [
+        {
+            "status": "T"
+        }
+    ],
+    "FLIGHT": va['FLIGHT'],
+    "CON_FLIGHT": va['CON_FLIGHT'],
+    "FARE":va['FARE'],
+    "PARAM": va['PARAM'],
+    "Deal": va['Deal'],
+    "FARE_RULE": va['FARE_RULE'],
+    "PAX": [
+        {
+            "apnr": "",
+            "baggage": "",
+            "dob": "",
+            "fare": "",
+            "ffn": "",
+            "fn": str(employee_id_1),
+            "gpnr": "",
+            "ln": str(employee_id_1),
+            "meal": "",
+            "mn": "",
+            "nat": "",
+            "other_info": "",
+            "pi": "",
+            "refundable": "",
+            "status": "",
+            "tc": "",
+            "tktno": "",
+            "ttl": "Mr",
+            "type": "adult",
+            "year": ""
+        },
+
+
+    ],
+    "TYPE": "DC",
+    "NAME": "PNR_CREATION",
+    "Others": [
+        {
+            "REMARK": "OTHER INFO FOR FUTURE/LEAVE BLANK FOR NOW",
+            "CUSTOMER_EMAIL": "vinod@taxivaxi.in",
+            "CUSTOMER_MOBILE": "9717163216"
+        }
+    ]
+}
+
+
+        headers = {}
+        r = requests.post(url, json=payload)
+        api_response = r.json()
+        print(api_response)
+
+
+        messages.success(request, 'Flight Booking Creates Successfully..!'+str(api_response))
+        return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/1", {'message': "Operation Successfully"})
+
+
+
+    else:
+        return HttpResponseRedirect("/login")
+
+
 
 ####################### Download MIS ##################################
 

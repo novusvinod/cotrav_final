@@ -93,7 +93,7 @@
 
                         </li>
                         <li class="mega-menu-dropdown " id="taxi_li_menu">
-                             <a href="/operator/taxi-bookings/1" class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
+                             <a href="/operator/taxi-bookings/2" class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
 
                             </a>
 
@@ -101,26 +101,29 @@
 
                         </li>
                         {% endif %}
-
+                        {% if user.service_type_id == 4 %}
                          <li class="mega-menu-dropdown" id="bus_li_menu">
-                            <a href="/operator/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
+                            <a href="/operator/bus-bookings/3" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
 
                             </a>
 
                         </li>
-
-
+                        {% endif %}
+                        {% if user.service_type_id == 6 %}
                         <li class="mega-menu-dropdown" id="hotel_li_menu">
-                            <a href="/operator/hotel-bookings/1" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
+                            <a href="/operator/hotel-bookings/3" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
                             </a>
 
                         </li>
+                        {% endif %}
+                        {% if user.service_type_id == 7 %}
 
                         <li class="mega-menu-dropdown" id="flight_li_menu">
-                            <a href="/operator/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
+                            <a href="/operator/flight-bookings/3" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
                             </a>
 
                         </li>
+                         {% endif %}
 
 
                     </ul>

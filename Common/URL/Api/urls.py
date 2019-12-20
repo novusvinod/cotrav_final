@@ -175,4 +175,14 @@ urlpatterns = [
     path('api/report_train_booking', api_views.report_train_booking),
     path('api/report_flight_booking', api_views.report_flight_booking),
     path('api/report_hotel_booking', api_views.report_hotel_booking),
+
+
+    path('api/get_auth_token', api_views.get_auth_token),
+    path('api/get_flight_search', api_views.get_flight_search),
+    path('api/get_flight_fare_search', api_views.get_flight_fare_search),
+    path('api/save_flight_booking', api_views.save_flight_booking),
+    path('api/get_flight_booking_detail', api_views.report_hotel_booking),
+
+
+
 ]

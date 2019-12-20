@@ -17,6 +17,7 @@ urlpatterns = [
     path('operator/delete-operator-driver/<int:id>', operator_view.delete_operator_driver),
 
     path('operator/taxi-bookings/<int:id>', operator_view.taxi_bookings),
+    path('operator/assign-taxi-booking/<int:id>', operator_view.assign_taxi_booking),
     path('operator/reject-taxi-booking/<int:id>', operator_view.reject_taxi_booking),
     path('operator/view-taxi-booking/<int:id>', operator_view.view_taxi_booking),
 

@@ -329,6 +329,8 @@ def add_company(request):
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             is_spoc = request.POST.get('is_spoc', '')
+            has_self_booking_access = request.POST.get('has_self_booking_access', '')
+            will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
 
             user_id = request.POST.get('cotrav_agent_id', '')
 
@@ -348,7 +350,7 @@ def add_company(request):
                       has_assessment_codes,'is_radio': is_radio, 'is_local': is_local, 'is_outstation': is_outstation, 'is_bus': is_bus,
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,'is_spoc':is_spoc,'password':password,'cotrav_agent_id':user_id,
-                       'user_type':user_type,'billing_city_id':billing_city_id}
+                       'user_type':user_type,'billing_city_id':billing_city_id,'will_do_realtime_payment':will_do_realtime_payment,'has_self_booking_access':has_self_booking_access}
 
             url = settings.API_BASE_URL + "add_company"
             company = getDataFromAPI(user_type, access_token, url, payload)
@@ -415,6 +417,8 @@ def edit_company(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+            has_self_booking_access = request.POST.get('has_self_booking_access', '')
+            will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
 
             user_id = request.POST.get('user_id', '')
 
@@ -426,7 +430,9 @@ def edit_company(request, id):
                       'has_auth_level': has_auth_level,'no_of_auth_level':no_of_auth_level,'has_assessment_codes':
                       has_assessment_codes,'is_radio': is_radio, 'is_local': is_local, 'is_outstation': is_outstation, 'is_bus': is_bus,
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
-                       'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,'corporate_id': corporate_id,'user_id':user_id,'user_type':user_type}
+                       'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
+                       'will_do_realtime_payment':will_do_realtime_payment,'has_self_booking_access':has_self_booking_access,
+            'corporate_id': corporate_id,'user_id':user_id,'user_type':user_type}
             print(payload)
             company = getDataFromAPI(user_type, access_token, url, payload)
             if company['success'] == 1:
@@ -2714,6 +2720,7 @@ def add_operator_driver(request,id):
             driver_email = request.POST.get('driver_email', '')
             licence_no = request.POST.get('licence_no', '')
             fcm_regid = request.POST.get('fcm_regid', '')
+            taxi_id = request.POST.get('taxi_id', '')
 
             driver_id = request.POST.get('driver_id', '')
             if driver_id:
@@ -2723,7 +2730,7 @@ def add_operator_driver(request,id):
                 driver_id = 0
 
             payload = {'operator_id':operator_id,'driver_name':driver_name,'driver_contact':driver_contact,'driver_email':driver_email,'licence_no':licence_no,
-                          'fcm_regid':fcm_regid,'password':password,'driver_id':driver_id,'user_id':user_id,'login_type':login_type}
+                          'fcm_regid':fcm_regid,'taxi_id':taxi_id,'password':password,'driver_id':driver_id,'user_id':user_id,'login_type':login_type}
 
             url = ""
 
@@ -2761,7 +2768,12 @@ def add_operator_driver(request,id):
                     operators = getDataFromAPI(login_type, access_token, url, payload)
                     operators = operators['Operators']
 
-                    return render(request, 'Agent/add_operator_driver.html', {'operator_drivers': op_drivers,'operators':operators})
+                    url_taxi = settings.API_BASE_URL + "taxis"
+                    taxi = getDataFromAPI(login_type, access_token, url_taxi, payload)
+                    taxi = taxi['Taxis']
+
+
+                    return render(request, 'Agent/add_operator_driver.html', {'operator_drivers': op_drivers,'operators':operators,'taxies':taxi})
                 else:
                     return HttpResponseRedirect("/agents/login")
             else:
@@ -2774,7 +2786,11 @@ def add_operator_driver(request,id):
                     operators = getDataFromAPI(login_type, access_token, url, payload)
                     operators = operators['Operators']
 
-                    return render(request, 'Agent/add_operator_driver.html', {'operators':operators})
+                    url_taxi = settings.API_BASE_URL + "taxis"
+                    taxi = getDataFromAPI(login_type, access_token, url_taxi, payload)
+                    taxi = taxi['Taxis']
+
+                    return render(request, 'Agent/add_operator_driver.html', {'operators':operators,'taxies':taxi})
                 else:
                     return HttpResponseRedirect("/agents/login")
         else:
@@ -2980,7 +2996,6 @@ def add_taxi_booking(request,id):
             return HttpResponseRedirect("/agents/login")
 
 
-
 def accept_taxi_booking(request):
     if 'agent_login_type' in request.session:
         login_type = request.session['agent_login_type']
@@ -3088,10 +3103,10 @@ def assign_taxi_booking(request,id):
             print(company)
             if company['success'] == 1:
                 messages.success(request, 'Taxi Booking Assigned..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/taxi-bookings/3", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Assign Taxi Booking..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/taxi-bookings/3", {'message': "Operation Fails"})
         else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']
@@ -3189,10 +3204,10 @@ def add_taxi_invoice(request,id):
             print(company)
             if company['success'] == 1:
                 messages.success(request, 'Taxi Invoice Added Successfully..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/taxi-bookings/3", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Added Taxi Invoice..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/taxi-bookings/3", {'message': "Operation Fails"})
         else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']
@@ -3501,10 +3516,10 @@ def assign_bus_booking(request,id):
 
             if company['success'] == 1:
                 messages.success(request, 'Bus Booking Assign successfully..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/bus-bookings/3", {'message': "Operation Successfully"})
             else:
                 messages.error(request, 'Fail to Assign Bus Booking..1')
-                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/bus-bookings/3", {'message': "Operation Fails"})
         else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']
@@ -3810,11 +3825,11 @@ def assign_train_booking(request,id):
             print(company)
             if company['success'] == 1:
                 messages.success(request, 'Train Booking assigned Successfully..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/train-bookings/3", {'message': "Operation Successfully"})
 
             else:
                 messages.error(request, 'Fail To assign Train Booking..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/train-bookings/3", {'message': "Operation Fails"})
         else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']
@@ -4163,11 +4178,11 @@ def assign_hotel_booking(request, id):
 
             if company['success'] == 1:
                 messages.success(request, 'Hotel Booking Assigned Successfully..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/hotel-bookings/3", {'message': "Operation Successfully"})
 
             else:
                 messages.error(request, 'Fails To Assign hotel Booking..!')
-                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/hotel-bookings/3", {'message': "Operation Fails"})
         else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']
@@ -4369,6 +4384,7 @@ def assign_flight_booking(request,id):
             client_ticket_path = ''
             vender_ticket_path = ''
 
+            operator_id = request.POST.get('operator_name', '')
             meal_is_include = request.POST.get('meal_is_include', '')
             fare_type = request.POST.get('fare_type', '')
             trip_type = request.POST.get('trip_type', '')
@@ -4476,18 +4492,18 @@ def assign_flight_booking(request,id):
                        'oper_cgst': oper_cgst, 'oper_sgst': oper_sgst, 'oper_igst': oper_igst,
                        'client_ticket_path': client_ticket_path,'client_ticket':client_ticket,'vender_ticket':vender_ticket,
                        'vender_ticket_path': vender_ticket_path,'is_client_sms':is_client_sms,'is_client_email':is_client_email,
-                       'igst_amount': igst_amount,'cgst_amount': cgst_amount,'sgst_amount': sgst_amount
+                       'igst_amount': igst_amount,'cgst_amount': cgst_amount,'sgst_amount': sgst_amount,'operator_id':operator_id
                        }
             print(payload)
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
                 messages.success(request, 'Operation Successfully')
-                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+                return HttpResponseRedirect("/agents/flight-bookings/3", {'message': "Operation Successfully"})
 
             else:
                 messages.error(request, 'Operation Fails')
-                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+                return HttpResponseRedirect("/agents/flight-bookings/3", {'message': "Operation Fails"})
         else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']

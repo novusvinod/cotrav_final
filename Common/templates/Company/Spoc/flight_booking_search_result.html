@@ -11,7 +11,7 @@
     <div class="page-content">
   <div class="text-center">
 
-        <form method="post" action="/Corporate/Spoc/add-flight-booking-self/{{user.id}}">
+
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
             <input type="hidden" name="spoc_id" value="{{user.id}}">
@@ -42,6 +42,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+
                                                 {% for flight in flights %}
                                                     <tr>
                                                         <td colspan="2" height="100"  class="border-section">  <img alt="" src="{% static 'assets/img/blog/flight_indigo.png' %}" class="img_align"></img>{{flight.F_NAME}} <br>
@@ -54,8 +55,16 @@
 
                                                         <td colspan="2"  class="border-section"> <i class="fa fa-inr"></i>{{flight.NET_FARE}} <br><p class="font_txt1">{{flight.OI}}</p></td>
 
-                                                        <td colspan="2"  class="border-section"> <button type="submit" class="btn btn-info">Book</button> <br><p class="font_txt1 butn_color"><a href="" class="read">Flight Details</a></p></td>
+                                                        <form method="post" action="/Corporate/Spoc/add-flight-booking-self-conformation/{{user.id}}">
+                                                            <input type="hidden" name="UID" value="{{flight.UID}}">
+                                                            <input type="hidden" name="ID" value="{{flight.ID}}">
+                                                            <input type="hidden" name="TID" value="{{flight.TID}}">
+                                                            <input type="hidden" name="D_NAME" value="{{flight.D_NAME}}">
+                                                            <input type="hidden" name="A_NAME" value="{{flight.A_NAME}}">
+                                                            <input type="hidden" name="A_DATE" value="{{flight.A_DATE}}">
 
+                                                            <td colspan="2"  class="border-section"> <button type="submit" class="btn btn-info">Book</button> <br><p class="font_txt1 butn_color"><a href="" class="read">Flight Details</a></p></td>
+                                                        </form>
 
                                                     </tr>
                                                 {% for flight_fl in flight.CON_DETAILS %}
@@ -81,7 +90,7 @@
                         </div>
                     </div>
 
-        </form>
+
     </div>
 </div>
 <!-- end page content -->
