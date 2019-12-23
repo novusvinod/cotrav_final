@@ -5,11 +5,17 @@
 
 {% if user %}
 			<!-- start page content -->
-{% include 'cotrav_alert_message.html' %}
-            <div class="page-content-wrapper">
-                <div class="page-content">
+{% load static %}
+<link href="{% static 'assets/css/select2_custome.css' %}" rel="stylesheet" type="text/css" />
 
-           <div class="text-center">
+
+{% include 'cotrav_alert_message.html' %}
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+      <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">
          {% if operators %}
          Edit Operators Details
@@ -30,31 +36,24 @@
             {% endif %}
 
                     <div class="row">
-                        <div class="col-md-4 col-sm-4">
-                            <div class="card card-box">
-                                <div class="card-head">
-                                    <header>General Information</header>
-                                     <button id = "panel-button"
-				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
-				                           data-upgraded = ",MaterialButton">
-				                           <i class = "material-icons">more_vert</i>
-				                        </button>
-				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-				                           data-mdl-for = "panel-button">
-				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
-				                        </ul>
-                                </div>
-                                <div class="card-body " id="bar-parent">
+						<div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
+								<div class="card-head">
+									<header>General Information: </header>
+                                     <div class="tools">
 
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                                         <div class="form-group row">
-                                                <label class="col-sm-4" for="simpleFormEmail">Operator Type</label>
-                                             {% if operators %}
+                                    </div>
+								</div>
+								<div class="card-body row">
+
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                            {% if operators %}
                                             {% for operator in operators %}
-	                                                 <select class="col-sm-8 form-control myselect" name="type" required>
-	                                                <option value="1" {% if operator.service_type_id == 1 %} selected {%endif%}>Radio</option>
+											<select class="mdl-textfield__input js-select2" name="type" required >
+												    <option value="1" {% if operator.service_type_id == 1 %} selected {%endif%}>Radio</option>
                                                     <option value="2" {% if operator.service_type_id == 2 %} selected {%endif%}>Local</option>
                                                     <option value="3" {% if operator.service_type_id == 3 %} selected {%endif%}>Outstation</option>
 	                                                <option value="4" {% if operator.service_type_id == 4 %} selected {%endif%}>Bus</option>
@@ -62,12 +61,11 @@
                                                     <option value="6" {% if operator.service_type_id == 6 %} selected {%endif%}>Hotel</option>
                                                     <option value="7" {% if operator.service_type_id == 7 %} selected {%endif%}>Flight</option>
                                                     <option value="8" {% if operator.service_type_id == 8 %} selected {%endif%}>Meal</option>
-	                                            </select>
+                                            </select>
                                             {% endfor %}
                                               {% else %}
-
-                                                <select class="col-sm-8 form-control myselect" name="type" required>
-	                                                <option value="1">Radio</option>
+                                            <select class="mdl-textfield__input js-select2 " name="type" required >
+                                                    <option value="1">Radio</option>
                                                     <option value="2">Local</option>
                                                     <option value="3">Outstation</option>
 	                                                <option value="4">Bus</option>
@@ -75,77 +73,97 @@
                                                     <option value="6">Hotel</option>
                                                     <option value="7">Flight</option>
                                                     <option value="8">Meal</option>
+                                            </select>
 
-	                                            </select>
-                                             {% endif %}
-                                            </div>
-
-                                          <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Login User Name</label>
-
-                                            {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="username" placeholder="Login User Name" value="{{operator.username}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                               <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="username" placeholder="Login User Name" required>
                                             {% endif %}
-                                        </div>
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Operator Name</label>
-                                            {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_name" value="{{operator.operator_name}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_name" placeholder="Operator Name" required>
-                                                {% endif %}
-                                        </div>
+                                        <label class = "mdl-textfield__label" >Operator Type</label>
+                                       </div>
+									</div>
 
-                                      <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Operator Email</label>
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                           {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_email" value="{{operator.operator_email}}" required>
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="username" value="{{operator.username}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="email" class="col-sm-8 form-control" name="operator_email" placeholder="Operator Email" required>
+                                          <input class = "mdl-textfield__input" type = "text" name="username" required >
                                           {% endif %}
-                                        </div>
+					                     <label class = "mdl-textfield__label">Login User Name</label>
+					                  </div>
+						            </div>
 
-                                      <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Operator Contact</label>
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                           {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" value="{{operator.operator_contact}}" required>
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="operator_name" value="{{operator.operator_name}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_contact" placeholder="Operator Contact" required>
+                                          <input class = "mdl-textfield__input" type = "text" name="operator_name" required >
                                           {% endif %}
-                                        </div>
+					                     <label class = "mdl-textfield__label">Operator Name</label>
+					                  </div>
+						            </div>
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Website</label>
-                                        {% if operators %}
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="website" value="{{operator.website}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="operator_email" value="{{operator.operator_email}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="website" placeholder="Website">
-                                        {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input" type = "text" name="operator_email" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Operator Email</label>
+					                  </div>
+						            </div>
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Operator Address</label>
-                                        {% if operators %}
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_address" value="{{operator.operator_address}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="operator_contact" value="{{operator.operator_contact}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_address" placeholder="Operator Address">
-                                        {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input" type = "text" name="operator_contact" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Operator Contact</label>
+					                  </div>
+						            </div>
+
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
+                                            {% for operator in operators %}
+					                     <input class = "mdl-textfield__input" type = "text" name="website" value="{{operator.website}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type = "text" name="website" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Website</label>
+					                  </div>
+						            </div>
+
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
+                                            {% for operator in operators %}
+					                     <input class = "mdl-textfield__input" type = "text" name="operator_address" value="{{operator.operator_address}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type = "text" name="operator_address" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Operator Address</label>
+					                  </div>
+						            </div>
+
 
 
 
@@ -153,128 +171,151 @@
                             </div>
                         </div>
 
+                        <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+									<header>Other Details: </header>
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                                <div class="card-body row">
 
 
-                        <div class="col-md-4 col-sm-4">
-                            <div class="card card-box">
-                                <div class="card-head">
-                                    <header>Other Details</header>
-                                    <button id = "panel-button2"
-				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
-				                           data-upgraded = ",MaterialButton">
-				                           <i class = "material-icons">more_vert</i>
-				                        </button>
-				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-				                           data-mdl-for = "panel-button2">
-				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
-				                        </ul>
-                                </div>
-                                <div class="card-body " id="bar-parent1">
-
-                                     <div class="form-group row">
-                                                <label class="col-sm-4">Tax Applicable</label>
-                                         {% if operators %}
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                            {% if operators %}
                                             {% for operator in operators %}
-
-                                              <select class="col-sm-8 form-control " name="is_service_tax_applicable">
+											<select class="mdl-textfield__input js-select2" name="is_service_tax_applicable">
 	                                                <option value="1" {% if operator.is_service_tax_applicable == 1 %} selected {%endif%}>Yes</option>
 	                                                <option value="0" {% if operator.is_service_tax_applicable == 0 %} selected {%endif%}>No</option>
-	                                            </select>
-
+	                                         </select>
                                             {% endfor %}
                                               {% else %}
-
-                                                <select class="col-sm-8 form-control" name="is_service_tax_applicable">
+                                            <select class="mdl-textfield__input js-select2" name="is_service_tax_applicable">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                            </select>
+	                                         </select>
 
-                                         {% endif %}
+                                            {% endif %}
 
-                                            </div>
+                                        <label class = "mdl-textfield__label" >Operator Type</label>
+                                       </div>
+									</div>
 
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Night Start Time</label>
-                                         {% if operators %}
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="night_start_time" value="{{operator.night_start_time}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="night_start_time" value="{{operator.night_start_time}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="night_start_time" placeholder="Night Start Time">
-                                         {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input" type = "text" name="night_start_time" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Night Start Time</label>
+					                  </div>
+						            </div>
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Night End Time</label>{% if operators %}
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="night_end_time"  value="{{operator.night_end_time}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="night_end_time" value="{{operator.night_end_time}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="night_end_time" placeholder="Night End Time">
-                                         {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input" type = "text" name="night_end_time" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Night End Time</label>
+					                  </div>
+						            </div>
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">TDS Rate</label>
-                                         {% if operators %}
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="tds_rate" value="{{operator.tds_rate}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="tds_rate" value="{{operator.tds_rate}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="tds_rate" placeholder="TDS Rate">
-                                         {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input" type = "text" name="tds_rate" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">TDS Rate</label>
+					                  </div>
+						            </div>
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">GST ID</label>
-                                         {% if operators %}
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="gst_id" value="{{operator.gst_id}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="gst_id" value="{{operator.gst_id}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="gst_id" placeholder="GST ID">
-                                         {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input" type = "text" name="gst_id" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">GST ID</label>
+					                  </div>
+						            </div>
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">PAN NO</label>
-                                         {% if operators %}
+
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if operators %}
                                             {% for operator in operators %}
-                                             <input type="text" class="col-sm-8 form-control" name="pan_no" placeholder="PAN NO" value="{{operator.pan_no}}">
-                                            {% endfor %}
+					                     <input class = "mdl-textfield__input" type = "text" name="pan_no" value="{{operator.pan_no}}" required >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="pan_no" placeholder="PAN NO">
-                                         {% endif %}
-                                        </div>
-
-
-
-
+                                          <input class = "mdl-textfield__input" type = "text" name="pan_no" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">PAN NO</label>
+					                  </div>
+						            </div>
 
 
                                 </div>
+
                             </div>
                         </div>
                     </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                          <div class="form-group">
-                                            <div class="offset-md-6 col-md-9">
-                                                <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                                            </div>
-                                        </div>
+                <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
 
-                    </div>
-                </div>
+                                     <div class="tools">
 
- </form>
-  </div>
-</div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
+
+
+
+                      <div class="col-lg-12"  align="center">
+							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
+
+                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"   >
+											  Cancel
+											</button>
+							            </div>
+
+                     </div>
+                 </div>
+
+        </div><!-- row end -->
+</form>
+       </div>
+
+    </div></div>
 
 <!-- end page content -->
 

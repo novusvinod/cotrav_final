@@ -23,45 +23,90 @@
                                         <input type="hidden" name="spoc_id" value="{{user.id}}">
                                         <input type="hidden" name="group_id" value="{{user.group_id}}">
                                         <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
-                                         <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-                                          <div class="col-sm-4 " style="border-right: solid 1px ">
+                                        <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                                        <div class="col-sm-1" style="border-right: solid 1px;">
+                                                <div class="lable_hotel_block"> <i class="fa fa-map-marker" aria-hidden="true"></i> Trip Type</div>
+                                            <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                                                <select class="form-control myselect" name="trip_type" style="width: 100%; margin-left: -8px;" >
+                                                    <option value="1">One Way</option>
+                                                    <option value="2">Round Trip</option>
+                                                    <option value="3">Sep Round</option>
+
+                                           </select>
+                                            </div>
+                                            </div>
+
+                                        <div class="col-sm-2" style="border-right: solid 1px;">
                                                 <div class="lable_hotel_block"> <i class="fa fa-map-marker" aria-hidden="true"></i> From</div>
+                                            <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
                                                 <select class="form-control myselect" name="from_city" style="width: 100%; margin-left: -8px;" >
                                                     <option value="">Select From City</option>-->
                                                     {% for airport in airports %}
-                                                    <option value="{{airport.code}}">{{airport.city_name}}, {{airport.country_name}}</option>
+                                                    <option value="{{airport.code}}">{{airport.city_name}}, {{airport.country_name}} ({{airport.code}})</option>
                                                     {% endfor %}
                                            </select>
-                                                <span class="lable_hotel_block  mar_20">India</span>
+                                            </div>
                                             </div>
 
 
-                                                  <div class="col-sm-4">
+                                                  <div class="col-sm-2" style="border-right: solid 1px;">
                                                 <div class="lable_hotel_block"> <i class="fa fa-map-marker" aria-hidden="true"></i> To</div>
+                                                      <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
                                                 <select class="form-control myselect select2_style" name="to_city" style="width: 100%; margin-left: -8px; font-size:30px;" >
                                                     <option value="">Select To City</option>-->
                                                     {% for airport in airports %}
-                                                    <option value="{{airport.code}}">{{airport.city_name}}, {{airport.country_name}}</option>
+                                                    <option value="{{airport.code}}">{{airport.city_name}}, {{airport.country_name}} ({{airport.code}})</option>
                                                     {% endfor %}
                                            </select>
-                                                <span class="lable_hotel_block  mar_20">India</span>
+                                                      </div>
                                             </div>
 
 
-                                              <div class="col-sm-2" style="border-left: solid 1px gray; ">
-                                              <div class="lable_hotel_block hotel_block2"><i class="fa fa-calendar"></i>
+                                              <div class="col-sm-2" style="border-right: solid 1px gray; ">
+                                              <div class="lable_hotel_block"><i class="fa fa-calendar"></i>
                                               Departure </div>
                                              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                                         <input class = "input3 formgrp-1 date" type = "text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
-                                        <label for="sample1" class="mdl-textfield__label"></label>
+                                             <input class = "input3 formgrp-1 date" type = "text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
+                                             </div>
 
-                                         </div>
-                                                   <span class="lable_hotel_block mar_20">India</span>
+                                            </div>
+
+                                         <div class="col-sm-1" style="border-right: solid 1px gray; ">
+                                              <div class="lable_hotel_block"><i class="fa fa-calendar"></i>
+                                              Return </div>
+                                             <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                                             <input class = "input3 formgrp-1 date" type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
+                                             </div>
+
+                                            </div>
+
+                                         <div class="col-sm-2" style="border-right: solid 1px;">
+                                                <div class="lable_hotel_block"> <i class="fa fa-map-marker" aria-hidden="true"></i> Class</div>
+                                            <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                                                <select class="form-control myselect" name="fl_class" style="width: 100%; margin-left: -8px;" >
+                                                    <option value="EC">Economy</option>
+                                                    <option value="BU">Businesses</option>
+
+                                           </select>
+                                            </div>
+                                            </div>
+
+                                         <div class="col-sm-1" style="border-right: solid 1px;">
+                                                <div class="lable_hotel_block"> <i class="fa fa-user" aria-hidden="true"></i> No Of Seats</div>
+                                            <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                                                <select class="form-control myselect" name="no_of_seats" style="width: 100%; margin-left: -8px;" >
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                           </select>
+                                            </div>
                                             </div>
 
 
-
-                                         <button type="submit" class="btn btn-primary btn_prp btn_prp1 btn_12">Search</button>
+                                         <button type="submit" class="btn btn-primary btn_prp btn_prp1 btn_12">  Search</button>
                                     </form>
 
                                 </div>

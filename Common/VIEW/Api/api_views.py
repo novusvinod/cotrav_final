@@ -1,7 +1,7 @@
 from datetime import datetime
 import socket
 from dateutil.parser import parse
-
+import json
 import requests
 from django.utils import timezone
 import pytz
@@ -6069,10 +6069,19 @@ def get_flight_search(request):
         AUTH_TOKEN = request.POST.get('auth_token', '')
         SESSION_ID = request.POST.get('session_id', '')
 
+        trip_type = request.POST.get('trip_type', '')
+        return_date = request.POST.get('return_date', '')
+        fl_class = request.POST.get('fl_class', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
         from_city = request.POST.get('from_city', '')
         to_city = request.POST.get('to_city', '')
         departure_date = request.POST.get('departure_date', '')
         d_date = parse(departure_date).strftime("%Y-%m-%d")
+
+        if return_date:
+            return_date = parse(return_date).strftime("%Y-%m-%d")
+        else:
+            return_date = ""
 
         user = {}
         user_token = req_token.split()
@@ -6082,35 +6091,36 @@ def get_flight_search(request):
                 try:
                     url = "http://mdt.ksofttechnology.com/API/FLIGHT"
                     payload = {
-                        "TYPE": "AIR",
-                        "NAME": "GET_FLIGHT",
-                        "STR": [
-                            {
-                                "AUTH_TOKEN": AUTH_TOKEN,
-                                "SESSION_ID": SESSION_ID,
-                                "TRIP": "1",
-                                "SECTOR": "D",
-                                "SRC": str(from_city),
-                                "DES": str(to_city),
-                                "DEP_DATE": str(d_date),
-                                "RET_DATE": "",
-                                "ADT": "",
-                                "CHD": "",
-                                "INF": "",
-                                "PC": "",
-                                "PF": "",
-                                "HS": "D"
-                            }
-                        ]
-                    }
+                            "TYPE": "AIR",
+                            "NAME": "GET_FLIGHT",
+                            "STR": [
+                                {
+                                    "AUTH_TOKEN": ""+AUTH_TOKEN,
+                                    "SESSION_ID": ""+SESSION_ID,
+                                    "TRIP": ""+trip_type,
+                                    "SECTOR": "D",
+                                    "SRC": ""+from_city,
+                                    "DES": ""+to_city,
+                                    "DEP_DATE": ""+d_date,
+                                    "RET_DATE": ""+return_date,
+                                    "ADT": ""+no_of_seats,
+                                    "CHD": "0",
+                                    "INF": "0",
+                                    "PC": ""+fl_class,
+                                    "PF": "",
+                                    "HS": "D"
+                                }
+                            ]
+                        }
 
                     headers = {}
+                    print(payload)
                     r = requests.post(url, json=payload)
                     api_response = r.json()
                     data = {'success': 1, 'Data': api_response}
                     return JsonResponse(data)
                 except Exception as e:
-                    data = {'success': 0, 'Data': ''}
+                    data = {'success': 0, 'Data': e}
                     return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
@@ -6132,9 +6142,17 @@ def get_flight_fare_search(request):
         UID = request.POST.get('UID', '')
         ID = request.POST.get('ID', '')
         TID = request.POST.get('TID', '')
-        src = request.POST.get('D_NAME', '')
-        des = request.POST.get('A_NAME', '')
-        dep_date = request.POST.get('A_DATE', '')
+        src = request.POST.get('src', '')
+        des = request.POST.get('des', '')
+        ret_date = request.POST.get('ret_date', '')
+        adt = request.POST.get('adt', '')
+        chd = request.POST.get('chd', '')
+        inf = request.POST.get('inf', '')
+        L_OW = request.POST.get('L_OW', '')
+        H_OW = request.POST.get('H_OW', '')
+        T_TIME = request.POST.get('T_TIME', '')
+
+        dep_date = request.POST.get('dep_date', '')
         d_date = parse(dep_date).strftime("%Y-%m-%d")
 
         user = {}
@@ -6157,20 +6175,20 @@ def get_flight_fare_search(request):
                                     "src": str(src),
                                     "des": str(des),
                                     "dep_date": str(d_date),
-                                    "ret_date": "",
-                                    "adt": "",
-                                    "chd": "",
-                                    "inf": "",
-                                    "L_OW": "",
-                                    "H_OW": "",
-                                    "T_TIME": "",
-                                    "Trip_String": trip_string
+                                    "ret_date": ""+ret_date,
+                                    "adt": ""+adt,
+                                    "chd": ""+chd,
+                                    "inf": ""+inf,
+                                    "L_OW": ""+L_OW,
+                                    "H_OW": ""+H_OW,
+                                    "T_TIME": ""+T_TIME,
+                                    "Trip_String": ""+trip_string
                                 }
                             }
                         ],
                         "TYPE": "AIR"
                     }
-
+                    print(payload)
                     headers = {}
                     r = requests.post(url, json=payload)
                     api_response = r.json()
@@ -6196,7 +6214,9 @@ def save_flight_booking(request):
         user_type = request.META['HTTP_USERTYPE']
 
         flightdata = request.POST.get('flightdata', '')
-        employee_id_1 = request.POST.get('employee_id_1', '')
+
+        employee_name_1 = request.POST.get('employee_name_1', '')
+
         flightdata = flightdata.replace("'", '"')
         flightdata = flightdata.replace("None", "null")
         flightdata = flightdata.replace("False", "null")
@@ -6205,7 +6225,7 @@ def save_flight_booking(request):
         flightdata = flightdata.replace('", "TAG":', ', "TAG":')
         # print(flightdata[3840])
         va = json.loads(flightdata)
-
+        print(va['FLIGHT'])
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -6219,12 +6239,12 @@ def save_flight_booking(request):
                                 "status": "T"
                             }
                         ],
-                        "FLIGHT": va['FLIGHT'],
-                        "CON_FLIGHT": va['CON_FLIGHT'],
-                        "FARE": va['FARE'],
-                        "PARAM": va['PARAM'],
-                        "Deal": va['Deal'],
-                        "FARE_RULE": va['FARE_RULE'],
+                        "FLIGHT": str(va['FLIGHT']),
+                        "CON_FLIGHT": str(va['CON_FLIGHT']),
+                        "FARE": str(va['FARE']),
+                        "PARAM": str(va['PARAM']),
+                        "Deal": str(va['Deal']),
+                        "FARE_RULE": str(va['FARE_RULE']),
                         "PAX": [
                             {
                                 "apnr": "",
@@ -6232,9 +6252,9 @@ def save_flight_booking(request):
                                 "dob": "",
                                 "fare": "",
                                 "ffn": "",
-                                "fn": str(employee_id_1),
+                                "fn": str(employee_name_1),
                                 "gpnr": "",
-                                "ln": str(employee_id_1),
+                                "ln": "",
                                 "meal": "",
                                 "mn": "",
                                 "nat": "",
@@ -6249,6 +6269,7 @@ def save_flight_booking(request):
                                 "year": ""
                             },
 
+
                         ],
                         "TYPE": "DC",
                         "NAME": "PNR_CREATION",
@@ -6261,13 +6282,14 @@ def save_flight_booking(request):
                         ]
                     }
 
-                headers = {}
+                    headers = {}
+                    print(payload)
                     r = requests.post(url, json=payload)
                     api_response = r.json()
                     data = {'success': 1, 'Data': api_response}
                     return JsonResponse(data)
                 except Exception as e:
-                    data = {'success': 0, 'Data': ''}
+                    data = {'success': 0, 'Data': e}
                     return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}

@@ -49,7 +49,7 @@
                                                             <p class="font_txt">{{flight.CN_CODE}}</p></td>
                                                         <td colspan="2"  class="border-section">{{flight.D_TIME}}<br><p class="font_txt1">{{flight.D_NAME}}</p> </td>
 
-                                                        <td colspan="2"  class="border-section">{{flight.DUR}} <i class="fa fa-long-arrow-right"></i>{{flight.DUR}} <br> <p class="font_txt1">{{ flight.STOP|default:'Non' }} Stop<p></td>
+                                                        <td colspan="2"  class="border-section">{{flight.DUR}} <br> <p class="font_txt1">{{ flight.STOP|default:'Non' }} Stop<p></td>
 
                                                         <td colspan="2"  class="border-section"> {{flight.A_TIME}} <br><p class="font_txt1">{{flight.A_NAME}}</p></td>
 
@@ -59,9 +59,21 @@
                                                             <input type="hidden" name="UID" value="{{flight.UID}}">
                                                             <input type="hidden" name="ID" value="{{flight.ID}}">
                                                             <input type="hidden" name="TID" value="{{flight.TID}}">
-                                                            <input type="hidden" name="D_NAME" value="{{flight.D_NAME}}">
-                                                            <input type="hidden" name="A_NAME" value="{{flight.A_NAME}}">
-                                                            <input type="hidden" name="A_DATE" value="{{flight.A_DATE}}">
+
+                                                            {% for param in params %}
+                                                            <input type="hidden" name="src" value="{{param.src}}">
+                                                            <input type="hidden" name="des" value="{{param.des}}">
+                                                            <input type="hidden" name="dep_date" value="{{param.dep_date}}">
+                                                            <input type="hidden" name="ret_date" value="{{param.ret_date}}">
+                                                            <input type="hidden" name="adt" value="{{param.adt}}">
+                                                            <input type="hidden" name="chd" value="{{param.chd}}">
+                                                            <input type="hidden" name="inf" value="{{param.inf}}">
+                                                            <input type="hidden" name="L_OW" value="{{param.L_OW}}">
+                                                            <input type="hidden" name="H_OW" value="{{param.H_OW}}">
+                                                            <input type="hidden" name="T_TIME" value="{{param.T_TIME}}">
+                                                            <input type="hidden" name="trip_string" value="{{param.Trip_String}}">
+                                                            {% endfor %}
+
 
                                                             <td colspan="2"  class="border-section"> <button type="submit" class="btn btn-info">Book</button> <br><p class="font_txt1 butn_color"><a href="" class="read">Flight Details</a></p></td>
                                                         </form>
@@ -71,7 +83,7 @@
                                                 <tr id="flight_details">
                                                     <td  colspan="2"  class="border-section"> <p>{{flight_fl.FLIGHT_NAME}} {{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}} </p></td>
                                                     <td colspan="2"  class="border-section"> <p>{{flight_fl.DEP_TIME}} <br><p class="font_txt1"> {{flight_fl.ORG_NAME}} </p></td>
-                                                    <td colspan="2"  class="border-section"> <p>{{flight_fl.DURATION}} <i class="fa fa-long-arrow-right"></i> {{flight_fl.DURATION}} </p></td>
+                                                    <td colspan="2"  class="border-section"> <p>{{flight_fl.DURATION}} </p></td>
                                                     <td colspan="2"  class="border-section"> <p>{{flight_fl.ARRV_TIME}} <i class="fa fa-long-arrow-right"></i> {{flight_fl.DES_NAME}} </p></td>
                                                     <td colspan="2"  class="border-section"> <p>{{flight_fl.LAYOVER_INFO}} </p></td>
                                                     <td colspan="2"  class="border-section"> <p>{{flight_fl.OPERATION_INFO}} </p></td>

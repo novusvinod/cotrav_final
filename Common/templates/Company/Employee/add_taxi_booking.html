@@ -5,15 +5,12 @@
 
 {% if user %}
 <!-- start page content -->
+{% load static %}
+
 
 {% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
-                          <div class="text-center">
-                     <div style="font-size:14px; font-weight:bold;">
-                        Add Taxi Booking
-                         </div>
-                </div>
         <form method="post" action="/Corporate/Employee/add-taxi-booking/{{user.corporate_id}}">
             <input type="hidden" name="employee_id" value="{{user.id}}">
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
@@ -21,159 +18,193 @@
             <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
              <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
+       <div class="row">
+						<div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
+								<div class="card-head">
+									<header>Booking Details: </header>
+                                     <div class="tools">
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card card-topline-aqua">
-                    <div class="card-head">
-                        <header>ADD TAXI BOOKING</header>
-                        <div class="tools">
-                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
-                        </div>
-                    </div>
-                    <div class="card-body ">
-                     <div class="row">
-                         <div class="col-md-12 col-sm-12">
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type myselect" required>
-                                      <option value="">Select Tour Type </option>
-                                    {% for corp_acces in corp_access %}
+                                    </div>
+								</div>
+								<div class="card-body row">
 
 
-                                      {% if corp_acces.is_radio == 1 %}
-                                      <option value="1">Radio </option>
-                                      {% endif %}
-                                      {% if corp_acces.is_local == 1 %}
-                                      <option value="2">Local </option>
-                                      {% endif %}
-                                      {% if corp_acces.is_outstation == 1 %}
-                                      <option value="3">Outstation </option>
-                                      {% endif %}
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+											<select class="mdl-textfield__input js-select2" id="tour_type" name="tour_type" required>
+                                                    <option value="">Select Tour Type </option>
+                                                        {% for corp_acces in corp_access %}
+
+                                                            {% if corp_acces.is_radio == 1 %}
+                                                                <option value="1">Radio </option>
+                                                            {% endif %}
+                                                            {% if corp_acces.is_local == 1 %}
+                                                                <option value="2">Local </option>
+                                                            {% endif %}
+                                                            {% if corp_acces.is_outstation == 1 %}
+                                                                <option value="3">Outstation </option>
+                                                            {% endif %}
+
+                                                        {% endfor %}
+
+                                            </select>
+                                         <label class = "mdl-textfield__label" >Tour Type*</label>
+                                       </div>
+									</div>
+
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+											<select class="mdl-textfield__input js-select2" id="current_city_id" name="current_city_id" required>
+                                                <option value="">Select City </option>
+                                                    {% for cities in citiess %}
+                                                     <option value="{{cities.id}}">{{cities.city_name}}</option>
+                                                    {% endfor %}
+                                            </select>
+                                         <label class = "mdl-textfield__label" >Pickup City*</label>
+                                       </div>
+									</div>
+
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+											<select class="mdl-textfield__input js-select2" id="select_taxi_type" name="taxi_type" required>
+                                                 <option value="">Select Taxi Type</option>
+                                                    {% for taxi in taxies %}
+                                                    <option value="{{taxi.id}}">{{taxi.name}}</option>
+                                                    {% endfor %}
+                                            </select>
+                                         <label class = "mdl-textfield__label" >Taxi Type</label>
+                                       </div>
+									</div>
+
+                                    <div class="col-lg-2 p-t-20" id="tr_package">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+											<select class="mdl-textfield__input js-select2" name="package_id" id="package_id">
 
 
-                              {% endfor %}
-                                  </select>
-                            </div>
+                                            </select>
+                                         <label class = "mdl-textfield__label" >Select Package</label>
+                                       </div>
+									</div>
+
+                                     <div class="col-lg-2 p-t-20" id="tr_no_of_days">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="no_of_days" id="id_no_of_days">
+					                     <label class = "mdl-textfield__label">No of Days</label>
+					                  </div>
+						            </div>
+
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input" type = "text" name="pickup_location" id="pickup_location" placeholder="" required>
+					                     <label class = "mdl-textfield__label">Pickup Location*</label>
+					                  </div>
+						            </div>
+
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input date-format" type = "text" name="pickup_datetime" required>
+					                     <label class = "mdl-textfield__label">Pickup DateTime*</label>
+					                  </div>
+						            </div>
+
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input" type = "text" name="drop_location" id="drop_location" placeholder="" required>
+					                     <label class = "mdl-textfield__label">Drop Location*</label>
+					                  </div>
+						            </div>
 
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Pickup City*</label>
-                                 <select id="current_city_id" name="current_city_id" class="form-control col-sm-8 myselect" required>
-                                      <option value="">Select City </option>
-                                        {% for cities in citiess %}
-                                         <option value="{{cities.id}}">{{cities.city_name}}</option>
-                                        {% endfor %}
-                                  </select>
-<!--                                 <input type="text" class="form-control col-sm-8" name="pickup_city" id="pickup_city" placeholder="Pickup City" required>-->
-<!--                                <input type="hidden" name="current_city_id" id="current_city_id">-->
-                            </div>
 
-                              <div class="form-group row" id="tr_taxi_type">
-                                    <label class="col-sm-4" >Taxi Type</label>
-                                     <select name="taxi_type" class="form-control col-sm-8 myselect" id="select_taxi_type">
-                                         <option value="" >Select Taxi Type</option>
-                                        {% for taxi in taxies %}
-                                        <option value="{{taxi.id}}">{{taxi.name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-
-                             <div class="form-group row" id="tr_package" >
-                                    <label class="col-sm-4" >Select Package</label>
-                                     <select name="package_id" id="package_id" class="form-control col-sm-8 myselect">
-
-                                    </select>
-                                </div>
-
-                              <div class="form-group row" id="tr_no_of_days" >
-                                    <label class="col-sm-4" >No of Days</label>
-                                      <input type="text" class="form-control col-sm-8" name="no_of_days" id="id_no_of_days" placeholder="No of Days">
-                            </div>
-
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Pickup Location*</label>
-                                 <input type="text" class="form-control col-sm-8" name="pickup_location" id="pickup_location" placeholder="Pickup Location" required>
-                            </div>
-
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Drop Location*</label>
-                                 <input type="text" class="form-control col-sm-8" name="drop_location" id="drop_location" placeholder="Drop Location" required>
-                            </div>
-
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Pickup DateTime*</label>
-                                 <input type="text" class="form-control col-sm-8 date-format" name="pickup_datetime" placeholder="Pickup Date/Time" required>
-                            </div>
-
-
-                             {% for corp_acces in corp_access %}
+                                {% for corp_acces in corp_access %}
                                 {% if corp_acces.has_assessment_codes == 1 %}
 
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Assessment Code*</label>
-                                   <select name="assessment_code" class="form-control col-sm-8 myselect">
-                                       <option value="" >Select Assessment Code</option>
-                                        {% for assessment in assessments %}
-                                        <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
-                                        {% endfor %}
-                                    </select>
-                            </div>
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+											<select class="mdl-textfield__input select2" name="assessment_code" id="assessment_code">
+                                                <option value="">Select Assessment Code</option>
+                                                    {% for assessment in assessments %}
+                                                    <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
+                                                    {% endfor %}
 
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Assessment City*</label>
-                                   <select name="assessment_city_id" class="form-control col-sm-8 myselect">
-                                       <option value="" >Select Assessment City</option>
-                                        {% for city in cities %}
-                                        <option value="{{city.id}}">{{city.city_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                            </div>
+                                            </select>
+                                         <label class = "mdl-textfield__label" >Assessment Code*</label>
+                                       </div>
+									</div>
+
+
+
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+											<select class="mdl-textfield__input js-select2" name="assessment_city_id" id="assessment_city_id">
+                                                <option value="">Select Assessment City</option>
+                                                    {% for city in cities %}
+                                                    <option value="{{city.id}}">{{city.city_name}}</option>
+                                                    {% endfor %}
+
+                                            </select>
+                                         <label class = "mdl-textfield__label" >Assessment City*</label>
+                                       </div>
+									</div>
 
                               {% endif %}
                               {% endfor %}
 
 
-
-                               <div class="form-group row">
-                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
-                                <textarea name="reason_booking" class="form-control col-sm-8" required placeholder="Reason/Comment for Booking"></textarea>
-                            </div>
-
-
-
+                              <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <textarea class = "mdl-textfield__input" name="reason_booking"> </textarea>
+					                     <label class = "mdl-textfield__label">Booking Reason/ Comment*</label>
+					                  </div>
+						      </div>
 
 
                         </div>
 
 
-                     </div>
 
-
-
-
-                     </div>
-                      <div class="form-group">
-                    <div class="offset-md-3 col-md-9">
-                        <button type="submit" class="btn btn-info">Submit</button>
-                        <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                    </div>
-                </div>
                 </div>
             </div>
-        </div>
+
+
+           <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
+
+
+
+                          <div class="col-lg-12"  align="center">
+							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
+
+                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="history.go(-2)" >
+											  Cancel
+											</button>
+							            </div>
+
+                     </div>
+                 </div>
+        </div><!-- row end -->
+
+       </div>
         </form>
-    </div>
-</div>
+    </div></div>
+
+
 <!-- end page content -->
-<script type="text/javascript">
-   $(".myselect").select2();
-</script>
-
-
 
 
 {% else %}

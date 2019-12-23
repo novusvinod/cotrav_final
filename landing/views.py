@@ -220,7 +220,7 @@ def get_flights(request):
                 "NAME": "GET_FLIGHT",
                 "STR": [
                     {
-                        "AUTH_TOKEN": "faddc27a-6463-4a72-81b7-d6750e944f69",
+                        "AUTH_TOKEN": "19d7c89d-41e2-4ddb-918f-b12a8f219686",
                         "SESSION_ID": "0vv5ycqeaxmndcdqhtatcscx",
                         "TRIP": "1",
                         "SECTOR": "D",

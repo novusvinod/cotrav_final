@@ -31,136 +31,130 @@
             {% endfor %}
             {% endif %}
 
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4">
-                            <div class="card card-box">
-                                <div class="card-head">
-                                    <header>General Information</header>
-                                     <button id = "panel-button"
-				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
-				                           data-upgraded = ",MaterialButton">
-				                           <i class = "material-icons">more_vert</i>
-				                        </button>
-				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-				                           data-mdl-for = "panel-button">
-				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
-				                        </ul>
-                                </div>
-                                <div class="card-body " id="bar-parent">
+ <div class="row">
+						<div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
+								<div class="card-head">
+									<header>General Information: </header>
+                                     <div class="tools">
 
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                                         <div class="form-group row">
-                                                <label class="col-sm-4">Operator</label>
-                                             {% if operator_drivers %}
+                                    </div>
+								</div>
+								<div class="card-body row">
+
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                            {% if operator_drivers %}
                                             {% for driver in operator_drivers %}
-	                                                 <select class="col-sm-8 form-control myselect" name="operator_id" required>
-                                                         <option value="">Select Operator</option>
+											<select class="mdl-textfield__input js-select2" name="operator_id" required >
+												   <option value="">Select Operator</option>
                                                     {% for operator in operators %}
                                                      <option value="{{operator.id}}" {%if driver.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
                                                     {% endfor %}
-	                                            </select>
+                                            </select>
                                             {% endfor %}
                                               {% else %}
-
-                                                <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                            <select class="mdl-textfield__input js-select2 " name="operator_id" required >
                                                     <option value="">Select Operator</option>
 	                                                {% for operator in operators %}
                                                      <option value="{{operator.id}}" >{{operator.operator_name}}</option>
                                                     {% endfor %}
-	                                            </select>
-                                             {% endif %}
-                                            </div>
+                                            </select>
+
+                                            {% endif %}
+
+                                        <label class = "mdl-textfield__label" >Operator Name</label>
+                                       </div>
+									</div>
 
 
-
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Driver Name</label>
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                          {% if operator_drivers %}
-                                            {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_name"  value="{{driver.driver_name}}" required>
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_name" placeholder="Driver Name" required>
-                                         {% endif %}
-                                        </div>
+                                         {% for driver in operator_drivers %}
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Driver Contact</label>
+					                     <input class = "mdl-textfield__input" type = "text" name="driver_name"  value="{{driver.driver_name}}" required   >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input"  type = "text" name="driver_name" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Driver Name</label>
+					                  </div>
+						            </div>
+
+
+
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                          {% if operator_drivers %}
-                                            {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_contact"  value="{{driver.driver_contact}}" required>
-                                            {% endfor %}
+                                         {% for driver in operator_drivers %}
+
+					                     <input class = "mdl-textfield__input" type = "text" name="driver_contact"  value="{{driver.driver_contact}}" required   >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_contact" placeholder="Driver Contact" required>
-                                         {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input"  type = "text" name="driver_contact" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Driver Contact</label>
+					                  </div>
+						            </div>
 
 
-                                       <div class="form-group row">
-                                            <label class="col-sm-4" >Driver Email</label>
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                          {% if operator_drivers %}
-                                            {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_email"  value="{{driver.driver_email}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="driver_email" placeholder="Driver Email">
-                                         {% endif %}
-                                        </div>
+                                         {% for driver in operator_drivers %}
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Driver Licence_no</label>
+					                     <input class = "mdl-textfield__input" type = "text" name="driver_email"  value="{{driver.driver_email}}" required   >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input"  type = "text" name="driver_email" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Driver Email</label>
+					                  </div>
+						            </div>
+
+
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                          {% if operator_drivers %}
-                                            {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="licence_no"  value="{{driver.licence_no}}">
-                                            {% endfor %}
-                                              {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="licence_no" placeholder="Driver Licence_no">
-                                         {% endif %}
-                                        </div>
+                                         {% for driver in operator_drivers %}
 
-                                     <div class="form-group row">
-                                            <label class="col-sm-4" >Fcm Regid</label>
+					                     <input class = "mdl-textfield__input" type = "text" name="licence_no"  value="{{driver.licence_no}}" required   >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input"  type = "text" name="licence_no" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Driver Licence_no</label>
+					                  </div>
+						            </div>
+
+
+                                     <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
                                          {% if operator_drivers %}
-                                            {% for driver in operator_drivers %}
-                                            <input type="text" class="col-sm-8 form-control" name="fcm_regid"  value="{{driver.fcm_regid}}">
-                                            {% endfor %}
+                                         {% for driver in operator_drivers %}
+
+					                     <input class = "mdl-textfield__input" type = "text" name="fcm_regid"  value="{{driver.fcm_regid}}" required   >
+                                          {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control" name="fcm_regid" placeholder="Fcm Regid">
-                                         {% endif %}
-                                        </div>
+                                          <input class = "mdl-textfield__input"  type = "text" name="fcm_regid" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Fcm Regid</label>
+					                  </div>
+						            </div>
 
-                                     <div class="form-group row">
-                                                <label class="col-sm-4">Select Taxi</label>
-                                             {% if operator_drivers %}
-                                            {% for driver in operator_drivers %}
-	                                                 <select class="col-sm-8 form-control myselect" name="taxi_id" required>
-                                                         <option value="">Select Taxi</option>
-                                                    {% for taxi in taxies %}
-                                                     <option value="{{taxi.id}}" {%if driver.taxi_id == taxi.id %} selected {%endif%}>{{taxi.taxi_reg_no}}</option>
-                                                    {% endfor %}
-	                                            </select>
-                                            {% endfor %}
-                                              {% else %}
+                                    <div class="col-lg-12"  align="center">
+							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
 
-                                                <select class="col-sm-8 form-control myselect" name="taxi_id" required>
-                                                    <option value="">Select Taxi</option>
-	                                                {% for taxi in taxies %}
-                                                     <option value="{{taxi.id}}" >{{taxi.taxi_reg_no}}</option>
-                                                    {% endfor %}
-	                                            </select>
-                                             {% endif %}
-                                            </div>
+                                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"   >
+											  Cancel
+											</button>
+                                    </div>
 
-
-
-                                        <div class="form-group">
-                                            <div class="offset-md-3 col-md-9">
-                                                <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                                            </div>
-                                        </div>
 
 
                                 </div>

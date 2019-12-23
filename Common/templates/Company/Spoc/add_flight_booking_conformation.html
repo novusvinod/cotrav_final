@@ -119,8 +119,85 @@
                            </div>
                     </div>
                       </div>
-
+<form method="post" action="/Corporate/Spoc/add-flight-booking-self-final/{{user.id}}">
             <div class="col-md-8">
+             <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>Other Details</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+
+
+    <input type="hidden" name="flightdata" value="{{flights}}">
+    <input type="hidden" name="user_id" value="{{user.id}}">
+    <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
+    <input type="hidden" name="spoc_id" value="{{user.id}}">
+    <input type="hidden" name="group_id" value="{{user.group_id}}">
+    <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
+
+{% for flight in flights.FLIGHT %}
+    <input type="hidden" name="usage_type" value="Flight">
+    <input type="hidden" name="trip_type" value="One Way">
+    <input type="hidden" name="seat_type" value="Economy">
+
+    <input type="hidden" name="from_city" value="{{flight.ORG_NAME}}">
+    <input type="hidden" name="to_city" value="{{flight.DES_NAME}}">
+    <input type="hidden" name="departure_date" value="{{flight.DEP_DATE}}">
+{% endfor %}
+                    <div class="card-body ">
+
+          {% for corp_acces in corp_access %}
+                {% if corp_acces.has_assessment_codes == 1 %}
+              <div class="form-group row">
+                    <label class="col-sm-4" >Assessment Code*</label>
+                     <select id="assessment_code" name="assessment_code" class="form-control col-sm-7 myselect">
+                         <option value="">Select Assessment Code</option>
+                         {% for assessment in assessments %}
+                        <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                 <div class="form-group row">
+                        <label class="col-sm-4">Assessment City</label>
+                        <select class="col-sm-7 form-control myselect" name="assessment_city" id="assessment_cities">
+                            <option value="">Select Assessment City</option>
+                            {% for city in cities_ass %}
+                                <option value="{{city.id}}">{{city.city_name}}</option>
+                                {% endfor %}
+                        </select>
+
+                </div>
+
+                 {% endif %}
+                      {% endfor %}
+
+
+                 <div class="form-group row">
+                    <label class="col-sm-4" >Select Billing Entity*</label>
+                     <select id="entity_id" name="billing_entity_id" class="form-control col-sm-7 myselect">
+                          <option value="">Select Billing Entity </option>
+
+                         {% for entity in entities %}
+                                <option value="{{entity.id}}">{{entity.entity_name}}</option>
+                            {% endfor %}
+
+                      </select>
+                </div>
+
+
+        </div>
+
+
+                </div>
+                </div>
+
+                <div class="col-md-8">
              <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>Passanger Details</header>
@@ -130,57 +207,9 @@
                             <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
                         </div>
                     </div>
-<form method="post" action="/Corporate/Spoc/add-flight-booking-self-final/{{user.id}}">
-
-    <input type="hidden" name="flightdata" value="{{flights}}">
-    <input type="hidden" name="user_id" value="{{user.id}}">
-            <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
-            <input type="hidden" name="spoc_id" value="{{user.id}}">
-            <input type="hidden" name="group_id" value="{{user.group_id}}">
-            <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
 
                     <div class="card-body ">
 <h4>IMPORTANT : Enter your name as it is mentioned on your passport or any goverment approved Id</h4>
-
-                          {% for corp_acces in corp_access %}
-                                {% if corp_acces.has_assessment_codes == 1 %}
-                              <div class="form-group row">
-                                    <label class="col-sm-4" >Assessment Code*</label>
-                                     <select id="assessment_code" name="assessment_code" class="form-control col-sm-8 myselect">
-                                         <option value="">Select Assessment Code</option>
-                                         {% for assessment in assessments %}
-                                        <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
-                                        {% endfor %}
-
-                                    </select>
-                                </div>
-
-                         <div class="form-group row">
-                                                <label class="col-sm-4">Assessment City</label>
-                                                <select class="col-sm-8 form-control myselect" name="assessment_city" id="assessment_cities">
-                                                    <option value="">Select Assessment City</option>
-                                                    {% for city in cities_ass %}
-                                                        <option value="{{city.id}}">{{city.city_name}}</option>
-                                                        {% endfor %}
-                                                </select>
-
-                                        </div>
-
-                         {% endif %}
-                              {% endfor %}
-
-
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Select Billing Entity*</label>
-                                 <select id="entity_id" name="billing_entity_id" class="form-control col-sm-8 myselect">
-                                      <option value="">Select Billing Entity </option>
-
-                                     {% for entity in entities %}
-                                            <option value="{{entity.id}}">{{entity.entity_name}}</option>
-                                        {% endfor %}
-
-                                  </select>
-                            </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-2" >Number Of Employees*</label>
@@ -199,7 +228,7 @@
                                      <select id="employee_id_1" name="employee_id_1" class="form-control col-sm-2 myselect" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
-                                        <option value="{{employee.employee_name}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
                                     <input type="text" name="emp_id_1" id="emp_id_1" class="form-control col-sm-2" placeholder="Employee Id">
@@ -290,6 +319,12 @@
                 </div>
                 </div>
 
+
+
+
+
+
+</form>
                   </div>
             </div>
              <!-- end page content -->

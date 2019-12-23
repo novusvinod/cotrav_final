@@ -53,7 +53,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script>
-   
+    <link href="{% static 'assets/css/select2_custome.css' %}" rel="stylesheet" type="text/css" />
+
     <!-- Date Time item CSS -->
     <link rel="stylesheet" href="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.css' %}" />
 
@@ -84,7 +85,18 @@
     width: 'resolve'
     });
 </script>
+<script type="text/javascript">
 
+    $(".js-select2").select2({
+        theme: "material",
+        width: 'resolve'
+    });
+
+    $(".select2-selection__arrow")
+        .addClass("material-icons")
+        .html("arrow_drop_down");
+
+</script>
 
     <!-- start footer -->
     <div class="page-footer">

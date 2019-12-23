@@ -186,331 +186,337 @@
 
             </div>
 
-            <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
+             <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
 								<div class="card-head">
-									<header>SPOC and Passanger Details</header>
+									<header>Passanger Details: </header>
                                      <div class="tools">
 
 										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
                                     </div>
-								</div>
-								<div class="card-body row">
+								</div> <!-- card-head class end -->
 
-									<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input js-select2" id="spoc_id" name="spoc_id" required>
-                                                <option value=""></option>
+                                <div class="card-body row">
+						            <div class="col-lg-6 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select id="spoc_id" name="spoc_id" class="mdl-textfield__input js-select2" placeholder="Select Spoc" required>
+                                      <option value=""></option>
+                                    </select>
 
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Select Spoc*</label>
-                                       </div>
-									</div>
+                                      <label class = "mdl-textfield__label">Select Spoc </label>
 
-
-                                    <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input js-select2" id="no_of_seats" name="no_of_seats" required>
-                                                <option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">5</option>
-												<option value="6">6</option>
-
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Number Of Employees*</label>
-                                       </div>
-									</div>
-
-
-                                    </div>
-
-                                        <div class="card-body row">
-
-                                		<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" id="emp_row_1">
-											<select class="mdl-textfield__input js-select2" name="employee_id_1" id="employee_id_1" required>
-                                                {% for employee in employees %}
-													<option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-												{% endfor %}
-
-                                            </select>
-                                            <label class = "mdl-textfield__label" >Employee 1</label>
-
-                                                <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                                    <input type="text" name="emp_id_1" id="emp_id_1" class = "mdl-textfield__input" >
-                                                    <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_name_1" id="employee_name_1" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_contact_1" id="employee_contact_1" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_email_1" id="employee_email_1" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                          </div>
-									</div>
-
-
-
-									<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" id="emp_row_2">
-											<select class="mdl-textfield__input js-select2" name="employee_id_2" id="employee_id_2" required>
-                                                {% for employee in employees %}
-													<option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-												{% endfor %}
-
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Employee 2</label>
-
-
-                                            <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                     <input type="text" name="emp_id_2" id="emp_id_2" class = "mdl-textfield__input">
-                                                    <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_name_2" id="employee_name_2" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_contact_2" id="employee_contact_2" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_email_2" id="employee_email_2" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                         </div>
-									</div>
-
-
-
-
-
-									<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" id="emp_row_3">
-											<select class="mdl-textfield__input js-select2" name="employee_id_3" id="employee_id_3" required>
-                                                {% for employee in employees %}
-													<option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-												{% endfor %}
-
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Employee 3</label>
-
-
-                                             <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                     <input type="text" name="emp_id_3" id="emp_id_3" class = "mdl-textfield__input">
-                                                    <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_name_3" id="employee_name_3" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_contact_3" id="employee_contact_3" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_email_3" id="employee_email_3" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                         </div>
-									</div>
-
-
-
-
-									<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" id="emp_row_4">
-											<select class="mdl-textfield__input js-select2" name="employee_id_4" id="employee_id_4" required>
-                                                {% for employee in employees %}
-													<option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-												{% endfor %}
-
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Employee 4</label>
-
-
-
-                                           <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                     <input type="text" name="emp_id_4" id="emp_id_4" class = "mdl-textfield__input">
-                                                    <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_name_4" id="employee_name_4" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_contact_4" id="employee_contact_4" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_email_4" id="employee_email_4" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                        </div>
-									</div>
-
-									<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" id="emp_row_5">
-											<select class="mdl-textfield__input js-select2" name="employee_id_5" id="employee_id_5" required>
-                                                {% for employee in employees %}
-													<option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-												{% endfor %}
-
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Employee 5</label>
-
-
-
-                                        <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                     <input type="text" name="emp_id_5" id="emp_id_5" class = "mdl-textfield__input">
-                                                    <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_name_5" id="employee_name_5" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_contact_5" id="employee_contact_5" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                             <input type="text" name="employee_email_5" id="employee_email_5" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                       </div>
-									</div>
-
-									<div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" id="emp_row_6">
-											<select class="mdl-textfield__input js-select2" name="employee_id_6" id="employee_id_6" required>
-                                                {% for employee in employees %}
-													<option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
-												{% endfor %}
-
-                                            </select>
-                                            <label class = "mdl-textfield__label" >Employee 6</label>
-
-
-
-                                                <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                     <input type="text" name="emp_id_6" id="emp_id_6" class = "mdl-textfield__input">
-                                                    <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                    <input type="text" name="employee_name_6" id="employee_name_6" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                    <input type="text" name="employee_contact_6" id="employee_contact_6" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                                 <div class="col-lg-2 p-t-20" style="max-width: 100%">
-                                                <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                                    <input type="text" name="employee_email_6" id="employee_email_6" class = "mdl-textfield__input">
-                                                 <label class = "mdl-textfield__label" ></label>
-                                                </div>
-                                                </div>
-
-                                            </div>
-									</div>
-
-
-
-            </div>
-
-
-
-
-                                           <div class="card-body row">
-
-                                     <div class="col-lg-12 p-t-20 text-center">
-						              	<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>
-										<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default" onclick="history.back();">Cancel</button>
+					                  </div>
 						            </div>
 
-                                           </div>
+                                    <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
 
-                                </div>
+                                          <select id="no_of_seatss" name="no_of_seats" class="form-control col-sm-10 no_of_seats myselect" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5" style="display: none">5</option>
+                                    <option value="6" style="display: none">6</option>
+                                </select>
+
+
+
+
+
+
+                                      </div>
+						            </div>
+
+                                    <div class="form-group row" id="emp_row_1">
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                           <select name="employee_id_1" id="employee_id_1" class="mdl-textfield__input js-select2" placeholder="Select Employee">
+                                               <option value=""></option>
+                                                {% for employee in employees %}
+                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
+                                                {% endfor %}
+                                           </select>
+
+                                          <label class = "mdl-textfield__label">Select Employee</label>
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="emp_id_1" id="emp_id_1" class="mdl-textfield__input" placeholder="Employee Id">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_name_1" id="employee_name_1" class="mdl-textfield__input" placeholder="Name">
+
+
+                                      </div>
+						            </div>
+
+                                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_contact_1" id="employee_contact_1" class="mdl-textfield__input" placeholder="Contact No">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_email_1" id="employee_email_1" class="mdl-textfield__input" placeholder="Email">
+
+
+                                      </div>
+						            </div>
+
+
+
+
                                     </div>
 
+                              <!-- second employee -->
+                                    <div class="form-group row" id="emp_row_2">
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                           <select name="employee_id_2" id="employee_id_2" class="mdl-textfield__input js-select2" placeholder="Select Employee">
+                                               <option value=""></option>
+                                                {% for employee in employees %}
+                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
+                                                {% endfor %}
+                                           </select>
+
+                                          <label class = "mdl-textfield__label">Select Employee</label>
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="emp_id_2" id="emp_id_2" class="mdl-textfield__input" placeholder="Employee Id">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_name_2" id="employee_name_2" class="mdl-textfield__input" placeholder="Name">
+
+
+                                      </div>
+						            </div>
+
+                                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_contact_2" id="employee_contact_2" class="mdl-textfield__input" placeholder="Contact No">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_email_2" id="employee_email_2" class="mdl-textfield__input" placeholder="Email">
+
+
+                                      </div>
+						            </div>
+
+
 
 
                                     </div>
 
+                              <!-- end -->
+
+                                    <!-- third employee -->
+                                    <div class="form-group row" id="emp_row_3">
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                           <select name="employee_id_3" id="employee_id_3" class="mdl-textfield__input js-select2" placeholder="Select Employee">
+                                               <option value=""></option>
+                                                {% for employee in employees %}
+                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
+                                                {% endfor %}
+                                           </select>
+
+                                          <label class = "mdl-textfield__label">Select Employee</label>
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="emp_id_3" id="emp_id_3" class="mdl-textfield__input" placeholder="Employee Id">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_name_3" id="employee_name_3" class="mdl-textfield__input" placeholder="Name">
+
+
+                                      </div>
+						            </div>
+
+                                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_contact_3" id="employee_contact_3" class="mdl-textfield__input" placeholder="Contact No">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_email_3" id="employee_email_3" class="mdl-textfield__input" placeholder="Email">
+
+
+                                      </div>
+						            </div>
 
 
 
-        </div>
-        </form>
-    </div>
-</div>
-<!-- end page content -->
+
+                                    </div>
+
+                              <!-- end -->
+
+
+
+                                     <!-- fourth employee -->
+                                    <div class="form-group row" id="emp_row_4">
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                           <select name="employee_id_4" id="employee_id_4" class="mdl-textfield__input js-select2" placeholder="Select Employee">
+                                               <option value=""></option>
+                                                {% for employee in employees %}
+                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
+                                                {% endfor %}
+                                           </select>
+
+                                          <label class = "mdl-textfield__label">Select Employee</label>
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="emp_id_4" id="emp_id_4" class="mdl-textfield__input" placeholder="Employee Id">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_name_4" id="employee_name_4" class="mdl-textfield__input" placeholder="Name">
+
+
+                                      </div>
+						            </div>
+
+                                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_contact_4" id="employee_contact_4" class="mdl-textfield__input" placeholder="Contact No">
+
+
+                                      </div>
+						            </div>
+
+                                        <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
+                                          <input type="text" name="employee_email_4" id="employee_email_4" class="mdl-textfield__input" placeholder="Email">
+
+
+                                      </div>
+						            </div>
+
+
+
+
+                                    </div>
+
+                              <!-- end -->
+
+
+                            </div>
+            </div>
+            </div>
+
+                 <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
+
+
+
+                         <div class="col-lg-12"  align="center">
+							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
+
+                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
+											  Cancel
+											</button>
+							            </div>
+
+
+
+
+                     </div>
+
+
+
+                 </div>
+
+
+
+
+        </div><!-- row end -->
+</form>
 
 
 
@@ -604,7 +610,7 @@ $("#employee_id_5").change(function()
     });
 
 
-$("#no_of_seats").change(function()
+$(".no_of_seats").change(function()
     {
 
     	var no_of_seats = $(this).val();

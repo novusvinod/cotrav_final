@@ -29,89 +29,234 @@
             <input type="hidden" class="col-sm-8 form-control" name="employee_id" value="{{employee.id }}">
             {% endfor %}
             {% endif %}
-            <div class="row">
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
-                        <div class="card-head">
-                            <header>General Information</header>
-                            <button id="panel-button"
-                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                                    data-upgraded=",MaterialButton">
-                                <i class="material-icons">more_vert</i>
-                            </button>
+
+ <div class="row">
+						<div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
+								<div class="card-head">
+									<header>General Information: </header>
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div>
+								<div class="card-body row">
+
+
+                                    <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                            {% if employee %}
+                                            {% for employee in employee %}
+											<select class="mdl-textfield__input js-select2" name="corporate_id" required>
+	                                                <option value="">Select Company</option>
+                                                        {% for company in companies %}
+                                                        <option value="{{company.id}}" {% if employee.corporate_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+                                            {% endfor %}
+                                              {% else %}
+                                            <select class="mdl-textfield__input js-select2" name="corporate_id" id="corporate_id" required>
+	                                                <option value="">Select Company</option>
+                                                        {% for company in companies %}
+                                                        <option value="{{company.id}}">{{company.corporate_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+
+                                            {% endif %}
+
+                                        <label class = "mdl-textfield__label" >Company Name</label>
+                                       </div>
+									</div>
+
+
+                                     <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                            {% if employee %}
+                                            {% for employee in employee %}
+											<select class="mdl-textfield__input js-select2" name="spoc_id"  required>
+	                                                <option value="">Select Spoc</option>
+                                                        {% for spoc in spocs %}
+                                                        <option value="{{spoc.id}}" {% if employee.spoc_id == spoc.id %} selected {%endif%}>{{spoc.user_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+                                            {% endfor %}
+                                              {% else %}
+                                            <select class="mdl-textfield__input js-select2" name="spoc_id" id="spoc_id" required>
+	                                                 <option value="">Select Spoc</option>
+                                                        {% for spoc in spocs %}
+                                                        <option value="{{spoc.id}}">{{spoc.user_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+
+                                            {% endif %}
+
+                                        <label class = "mdl-textfield__label" >Select Spoc</label>
+                                       </div>
+									</div>
+
+
+                              <div class="col-lg-2 p-t-20">
+										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                            {% if employee %}
+                                            {% for employee in employee %}
+											<select class="mdl-textfield__input js-select2" name="billing_entity_id"  required>
+	                                                <option value="">Select Billing Entity</option>
+                                                        {% for entity in entitys %}
+                                                        <option value="{{entity.id}}" {% if employee.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+                                            {% endfor %}
+                                              {% else %}
+                                            <select class="mdl-textfield__input js-select2" name="billing_entity_id" id="billing_entity_id" required>
+	                                                 <option value="">Select Billing Entity</option>
+                                                        {% for entity in entitys %}
+                                                        <option value="{{entity.id}}">{{entity.entity_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+
+                                            {% endif %}
+
+                                        <label class = "mdl-textfield__label" >Billing Entity</label>
+                                       </div>
+									</div>
+
 
                         </div>
-                        <div class="card-body " id="bar-parent">
+                    </div>
+                </div>
 
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Company Name</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="corporate_id"  required>
-                                        <option value="">Select Company</option>
-                                        {% for company in companies %}
-                                        <option value="{{company.id}}" {% if employee.corporate_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% endfor %}
-                                {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="corporate_id" id="corporate_id" required>
-                                        <option value="">Select Company</option>
-                                        {% for company in companies %}
-                                        <option value="{{company.id}}">{{company.corporate_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% endif %}
-                            </div>
+ <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+									<header>Rate Details: </header>
+                                     <div class="tools">
 
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Select Spoc</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="spoc_id"  required>
-                                        <option value="">Select Spoc</option>
-                                        {% for spoc in spocs %}
-                                        <option value="{{spoc.id}}" {% if employee.spoc_id == spoc.id %} selected {%endif%}>{{spoc.user_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% endfor %}
-                                {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="spoc_id" id="spoc_id" required>
-                                        <option value="">Select Spoc</option>
-                                        {% for spoc in spocs %}
-                                        <option value="{{spoc.id}}">{{spoc.user_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% endif %}
-                            </div>
+                                    </div>
+								</div> <!-- card-head class end -->
 
+                                <div class="card-body row">
 
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Billing Entity</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="billing_entity_id"   required >
-                                        <option value="">Select Billing Entity</option>
-                                        {% for entity in entitys %}
-                                        <option value="{{entity.id}}" {% if employee.billing_entity_id == entity.id %} selected {%endif%}>{{entity.entity_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% endfor %}
-                                {% else %}
-                                     <select class="col-sm-8 form-control myselect" name="billing_entity_id" id="entity_id" required>
-                                        <option value="">Select Billing Entity</option>
-                                        {% for entity in entitys %}
-                                        <option value="{{entity.id}}">{{entity.entity_name}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% endif %}
-                            </div>
+                              <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type = "text" name="core_employee_id" value="{{employee.core_employee_id|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type = "text" name="core_employee_id" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Core Employee id</label>
+					                  </div>
+						            </div>
 
 
 
+                             <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type = "text" name="employee_cid" value="{{employee.employee_cid|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type = "text" name="employee_cid" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Employee Company id</label>
+					                  </div>
+						            </div>
 
+                            <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type = "text" name="employee_name" value="{{employee.employee_name|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type = "text" name="employee_name" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Employee Name</label>
+					                  </div>
+						            </div>
+
+
+                           <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type = "text" name="employee_email" value="{{employee.employee_email|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type = "text" name="employee_email" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Employee Email</label>
+					                  </div>
+						            </div>
+
+
+                          <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type="number" name="employee_contact" value="{{employee.employee_contact|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type="number" name="employee_contact" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Employee Contact</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type="text" name="designation" value="{{employee.designation}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type="text" name="designation" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Designation</label>
+					                  </div>
+						            </div>
+
+
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          <select name="gender" class="mdl-textfield__input js-select2">
+                                                {% if employee %}
+                                                {% for employee in employee %}
+                                                <option value="Male" {% if employee.gender == 'Male' %} selected {%endif%}>Male</option>
+                                                <option value="Female" {% if employee.gender == 'Female' %} selected {%endif%}>Female</option>
+                                                {% endfor %}
+                                                {% else %}
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                {% endif %}
+
+                                          </select>
+					                     <label class = "mdl-textfield__label">Gender</label>
+					                  </div>
+						            </div>
+
+                               <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                            {% for employee in employee %}
+                                            {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
+					                     <input class = "mdl-textfield__input date" type="text" name="date_of_birth" value="{{employee.date_of_birth}}" required >
+                                          {% else %}
+                                          <input class = "mdl-textfield__input date" type="text" name="date_of_birth" required >
+                                          {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                          <input class = "mdl-textfield__input date" type="text" name="date_of_birth" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Date Of Birth</label>
+					                  </div>
+						            </div>
 
 
 
@@ -120,204 +265,52 @@
                 </div>
 
 
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
-                        <div class="card-head">
-                            <header>Employee Details</header>
-                            <button
-                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                                    data-upgraded=",MaterialButton">
-                                <i class="material-icons">more_vert</i>
-                            </button>
-                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                                data-mdl-for="panel-button">
-                                <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body ">
+  <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+									<header>Other Information: </header>
+                                     <div class="tools">
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Core Employee id</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="core_employee_id" value="{{employee.core_employee_id|default:''}}"
-                                       placeholder="Core Employee id">
-                                {% endfor %}
-                                {% else %}
-                                    <input type="text" class="col-sm-8 form-control" name="core_employee_id"
-                                       placeholder="Core Employee id">
-                                {% endif %}
-                            </div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Employee Company id</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_cid" value="{{employee.employee_cid|default:''}}"
-                                       placeholder="Employee Cid">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_cid"
-                                       placeholder="Employee Cid">
-                                {% endif %}
-                            </div>
+                                    </div>
+								</div> <!-- card-head class end -->
 
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Employee Name</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_name" value="{{employee.employee_name|default:''}}" required
-                                       placeholder="Employee Name">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="employee_name" required
-                                       placeholder="Employee Name">
-                                {% endif %}
-                            </div>
-
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Employee Email</label>
-                                 {% if employee %}
-                                {% for employee in employee %}
-                                <input type="email" class="col-sm-8 form-control" name="employee_email" value="{{employee.employee_email|default:''}}" required
-                                       placeholder="Employee Email">
-                                 {% endfor %}
-                                {% else %}
-                                 <input type="email" class="col-sm-8 form-control" name="employee_email" required
-                                       placeholder="Employee Email">
-                                  {% endif %}
-                            </div>
-
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Employee Contact</label>
-                                 {% if employee %}
-                                {% for employee in employee %}
-                                <input type="number" class="col-sm-8 form-control" name="employee_contact" value="{{employee.employee_contact|default:''}}" required
-                                       placeholder="Employee Contact">
-                                 {% endfor %}
-                                {% else %}
-                                 <input type="number" class="col-sm-8 form-control" name="employee_contact" required
-                                       placeholder="Employee Contact">
-                                  {% endif %}
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Designation</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="designation" value="{{employee.designation}}"
-                                       placeholder="Designation">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="designation"
-                                       placeholder="Designation">
-                                 {% endif %}
-                            </div>
+                                <div class="card-body row">
 
 
+                             <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type="text" name="id_proof_type" value="{{employee.id_proof_type|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type="text" name="id_proof_type" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Id Proof Type</label>
+					                  </div>
+						            </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Gender</label>
-                                <select name="gender" class="col-sm-8 form-control">
-                                    {% if employee %}
-                                {% for employee in employee %}
-                                <option value="Male" {% if employee.gender == 'Male' %} selected {%endif%}>Male</option>
-                                <option value="Female" {% if employee.gender == 'Female' %} selected {%endif%}>Female</option>
-                                {% endfor %}
-                                {% else %}
-                                <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                 {% endif %}
-
-                                </select>
-
-                            </div>
-
-
-
-
-                              <div class="form-group row">
-                                <label class="col-sm-4" >Date Of Birth</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
-
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth" value="{{employee.date_of_birth}}"
-                                       placeholder="Assistant ID" required>
-                                {% else %}
-
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
-                                       placeholder="Date Of Birth" required>
-                                 {% endif %}
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
-                                       placeholder="Date Of Birth" required>
-                                 {% endif %}
-                            </div>
+                            <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type="number" name="id_proof_no" value="{{employee.id_proof_no|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type="number" name="id_proof_no" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Id Proof No</label>
+					                  </div>
+						            </div>
 
 
-
-
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
-                        <div class="card-head">
-                            <header>Other Information</header>
-                            <button id="panel-button2"
-                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                                    data-upgraded=",MaterialButton">
-                                <i class="material-icons">more_vert</i>
-                            </button>
-                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                                data-mdl-for="panel-button2">
-                                <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
-                                <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body " id="bar-parent1">
-
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Id Proof Type</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="id_proof_type" value="{{employee.id_proof_type|default:''}}"
-                                       placeholder="Id Proof Type">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="id_proof_type"
-                                       placeholder="Id Proof Type">
-                                 {% endif %}
-                            </div>
-
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Id Proof No</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="id_proof_no" value="{{employee.id_proof_no|default:''}}"
-                                       placeholder="Id Proof No">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="id_proof_no"
-                                       placeholder="Id Proof No">
-                                 {% endif %}
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4" >Home City</label>
-                                {% if employee %}
+                            <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
                                 {% for employe in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="home_city" id="city_id" required>
+                                    <select class="mdl-textfield__input js-select2" name="home_city" id="city_id" required>
                                         <option value="">Select Home City</option>
                                         {% for citie in cities %}
                                         <option value="{{citie.id}}" {% if employe.home_city == citie.id %} selected {%endif%}>{{citie.city_name}}</option>
@@ -326,91 +319,95 @@
                                 {% endfor %}
                                 {% else %}
 
-                                     <select class="col-sm-8 form-control myselect" name="home_city" id="city_id_edit"  required>
+                                     <select class="mdl-textfield__input js-select2" name="home_city" id="city_id_edit"  required>
                                         <option value="">Select Home City</option>
                                         {% for citie in cities %}
                                         <option value="{{citie.id}}">{{citie.city_name}}</option>
                                         {% endfor %}
                                     </select>
-                                {% endif %}
-                            </div>
 
-                             <div class="form-group row">
-                                <label class="col-sm-4" >Home Address</label>
-                                {% if employee %}
-                                {% for employee in employee %}
-                                <input type="text" class="col-sm-8 form-control" name="home_address" value="{{employee.home_address|default:''}}"
-                                       placeholder="Home Address">
-                                {% endfor %}
-                                {% else %}
-                                <input type="text" class="col-sm-8 form-control" name="home_address"
-                                       placeholder="Home Address">
-                                 {% endif %}
-                            </div>
-
-
-                           <div class="form-group row">
-                                <label class="col-sm-4 control-label">is Active</label>
-
-                                    <select class="form-control col-sm-8" name="is_active">
-
-                                        {% if employee %}
-                                        {% for employee in employee %}
-                                            <option value="1" {% if employee.is_active == 1 %} selected {%endif%}>Yes</option>
-                                        {% endfor %}
-                                        {% else %}
-                                            <option value="1">Yes</option>
                                         {% endif %}
-                                        <option value="0">No</option>
-                                    </select>
+					                     <label class = "mdl-textfield__label">Home City</label>
+					                  </div>
+						            </div>
 
-                            </div>
 
-                             <div class="form-group row">
-                                <label class="col-sm-4 control-label">is CXO</label>
+                             <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                          {% if employee %}
+                                          {% for employee in employee %}
+					                     <input class = "mdl-textfield__input" type="text" name="home_address" value="{{employee.home_address|default:''}}" required >
+                                          {% endfor %}
+                                              {% else %}
+                                          <input class = "mdl-textfield__input" type="text" name="home_address" required >
+                                          {% endif %}
+					                     <label class = "mdl-textfield__label">Home Address</label>
+					                  </div>
+						            </div>
 
-                                    <select class="form-control col-sm-8" name="is_cxo" id="is_cxo">
 
-                                       {% if employee %}
-                                        {% for employee in employee %}
-                                            <option value="0" {% if employee.is_cxo == 0 %} selected {%endif%}>No</option>
-                                            <option value="1" {% if employee.is_cxo == 1 %} selected {%endif%}>Yes</option>
-                                        {% endfor %}
-                                        {% else %}
+                            <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                         <select class="mdl-textfield__input js-select2" name="is_active">
+
+                                            {% if employee %}
+                                            {% for employee in employee %}
+                                                <option value="1" {% if employee.is_active == 1 %} selected {%endif%}>Yes</option>
+                                            {% endfor %}
+                                            {% else %}
+                                                <option value="1">Yes</option>
+                                            {% endif %}
                                             <option value="0">No</option>
-                                            <option value="1">Yes</option>
-                                        {% endif %}
-                                    </select>
 
-                            </div>
-
-                            <div class="form-group row" id="row_assistant_id">
-                                <label class="col-sm-4" >Assistant Name</label>
-                                <select name="assistant_id" id="assistant_id" class="form-control col-sm-8 myselect">
-                                    <option value=" " >Select Assistant</option>
-                                {% if employee %}
-                                {% for employe in employee %}
-                                {% for employee in employeess %}
-                                        <option value="{{employee.id}}" {% if employe.assistant_id == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
-                                        {% endfor %}
-                                {% endfor %}
-                                {% else %}
-                                {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}</option>
-                                        {% endfor %}
-                                 {% endif %}
-                                </select>
-                            </div>
+                                        </select>
+					                     <label class = "mdl-textfield__label">is Active</label>
+					                  </div>
+						            </div>
 
 
+                           <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                         <select class="mdl-textfield__input js-select2" name="is_cxo">
+                                                {% if employee %}
+                                                {% for employee in employee %}
+                                                    <option value="0" {% if employee.is_cxo == 0 %} selected {%endif%}>No</option>
+                                                    <option value="1" {% if employee.is_cxo == 1 %} selected {%endif%}>Yes</option>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                {% endif %}
+
+                                        </select>
+					                     <label class = "mdl-textfield__label">is CXO</label>
+					                  </div>
+						            </div>
 
 
-                            <div class="form-group">
-                                <div class="offset-md-3 col-md-9">
-                                    <button type="submit" class="btn btn-info">Submit</button>
-                                    <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                                </div>
-                            </div>
+                            <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                         <select class="mdl-textfield__input js-select2" name="assistant_id" id="assistant_id" >
+                                                    <option value=" " >Select Assistant</option>
+                                                        {% if employee %}
+                                                        {% for employe in employee %}
+                                                        {% for employee in employeess %}
+                                                                <option value="{{employee.id}}" {% if employe.assistant_id == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
+                                                                {% endfor %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        {% for employee in employees %}
+                                                                <option value="{{employee.id}}">{{employee.employee_name}}</option>
+                                                                {% endfor %}
+                                                         {% endif %}
+
+                                        </select>
+					                     <label class = "mdl-textfield__label">is CXO</label>
+					                  </div>
+						            </div>
+
+
+
+
 
                         </div>
                     </div>
@@ -418,10 +415,39 @@
 
 
 
-            </div>
-        </form>
-    </div>
-</div>
+ <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
+
+
+
+                      <div class="col-lg-12"  align="center">
+							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
+
+                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"   >
+											  Cancel
+											</button>
+                      </div>
+
+                     </div>
+                 </div>
+
+        </div><!-- row end -->
+
+       </div>
+</form>
+    </div></div>
 
 <!-- end page content -->
 
