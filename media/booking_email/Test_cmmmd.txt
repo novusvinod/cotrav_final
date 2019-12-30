@@ -1,0 +1,44 @@
+-------------running in /root Dir --------
+Alias /static /root/cotrav_project/static
+<Directory /root/cotrav_project/static>
+    Require all granted
+</Directory>
+
+<Directory /root/cotrav_project/cotrav>
+    <Files wsgi.py>
+        Require all granted
+    </Files>
+</Directory>
+
+WSGIDaemonProcess cotrav_project python-path=/root/cotrav_project:/root/cotrav_project/cotrav_env/lib/python3.6/site-packages
+WSGIProcessGroup cotrav_project
+WSGIScriptAlias / /root/cotrav_project/cotrav/wsgi.py
+
+
+---------------------------------
+
+<Directory /home/cotrav/public_html/cotrav_test/CoTrav>
+    <Files wsgi.py>
+        Require all granted
+    </Files>
+</Directory>
+
+WSGIDaemonProcess cotrav_test python-path=/home/cotrav/public_html/cotrav_test:/home/cotrav/public_html/cotrav_test/cotrav_env/lib/python3.6/site-packages
+WSGIProcessGroup cotrav_test
+WSGIScriptAlias / /home/cotrav/public_html/cotrav_test/CoTrav/wsgi.py
+
+
+# add the hellodjango project path into the sys.path
+sys.path.append('/home/cotrav/public_html/cotrav_test')
+
+# add the virtualenv site-packages path to the sys.path
+sys.path.append('/home/cotrav/public_html/cotrav_test/cotrav_env/lib/python3.6/site-packages')
+
+
+
+
+
+
+
+
+
