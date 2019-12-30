@@ -41,7 +41,7 @@
                              <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="tour_type" name="tour_type" required>
-                                                <option value="">Select Tour Type </option>
+                                                <option value="">--Select Tour Type--</option>
                                                   {% if user.is_radio == 1 %}
                                                   <option value="1">Radio </option>
                                                   {% endif %}
@@ -59,7 +59,7 @@
                              <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="current_city_id" name="current_city_id" required>
-                                                <option value="">Select City </option>
+                                                <option value="">--Select City--</option>
                                                     {% for cities in citiess %}
                                                      <option value="{{cities.id}}">{{cities.city_name}}</option>
                                                     {% endfor %}
@@ -74,7 +74,7 @@
                                  <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="select_taxi_type" name="taxi_type" required>
-                                                 <option value="">Select Taxi Type</option>
+                                                 <option value="">--Select Taxi Type--</option>
                                                     {% for taxi in taxies %}
                                                     <option value="{{taxi.id}}">{{taxi.name}}</option>
                                                     {% endfor %}
@@ -88,7 +88,7 @@
                              <div class="col-lg-2 p-t-20" id="tr_package">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
 											<select class="mdl-textfield__input js-select2" name="package_id" id="package_id">
-
+                                                <option value="">--Select Package--</option>
 
                                             </select>
                                          <label class = "mdl-textfield__label" >Select Package</label>
@@ -130,7 +130,7 @@
 
                               <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input select2" name="assessment_code" id="assessment_code">
+											<select class="mdl-textfield__input js-select2" name="assessment_code" id="assessment_code">
                                                 <option value="">Select Assessment Code</option>
                                                     {% for assessment in assessments %}
                                                     <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
@@ -146,7 +146,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" name="assessment_city_id" id="assessment_city_id">
-                                                <option value="">Select Assessment City</option>
+                                                <option value="">--Select Assessment City--</option>
                                                     {% for city in cities %}
                                                     <option value="{{city.id}}">{{city.city_name}}</option>
                                                     {% endfor %}
@@ -162,7 +162,7 @@
                              <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="entity_id" name="entity_id" required>
-                                                <option value="">Select Billing Entity </option>
+                                                <option value="">--Select Billing Entity-- </option>
                                                     {% for entity in entities %}
                                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
                                                     {% endfor %}
@@ -203,16 +203,14 @@
 
                                     <div class="col-lg-4 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-
-                                          <select id="no_of_seatss" name="no_of_seats" class="form-control col-sm-10 no_of_seats myselect" required>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5" style="display: none">5</option>
-                                                <option value="6" style="display: none">6</option>
-                                          </select>
+                                        <select id="no_of_seats" name="no_of_seats" class="mdl-textfield__input no_of_seats js-select2" placeholder="Select No Of Employye" required>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5" style="display: none">5</option>
+                                            <option value="6" style="display: none">6</option>
+                                        </select>
 
                                       </div>
 						            </div>
@@ -222,13 +220,13 @@
                                     </div>
 
 
-                                    <div class="form-group row" id="emp_row_1">
+                                    <div class="card-body row" id="emp_row_1">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_1" id="employee_id_1" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -281,13 +279,13 @@
                                     </div>
 
                               <!-- second employee -->
-                                    <div class="form-group row" id="emp_row_2">
+                                    <div class="card-body row" id="emp_row_2">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_2" id="employee_id_2" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -342,13 +340,13 @@
                               <!-- end -->
 
                                     <!-- third employee -->
-                                    <div class="form-group row" id="emp_row_3">
+                                    <div class="card-body row" id="emp_row_3">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_3" id="employee_id_3" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -405,13 +403,13 @@
 
 
                                      <!-- fourth employee -->
-                                    <div class="form-group row" id="emp_row_4">
+                                    <div class="card-body row" id="emp_row_4">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_4" id="employee_id_4" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -486,11 +484,11 @@
 
 
                       <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+							              	<button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
 											  Submit
 											</button>
 
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="history.go(-2)" >
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
 											  Cancel
 											</button>
 							            </div>

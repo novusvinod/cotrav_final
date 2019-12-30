@@ -40,7 +40,7 @@
 						            <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
 											<select class="mdl-textfield__input js-select2 " name="corporate_id" id="corporate_id" required >
-												<option value=""></option>
+												<option value="">--Select Company--</option>
                                                {% for company in companies %}
 												<option value="{{company.id}}">{{company.corporate_name}}</option>
 												{% endfor %}
@@ -61,7 +61,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="tour_type" name="tour_type" required>
-                                                <option value=""></option>
+                                                <option value="">--Select Tour Type-- </option>
                                                 <option value="1">Radio </option>
 												<option value="2">Local </option>
 												<option value="3">Outstation </option>
@@ -74,7 +74,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="current_city_id" name="current_city_id" required>
-                                                <option value=""></option>
+                                                <option value="">--Pickup City--</option>
                                                 {% for citie in cities %}
 													<option value="{{citie.id}}">{{citie.city_name}}</option>
 												{% endfor %}
@@ -87,7 +87,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="select_taxi_type" name="taxi_type" required>
-                                                <option value=""></option>
+                                                <option value="">--Taxi Type--</option>
                                                 {% for taxi in taxies %}
 													<option value="{{taxi.id}}">{{taxi.name}}</option>
 												{% endfor %}
@@ -100,8 +100,7 @@
                                     <div class="col-lg-2 p-t-20" id="tr_package">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
 											<select class="mdl-textfield__input js-select2" name="package_id" id="package_id">
-
-
+                                                <option value="">--Select Package-- </option>
                                             </select>
                                          <label class = "mdl-textfield__label" >Select Package</label>
                                        </div>
@@ -145,8 +144,8 @@
 
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input select2" name="assessment_code" id="assessment_code">
-
+											<select class="mdl-textfield__input js-select2" name="assessment_code" id="assessment_code">
+                                                    <option value="">--Select Assessment Code--</option>
 
                                             </select>
                                          <label class = "mdl-textfield__label" >Assessment Code*</label>
@@ -157,7 +156,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" name="assessment_city_id" id="assessment_city_id">
-
+                                                <option value="">--Select Assessment City-- </option>
 
                                             </select>
                                          <label class = "mdl-textfield__label" >Assessment City*</label>
@@ -170,7 +169,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="entity_id" name="entity_id" required>
-                                                <option value=""></option>
+                                                <option value="">--Select Billing Entity-- </option>
 
                                             </select>
                                          <label class = "mdl-textfield__label" >Select Billing Entity*</label>
@@ -180,7 +179,7 @@
 
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input js-select2 tour_type" name="is_sms">
+											<select class="mdl-textfield__input js-select2" name="is_sms">
 
                                                 <option value="0">No</option>
 												<option value="1">Yes</option>
@@ -192,7 +191,7 @@
 
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input js-select2 tour_type" name="is_email">
+											<select class="mdl-textfield__input js-select2" name="is_email">
 
                                                 <option value="0">No</option>
 												<option value="1">Yes</option>
@@ -213,7 +212,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+
 
 
 
@@ -232,10 +231,10 @@
 						            <div class="col-lg-6 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                <select id="spoc_id" name="spoc_id" class="mdl-textfield__input js-select2" placeholder="Select Spoc" required>
-                                      <option value=""></option>
+                                      <option value="">--Select Spoc--</option>
                                     </select>
 
-                                      <label class = "mdl-textfield__label">Select Spoc </label>
+                                      <label class = "mdl-textfield__label">Select Spoc</label>
 
 					                  </div>
 						            </div>
@@ -244,7 +243,8 @@
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
 
-                                          <select id="no_of_seatss" name="no_of_seats" class="form-control col-sm-10 no_of_seats myselect" required>
+<!--                                          <select id="no_of_seatss" name="no_of_seats" class="form-control col-sm-10 no_of_seats myselect" required>-->
+                                               <select id="no_of_seats" name="no_of_seats" class="mdl-textfield__input no_of_seats js-select2" placeholder="Select No Of Employye" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -267,7 +267,7 @@
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_1" id="employee_id_1" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                                 {% endfor %}
@@ -326,7 +326,7 @@
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_2" id="employee_id_2" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                                 {% endfor %}
@@ -387,7 +387,7 @@
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_3" id="employee_id_3" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                                 {% endfor %}
@@ -450,7 +450,7 @@
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_4" id="employee_id_4" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                                 {% endfor %}
@@ -525,11 +525,11 @@
 
 
                      <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+							              	<button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
 											  Submit
 											</button>
 
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
 											  Cancel
 											</button>
 							            </div>
@@ -547,9 +547,10 @@
 
 
         </div><!-- row end -->
+        </div>
 </form>
-
-
+                </div>
+</div>
 
 <!-- end page content -->
 <script type="text/javascript">
@@ -754,8 +755,8 @@ $("#corporate_id").change(function(){
   $('#taxi_type_id').empty();
   $('#spoc_id').empty();
   $('#entity_id').empty();
-  $('#package_id').empty();
-
+  $('#assessment_code').empty();
+  $('#assessment_city_id').empty();
 
    var corporate_id =  $(this).val();
     var taxi_type =  $("#select_taxi_type").val();
@@ -786,11 +787,12 @@ $("#corporate_id").change(function(){
        //alert(data['Entitys']);
        if(data['Entitys'].length != 0){
         entities = data['Entitys'];
-        $('#entity_id').append($("<option value=''>Select Billing Entity</option>"));
+        $('#entity_id').append($("<option value=''>--Select Billing Entity--</option>"));
          for (var i=0;i<entities.length;i++) {
             $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
          }
        }else{
+       $('#entity_id').append($("<option value=''>--Select Billing Entity--</option>"));
         alert('No Entity Available')
        }
        });
@@ -805,12 +807,13 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['Spocs'].length != 0){
         spocs = data['Spocs'];
-        $('#spoc_id').append($("<option value=''>Select Spoc</option>"));
+        $('#spoc_id').append($("<option value=''>--Select Spoc--</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#spoc_id').append($("<option value='"+spocs[i].id+','+spocs[i].group_id+','+spocs[i].subgroup_id+" '>"+spocs[i].user_name+"</option>"));
 
          }
        }else{
+       $('#spoc_id').append($("<option value=''>--Select Spoc--</option>"));
         alert('No SPOC Available')
        }
        });
@@ -824,11 +827,12 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['AssCodes'].length != 0){
         spocs = data['AssCodes']
-
+           $('#assessment_code').append($("<option value=''>--Select Assessment Code--</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#assessment_code').append($("<option value='"+spocs[i].id+"'>"+spocs[i].assessment_code+"</option>"));
          }
        }else{
+       $('#assessment_code').append($("<option value=''>--Select Assessment Code--</option>"));
         alert('No Assessment Code Available')
        }
        });
@@ -842,10 +846,12 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['AssCity'].length != 0){
         spocs = data['AssCity']
+        $('#assessment_city_id').append($("<option value=''>--Select Assessment City--</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#assessment_city_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].city_name+"</option>"));
          }
        }else{
+       $('#assessment_city_id').append($("<option value=''>--Select Assessment City--</option>"));
         alert('No Assessment City Available')
        }
        });
@@ -880,12 +886,12 @@ $("#spoc_id").change(function(){
 
        if(data['Employees'].length != 0){
         employee = data['Employees'];
-        $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
-        $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
-        $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
-        $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
-        $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
-        $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_1').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_2').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_3').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_4').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_5').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_6').append($("<option value=''>--Select Employee--</option>"));
          for (var i=0;i<employee.length;i++) {
 
              $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
@@ -899,13 +905,20 @@ $("#spoc_id").change(function(){
 
        var emp_len = data['Employees'].length;
        for (var i=emp_len+1;i<7;i++) {
-       var valueToCompare = $("#no_of_seats option[value='"+i+"']").text();
+       var valueToCompare = $(".no_of_seats option[value='"+i+"']").text();
+
             if(valueToCompare == i) {
-                $("#no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
+                $(".no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
             }
        }
 
        }else{
+       ('#employee_id_1').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_2').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_3').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_4').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_5').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_6').append($("<option value=''>--Select Employee--</option>"));
         alert('No Employees Available')
        }
        });
@@ -943,12 +956,14 @@ $('#package_id').empty();
                //alert(data['Spocs']);
                if(data['Package'].length != 0){
                 package = data['Package'];
-                 $('#package_id').append($("<option value=''>Select Package</option>"));
+                    $('#package_id').append($("<option value=''>--Select Package--</option>"));
                  for (var i=0;i<package.length;i++) {
+
                     $('#package_id').append($("<option value='"+package[i].id+"'>"+package[i].package_name+"</option>"));
                  }
                }else{
                 alert('No Package Available')
+                $('#package_id').append($("<option value=''>--Select Package--</option>"));
                }
                });
         }

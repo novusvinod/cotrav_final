@@ -16,7 +16,8 @@
     .select2-container--material .select2-selection--single .select2-selection__rendered {
       color: #444;
       line-height: 28px;
-      padding-left: 0; }
+      padding-left: 0;
+      outline:none;}
     .select2-container--material .select2-selection--single .select2-selection__clear {
       cursor: pointer;
       float: right;

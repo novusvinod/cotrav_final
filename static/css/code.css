@@ -96,7 +96,7 @@ a:hover, a:active {
   background: #16a086;
 }
 .text-theme-color {
-  color: #16a086;
+  color: #fff;
 }
 .text-content-big p {
   font-weight: 400;
@@ -397,8 +397,8 @@ a:hover, a:active {
   color: #fff;
 }
 .butn-style3.theme {
-  background: #16a086;
-  border: 2px solid #16a086;
+  background: #3366cc;
+  border: 2px solid #3366cc;
   color: #fff;
 }
 .butn-style3.theme:hover {
@@ -616,7 +616,7 @@ a:hover, a:active {
   display: block;
   width: 100px;
   height: 2px;
-  background: #16a086;
+  background: #3366cc;
   margin: 0 auto;
   position: absolute;
   left: 0;
@@ -2440,8 +2440,8 @@ h1.title-style2.white, h2.title-style2.white, h3.title-style2.white, h4.title-st
   position: absolute;
   bottom: -3px;
   right: -3px;
-  border-bottom: 3px solid #16a086;
-  border-right: 3px solid #16a086;
+  border-bottom: 3px solid #3366cc;
+  border-right: 3px solid #3366cc;
   transition: all 0.5s ease 0s;
   -webkit-transition: all 0.5s ease 0s;
 }
@@ -2453,14 +2453,14 @@ h1.title-style2.white, h2.title-style2.white, h3.title-style2.white, h4.title-st
   position: absolute;
   top: -3px;
   left: -3px;
-  border-top: 3px solid #16a086;
-  border-left: 3px solid #16a086;
+  border-top: 3px solid #3366cc;
+  border-left: 3px solid #3366cc;
   transition: all 0.5s ease 0s;
   -webkit-transition: all 0.5s ease 0s;
 }
 .services-block-three > a:hover {
   opacity: 1;
-  border-color: #d5d5d5;
+  border-color: #3366cc;
 }
 .services-block-three > a:hover:before, .services-block-three > a:hover:after {
   width: 95%;
@@ -3058,7 +3058,7 @@ h1.title-style2.white, h2.title-style2.white, h3.title-style2.white, h4.title-st
   position: relative;
   height: 80px;
   width: 80px;
-  background: #16a086;
+  background: #3366cc;
   text-align: center;
   display: inline-block;
   line-height: 85px;
@@ -3905,7 +3905,7 @@ h1.title-style2.white, h2.title-style2.white, h3.title-style2.white, h4.title-st
 }
 .testmonials-style5 span {
   font-size: 13px;
-  color: #16a086;
+  color: #3366cc;
 }
 .testmonials-style5 span:before {
   background: rgba(0, 0, 0, 0.2);
@@ -5976,7 +5976,7 @@ h2.resp-accordion.resp-tab-active {
     margin-top: 8px;
   }
   .tab-style6 .resp-tabs-list li.resp-tab-active h6 {
-    color: #16a086;
+    color: #3366cc;
   }
   .tab-style6 .resp-tabs-list .tab-box h6 {
     margin: 0;
@@ -5999,7 +5999,7 @@ h2.resp-accordion.resp-tab-active {
   }
   .tab-style6 .resp-tabs-list li.resp-tab-active {
     border-width: 0 0 2px 0 !important;
-    border-color: #16a086 !important;
+    border-color: #3366cc !important;
   }
   .tab-style6 ul.resp-tabs-list i {
     margin-right: 15px;
@@ -6013,8 +6013,8 @@ h2.resp-accordion.resp-tab-active {
     vertical-align: middle;
   }
   .tab-style6 ul.resp-tabs-list li.resp-tab-active i {
-    background: #16a086;
-    border-color: #16a086;
+    background: #3366cc;
+    border-color: #3366cc;
     color: #fff;
   }
 }

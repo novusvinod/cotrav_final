@@ -57,7 +57,7 @@ def login(request):
 
                 if resp1:
                     if user_type == '1':
-                        insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user[0]['corporate_id'], access_token=gen_access_token,user_agent=user_info)
+                        insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user[0]['id'], access_token=gen_access_token,user_agent=user_info)
                     elif user_type == '2':
                         insert_data = Corporate_Approves_1_Login_Access_Token.objects.create(subgroup_authenticater_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
                         print(insert_data)
@@ -5349,7 +5349,7 @@ def add_flight_booking(request):
 
 
                     cursor.close()
-                    data = {'success': 1, 'message': "Insert Success"}
+                    data = {'success': 1, 'message': "Insert Success",'last_booking_id':last_booking_id}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -6164,6 +6164,7 @@ def get_flight_fare_search(request):
                     url = "http://mdt.ksofttechnology.com/API/AVLT"
                     payload = {
                         "NAME": "FARE_CHECK",
+                        "TYPE": "AIR",
                         "STR": [
                             {
                                 "FLIGHT": {
@@ -6183,10 +6184,21 @@ def get_flight_fare_search(request):
                                     "H_OW": ""+H_OW,
                                     "T_TIME": ""+T_TIME,
                                     "Trip_String": ""+trip_string
-                                }
+                                },
+                                "GSTINFO": {
+                                    "Address": "1/1075/1/2 GF 4, Mehrauli, New Delhi 110030",
+                                    "Company": "BAI INFOSOLUTIONS PRIVATE LIMITED",
+                                    "Email": "vinod@taxivaxi.com",
+                                    "Mobile": "11321654654",
+                                    "Number": "07AAGCB3556P1Z7",
+                                    "Pin": "110030",
+                                    "State": "New Delhi",
+                                    "Type": "GST Type",
+                                    "hasGST": 'true'
+                                  }
                             }
                         ],
-                        "TYPE": "AIR"
+
                     }
                     print(payload)
                     headers = {}
@@ -6245,6 +6257,7 @@ def save_flight_booking(request):
                         "PARAM": str(va['PARAM']),
                         "Deal": str(va['Deal']),
                         "FARE_RULE": str(va['FARE_RULE']),
+
                         "PAX": [
                             {
                                 "apnr": "",
@@ -6284,6 +6297,56 @@ def save_flight_booking(request):
 
                     headers = {}
                     print(payload)
+                    r = requests.post(url, json=payload)
+                    api_response = r.json()
+                    data = {'success': 1, 'Data': api_response}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'Data': e}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_flight_pnr_details(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        pnr = request.POST.get('pnr', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    url = "http://mdt.ksofttechnology.com/API/flight"
+                    payload = {
+
+                            "NAME": "PNR_RETRIVE",
+                            "TYPE": "DC",
+                            "STR": [
+                                {
+                                    "BOOKINGID": "APIP637127916477026220O1aa4",
+                                    "CLIENT_SESSIONID": "2d97c21a-abfd-4c7b-a9ae-cbd83ba0bcbc",
+                                    "HS": "D",
+                                    "MODULE": "B2B",
+                                }
+                            ],
+                            
+
+                    }
+
+                    headers = {}
+
                     r = requests.post(url, json=payload)
                     api_response = r.json()
                     data = {'success': 1, 'Data': api_response}

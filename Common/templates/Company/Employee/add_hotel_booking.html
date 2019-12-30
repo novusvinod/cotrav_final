@@ -40,7 +40,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="from_city" id="from_city" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select City</option>
+                                                <option value="">--Select City--</option>
                                                  {% for city in cities %}
                                                 <option value="{{city.id}}">{{city.city_name}}</option>
                                                  {% endfor %}
@@ -53,7 +53,7 @@
                                     <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
 					                     <select class="mdl-textfield__input js-select2" name="city_area" id="city_area"  required>
-                                                         <option value="">Select Hotel Area</option>
+                                                         <option value="">--Select Hotel Area--</option>
 
                                                     </select>
 					                     <label class = "mdl-textfield__label">City Area</label>
@@ -88,7 +88,7 @@
                                      <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="room_type_priority1" id="room_type_priority1" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select Room Type</option>
+                                                <option value="">--Select Room Type--</option>
                                                     {% for room_type in room_types %}
                                                         <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                     {% endfor %}
@@ -101,7 +101,7 @@
                                      <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="room_type_priority2" id="room_type_priority2" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select Room Type</option>
+                                                <option value="">--Select Room Type--</option>
                                                     {% for room_type in room_types %}
                                                 <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                 {% endfor %}
@@ -114,7 +114,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="room_occupancy" id="room_occupancy" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select Room Occupancy</option>
+                                                <option value="">--Select Room Occupancy--</option>
                                                         {% for hotel_type in hotel_types %}
                                                         <option value="{{hotel_type.id}}">{{hotel_type.name}}</option>
                                                         {% endfor %}
@@ -138,8 +138,8 @@
 
                                           <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input select2" name="assessment_code" id="assessment_code">
-                                                <option value="">Select Assessment Code</option>
+											<select class="mdl-textfield__input js-select2" name="assessment_code" id="assessment_code">
+                                                <option value="">--Select Assessment Code--</option>
                                                     {% for assessment in assessments %}
                                                     <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                                     {% endfor %}
@@ -154,7 +154,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" name="assessment_city" id="assessment_cities">
-                                                 <option value="">Select Assessment City</option>
+                                                 <option value="">--Select Assessment City--</option>
                                                     {% for city in cities_ass %}
                                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -200,11 +200,11 @@
 
 
                           <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+							              	<button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
 											  Submit
 											</button>
 
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="history.go(-2)" >
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
 											  Cancel
 											</button>
 							            </div>

@@ -15,89 +15,94 @@
    </div>
 
 <form method="post" action="/agents/assign-flight-booking/{{booking.id}}" enctype="multipart/form-data">
-        <div class="row">
 
-                        <div class="col-md-3">
+           <div class="row">
+						<div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
+								<div class="card-head">
+									<header>Basic Details: </header>
+                                     <div class="tools">
 
-                <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Booking Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Booking Reference No</label>
-                            <div class="col-sm-7">
-                                <input  class="form-control" type="text" value="{{booking.reference_no}}" readonly>
-                            </div>
-                        </div>
+                                    </div>
+								</div>
+								<div class="card-body row">
 
-
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">From City</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.from_location}}" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">To City</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.to_location}}" readonly>
-                            </div>
-                        </div>
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.reference_no}}" readonly>
+					                     <label class = "mdl-textfield__label">Booking Reference No</label>
+					                  </div>
+						            </div>
 
 
+                       <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.from_location}}" readonly>
+					                     <label class = "mdl-textfield__label">From City</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Booking Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.booking_datetime}}" readonly>
-                            </div>
-                        </div>
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.to_location}}" readonly>
+					                     <label class = "mdl-textfield__label">To City</label>
+					                  </div>
+						            </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Departure DateTime</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.departure_datetime}}" readonly>
-                            </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Seat Type</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.usage_type}}" readonly>
-                            </div>
-                        </div>
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input date-format" type = "text" value="{{booking.booking_datetime}}" readonly>
+					                     <label class = "mdl-textfield__label">Booking Date</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Preferred Flight</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.preferred_flight}}" readonly>
-                            </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                     <input class = "mdl-textfield__input date" type = "text" value="{{booking.departure_datetime}}" readonly>
+					                     <label class = "mdl-textfield__label">Departure DateTime</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Cotrav Status</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.cotrav_status}}" readonly>
-                            </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Client Status</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.client_status}}" readonly>
-                            </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.usage_type}}" readonly>
+					                     <label class = "mdl-textfield__label">Seat Type</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Reason for Booking</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" type="text" value="{{booking.reason_booking}}" readonly>
-                            </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.preferred_flight}}" readonly>
+					                     <label class = "mdl-textfield__label">Preferred Flight</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.cotrav_status}}" readonly>
+					                     <label class = "mdl-textfield__label">Cotrav Status</label>
+					                  </div>
+						            </div>
+
+
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.client_status}}" readonly>
+					                     <label class = "mdl-textfield__label">Client Status</label>
+					                  </div>
+						            </div>
+
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{booking.reason_booking}}" readonly>
+					                     <label class = "mdl-textfield__label">Reason for Booking</label>
+					                  </div>
+						            </div>
 
 
                      </div>
@@ -105,325 +110,439 @@
                  </div>
 
 
+            <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+
+                                    <header>Onward Flight Details: </header>
+
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
 
 
+            <input type="hidden" name="booking_id" value="{{booking.id}}">
+            <input type="hidden" name="user_id" value="{{user.id}}">
+            <input type="hidden" name="no_of_passanger" value="{{booking.no_of_seats}}">
+            <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Onward Flight Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-    <input type="hidden" name="booking_id" value="{{booking.id}}">
-    <input type="hidden" name="user_id" value="{{user.id}}">
-    <input type="hidden" name="no_of_passanger" value="{{booking.no_of_seats}}">
-    <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-
-    <input type="hidden" name="tax_on_management_fee" id="tax_on_management_fee" value="0">
-    <input type="hidden" name="tax_on_management_fee_percentage" id="tax_on_management_fee_percentage" value="0">
-    <input type="hidden" name="management_fee_igst" id="management_fee_igst" value="0">
-    <input type="hidden" name="management_fee_cgst" id="management_fee_cgst" value="0">
-    <input type="hidden" name="management_fee_sgst" id="management_fee_sgst" value="0">
-    <input type="hidden" name="management_fee_igst_rate" id="management_fee_igst_rate" value="0">
-    <input type="hidden" name="management_fee_cgst_rate" id="management_fee_cgst_rate" value="0">
-    <input type="hidden" name="management_fee_sgst_rate" id="management_fee_sgst_rate" value="0">
-                        <input type="hidden" name="igst_amount" id="igst_amount" value="0">
-    <input type="hidden" name="cgst_amount" id="cgst_amount" value="0">
-    <input type="hidden" name="sgst_amount" id="sgst_amount" value="0">
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Flight Type</label>
-                            <div class="col-sm-7">
-                            <select name="flight_type" id="flight_type" class="form-control myselect" required>
-                                    <option value="Domestic">Domestic</option>
-                                    <option value="International">International</option>
-                               </select>
-                            </div>   
-                        </div>
+            <input type="hidden" name="tax_on_management_fee" id="tax_on_management_fee" value="0">
+            <input type="hidden" name="tax_on_management_fee_percentage" id="tax_on_management_fee_percentage" value="0">
+            <input type="hidden" name="management_fee_igst" id="management_fee_igst" value="0">
+            <input type="hidden" name="management_fee_cgst" id="management_fee_cgst" value="0">
+            <input type="hidden" name="management_fee_sgst" id="management_fee_sgst" value="0">
+            <input type="hidden" name="management_fee_igst_rate" id="management_fee_igst_rate" value="0">
+            <input type="hidden" name="management_fee_cgst_rate" id="management_fee_cgst_rate" value="0">
+            <input type="hidden" name="management_fee_sgst_rate" id="management_fee_sgst_rate" value="0">
+            <input type="hidden" name="igst_amount" id="igst_amount" value="0">
+            <input type="hidden" name="cgst_amount" id="cgst_amount" value="0">
+            <input type="hidden" name="sgst_amount" id="sgst_amount" value="0">
 
 
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="flight_type" id="flight_type" class="mdl-textfield__input js-select2" required>
+                                        <option value="Domestic">Domestic</option>
+                                        <option value="International">International</option>
+                                    </select>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Seat Type</label>
-                            <div class="col-sm-7">
+                                      <label class = "mdl-textfield__label">Flight Type </label>
 
-                                <select name="seat_type" id="seat_type" class="form-control myselect" required>
-                                   <option value="Economy" >Economy</option>
-                                   <option value="Corporate Economy" >Corporate Economy</option>
-                                   <option value="Premium Economy" >Premium Economy</option>
-                                   <option value="Business" >Business</option>
-                               </select>
+					                  </div>
+						            </div>
 
-                            </div>
-                        </div>
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="seat_type" id="seat_type" class="mdl-textfield__input js-select2" required>
+                                            <option value="Economy" >Economy</option>
+                                           <option value="Corporate Economy" >Corporate Economy</option>
+                                           <option value="Premium Economy" >Premium Economy</option>
+                                           <option value="Business" >Business</option>
+                                    </select>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Trip Type</label>
-                            <div class="col-sm-7">
-                                    <select name="trip_type" id="trip_type" class="form-control myselect" required>
+                                      <label class = "mdl-textfield__label">Seat Type </label>
+
+					                  </div>
+						            </div>
+
+
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="trip_type" id="trip_type" class="mdl-textfield__input js-select2" required>
                                            <option value="One Way" >One Way</option>
                                            <option value="Round Trip" >Round Trip</option>
-                                       </select>
-                            </div>
-                        </div>
+                                    </select>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Fare Type</label>
-                            <div class="col-sm-7">
-                                    <select name="fare_type" id="fare_type" class="form-control myselect" required>
+                                      <label class = "mdl-textfield__label">Trip Type </label>
+
+					                  </div>
+						            </div>
+
+
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="fare_type" id="fare_type" class="mdl-textfield__input js-select2" required>
                                            <option value="Refundable" >Refundable</option>
                                            <option value="Non Refundable" >Non Refundable</option>
                                            <option value="Partially Refundable">Partial Refundable</option>
-                                       </select>
-                            </div>
-                        </div>
+                                    </select>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Is Meal Included</label>
-                            <div class="col-sm-7">
-                                    <select name="meal_is_include" id="meal_is_include" class="form-control myselect" required>
+                                      <label class = "mdl-textfield__label">Fare Type </label>
+
+					                  </div>
+						            </div>
+
+
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="meal_is_include" id="meal_is_include" class="mdl-textfield__input js-select2" required>
                                            <option value="1" >Yes</option>
                                            <option value="0">No</option>
-                                    </select>        
-                            </div>
-                        </div>
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Is Meal Included </label>
+
+					                  </div>
+						            </div>
 
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">No. Of Stops</label>
-                            <div class="col-sm-7">
-                                    <select name="no_of_stops" id="no_of_stop" class="form-control myselect" required>
-                                        <option value="0">no stop</option>
+
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="no_of_stops" id="no_of_stop" class="mdl-textfield__input js-select2" required>
+                                           <option value="0">no stop</option>
                                             <option value="1">1 stop</option>
                                             <option value="2" >2 stop</option>
                                            <option value="3">3 stop</option>
-                                    </select> 
-                            </div>
-                        </div>
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">No. Of Stops</label>
+
+					                  </div>
+						            </div>
 
                         {% for employee in booking.Passangers %}
                         <input type="hidden" name="employee_booking_id" value="{{employee.id}}">
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Ticket Number : {{employee.employee_name}} </label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="ticket_number" placeholder="ticket number" type="text" value="">
-                            </div>
-                        </div>
+
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="ticket_number" placeholder="ticket number" value="" >
+					                     <label class = "mdl-textfield__label">Ticket Number : {{employee.employee_name}}</label>
+					                  </div>
+						            </div>
+
 
                         {% endfor %}
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">From</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="from" placeholder="Flight From" type="text" value="">
-                            </div>
-                        </div>
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="from" placeholder="Flight From" value="" >
+					                     <label class = "mdl-textfield__label">From</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                                <label class="col-sm-5 control-label">To</label>
-                                <div class="col-sm-7">
-                                    <input class="form-control" name="to" placeholder="Flight To" type="text" value="">
-                                </div>
-                            </div>
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="to" placeholder="Flight To" value="" >
+					                     <label class = "mdl-textfield__label">To</label>
+					                  </div>
+						            </div>
 
-
-                            <div class="form-group row">
-                                    <label class="col-sm-5 control-label">Departure Time</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control date-format" name="departure_time" type="text" value="">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-5 control-label">Arrival Time</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control date-format" name="arival_time" type="text" value="">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-5 control-label">Flight Name</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" name="flight_name" placeholder="Flight Name" type="text" value="">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-5 control-label">Flight No.</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" name="flight_no" placeholder="Flight No." type="text" value="">
-                                    </div>
-                                </div>
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input date-format" type = "text" name="departure_time" value="" >
+					                     <label class = "mdl-textfield__label">Departure Time</label>
+					                  </div>
+						            </div>
 
 
-                                <div class="form-group row">
-                                    <label class="col-sm-5 control-label">PNR Number</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control" name="pnr_number" placeholder="PNR Number" type="text" value="">
-                                    </div>
-                                </div>
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input date-format" type = "text" name="arival_time" value="" >
+					                     <label class = "mdl-textfield__label">Arrival Time</label>
+					                  </div>
+						            </div>
 
 
-                                <div class="form-group row">
-                                        <div class="col-sm-3">
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="flight_name" value="" >
+					                     <label class = "mdl-textfield__label">Flight Name</label>
+					                  </div>
+						            </div>
 
-                                        </div>
-                                        <div class="col-sm-3" style="text-align: center;">
-                                            <span class="stop-head stop1" style="font-size: 2.2em">Stop 1</span>
-                                        </div>
-                                        <div class="col-sm-3" style="text-align: center;">
-                                            <span class="stop-head stop2" style="font-size: 2.2em">Stop 2</span>
-                                        </div>
-                                        <div class="col-sm-3" style="text-align: center;">
-                                            <span class="stop-head stop3" style="font-size: 2.2em">Stop 3</span>
-                                        </div>
+                        <div class="col-lg-6 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="flight_no" value="" >
+					                     <label class = "mdl-textfield__label">Flight No</label>
+					                  </div>
+						            </div>
 
-                                </div>
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-3 control-label stop1">From</label>
-                                            <div class="col-sm-3 stop1">
-                                                    <input class="form-control" name="from" placeholder="From"
+                        <div class="col-lg-6 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="pnr_number" placeholder="PNR Number" value="" >
+					                     <label class = "mdl-textfield__label">PNR Number</label>
+					                  </div>
+						            </div>
+
+
+
+
+                        <div class="col-lg-1 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input"
+                                                           type="text" value="Stop 1" readonly>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="from" placeholder="From"
                                                            type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop2">
-                                                        <input class="form-control" name="from" placeholder="From"
-                                                               type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop3">
-                                                        <input class="form-control" name="from" placeholder="From"
-                                                               type="text" value="">
-                                                </div>
-                                    </div>
+					                  </div>
+						            </div>
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-3 control-label stop1">To</label>
-                                            <div class="col-sm-3 stop1">
-                                                    <input class="form-control" name="to" placeholder="To"
+
+                          <div class="col-lg-2 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="to" placeholder="To"
                                                            type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop2">
-                                                        <input class="form-control" name="to" placeholder="To"
-                                                               type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop3">
-                                                        <input class="form-control" name="to[]" placeholder="To"
-                                                               type="text" value="">
-                                                </div>
-                                    </div>
+					                  </div>
+						            </div>
 
-                                <div class="form-group row">
-                                        <label class="col-sm-3 control-label stop1">Arrival Time</label>
-                                        <div class="col-sm-3 stop1">
-                                            <input class="form-control date-format" name="arival_time" placeholder="arival_time"
-                                                   type="text" value="">
-                                        </div>
-                                        <div class="col-sm-3 stop2">
-                                                <input class="form-control date-format" name="arival_time" placeholder="arival_time"
-                                                       type="text" value="">
-                                        </div>
-                                        <div class="col-sm-3 stop3">
-                                                <input class="form-control date-format" name="arival_time" placeholder="arival_time"
-                                                       type="text" value="">
-                                        </div>
-                                    </div>
 
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 control-label stop1">Departure Time</label>
-                                        <div class="col-sm-3 stop1">
-                                            <input class="form-control date-format" name="departure_time" placeholder="Departure Time"
-                                                   type="text" value="">
-                                        </div>
-                                        <div class="col-sm-3 stop2">
-                                                <input class="form-control date-format" name="departure_time" placeholder="Departure Time"
-                                                       type="text" value="">
-                                        </div>
-                                        <div class="col-sm-3 stop3">
-                                                <input class="form-control date-format" name="departure_time" placeholder="Departure Time"
-                                                       type="text" value="">
-                                        </div>
-                                    </div>
+                           <div class="col-lg-1 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-3 control-label stop1">Flight Name</label>
-                                            <div class="col-sm-3 stop1">
-                                                    <input class="form-control" name="flight_name" placeholder="Flight Name"
+					                     <input class="mdl-textfield__input date-format" name="arival_time" placeholder="arival_time"
                                                            type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop2">
-                                                        <input class="form-control" name="flight_name" placeholder="Flight Name"
-                                                               type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop3">
-                                                        <input class="form-control" name="flight_name" placeholder="Flight Name"
-                                                               type="text" value="">
-                                                </div>
-                                    </div>  
-                                    
-                                    <div class="form-group row">
-                                            <label class="col-sm-3 control-label stop1">Flight No.</label>
-                                            <div class="col-sm-3 stop1">
-                                                    <input class="form-control" name="flight_no" placeholder="Flight No."
+					                  </div>
+						            </div>
+
+
+                            <div class="col-lg-1 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input date-format" name="departure_time" placeholder="Departure Time"
                                                            type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop2">
-                                                        <input class="form-control" name="flight_no" placeholder="Flight No."
-                                                               type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop3">
-                                                        <input class="form-control" name="flight_no" placeholder="Flight No."
-                                                               type="text" value="">
-                                                </div>
-                                    </div>  
+					                  </div>
+						            </div>
 
 
-                                    <div class="form-group row">
-                                            <label class="col-sm-3 control-label stop1">PNR Number</label>
-                                            <div class="col-sm-3 stop1">
-                                                    <input class="form-control" name="pnr_number" placeholder="PNR Number"
+                            <div class="col-lg-1 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="flight_name" placeholder="Flight Name"
                                                            type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop2">
-                                                        <input class="form-control" name="pnr_number" placeholder="PNR Number"
-                                                               type="text" value="">
-                                                </div>
-                                                <div class="col-sm-3 stop3">
-                                                        <input class="form-control" name="pnr_number" placeholder="PNR Number"
-                                                               type="text" value="">
-                                                </div>
-                                    </div>  
+					                  </div>
+						            </div>
 
-                            <div class="form-group row">
-                            <label class="col-sm-5 control-label">Send Client SMS</label>
-                            <div class="col-sm-7">
-                                <select class="form-control" name="is_client_sms">
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Send Client Email</label>
-                            <div class="col-sm-7">
-                                 <select class="form-control" name="is_client_email">
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
+                             <div class="col-lg-1 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="flight_no" placeholder="Flight No."
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                             <div class="col-lg-3 p-t-20 stop1" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="pnr_number" placeholder="PNR Number"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
 
 
 
 
-                                    <div class="form-group">
-                                            <div class="offset-md-3 col-md-9">
-                                                <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                                            </div>
-                                        </div>
 
 
+
+                            <div class="col-lg-1 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input"
+                                                           type="text" value="Stop 2" readonly>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="from" placeholder="From"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                          <div class="col-lg-2 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="to" placeholder="To"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                           <div class="col-lg-1 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input date-format" name="arival_time" placeholder="arival_time"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                            <div class="col-lg-1 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input date-format" name="departure_time" placeholder="Departure Time"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                            <div class="col-lg-1 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="flight_name" placeholder="Flight Name"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                             <div class="col-lg-1 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="flight_no" placeholder="Flight No."
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                             <div class="col-lg-3 p-t-20 stop2" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="pnr_number" placeholder="PNR Number"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+
+
+
+                                <div class="col-lg-1 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input"
+                                                           type="text" value="Stop 3" readonly>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="from" placeholder="From"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                          <div class="col-lg-2 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="to" placeholder="To"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                           <div class="col-lg-1 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input date-format" name="arival_time" placeholder="arival_time"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                            <div class="col-lg-1 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input date-format" name="departure_time" placeholder="Departure Time"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                            <div class="col-lg-1 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="flight_name" placeholder="Flight Name"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                             <div class="col-lg-1 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="flight_no" placeholder="Flight No."
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+                             <div class="col-lg-3 p-t-20 stop3" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+
+					                     <input class="mdl-textfield__input" name="pnr_number" placeholder="PNR Number"
+                                                           type="text" value="">
+					                  </div>
+						            </div>
+
+
+
+
+                                <div class="col-lg-6 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="is_client_sms" class="mdl-textfield__input js-select2" required>
+                                           <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Send Client SMS</label>
+
+					                  </div>
+						            </div>
+
+                          <div class="col-lg-6 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select name="is_client_email" class="mdl-textfield__input js-select2" required>
+                                           <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Send Client Email</label>
+
+					                  </div>
+						            </div>
 
 
                     </div>
@@ -431,112 +550,118 @@
             </div>
 
 
-             <div class="col-md-3">
+             <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
 
-                    <div class="card">
-                      <div class="card-head card-topline-aqua">
-                          <header>Billing Details</header>
-                      </div>
-                      <div class="card-body no-padding height-9">
+                                    <header>Billing Details: </header>
 
-                          <div class="form-group row">
-                              <label class="col-sm-6 control-label">Ticket Price:</label>
-                              <div class="col-sm-6">
-                                    <input type="number" name="ticket_price" id="ticket_price" class="form-control" required >
-                              </div>
-                          </div>
+                                     <div class="tools">
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">Management_fee:</label>
-                                <div class="col-sm-6">
-                                        <input type="text" name="management_fee" id="mng_fee" class="form-control" readonly >
-                                </div>
-                        </div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">Tax amount management fee:</label>
-                                <div class="col-sm-6">
-                                    <input type="text" name="tax_mng_amt" id="tax_mng_amt" class="form-control" readonly >
-                                </div>
-                        </div>
+                                    </div>
+								</div> <!-- card-head class end -->
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">Total billing amount</label>
-                                <div class="col-sm-6">
-                                        <input type="text" name="sub_total" id="total_billing_amt" class="form-control" readonly >
-                                </div>
-                        </div>
+                     <div class="card-body row">
+
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="number" name="ticket_price" id="ticket_price" required>
+					                     <label class = "mdl-textfield__label">Ticket Price:</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="management_fee" id="mng_fee" readonly>
+					                     <label class = "mdl-textfield__label">Management_fee:</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="tax_mng_amt" id="tax_mng_amt" readonly>
+					                     <label class = "mdl-textfield__label">Tax amount management fee:</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="sub_total" id="total_billing_amt" readonly>
+					                     <label class = "mdl-textfield__label">Total billing amount</label>
+					                  </div>
+						            </div>
+
 
 
                       {% for c_enttity in c_entitys %}
 
-                          <div class="form-group row">
-                                <label class="col-sm-6 control-label">Select Cotrav Billing Entity</label>
-                                <div class="col-sm-6">
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select id="cotrav_billing_entity" name="cotrav_billing_entity" class="mdl-textfield__input js-select2" required>
+                                           <option value="{{c_enttity.id}}" gst="{{c_enttity.gst_id}}">{{c_enttity.entity_name}} </option>
+                                    </select>
 
-                                        <select class="form-control" id="cotrav_billing_entity" required name="cotrav_billing_entity">
+                                      <label class = "mdl-textfield__label">Select Cotrav Billing Entity</label>
+
+					                  </div>
+						 </div>
 
 
-                                                <option value="{{c_enttity.id}}" gst="{{c_enttity.gst_id}}">{{c_enttity.entity_name}} </option>
 
-
-                                        </select>
-
-                                </div>
-                        </div>
 
                        {% endfor %}
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">Booking Billing Entity</label>
-                                <div class="col-sm-6">
 
-                                        <input type="text" class="form-control" name="bb_entity" gst="{{be_gst}}" id="booking_billing_entity" value="{{be_name}}">
-
-                                </div>
-                        </div>
-
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="bb_entity" gst="{{be_gst}}" id="booking_billing_entity" value="{{be_name}}">
+					                     <label class = "mdl-textfield__label">Booking Billing Entity</label>
+					                  </div>
+						            </div>
 
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">CGST (perscentage)</label>
-                                <div class="col-sm-6">
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="cgst" id="cgst" readonly >
+					                     <label class = "mdl-textfield__label">CGST (perscentage)</label>
+					                  </div>
+						            </div>
 
-                                        <input type="text" class="form-control" name="cgst" id="cgst"  readonly>
 
-                                </div>
-                        </div>
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">SGST (perscentage)</label>
-                                <div class="col-sm-6">
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="sgst" id="sgst"  readonly >
+					                     <label class = "mdl-textfield__label">SGST (perscentage)</label>
+					                  </div>
+						            </div>
 
-                                        <input type="text"  class="form-control" name="sgst" id="sgst"  readonly>
 
-                                </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="igst" id="igst"  readonly >
+					                     <label class = "mdl-textfield__label">IGST (perscentage)</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">IGST (perscentage)</label>
-                                <div class="col-sm-6">
 
-                                        <input type="text" class="form-control" name="igst" id="igst"  readonly>
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input client_ticket" type="checkbox" name="client_ticket" value="1" onchange="valueChanged()" >
+					                     <label class = "mdl-textfield__label">Generate System Ticket</label>
+					                  </div>
+						            </div>
 
-                                </div>
-                        </div>
-
-                          <div class="form-group row browse" >
-
-                          <input class="client_ticket form-control" type="checkbox" name="client_ticket" value="1" onchange="valueChanged()"/>
-                            Generate System Ticket
-                          </div>
-                          <div class="form-group row" id="client-tkt" >
-                                <label class="col-sm-6 control-label">Browse Bus Ticket</label>
-                                <div class="col-sm-6">
-
-                                        <input type="file" class="form-control" name="busticketToUpload" id="bus-ticket">
-                                </div>
-                           </div>
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input client_ticket" type="file" name="busticketToUpload" id="bus-ticket" >
+					                     <label class = "mdl-textfield__label">Browse Bus Ticket</label>
+					                  </div>
+						            </div>
 
 
                        </div>
@@ -544,105 +669,115 @@
               </div>
 
 
-             <div class="col-md-3">
+            <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
 
-                    <div class="card">
-                      <div class="card-head card-topline-aqua">
-                          <header>Operator Billing Details</header>
-                      </div>
-                      <div class="card-body no-padding height-9">
+                                    <header>Operator Billing Details: </header>
 
-                           <div class="form-group row">
-                            <label class="col-sm-5 control-label">Operator Name</label>
-                            <div class="col-sm-7">
-                               <select name="operator_name" id="operator_id" class="form-control myselect" required>
-                                    <option value="">Select Operator Name</option>
-                                    {% for operator in flight_operators %}
-                                        <option value="{{operator.id}}" gst="{{operator.gst_id}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
-                                    {% endfor %}
-                                </select>
-                                <input type="hidden" id="operator_gst_id">
-                            </div>
-                        </div>
+                                     <div class="tools">
 
-                          <div class="form-group row">
-                              <label class="col-sm-6 control-label">Ticket Price:</label>
-                              <div class="col-sm-6">
-                                    <input type="number" class="form-control" name="oper_ticket_price" id="oper_ticket_price" required >
-                              </div>
-                          </div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                          <div class="form-group row">
-                              <label class="col-sm-6 control-label">Commission:</label>
-                              <div class="col-sm-6">
-                                    <input type="number" class="form-control" name="operator_commission" id="operator_commission" required>
-                              </div>
-                          </div>
+                                    </div>
+								</div> <!-- card-head class end -->
 
-                          <div class="form-group row">
-                                <label class="col-sm-6 control-label">Commission Type</label>
-                                <div class="col-sm-6">
-                                        <select class="form-control" id="oper_commission_type" name="oper_commission_type">
-                                                <option value="1">Percent</option>
-                                                <option value="1">Fixed</option>
-                                        </select>
-                                </div>
-                        </div>
+                     <div class="card-body row">
+
+                         <input type="hidden" id="operator_gst_id">
+
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                <select name="operator_name" id="operator_id" class="mdl-textfield__input js-select2" required>
+                                           <option value="">Select Operator Name</option>
+                                                {% for operator in flight_operators %}
+                                                    <option value="{{operator.id}}" gst="{{operator.gst_id}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
+                                                {% endfor %}
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Operator Name</label>
+
+					                  </div>
+						 </div>
+
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="number" name="oper_ticket_price" id="oper_ticket_price"  required >
+					                     <label class = "mdl-textfield__label">Ticket Price:</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="number" name="operator_commission" id="operator_commission"  required >
+					                     <label class = "mdl-textfield__label">Commission:</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-6 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select id="oper_commission_type" name="oper_commission_type" class="mdl-textfield__input js-select2" required>
+                                            <option value="1">Percent</option>
+                                            <option value="1">Fixed</option>
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Commission Type</label>
+
+					                  </div>
+						 </div>
+
 
                       {% for c_enttity in c_entitys %}
 
-                          <div class="form-group row">
-                                <label class="col-sm-6 control-label">Select Cotrav Billing Entity</label>
-                                <div class="col-sm-6">
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                <select id="oper_cotrav_billing_entity" name="oper_cotrav_billing_entity" class="mdl-textfield__input js-select2" required>
+                                           <option value="{{c_enttity.id}}" gst="{{c_enttity.gst_id}}">{{c_enttity.entity_name}} </option>
+                                    </select>
 
-                                        <select class="form-control" id="oper_cotrav_billing_entity" name="oper_cotrav_billing_entity">
+                                      <label class = "mdl-textfield__label">Select Cotrav Billing Entity</label>
 
+					                  </div>
+						 </div>
 
-                                                 <option value="{{c_enttity.id}}" gst="{{c_enttity.gst_id}}">{{c_enttity.entity_name}} </option>
-
-                                        </select>
-
-                                </div>
-                        </div>
 
                        {% endfor %}
 
 
-                           <div class="form-group row">
-                                <label class="col-sm-6 control-label">CGST (perscentage)</label>
-                                <div class="col-sm-6">
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="number" name="oper_cgst" id="oper_cgst"  readonly >
+					                     <label class = "mdl-textfield__label">CGST (perscentage)</label>
+					                  </div>
+						            </div>
 
-                                        <input type="text" class="form-control" name="oper_cgst" id="oper_cgst"  readonly>
-
-                                </div>
-                        </div>
-
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">SGST (perscentage)</label>
-                                <div class="col-sm-6">
-
-                                        <input type="text"  class="form-control" name="oper_sgst" id="oper_sgst"  readonly>
-
-                                </div>
-                        </div>
-
-                        <div class="form-group row">
-                                <label class="col-sm-6 control-label">IGST (perscentage)</label>
-                                <div class="col-sm-6">
-
-                                        <input type="text" class="form-control" name="oper_igst" id="oper_igst"  readonly>
-
-                                </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="number" name="oper_sgst" id="oper_sgst"  readonly >
+					                     <label class = "mdl-textfield__label">SGST (perscentage)</label>
+					                  </div>
+						            </div>
 
 
-                          <div class="form-group row">
-                                <label class="col-sm-6 control-label">Browse Vendor Ticket</label>
-                                <div class="col-sm-6">
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="number" name="oper_igst" id="oper_igst"  readonly >
+					                     <label class = "mdl-textfield__label">IGST (perscentage)</label>
+					                  </div>
+						            </div>
 
-                                        <input type="file" class="form-control" name="vendorticketToUpload" id="vendor-bus-ticket">
-                                </div>
-                           </div>
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="file" name="vendorticketToUpload" id="vendor-bus-ticket"  >
+					                     <label class = "mdl-textfield__label">Browse Vendor Ticket</label>
+					                  </div>
+						            </div>
+
 
 
 
@@ -652,12 +787,46 @@
 
 
 
-        </div>
+        <div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
 
-  </form>
+                                     <div class="tools">
 
-    </div>
-</div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
+
+
+
+                      <div class="col-lg-12"  align="center">
+							              <button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
+
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
+											  Cancel
+											</button>
+							            </div>
+
+
+                     </div>
+
+
+
+                 </div>
+
+
+
+
+        </div><!-- row end -->
+
+       </div>
+        </form>
+    </div></div>
 <!-- end page content -->
 {% endfor %}
 

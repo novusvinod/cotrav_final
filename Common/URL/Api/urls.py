@@ -85,7 +85,7 @@ urlpatterns = [
     path('api/add_company_rates', api_views.add_company_rates),
     path('api/update_company_rates', api_views.update_company_rates),
     path('api/delete_company_rates', api_views.delete_company_rates),
-##sanket added this
+    ##sanket added this
     path('api/taxi_packages', api_views.taxi_packages),
 
     path('api/billing_entities', api_views.billing_entities),
@@ -181,7 +181,7 @@ urlpatterns = [
     path('api/get_flight_search', api_views.get_flight_search),
     path('api/get_flight_fare_search', api_views.get_flight_fare_search),
     path('api/save_flight_booking', api_views.save_flight_booking),
-    path('api/get_flight_booking_detail', api_views.report_hotel_booking),
+    path('api/get_flight_pnr_details', api_views.get_flight_pnr_details),
 
 
 

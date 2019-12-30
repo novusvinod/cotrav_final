@@ -38,7 +38,7 @@
                                      <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="from_city" id="from_city" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select City</option>
+                                                <option value="">--Select City--</option>
                                                  {% for city in cities %}
                                                 <option value="{{city.id}}">{{city.city_name}}</option>
                                                  {% endfor %}
@@ -51,7 +51,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="city_area" id="city_area" class="mdl-textfield__input js-select2" required>
-                                                 <option value="">Select City Area</option>
+                                                 <option value="">--Select City Area--</option>
                                                        {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -87,7 +87,7 @@
                                      <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="room_type_priority1" id="room_type_priority1" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select Room Type</option>
+                                                <option value="">--Select Room Type--</option>
                                                     {% for room_type in room_types %}
                                                         <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                     {% endfor %}
@@ -100,7 +100,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="room_type_priority2" id="room_type_priority2" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select Room Type</option>
+                                                <option value="">--Select Room Type--</option>
                                                     {% for room_type in room_types %}
                                                 <option value="{{room_type.id}}">{{room_type.name}}</option>
                                                 {% endfor %}
@@ -113,7 +113,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select name="room_occupancy" id="room_occupancy" class="mdl-textfield__input js-select2" required>
-                                                <option value="">Select Room Occupancy</option>
+                                                <option value="">--Select Room Occupancy--</option>
                                                         {% for hotel_type in hotel_types %}
                                                         <option value="{{hotel_type.id}}">{{hotel_type.name}}</option>
                                                         {% endfor %}
@@ -138,7 +138,7 @@
                                       <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input select2" name="assessment_code" id="assessment_code">
-                                                <option value="">Select Assessment Code</option>
+                                                <option value="">--Select Assessment Code--</option>
                                                     {% for assessment in assessments %}
                                                     <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                                     {% endfor %}
@@ -153,7 +153,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" name="assessment_city_id" id="assessment_city_id">
-                                                 <option value="">Select Assessment City</option>
+                                                 <option value="">--Select Assessment City--</option>
                                                     {% for city in cities_ass %}
                                                         <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -171,7 +171,7 @@
                                     <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" id="entity_id" name="entity_id" required>
-                                                <option value="">Select Billing Entity </option>
+                                                <option value="">--Select Billing Entity--</option>
                                                     {% for entity in entities %}
                                                         <option value="{{entity.id}}">{{entity.entity_name}}</option>
                                                     {% endfor %}
@@ -210,7 +210,7 @@
 						            <div class="col-lg-6 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                <select id="spoc_id" name="spoc_id" class="mdl-textfield__input js-select2" placeholder="Select Spoc" required>
-                                      <option value="">Select Spoc </option>
+                                      <option value="">--Select Spoc--</option>
                                         {% for spoc in spocs %}
                                             <option value="{{spoc.id}},{{spoc.group_id}},{{spoc.subgroup_id}}">{{spoc.user_name}}</option>
                                         {% endfor %}
@@ -223,27 +223,25 @@
 
                                     <div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-
-                                          <select id="no_of_seatss" name="no_of_seats" class="form-control col-sm-10 no_of_seats myselect" required>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5" style="display: none">5</option>
-                                                <option value="6" style="display: none">6</option>
-                                          </select>
+                                          <select id="no_of_seats" name="no_of_seats" class="mdl-textfield__input no_of_seats js-select2" placeholder="Select No Of Employye" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5" style="display: none">5</option>
+                                    <option value="6" style="display: none">6</option>
+                                </select>
 
                                       </div>
 						            </div>
 
-                                    <div class="form-group row" id="emp_row_1">
+                                    <div class="card-body row" id="emp_row_1">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_1" id="employee_id_1" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                              <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -296,13 +294,13 @@
                                     </div>
 
                               <!-- second employee -->
-                                    <div class="form-group row" id="emp_row_2">
+                                    <div class="card-body row" id="emp_row_2">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_2" id="employee_id_2" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -357,13 +355,13 @@
                               <!-- end -->
 
                                     <!-- third employee -->
-                                    <div class="form-group row" id="emp_row_3">
+                                    <div class="card-body row" id="emp_row_3">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_3" id="employee_id_3" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -420,13 +418,13 @@
 
 
                                      <!-- fourth employee -->
-                                    <div class="form-group row" id="emp_row_4">
+                                    <div class="card-body row" id="emp_row_4">
 
                                         <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 
                                            <select name="employee_id_4" id="employee_id_4" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value=""></option>
+                                               <option value="">--Select Employee--</option>
                                                 {% for employee in employees %}
                                                 <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                                 {% endfor %}
@@ -501,11 +499,11 @@
 
 
                      <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+							              		<button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
 											  Submit
 											</button>
 
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
 											  Cancel
 											</button>
 							            </div>
@@ -568,7 +566,7 @@ var_url = '/api/'+'cities'
        //alert(data['Cities']);
        if(data['Cities'].length != 0){
         entities = data['Cities'];
-        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
+        $('#current_city_id').append($("<option value=''>--Select Billing Entity--</option>"));
          for (var i=0;i<entities.length;i++) {
             $('#from_city').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
             $('#city_area').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));

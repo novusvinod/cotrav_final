@@ -12,6 +12,8 @@ from openpyxl import Workbook
 from Common.models import Corporate_Spoc_Login_Access_Token
 from landing.cotrav_messeging import Excelexport
 from django.http import HttpResponse
+import razorpay
+razorpay_client = razorpay.Client(auth=("rzp_test_eipQBGxGd1SmmJ", "r82J3rVV4NEAZKMGxIJVPyGY"))
 
 def logout_action(request):
     if 'spoc_login_type' in request.session:
@@ -1063,16 +1065,16 @@ def add_flight_booking_self(request,id):
 
             booking_data = {'user_id':user_id,'user_type':login_type,'corporate_id':corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from_city':from_city,'to_city':to_city,
-                       'departure_datetime':departure_date}
+                       'departure_datetime':departure_date,'return_date':return_date,'trip_type':trip_type,'fl_class':fl_class,'no_of_seats':no_of_seats}
 
             url_tokn = settings.API_BASE_URL + "get_auth_token"
             data = getDataFromAPI(login_type, access_token, url_tokn, booking_data)
             if data['success'] == 1:
                 token = data['Data']
             else:
-                return render(request, 'Company/Spoc/flight_booking_search_result.html',{'booking_datas': booking_data, 'flights': ''})
+                return render(request, 'Company/Spoc/add_flight_booking_self.html',{'booking_datas': booking_data, 'flights': ''})
 
-            payload = {'auth_token':"e2d43e32-3e43-495e-878e-4cfcff86cc1b",'session_id':access_token,'from_city':from_city,'to_city':to_city,'departure_date':departure_date,
+            payload = {'auth_token':"71d5f64a-eb8d-4fc9-b2e8-9d3858f92355",'session_id':access_token,'from_city':from_city,'to_city':to_city,'departure_date':departure_date,
                        'fl_class':fl_class,'return_date':return_date,'trip_type':trip_type,'no_of_seats':no_of_seats,}
             print(payload)
             url_flt = settings.API_BASE_URL + "get_flight_search"
@@ -1080,11 +1082,20 @@ def add_flight_booking_self(request,id):
             #print(flightdata['Data'])
             if 'FLIGHT' in flightdata['Data']:
                 flight = flightdata['Data']
-                return render(request, 'Company/Spoc/flight_booking_search_result.html',
-                              {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight['FLIGHT']})
+
+                url_access = settings.API_BASE_URL + "get_airports"
+                data11 = getDataFromAPI(login_type, access_token, url_access, payload)
+                airports = data11['Airports']
+
+                return render(request, 'Company/Spoc/add_flight_booking_self.html',
+                              {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight['FLIGHT'], 'airports':airports})
             else:
+                url_access = settings.API_BASE_URL + "get_airports"
+                data11 = getDataFromAPI(login_type, access_token, url_access, payload)
+                airports = data11['Airports']
+
                 messages.success(request, 'No Flight Found Please Try Another Flight.!')
-                return HttpResponseRedirect("/Corporate/Spoc/add-flight-booking-self/2", {})
+                return render(request, 'Company/Spoc/add_flight_booking_self.html',{'booking_datas': booking_data, 'flights': '', 'airports':airports})
 
         else:
             return HttpResponseRedirect("/login")
@@ -1196,8 +1207,6 @@ def add_flight_booking_self_final(request, id):
         employee_name_5 = request.POST.get('employee_name_5', '')
         employee_name_6 = request.POST.get('employee_name_6', '')
 
-
-
         if entity_id:
             pass
         else:
@@ -1217,10 +1226,11 @@ def add_flight_booking_self_final(request, id):
         print("API BOOK")
         print(booking1)
         vendor_booking = ""
-        if 'BOOKINGID' in booking1['RESULT']:
-            vendor_booking = booking1['RESULT']['BOOKINGID']
+        print(booking1['Data']['RESULT'][0]['BOOKINGID'])
+        if 'BOOKINGID' in booking1['Data']['RESULT'][0]:
+            vendor_booking = booking1['Data']['RESULT'][0]['BOOKINGID']
         else:
-            vendor_booking = booking1['RESULT']['BOOKINGID']
+            vendor_booking = ""
 
         payload = {'user_id': user_id, 'user_type': login_type, 'corporate_id': corporate_id, 'spoc_id': spoc_id,
                    'group_id': group_id,
@@ -1231,18 +1241,97 @@ def add_flight_booking_self_final(request, id):
                    'reason_booking': reason_booking, 'no_of_seats': no_of_seats, 'employees': employees,
                    'billing_entity_id': entity_id,
                    'is_sms': 1, 'is_email': 1, 'assessment_city_id': assessment_city_id, 'flightdata': flightdata,
-                   'employee_name_1': employee_name_1}
+                   'employee_name_1': employee_name_1,'vendor_booking':vendor_booking}
         # print(payload)
+        if vendor_booking:
+            url_taxi_booking = settings.API_BASE_URL + "add_flight_booking"
+            booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
+            print("MYBOOOK")
+            print(booking)
+            if booking['success'] == 1:
+                last_booking_id = booking['last_booking_id']
+                url_save = settings.API_BASE_URL + "get_flight_pnr_details"
+                booking1 = getDataFromAPI(login_type, access_token, url_save, payload)
+                print(booking1['Data']['FLIGHT'])
+                ticket_number =[]
+                pnr_no =[]
+                flight_no =[]
+                flight_name =[]
+                arrival_time =[]
+                departure_time =[]
+                flight_to =[]
+                flight_from =[]
+                no_of_stops = booking1['Data']['FLIGHT'][0]['STOP']
+                flight_type = seat_type
+                fare_type = booking1['Data']['FLIGHT'][0]['FARE_TYPE']
+                meal_is_include = ''
+                no_of_passanger = booking1['Data']['FLIGHT'][0]['SEAT']
+                employee_booking_id = employees
+                ticket_price = booking1['Data']['FLIGHT'][0]['AMOUNT']
 
-        url_taxi_booking = settings.API_BASE_URL + "add_flight_booking"
-        booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
-        print("MYBOOOK")
-        print(booking)
+                ticket_number.append(booking1['Data']['FLIGHT'][0]['PCC'])
+                pnr_no.append(booking1['Data']['PAX'][0]['apnr'])
+                flight_no.append(booking1['Data']['FLIGHT'][0]['FLIGHT_NO'])
+                flight_name.append(booking1['Data']['FLIGHT'][0]['FLIGHT_NAME'])
+                arrival_time.append(booking1['Data']['FLIGHT'][0]['ARRV_DATE']+" "+booking1['Data']['FLIGHT'][0]['ARRV_TIME'])
+                departure_time.append(booking1['Data']['FLIGHT'][0]['DEP_DATE']+" "+booking1['Data']['FLIGHT'][0]['DEP_TIME'])
+                flight_to.append(booking1['Data']['FLIGHT'][0]['DES_NAME'])
+                flight_from.append(booking1['Data']['FLIGHT'][0]['ORG_NAME'])
 
-        if booking1['success'] == 1:
-            messages.success(request, 'Flight Booking Added Successfully..!')
+                for flightt in booking1['Data']['CON_FLIGHT']:
+                    ticket_number.append(ticket_number)
+                    pnr_no.append(pnr_no)
+                    flight_no.append(flightt['FLIGHT_NO'])
+                    flight_name.append(flightt['FLIGHT_NAME'])
+                    arrival_time.append(flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'])
+                    departure_time.append(flightt['DEP_DATE'] + " " + flightt['DEP_TIME'])
+                    flight_to.append(flightt['DES_NAME'])
+                    flight_from.append(flightt['ORG_NAME'])
+
+                sub_total = 118+int(ticket_price)
+
+
+                url = settings.API_BASE_URL + "assign_flight_booking"
+                payload = {'ticket_no': ticket_number, 'pnr_no': pnr_no, 'portal_used': "",
+                           'booking_id': last_booking_id, 'user_id': user_id, 'user_type': login_type, 'flight_no': flight_no,
+                           'flight_name': flight_name, 'arrival_time': arrival_time,
+                           'departure_time': departure_time, 'flight_to': flight_to, 'flight_from': flight_from,
+                           'no_of_stops': no_of_stops, 'seat_type': seat_type, 'flight_type': flight_type,
+                           'trip_type': trip_type, 'fare_type': fare_type, 'meal_is_include': meal_is_include,
+                           'no_of_passanger': no_of_passanger, 'employee_booking_id': employee_booking_id,
+                           'ticket_price': ticket_price, 'management_fee': '100',
+                           'tax_mng_amt': '18', 'tax_on_management_fee': '18',
+                           'tax_on_management_fee_percentage': '18',
+                           'sub_total': sub_total,
+                           'management_fee_igst': 18, 'management_fee_cgst': 0,
+                           'management_fee_sgst': 0,
+                           'management_fee_igst_rate': int(ticket_price)*0.18,
+                           'management_fee_cgst_rate': 0,
+                           'management_fee_sgst_rate': 0, 'cgst': 0, 'sgst': 0,
+                           'igst': int(sub_total)*0.18,
+                           'oper_ticket_price': ticket_price, 'oper_commission': "",
+                           'oper_commission_type': "",
+                           'oper_cotrav_billing_entity': "1",
+                           'cotrav_billing_entity': '1',
+                           'oper_cgst': 0, 'oper_sgst': 0, 'oper_igst': 18,
+                           'client_ticket_path': '', 'client_ticket': '1',
+                           'vender_ticket': '',
+                           'vender_ticket_path': '', 'is_client_sms': '1',
+                           'is_client_email': '1',
+                           'igst_amount': int(ticket_price)*0.18, 'cgst_amount': 0, 'sgst_amount': 0,
+                           'operator_id': '1'
+                           }
+                print(payload)
+                company = getDataFromAPI(login_type, access_token, url, payload)
+
+                messages.success(request, 'Flight Booking Added Successfully..!')
+                return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Flight Booking Not Added..!')
+                return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
+        else:
+            messages.error(request, 'Flight Booking Not Added..!')
             return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
-
 
 
     else:
@@ -3523,3 +3612,19 @@ def timeonly(dt=''):
             return ''
     except ValueError :
         return ''
+
+
+def razor_charge(request):
+    if 'spoc_login_type' in request.session:
+        login_type = request.session['spoc_login_type']
+        access_token = request.session['spoc_access_token']
+
+        pnr = request.POST.get('pnr', '')
+        payload ={'pnr':pnr}
+
+        url_save = settings.API_BASE_URL + "get_flight_pnr_details"
+        booking1 = getDataFromAPI(login_type, access_token, url_save, payload)
+        print(booking1['Data']['FLIGHT'])
+        messages.success(request, 'Payment Successfully..!'+str(booking1['Data']['FLIGHT']))
+        return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
+

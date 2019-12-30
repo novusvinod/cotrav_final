@@ -53,93 +53,91 @@ list-style:
    </div>
 
 {% for booking in bookings %}
-        <div class="row">
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Basic Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
+						<div class="col-sm-12">
+							<div class="card card-box" >
+								<div class="card-head">
+									<header>Basic Details: </header>
+                                     <div class="tools">
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Reference No</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name"
-                                     readonly  type="text" value="{{ booking.reference_no }}">
-                            </div>
-                        </div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Tour Type</label>
-                            <div class="col-sm-7">
-                                    {% if booking.tour_type == 1 %}
-                                     <input readonly class="form-control"name="tour_type" type="text" value="Radio">
+                                    </div>
+								</div>
+								<div class="card-body row">
+
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ booking.reference_no }}" readonly>
+					                     <label class = "mdl-textfield__label">Booking Reference No</label>
+					                  </div>
+						            </div>
+
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     {% if booking.tour_type == 1 %}
+                                     <input readonly class="mdl-textfield__input"name="tour_type" type="text" value="Radio">
                                     {% elif booking.tour_type == 2 %}
-                                     <input readonly class="form-control" name="tour_type" type="text" value="Local">
+                                     <input readonly class="mdl-textfield__input" name="tour_type" type="text" value="Local">
                                     {% else %}
-                                    <input readonly class="form-control" name="tour_type" type="text" value="Outstation">
+                                    <input readonly class="mdl-textfield__input" name="tour_type" type="text" value="Outstation">
                                     {% endif %}
-                            </div>
+					                     <label class = "mdl-textfield__label">Tour Type</label>
+					                  </div>
+						            </div>
 
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">City Name</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="City Name"
-                                     readonly  type="text" value="{{ booking.city_name }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Pickup Location</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="pickup_location" placeholder="Pickup Location"
-                                     readonly  type="text" value="{{ booking.pickup_location }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Drop Location</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="drop_location" placeholder="Drop Location"
-                                     readonly  type="text" value="{{ booking.drop_location }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Pickup Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="pickup_datetime" placeholder="Pickup Datetime"
-                                     readonly  type="text" value="{{ booking.pickup_datetime }}">
-                            </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="city_name" value="{{ booking.city_name }}" readonly>
+					                     <label class = "mdl-textfield__label">City Name</label>
+					                  </div>
+						            </div>
 
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Booking Date</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="booking_date" placeholder="Booking Date"
-                                     readonly  type="text" value="{{ booking.booking_date }}">
-                            </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text"  name="pickup_location" value="{{ booking.pickup_location }}" readonly>
+					                     <label class = "mdl-textfield__label">Pickup Location</label>
+					                  </div>
+						            </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">No Of Seats</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="no_of_seats" placeholder="No Of Seats"
-                                     readonly  type="text" value="{{ booking.no_of_seats }}">
-                            </div>
-                        </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Booking Reason</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="reason_booking" placeholder="Booking Reason"
-                                     readonly  type="text" value="{{ booking.reason_booking }}">
-                            </div>
-                        </div>
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ booking.drop_location }}" name="drop_location"  readonly>
+					                     <label class = "mdl-textfield__label">Drop Location</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ booking.pickup_datetime }}" name="pickup_datetime"  readonly>
+					                     <label class = "mdl-textfield__label">Pickup Date</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ booking.booking_date }}" name="booking_date"  readonly>
+					                     <label class = "mdl-textfield__label">Booking Date</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ booking.no_of_seats }}" name="no_of_seats"  readonly>
+					                     <label class = "mdl-textfield__label">No Of Seats</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ booking.reason_booking }}" name="reason_booking"  readonly>
+					                     <label class = "mdl-textfield__label">Booking Reason</label>
+					                  </div>
+						            </div>
 
 
                     </div>
@@ -149,201 +147,174 @@ list-style:
 
 
 
-            <div class="col-md-4">
-
-                <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Assign Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Reference No/Account Used</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="vendor_booking_id" >
-                            </div>
-                        </div>
-                     <form method="post" action="/agents/assign-taxi-booking/{{booking.id}}">
+          <form method="post" action="/agents/assign-taxi-booking/{{booking.id}}">
                           <input type="hidden" class="col-sm-8 form-control" name="user_id"  value="{{user.id }}">
                           <input type="hidden" class="col-sm-8 form-control" name="booking_id"  value="{{booking.id}}">
                           <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                          <input type="hidden" name="tour_typ_save" value="{{booking.tour_type}}">
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Operator Name</label>
-                            <div class="col-sm-7">
-                                 <input id="operators"  class="form-control" type="text" name="operator_id" value="{{booking.operator_name}}" autocomplete="off" placeholder="Operator Name">
-<!--
- <select name="operator_id" class="form-control myselect" required>-->
-<!--                                    <option value="">Select</option>-->
-<!--                                    {% for operator in operators %}-->
-<!--                                    {% if operator.service_type_id == booking.tour_type %}-->
-<!--                                        <option value="{{operator.id}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>-->
-<!--                                    {% endif %}-->
-<!--                                    {% endfor %}-->
-<!--                                </select>-->
-                            </div>
-                        </div>
-
-                           <div class="form-group row">
-                            <label class="col-sm-5 control-label">Driver Name</label>
-                            <div class="col-sm-7">
-                                 <input id="driver_id"  class="form-control" type="text" name="driver_id" something="9999999999" value="" autocomplete="off" placeholder="Driver Name">
-<!--                               <select name="driver_id" class="form-control myselect" required>-->
-<!--                                   <option value="">Select</option>-->
-<!--                                    {% for operator_driver in operator_drivers %}-->
-<!--                                        <option value="{{operator_driver.id}}">{{operator_driver.driver_name}} ({{operator_driver.driver_contact}})</option>-->
-<!--                                    {% endfor %}-->
-<!--                                </select>-->
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Driver Contact</label>
-                            <div class="col-sm-7">
-                               <input class="form-control" name="driver_contact" id="driver_contact" placeholder="Driver Contact">
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Taxi Reg No</label>
-                            <div class="col-sm-7">
-                                <input id="taxi_id"  class="form-control" type="text" name="taxi_id" value="" autocomplete="off" placeholder="Taxi Reg No">
-<!--                                <select name="taxi_id" class="form-control myselect" required>-->
-<!--                                   <option value="">Select</option>-->
-<!--                                    {% for taxi in taxis %}-->
-<!--                                        <option value="{{taxi.id}}">{{taxi.taxi_reg_no}} ( {{taxi.brand_name}}({{taxi.model_name}}) )</option>-->
-<!--                                    {% endfor %}-->
-<!--                                </select>-->
-                            </div>
-                        </div>
-
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Taxi Model</label>
-                            <div class="col-sm-7">
-                                <input id="taxi_model"  class="form-control" type="text" name="taxi_model" value="" autocomplete="off" placeholder="Taxi Model">
-<!--                                <select name="taxi_id" class="form-control myselect" required>-->
-<!--                                   <option value="">Select</option>-->
-<!--                                    {% for taxi in taxis %}-->
-<!--                                        <option value="{{taxi.id}}">{{taxi.taxi_reg_no}} ( {{taxi.brand_name}}({{taxi.model_name}}) )</option>-->
-<!--                                    {% endfor %}-->
-<!--                                </select>-->
-                            </div>
-                        </div>
-
-                           <div class="form-group row">
-                            <label class="col-sm-5 control-label">Taxi Type</label>
-                            <div class="col-sm-7">
-                                <input id="taxi_types"  class="form-control" type="text" name="taxi_types" value="" autocomplete="off" placeholder="Taxi Type">
-<!--                                <select name="taxi_id" class="form-control myselect" required>-->
-<!--                                   <option value="">Select</option>-->
-<!--                                    {% for taxi in taxis %}-->
-<!--                                        <option value="{{taxi.id}}">{{taxi.taxi_reg_no}} ( {{taxi.brand_name}}({{taxi.model_name}}) )</option>-->
-<!--                                    {% endfor %}-->
-<!--                                </select>-->
-                            </div>
-                        </div>
 
 
 
+						<div class="col-sm-12">
+							<div class="card card-box" >
+								<div class="card-head">
+									<header>Assign Details: </header>
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div>
+								<div class="card-body row">
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type = "text" name="vendor_booking_id"  readonly>
+					                     <label class = "mdl-textfield__label">Reference No/Account Used</label>
+					                  </div>
+						            </div>
 
 
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" id="operators" type="text" name="operator_id" value="{{booking.operator_name|default:''}}" autocomplete="off" placeholder="Operator Name">
+					                     <label class = "mdl-textfield__label">Operator Name</label>
+					                  </div>
+						            </div>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Send Client SMS</label>
-                            <div class="col-sm-7">
-                                <select class="form-control" name="is_client_sms">
-                                    <option value="1">Yes</option>
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" id="driver_id" type="text" name="driver_id" something="9999999999" value="" autocomplete="off" placeholder="Driver Name">
+					                     <label class = "mdl-textfield__label">Driver Name</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="driver_contact" id="driver_contact" placeholder="Driver Contact">
+					                     <label class = "mdl-textfield__label">Driver Contact</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="text" name="taxi_id" value=""  placeholder="Taxi Reg No">
+					                     <label class = "mdl-textfield__label">Taxi Reg No</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="text" name="taxi_model" value=""  placeholder="Taxi Model">
+					                     <label class = "mdl-textfield__label">Taxi Model</label>
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" type="text" name="taxi_types" value="" placeholder="Taxi Type">
+					                     <label class = "mdl-textfield__label">Taxi Type</label>
+					                  </div>
+						            </div>
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select class="mdl-textfield__input js-select2"  name="is_client_sms">
+                                           <option value="1">Yes</option>
                                     <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
+                                    </select>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Send Client Email</label>
-                            <div class="col-sm-7">
-                                 <select class="form-control" name="is_client_email">
-                                    <option value="1">Yes</option>
+                                      <label class = "mdl-textfield__label">Send Client SMS </label>
+
+					                  </div>
+						            </div>
+
+                        <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select class="mdl-textfield__input js-select2"  name="is_client_email">
+                                           <option value="1">Yes</option>
                                     <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
+                                    </select>
 
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Send Driver SMS</label>
-                            <div class="col-sm-7">
-                                <select class="form-control" name="is_driver_sms">
-                                    <option value="1">Yes</option>
+                                      <label class = "mdl-textfield__label">Send Client Email </label>
+
+					                  </div>
+						            </div>
+
+
+                         <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                <select class="mdl-textfield__input js-select2" name="is_driver_sms">
+                                           <option value="1">Yes</option>
                                     <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
+                                    </select>
 
-                         <div class="form-group">
-                            <div class="offset-md-3 col-md-9">
-                                <button type="submit" class="btn btn-info">Assign</button>
-                            </div>
-                        </div>
+                                      <label class = "mdl-textfield__label">Send Driver SMS </label>
 
+					                  </div>
+						            </div>
 
-                        </form>
                     </div>
                 </div>
+                        </div>
 
+						<div class="col-sm-12">
+							<div class="card card-box">
+								<div class="card-head">
+									<header>Passenger Details: </header>
+                                     <div class="tools">
 
-            </div>
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-
-             <div class="col-md-4">
-
-                 <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Passanger Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
+                                    </div>
+								</div>
+								<div class="card-body row">
 
                          {% for passanger in booking.Passangers %}
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Name {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Name" readonly
+
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="passanger_name" placeholder="Name" readonly
                                        type="text" value="{{ passanger.employee_name|default:'' }}">
-                            </div>
-                        </div>
+					                     <label class = "mdl-textfield__label">Passanger Name {{ forloop.counter }}</label>
+					                  </div>
+						            </div>
 
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Contact Email {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Contact Email" readonly
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="contact_email" placeholder="Contact Email" readonly
                                        type="text" value="{{ passanger.employee_email|default:''}}">
-                            </div>
-                        </div>
+					                     <label class = "mdl-textfield__label">Passanger Contact Email {{ forloop.counter }}</label>
+					                  </div>
+						            </div>
 
-                          <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Contact Number {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Group Name" readonly
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="contact_number" placeholder="Contact Number" readonly
                                        type="text" value="{{ passanger.employee_contact|default:''}}">
-                            </div>
-                        </div>
+					                     <label class = "mdl-textfield__label">Passanger Contact Number {{ forloop.counter }}</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Age {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Age" readonly
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="age" placeholder="Age" readonly
                                        type="text" value="{{ passanger.age|default:''}}">
-                            </div>
-                        </div>
+					                     <label class = "mdl-textfield__label">Passanger Age {{ forloop.counter }}</label>
+					                  </div>
+						            </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Passanger Gender {{ forloop.counter }}</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" placeholder="Gender" readonly
+
+                       <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="gender" placeholder="Gender" readonly
                                        type="text" value="{{ passanger.gender|default:''}}">
-                            </div>
-                        </div>
+					                     <label class = "mdl-textfield__label">Passanger Gender {{ forloop.counter }}</label>
+					                  </div>
+						            </div>
 
 
                         {% endfor %}
@@ -355,59 +326,91 @@ list-style:
 
 
 
+						<div class="col-sm-12">
+							<div class="card card-box" >
+								<div class="card-head">
+									<header>Spoc Details: </header>
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div>
+								<div class="card-body row">
 
 
+                         <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="spoc_name" readonly  type="text" value="{{ booking.user_name }}">
+					                     <label class = "mdl-textfield__label">Spoc Name</label>
+					                  </div>
+						            </div>
 
-            <div class="col-md-4">
-
-                  <div class="card">
-                    <div class="card-head card-topline-aqua">
-                        <header>Spoc Details</header>
-                    </div>
-                    <div class="card-body no-padding height-9">
-
-                        <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Name</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="group_name" readonly  type="text" value="{{ booking.user_name }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Email</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="user_email" readonly  type="text" value="{{ booking.user_email }}">
-                            </div>
-                        </div>
-
-                         <div class="form-group row">
-                            <label class="col-sm-5 control-label">Spoc Contact</label>
-                            <div class="col-sm-7">
-                                <input class="form-control" name="user_contact" readonly  type="text" value="{{ booking.user_contact }}">
-                            </div>
-                        </div>
+                        <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="user_email" readonly  type="text" value="{{ booking.user_email }}">
+					                     <label class = "mdl-textfield__label">Spoc Email</label>
+					                  </div>
+						            </div>
 
 
-
+                       <div class="col-lg-2 p-t-20" >
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+					                     <input class = "mdl-textfield__input" name="user_contact" readonly  type="text" value="{{ booking.user_contact }}">
+					                     <label class = "mdl-textfield__label">Spoc Contact</label>
+					                  </div>
+						            </div>
 
                     </div>
                 </div>
             </div>
 
 
+<div class="col-sm-12">
+							<div class="card card-box" >
+								<div class="card-head">
+
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div> <!-- card-head class end -->
+
+                     <div class="card-body row">
 
 
-        </div>
+
+                      <div class="col-lg-12"  align="center">
+							              	<button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+											  Submit
+											</button>
+
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
+											  Cancel
+											</button>
+							            </div>
+
+
+                     </div>
+
+
+
+                 </div>
 
 
 
 
+        </div><!-- row end -->
+</form>
+       </div>
 
+    </div>
+            </div>
 
  {% endfor %}
 
-    </div>
-</div>
+
 <!-- end page content -->
 
 

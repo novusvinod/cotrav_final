@@ -57,7 +57,7 @@
                          <div class="col-lg-2 p-t-20">
                                     <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
                                      <select name="bus_type" class="mdl-textfield__input js-select2" required>
-                                         <option value="">Select Bus Type</option>
+                                         <option value="">--Select Bus Type--</option>
                                           <option value="1">AC Seater</option>
                                           <option value="2">AC Sleeper</option>
                                           <option value="3">NON AC Seater</option>
@@ -96,8 +96,8 @@
 
                               <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input select2" name="assessment_code" id="assessment_code">
-                                                <option value="">Select Assessment Code</option>
+											<select class="mdl-textfield__input js-select2" name="assessment_code" id="assessment_code">
+                                                <option value="">--Select Assessment Code--</option>
                                                     {% for assessment in assessments %}
                                                     <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
                                                     {% endfor %}
@@ -112,7 +112,7 @@
                               <div class="col-lg-2 p-t-20">
 										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											<select class="mdl-textfield__input js-select2" name="assessment_city_id" id="assessment_city_id">
-                                                <option value="">Select Assessment City</option>
+                                                <option value="">--Select Assessment City--</option>
                                                     {% for city in cities %}
                                                     <option value="{{city.id}}">{{city.city_name}}</option>
                                                     {% endfor %}
@@ -157,11 +157,11 @@
 
 
                           <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+							              <button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
 											  Submit
 											</button>
 
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="history.go(-2)" >
+                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
 											  Cancel
 											</button>
 							            </div>

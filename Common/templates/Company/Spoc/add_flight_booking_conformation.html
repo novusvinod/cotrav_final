@@ -107,9 +107,12 @@
                                                        Fare Rule : {{fare.FARE_RULE}}
                                                    </tr>
 
+
+
                                                 </tbody>
 
                                             </table>
+
                                              {% endfor %}
 
 
@@ -130,6 +133,26 @@
                             <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
                         </div>
                     </div>
+
+                  <script
+                                                        src="https://checkout.razorpay.com/v1/checkout.js"
+                                                        data-key="rzp_test_eipQBGxGd1SmmJ"
+                                                        data-amount="{{fare.GRAND_TOTAL}}"
+                                                        data-name="Flight Booking"
+                                                        data-description="{{flight.ORG_NAME}} To {{containg.DES_NAME}} Flight: {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}}"
+                                                        data-image="{% static 'assets/img/cotrav_logo.png' %}"
+                                                        data-netbanking="true"
+                                                        data-description="Tron Legacy"
+                                                        data-prefill.name="Balwant Chauhan"
+                                                        data-prefill.email="balwant@taxivaxi.in"
+                                                        data-prefill.contact="9579477262"
+                                                        data-notes.user_id="{{user.id}}">
+                  </script>
+                                                    <input type="hidden" name="user_id" value="{{user.id}}">
+                                                    <input type="hidden" name="amount" value="{{fare.GRAND_TOTAL}}">
+
+
+
 
 
     <input type="hidden" name="flightdata" value="{{flights}}">

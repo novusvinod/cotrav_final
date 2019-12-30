@@ -43,6 +43,7 @@ urlpatterns = [
     path('Corporate/Spoc/add-flight-booking-self/<int:id>', spoc_views.add_flight_booking_self),
     path('Corporate/Spoc/add-flight-booking-self-conformation/<int:id>', spoc_views.add_flight_booking_self_conformation),
     path('Corporate/Spoc/add-flight-booking-self-final/<int:id>', spoc_views.add_flight_booking_self_final),
+    path('Corporate/Spoc/get-api-flight', spoc_views.razor_charge),
 
     path('Corporate/Spoc/download-taxi-bookings', spoc_views.download_taxi_bookings),
     path('Corporate/Spoc/download-bus-bookings', spoc_views.download_bus_bookings),
