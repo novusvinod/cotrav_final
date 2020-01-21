@@ -28,6 +28,8 @@ urlpatterns = [
     path('login', basic_web_views.login_action),
     path('logout', basic_web_views.logout_action),
     path('change_password', basic_web_views.change_password),
+    path('forgot_password', basic_web_views.forgot_password),
+    path('forgot_password_conformation', basic_web_views.forgot_password_conformation),
     path('send_sms', basic_web_views.send_sms),
     path('send_email', basic_web_views.send_email),
 ######################### END Commann urls ###############

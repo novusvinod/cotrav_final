@@ -45,9 +45,8 @@ left:50%;
 {% if user %}
 			<!-- start page content -->
 {% include 'cotrav_alert_message.html' %}
-
-<div class="page-content-wrapper">
-   <div class="page-content">
+            <div class="page-content-wrapper">
+                <div class="page-content">
 
     <div class="text-center">
      <div style="font-size:14px; font-weight:bold;">
@@ -56,7 +55,7 @@ left:50%;
          {% else %}
             Add New Operators Rate Details
          {% endif %}
-     </div>
+         </div>
    </div>
 
 
@@ -70,134 +69,127 @@ left:50%;
             {% endfor %}
             {% endif %}
 
-  <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
-								<div class="card-head">
-									<header>General Information: </header>
-                                     <div class="tools">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>General Information</header>
 
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent">
 
-                                    </div>
-								</div>
-								<div class="card-body row">
 
-
-                                    <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+                                         <div class="form-group row">
+                                                <label class="col-sm-4">Operator Name</label>
                                              {% if operator_rates %}
                                             {% for rate in operator_rates %}
-											<select class="mdl-textfield__input js-select2" name="operator_id" required >
-												    <option value="">Select Operator</option>
+	                                                 <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                                         <option value="">Select Operator</option>
                                                     {% for operator in operators %}
                                                      <option value="{{operator.id}}" {%if rate.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
                                                     {% endfor %}
-                                            </select>
+	                                            </select>
                                             {% endfor %}
                                               {% else %}
-                                            <select class="mdl-textfield__input js-select2 " name="operator_id" required >
+
+                                                <select class="col-sm-8 form-control myselect" name="operator_id" required>
                                                     <option value="">Select Operator</option>
 	                                                {% for operator in operators %}
                                                      <option value="{{operator.id}}" >{{operator.operator_name}}</option>
                                                     {% endfor %}
-                                            </select>
-
-                                            {% endif %}
-
-                                        <label class = "mdl-textfield__label" >Operator Name</label>
-                                       </div>
-									</div>
+	                                            </select>
+                                             {% endif %}
+                                            </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                            {% if operator_rates %}
+                                        <div class="form-group row">
+                                                <label class="col-sm-4">City</label>
+                                             {% if operator_rates %}
                                             {% for rate in operator_rates %}
-											<select class="mdl-textfield__input js-select2" name="city_id" id="city_id_edit" required >
-												    <option value="">Select City</option>
-                                                    {% for city in cities %}
+	                                                 <select class="col-sm-8 form-control myselect" name="city_id" id="city_id_edit" required>
+                                                         <option value="">Select City</option>
+                                                         {% for city in cities %}
                                                      <option value="{{city.id}}" {%if rate.city_id == city.id %} selected {%endif%}>{{city.city_name}}</option>
                                                     {% endfor %}
-                                            </select>
+	                                            </select>
                                             {% endfor %}
                                               {% else %}
-                                            <select class="mdl-textfield__input js-select2 " name="city_id" id="city_id" required >
+
+                                                <select class="col-sm-8 form-control myselect" name="city_id" id="city_id" required>
                                                     <option value="">Select City</option>
 	                                                {% for city in cities %}
                                                      <option value="{{city.id}}" >{{city.city_name}}</option>
                                                     {% endfor %}
-                                            </select>
+	                                            </select>
+                                             {% endif %}
+                                            </div>
 
-                                            {% endif %}
-
-                                        <label class = "mdl-textfield__label" >City</label>
-                                       </div>
-									</div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                            {% if operator_rates %}
+                                    <div class="form-group row">
+                                                <label class="col-sm-4">Taxi Type</label>
+                                             {% if operator_rates %}
                                             {% for rate in operator_rates %}
-											<select class="mdl-textfield__input js-select2" name="taxi_type_id"  required >
-												    <option value="">Select Taxi Type</option>
+	                                                 <select class="col-sm-8 form-control myselect" name="taxi_type_id" required>
+                                                         <option value="">Select Taxi Type</option>
                                                          {% for taxi_type in taxi_types %}
                                                      <option value="{{taxi_type.id}}" {%if rate.taxi_type_id == taxi_type.id %} selected {%endif%}>{{taxi_type.name}}</option>
                                                     {% endfor %}
-                                            </select>
+	                                            </select>
                                             {% endfor %}
                                               {% else %}
-                                            <select class="mdl-textfield__input js-select2 " name="taxi_type_id" required >
+
+                                                <select class="col-sm-8 form-control myselect" name="taxi_type_id" required>
                                                     <option value="">Select Taxi Type</option>
 	                                                {% for taxi_type in taxi_types %}
                                                      <option value="{{taxi_type.id}}" >{{taxi_type.name}}</option>
                                                     {% endfor %}
-                                            </select>
-
-                                            {% endif %}
-
-                                        <label class = "mdl-textfield__label" >Taxi Type</label>
-                                       </div>
-									</div>
+	                                            </select>
+                                             {% endif %}
+                                            </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" autocomplete="off" id="myInput"  type = "text" name="package_name" value="{{operator.package_name}}" required >
-                                          {% endfor %}
-                                              {% else %}
-                                          <input class = "mdl-textfield__input" autocomplete="off" id="myInput1" type = "text" name="package_name" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Package Name</label>
-					                  </div>
-						            </div>
-
-
-                                     <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                            {% if operator_rates %}
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Package Name</label>
+                                         {% if operator_rates %}
                                             {% for rate in operator_rates %}
-											<select class="mdl-textfield__input js-select2" name="tour_type"  required >
-												    <option value="">Select Tour Type</option>
+
+                                         <input class="col-sm-8 form-control" autocomplete="off" id="myInput" name="package_name" placeholder="Package Name" type="text" value="{{rate.package_name}}">
+                                            {% endfor %}
+
+                                              {% else %}
+                                            <input class="col-sm-8  form-control" autocomplete="off" id="myInput1" name="package_name" placeholder="Package Name" type="text" value="{{rate.package_name}}">
+                                         {% endif %}
+                                        </div>
+
+
+                                      <div class="form-group row">
+                                                <label class="col-sm-4">Tour Type</label>
+                                             {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+	                                                 <select class="col-sm-8 form-control myselect" name="tour_type" required>
+                                                         <option value="">Select Tour Type</option>
                                                      <option value="2" {%if rate.tour_type == 1 %} selected {%endif%}>Local</option>
                                                      <option value="3" {%if rate.tour_type == 3 %} selected {%endif%}>Outstation</option>
-                                            </select>
+	                                            </select>
                                             {% endfor %}
                                               {% else %}
-                                            <select class="mdl-textfield__input js-select2 " name="tour_type" required >
+
+                                                <select class="col-sm-8 form-control myselect" name="tour_type" required>
                                                     <option value="">Select Tour Type</option>
                                                     <option value="2">Local</option>
                                                     <option value="3">Outstation</option>
-                                            </select>
+	                                            </select>
+                                             {% endif %}
+                                            </div>
 
-                                            {% endif %}
 
-                                        <label class = "mdl-textfield__label" >Tour Type</label>
-                                       </div>
-									</div>
+
+
 
 
                                 </div>
@@ -206,154 +198,129 @@ left:50%;
 
 
 
-     <div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Rate Details: </header>
-                                     <div class="tools">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-box">
+                                <div class="card-head">
+                                    <header>Rate Details</header>
+                                     <button
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " >
 
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
 
-                                    </div>
-								</div> <!-- card-head class end -->
-
-                                <div class="card-body row">
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="base_rate" value="{{rate.base_rate}}" required >
-                                          {% endfor %}
+                                      <div class="form-group row">
+                                            <label class="col-sm-4" >Base Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="base_rate"  value="{{rate.base_rate}}" required>
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="base_rate" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Base Rate</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="base_rate" placeholder="Base Rate" required>
+                                         {% endif %}
+                                        </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="hours" value="{{rate.base_rate}}" required >
-                                          {% endfor %}
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Hours Included</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="hours"  value="{{rate.hours}}" required>
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="hours" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Hours Included</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="hours" placeholder="Hours" required>
+                                         {% endif %}
+                                        </div>
 
-
-                                     <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="kms" value="{{rate.kms}}" required >
-                                          {% endfor %}
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Kms Included</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="kms"  value="{{rate.kms}}" required>
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="kms" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Kms Included</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="kms" placeholder="KMS" required>
+                                         {% endif %}
+                                        </div>
 
 
-                                     <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="hour_rate" value="{{rate.hour_rate}}" required >
-                                          {% endfor %}
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Per Hour Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="hour_rate"  value="{{rate.hour_rate}}" required>
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="hour_rate" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Per Hour Rate</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="hour_rate" placeholder="Hours Rate" required>
+                                         {% endif %}
+                                        </div>
 
 
-                                     <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="km_rate" value="{{rate.km_rate}}" required >
-                                          {% endfor %}
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Per Km Rate</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="km_rate"  value="{{rate.km_rate}}" required>
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="km_rate" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Per Km Rate</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="km_rate" placeholder="Km Rate" required>
+                                         {% endif %}
+                                        </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="night_rate" value="{{rate.night_rate}}" required >
-                                          {% endfor %}
+
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Night/Driver Charge</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="night_rate"  value="{{rate.night_rate}}" required>
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="night_rate" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Night/Driver Charge</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="night_rate" placeholder="Night Rate" required>
+                                         {% endif %}
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-                                          {% if operator_rates %}
-                                          {% for rate in operator_rates %}
-					                     <input class = "mdl-textfield__input" type = "text" name="fuel_rate" value="{{rate.fuel_rate}}" required >
-                                          {% endfor %}
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" >Fuel Charge</label>
+                                         {% if operator_rates %}
+                                            {% for rate in operator_rates %}
+                                            <input type="text" class="col-sm-8 form-control" name="fuel_rate"  value="{{rate.fuel_rate}}" >
+                                            {% endfor %}
                                               {% else %}
-                                          <input class = "mdl-textfield__input" type = "text" name="fuel_rate" required >
-                                          {% endif %}
-					                     <label class = "mdl-textfield__label">Fuel Charge</label>
-					                  </div>
-						            </div>
+                                            <input type="text" class="col-sm-8 form-control" name="fuel_rate" placeholder="Fuel Rate">
+                                         {% endif %}
+                                        </div>
+
 
 
                                 </div>
                             </div>
                         </div>
 
-
-<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div> <!-- card-head class end -->
-
-                     <div class="card-body row">
+                         <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <input type="submit" value="Submit" class="btn btn-info">
+                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
 
 
 
-                      <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-											  Submit
-											</button>
+                    </div>
+ </form>
+  </div>
+</div>
 
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"   >
-											  Cancel
-											</button>
-                      </div>
-
-                     </div>
-                 </div>
-
-        </div><!-- row end -->
-
-       </div>
-</form>
-    </div></div>
 <!-- end page content -->
 
 

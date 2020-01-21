@@ -20,7 +20,9 @@
                                 <div class="card-body">
                                    <div class="table-wrap">
                                         <div class="table-responsive tblDriverDetail">
-                                            {% for flight in flights.FLIGHT %}
+                                            {% if UID2 %}
+                                            <h3>OnWords Flight Details</h3>
+                                            {% for flight in flights.FLIGHTOW %}
                                              <table class="table display product-overview mb-30 table_txt_align" id="support_table1">
                                               <thead>
                                                  <tr>
@@ -32,7 +34,7 @@
 
                                                 <tbody>
                                                     <tr>
-                                                        <td >  <img alt="" src="{% static 'assets/img/blog/flight_indigo.png' %}">  {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
                                                        </td>
                                                         <td >{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}}
                                                             <br>{{flight.ORG_NAME}} Airport</p> </td>
@@ -45,10 +47,10 @@
                                                     </tr>
                                                 </tbody>
 
-                                                 {% for containg in flights.CON_FLIGHT %}
+                                                 {% for containg in flights.CON_FLIGHTOW %}
                                                  <tbody>
                                                     <tr>
-                                                        <td >  <img alt="" src="{% static 'assets/img/blog/flight_indigo.png' %}">  {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
+                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo">  {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
                                                        </td>
                                                         <td >{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}}
                                                             <br>{{containg.ORG_NAME}} Airport</p> </td>
@@ -65,6 +67,102 @@
 
                                             </table>
                                              {% endfor %}
+
+                                            <h3>Return Flight Details</h3>
+                                            {% for flight in flights.FLIGHTRT %}
+                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table1">
+                                              <thead>
+                                                 <tr>
+                                                    <div class="txt-block-1">{{flight.ORG_NAME}} <i class="fa fa-long-arrow-right"></i>{{flight.DES_NAME}} </div>
+                                                     <p>{{flight.DEP_DATE}}<br> </p>
+                                                          <h5 class="block_txt border-section"> {{flight.FARE_CLASS}} </h5></i>
+                                                </tr>
+                                             </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td >  <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo">  {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td >{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}}
+                                                            <br>{{flight.ORG_NAME}} Airport</p> </td>
+
+                                                        <td>{{flight.DURATION}}  <i class="fa fa-long-arrow-right"></i>  20min <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{flight.STOP}} Stop<p></td>
+
+                                                     <td>{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}}
+                                                            <br>{{flight.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+                                                </tbody>
+
+                                                 {% for containg in flights.CON_FLIGHTRT %}
+                                                 <tbody>
+                                                    <tr>
+                                                        <td >  <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td >{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}}
+                                                            <br>{{containg.ORG_NAME}} Airport</p> </td>
+
+                                                        <td>{{containg.DURATION}}  <i class="fa fa-long-arrow-right"></i>  20min <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{containg.STOP}} Stop<p></td>
+
+                                                     <td>{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}}
+                                                            <br>{{containg.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+                                                </tbody>
+
+                                                 {% endfor %}
+
+                                            </table>
+                                             {% endfor %}
+
+                                            {% else %}
+                                            {% for flight in flights.FLIGHT %}
+                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table1">
+                                              <thead>
+                                                 <tr>
+                                                    <div class="txt-block-1">{{flight.ORG_NAME}} <i class="fa fa-long-arrow-right"></i>{{flight.DES_NAME}} </div>
+                                                     <p>{{flight.DEP_DATE}}<br> </p>
+                                                          <h5 class="block_txt border-section"> {{flight.FARE_CLASS}} </h5></i>
+                                                </tr>
+                                             </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td >{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}}
+                                                            <br>{{flight.ORG_NAME}} Airport</p> </td>
+
+                                                        <td>{{flight.DURATION}}  <i class="fa fa-long-arrow-right"></i>  20min <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{flight.STOP}} Stop<p></td>
+
+                                                     <td>{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}}
+                                                            <br>{{flight.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+                                                </tbody>
+
+                                                 {% for containg in flights.CON_FLIGHT %}
+                                                 <tbody>
+                                                    <tr>
+                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td >{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}}
+                                                            <br>{{containg.ORG_NAME}} Airport</p> </td>
+
+                                                        <td>{{containg.DURATION}}  <i class="fa fa-long-arrow-right"></i>  20min <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{containg.STOP}} Stop<p></td>
+
+                                                     <td>{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}}
+                                                            <br>{{containg.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+                                                </tbody>
+
+                                                 {% endfor %}
+
+                                            </table>
+                                             {% endfor %}
+
+                                            {% endif %}
                                         </div>
                                     </div>
                                </div>
@@ -78,7 +176,11 @@
                                 <div class="card-body">
                                    <div class="table-wrap">
                                         <div class="table-responsive tblDriverDetail">
-                                            {% for fare in flights.FARE %}
+
+                                            {% if UID2 %}
+                                            <h3>OnWords Fare Details</h3>
+                                                    {% for fare in flights.FAREOW %}
+
                                              <table class="table display product-overview mb-30 table_txt_align" id="support_table2">
 
 
@@ -101,10 +203,93 @@
                                                    </tr>
                                                 <tr>
                                                        <td class="fare_amt">Fare Type :</td>
-                                                         <td class="fare_amt">{{fare.REFUNDABLE}}</td>
+                                                         <td  style="text-transform:uppercase" class="fare_amt">{{fare.REFUNDABLE}}</td>
                                                    </tr>
                                                    <tr>
-                                                       Fare Rule : {{fare.FARE_RULE}}
+                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
+                                                       {{fare1.FARE_RULE}}
+                                                       {% endfor %}
+                                                   </tr>
+
+
+
+                                                </tbody>
+
+                                            </table>
+                                            {% endfor %}
+
+
+                                            <h3>Return Fare Details</h3>
+                                                    {% for fare in flights.FARERT %}
+
+                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table2">
+
+
+                                                <tbody>
+                                                   <tr>
+                                                       <td class="border-section fare_amt_td"> Base Fare</td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
+                                                   </tr>
+                                                    <tr>
+                                                       <td class="border-section fare_amt_td">Service Tax </td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.TAX_ADT}}</td>
+                                                   </tr>
+                                                    <tr>
+                                                       <td class="border-section fare_amt_td"> Total</td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"> </i>{{fare.TOTAL_ADT}}</td>
+                                                   </tr>
+                                                   <tr>
+                                                       <td class="fare_amt">Total Fare :</td>
+                                                         <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
+                                                   </tr>
+                                                <tr>
+                                                       <td class="fare_amt">Fare Type :</td>
+                                                         <td  style="text-transform:uppercase" class="fare_amt">{{fare.REFUNDABLE}}</td>
+                                                   </tr>
+                                                   <tr>
+                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
+                                                       {{fare1.FARE_RULE}}
+                                                       {% endfor %}
+                                                   </tr>
+
+
+
+                                                </tbody>
+
+                                            </table>
+                                            {% endfor %}
+
+                                            {% else %}
+                                            {% for fare in flights.FARE %}
+
+                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table2">
+
+
+                                                <tbody>
+                                                   <tr>
+                                                       <td class="border-section fare_amt_td"> Base Fare</td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
+                                                   </tr>
+                                                    <tr>
+                                                       <td class="border-section fare_amt_td">Service Tax </td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.TAX_ADT}}</td>
+                                                   </tr>
+                                                    <tr>
+                                                       <td class="border-section fare_amt_td"> Total</td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"> </i>{{fare.TOTAL_ADT}}</td>
+                                                   </tr>
+                                                   <tr>
+                                                       <td class="fare_amt">Total Fare :</td>
+                                                         <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
+                                                   </tr>
+                                                <tr>
+                                                       <td class="fare_amt">Fare Type :</td>
+                                                         <td style="text-transform:uppercase" class="fare_amt">{{fare.REFUNDABLE}}</td>
+                                                   </tr>
+                                                   <tr>
+                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
+                                                       {{fare1.FARE_RULE}}
+                                                       {% endfor %}
                                                    </tr>
 
 
@@ -114,7 +299,7 @@
                                             </table>
 
                                              {% endfor %}
-
+                                                {% endif %}
 
                                         </div>
                                     </div>
@@ -134,42 +319,31 @@
                         </div>
                     </div>
 
-                  <script
-                                                        src="https://checkout.razorpay.com/v1/checkout.js"
-                                                        data-key="rzp_test_eipQBGxGd1SmmJ"
-                                                        data-amount="{{fare.GRAND_TOTAL}}"
-                                                        data-name="Flight Booking"
-                                                        data-description="{{flight.ORG_NAME}} To {{containg.DES_NAME}} Flight: {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}}"
-                                                        data-image="{% static 'assets/img/cotrav_logo.png' %}"
-                                                        data-netbanking="true"
-                                                        data-description="Tron Legacy"
-                                                        data-prefill.name="Balwant Chauhan"
-                                                        data-prefill.email="balwant@taxivaxi.in"
-                                                        data-prefill.contact="9579477262"
-                                                        data-notes.user_id="{{user.id}}">
-                  </script>
-                                                    <input type="hidden" name="user_id" value="{{user.id}}">
-                                                    <input type="hidden" name="amount" value="{{fare.GRAND_TOTAL}}">
 
-
-
-
-
+    <input type="hidden" name="user_id" value="{{user.id}}">
+    <input type="hidden" name="amount" value="{{fare.GRAND_TOTAL}}">
     <input type="hidden" name="flightdata" value="{{flights}}">
+    <input type="hidden" name="UID2" value="{{UID2}}">
     <input type="hidden" name="user_id" value="{{user.id}}">
     <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
     <input type="hidden" name="spoc_id" value="{{user.id}}">
     <input type="hidden" name="group_id" value="{{user.group_id}}">
     <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
 
-{% for flight in flights.FLIGHT %}
+{% for flight in flights.PARAM %}
     <input type="hidden" name="usage_type" value="Flight">
+                 {% if UID2%}
+                 <input type="hidden" name="trip_type" value="Round Trip">
+                 {% else %}
     <input type="hidden" name="trip_type" value="One Way">
+                 {% endif %}
     <input type="hidden" name="seat_type" value="Economy">
 
-    <input type="hidden" name="from_city" value="{{flight.ORG_NAME}}">
-    <input type="hidden" name="to_city" value="{{flight.DES_NAME}}">
-    <input type="hidden" name="departure_date" value="{{flight.DEP_DATE}}">
+    <input type="hidden" name="from_city" value="{{flight.src}}">
+    <input type="hidden" name="to_city" value="{{flight.des}}">
+    <input type="hidden" name="departure_date" value="{{flight.dep_date}}">
+    <input type="hidden" name="return_date" value="{{flight.ret_date}}">
+    <input type="hidden" name="no_of_seats" value="{{no_of_seats}}">
 {% endfor %}
                     <div class="card-body ">
 
@@ -233,18 +407,6 @@
 
                     <div class="card-body ">
 <h4>IMPORTANT : Enter your name as it is mentioned on your passport or any goverment approved Id</h4>
-
-                              <div class="form-group row">
-                                <label class="col-sm-2" >Number Of Employees*</label>
-                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-8 no_of_seats myselect">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5" style="display: none">5</option>
-                                    <option value="6" style="display: none">6</option>
-                                </select>
-                            </div>
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-2" >Employee 1</label>
@@ -321,7 +483,7 @@
                                      <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-2 myselect">
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
+                                        <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
                                         {% endfor %}
                                     </select>
                                     <input type="text" name="emp_id_6" id="emp_id_6" class="form-control col-sm-2" placeholder="Employee Id">
@@ -329,6 +491,51 @@
                                     <input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control col-sm-2" placeholder="Contact No">
                                     <input type="text" name="employee_email_6" id="employee_email_6" class="form-control col-sm-2" placeholder="Email">
                                 </div>
+
+                         <div class="form-group row"  id="emp_row_7">
+                                    <label class="col-sm-2" >Employee 7</label>
+                                     <select name="employee_id_7" id="employee_id_7" class="form-control col-sm-2 myselect">
+                                         <option value="">Select Employee</option>
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="emp_id_7" id="emp_id_7" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_7" id="employee_name_7" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_7" id="employee_contact_7" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_7" id="employee_email_7" class="form-control col-sm-2" placeholder="Email">
+                                </div>
+
+
+                         <div class="form-group row"  id="emp_row_8">
+                                    <label class="col-sm-2" >Employee 8</label>
+                                     <select name="employee_id_8" id="employee_id_8" class="form-control col-sm-2 myselect">
+                                         <option value="">Select Employee</option>
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="emp_id_8" id="emp_id_8" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_8" id="8" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_8" id="employee_contact_8" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_8" id="employee_email_8" class="form-control col-sm-2" placeholder="Email">
+                                </div>
+
+                         <div class="form-group row"  id="emp_row_9">
+                                    <label class="col-sm-2" >Employee 9</label>
+                                     <select name="employee_id_9" id="employee_id_9" class="form-control col-sm-2 myselect">
+                                         <option value="">Select Employee</option>
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}" emp_id="{{employee.employee_cid}}" emp_cnt="{{employee.employee_contact}}" emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="emp_id_9" id="emp_id_9" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_9" id="employee_name_9" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_9" id="employee_contact_9" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_9" id="employee_email_9" class="form-control col-sm-2" placeholder="Email">
+                                </div>
+
+
 
                           </div>
 
@@ -361,19 +568,23 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-$('#emp_row_2').hide();
-$('#emp_row_3').hide();
-$('#emp_row_4').hide();
-$('#emp_row_5').hide();
-$('#emp_row_6').hide();
-    var emp_len = $('#employee_id_1 > option').length;
-       for (var i=emp_len;i<7;i++) {
-       var valueToCompare = $("#no_of_seats option[value='"+i+"']").text();
-            if(valueToCompare == i) {
-                $("#no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
+    	var no_of_seats = {{no_of_seats}};
+    	if(no_of_seats > 0){
+           for(i=1;i<=no_of_seats;i++)
+            {
+                $('#emp_row_'+i).show();
+                $("#employee_id_"+i).attr('required',true);
+
             }
-       }
-});
+            var j = parseInt(no_of_seats) + 1;
+			for(j=j; j<=10; j++)
+			{
+				$('#emp_row_'+j).hide();
+				$("#employee_id_"+j).attr('required',false);
+
+			}
+    	}
+    });
 
 $("#employee_id_1").change(function()
     {
@@ -423,34 +634,27 @@ $("#employee_id_5").change(function()
     	$("#employee_email_6").val($(this).find("option:selected").attr("emp_email"));
     });
 
-$(".no_of_seats").change(function()
+    $("#employee_id_7").change(function()
     {
-
-    	var no_of_seats = $(this).val();
-
-    	if(no_of_seats > 0){
-           for(i=1;i<=no_of_seats;i++)
-            {
-                $('#emp_row_'+i).show();
-                $("#employee_id_"+i).attr('required',true);
-
-            }
-            var j = parseInt(no_of_seats) + 1;
-			for(j=j; j<=6; j++)
-			{
-				$('#emp_row_'+j).hide();
-				$("#employee_id_"+j).attr('required',false);
-
-			}
-    	}
+    	$("#emp_id_7").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_7").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_7").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_7").val($(this).find("option:selected").attr("emp_email"));
     });
-
-
- var input = document.getElementById('pickup_location');
- var autocomplete = new google.maps.places.Autocomplete(input);
-
- var input = document.getElementById('drop_location');
- var autocomplete = new google.maps.places.Autocomplete(input);
+        $("#employee_id_8").change(function()
+    {
+    	$("#emp_id_8").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_8").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_8").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_8").val($(this).find("option:selected").attr("emp_email"));
+    });
+        $("#employee_id_9").change(function()
+    {
+    	$("#emp_id_9").val($(this).find("option:selected").attr("emp_id"));
+    	$("#employee_name_9").val($(this).find("option:selected").attr("emp_name"));
+    	$("#employee_contact_9").val($(this).find("option:selected").attr("emp_cnt"));
+    	$("#employee_email_9").val($(this).find("option:selected").attr("emp_email"));
+    });
 
 
 

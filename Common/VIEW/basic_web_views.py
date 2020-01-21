@@ -1,3 +1,6 @@
+import random
+import string
+
 import requests
 from django.shortcuts import render, redirect
 from datetime import datetime
@@ -45,31 +48,31 @@ def login_action(request):
 
                 if user_type == '1':
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    return redirect("Corporate/Admin/home")
+                    return HttpResponseRedirect("Corporate/Admin/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '2':
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    return redirect("Corporate/Approver_1/home")
+                    return HttpResponseRedirect("Corporate/Approver_1/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '3':
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    return redirect("Corporate/Approver_2/home")
+                    return HttpResponseRedirect("Corporate/Approver_2/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '4':
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    return redirect("Corporate/Spoc/home")
+                    return HttpResponseRedirect("Corporate/Spoc/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '6':
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                    return redirect("Corporate/Employee/home")
+                    return HttpResponseRedirect("Corporate/Employee/home")
                 else:
                     print("User Info Not Found")
 
@@ -122,7 +125,7 @@ def logout_action(request):
     user.expiry_date = datetime.now()  # change field
     user.save()  # this will update only
     #logout(request)  # the user is now LogOut
-    return redirect("/login")
+    return HttpResponseRedirect("/login")
 
 
 def change_password(request):
@@ -159,6 +162,59 @@ def change_password(request):
 
     else:
         return None
+
+
+def forgot_password_conformation(request):
+    if request.method == 'POST':
+        user_type = request.POST.get('corporate_login_type', '')
+        user_email = request.POST.get('email', '')
+        current_url = request.POST.get('current_url', '')
+
+        send_otp = SignIn_OTP()
+        email_subject = "CoTrav Corporate - Password Change Request"
+        email_body = "Dear User,<br><br>Your Password Request <br><br> If you are conform with change password then click on link  <a href='http://www.cotrav.co/forgot_password'>http://www.cotrav.co/forgot_password</a>  <br><br>Regards,<br>CoTrav Team"
+        resp1 = send_otp.send_email(user_email, email_subject, email_body)
+        messages.success(request, 'Password Request Send To Your Email Address..!')
+        return HttpResponseRedirect(current_url, {})
+
+    else:
+        return render(request, 'forgot_password_conformation.html', {})
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        user_type = request.POST.get('corporate_login_type', '')
+        user_email = request.POST.get('email', '')
+        current_url = request.POST.get('current_url', '')
+
+        cursor2 = connection.cursor()
+        cursor2.callproc('getUserIDByUseremailandType', [user_email, user_type])
+        user_id = dictfetchall(cursor2)
+        cursor2.close()
+        print(user_id[0]['id'])
+        user_id = user_id[0]['id']
+        if user_id:
+            new_password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+            generate_password = make_password(new_password)
+            cursor = connection.cursor()
+            cursor.callproc('changeUserPassword', [user_id,user_type,generate_password])
+            user_info = dictfetchall(cursor)
+            cursor.close()
+            if user_info:
+                messages.error(request, 'Password Not Change Please Try Again..!')
+                return HttpResponseRedirect(current_url, {})
+            else:
+                send_otp = SignIn_OTP()
+                email_subject = "CoTrav Corporate - Password Change Successfully"
+                email_body = "Dear User,<br><br>Your Password Successfully Reset!!!<br><br> <br>Your Login Password is: <strong>" + new_password + "</strong><br><br>Regards,<br>CoTrav Team";
+                resp1 = send_otp.send_email(user_email, email_subject, email_body)
+                messages.success(request, 'Password Change Successfully..!')
+                return HttpResponseRedirect(current_url, {})
+        else:
+            messages.error(request, 'User Information Not Found.. Please Try Again..!')
+            return HttpResponseRedirect(current_url, {})
+    else:
+        return render(request, 'forgot_password.html', {})
 
 
 def send_sms(request):

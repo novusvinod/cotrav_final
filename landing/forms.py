@@ -31,6 +31,7 @@ source = (
     ('Facebook','Facebook'),
     ('Twitter','Twitter'),
     ('LinkedIn','LinkedIn'),
+    ('Bulk Upload','Bulk Upload'),
     ('Other','Other'),
 
 )
@@ -73,7 +74,7 @@ class LeadGenerationModelForm(forms.ModelForm):
     Assigned_Sales_Person = forms.CharField(max_length=255 ,widget = forms.Select( choices=abc,attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}),)
     Status = forms.CharField(label='Status' , max_length=255 , widget = forms.Select(choices=sts,attrs={'class': "form-control col-sm-8 myselect",'id':"status"}),)
     Lead_Source = forms.CharField(label='Lead_Source', max_length=255 , widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
-    Attachments = forms.FileField(required=False)
+    Attachments = forms.FileField(required=False,allow_empty_file=True)
     Lead_Communication = forms.CharField(label='Lead_Communication', max_length=255 , required=False , widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
     Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255 , required=False , widget = forms.Select(choices=hear_about,attrs={'class': "form-control col-sm-8 myselect",'id':"Hear_About_Us"}),)
     Comments = forms.CharField(label='Comments', max_length=255 , widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
@@ -96,7 +97,7 @@ class LeadUpdateForm(forms.ModelForm):
     Assigned_Sales_Person = forms.CharField(max_length=255, widget=forms.Select(choices=abc, attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}), )
     Status = forms.CharField(label='Status', max_length=255,widget=forms.Select(choices=sts, attrs={'class': "form-control col-sm-8 myselect",'id':"status"}), )
     Lead_Source = forms.CharField(label='Lead_Source', max_length=255,widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
-    Attachments = forms.FileField(required=False)
+    Attachments = forms.FileField(required=False,allow_empty_file=True)
     Lead_Communication = forms.CharField(label='Lead_Communication', max_length=255, required=False,widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
     Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255, required=False,widget = forms.Select(choices=hear_about,attrs={'class': "form-control col-sm-8 myselect",'id':"Hear_About_Us"}),)
     Comments = forms.CharField(label='Comments', max_length=255,widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))

@@ -24,14 +24,10 @@
       <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                     <div class="row">
                         <div class="col-md-4 col-sm-4">
-                            <div class="card card-box">
+                            <div class="card card-topline-aqua">
                                 <div class="card-head">
                                     <header>General Information</header>
-                                     <button id = "panel-button"
-				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
-				                           data-upgraded = ",MaterialButton">
-				                           <i class = "material-icons">more_vert</i>
-				                        </button>
+
 				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
 				                           data-mdl-for = "panel-button">
 				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
@@ -76,9 +72,9 @@
 
                                          <div class="form-group row">
                                                 <label class="col-sm-4" for="simpleFormEmail">Has Billing Admin Approval Level</label>
-                                                <select class="col-sm-8 form-control" name="has_bill_approved_level">
-	                                                <option value="1" {% if corporate.has_bill_approved_level == 1 %} selected {% endif %}>Yes</option>
-	                                                <option value="0" {% if corporate.has_bill_approved_level == 0 %} selected {% endif %}>No</option>
+                                                <select class="col-sm-8 form-control" name="has_billing_admin_level">
+	                                                <option value="1" {% if corporate.has_billing_admin_level == 1 %} selected {% endif %}>Yes</option>
+	                                                <option value="0" {% if corporate.has_billing_admin_level == 0 %} selected {% endif %}>No</option>
 	                                            </select>
                                             </div>
 
@@ -86,14 +82,10 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-4">
-                            <div class="card card-box">
+                            <div class="card card-topline-aqua">
                                 <div class="card-head">
                                     <header>Access Details</header>
-                                    <button id = "panel-button2"
-				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
-				                           data-upgraded = ",MaterialButton">
-				                           <i class = "material-icons">more_vert</i>
-				                        </button>
+
 				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
 				                           data-mdl-for = "panel-button2">
 				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
@@ -259,16 +251,20 @@
                                         </div>
 
 
-                                        <div class="form-group">
-                                            <div class="offset-md-3 col-md-9">
-                                                <button type="submit" class="btn btn-info">Submit</button>
-                                                <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                                            </div>
-                                        </div>
+
 
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <input type="submit" value="Submit" class="btn btn-info">
+                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
                     </div>
  </form>
                      {% endfor %}

@@ -30,8 +30,8 @@ from Common.models import Operator_Login_Access_Token
 from django.contrib.auth.hashers import check_password
 import string
 import random
-from Common.email_settings import SignIn_OTP,AddBooking_Email,newUserAdd_Email
-
+from Common.email_settings import SignIn_OTP, AddBooking_Email, newUserAdd_Email, Assign_Booking_Email
+from landing.cotrav_messeging import Flight
 
 COTRAV_EMAILS = "balwant@taxiaxi.in,chauhanbalwant007@gmail.com"
 COTRAV_NUMBERS = "9579477262,"
@@ -284,6 +284,7 @@ def add_companies(request):
         gst_id = request.POST.get('gst_id', '')
 
         has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+        has_billing_admin_level = request.POST.get('has_billing_admin_level', '')
         has_auth_level = request.POST.get('has_auth_level', '')
         no_of_auth_level = request.POST.get('no_of_auth_level', '')
         has_assessment_codes = request.POST.get('has_assessment_codes', '')
@@ -314,7 +315,7 @@ def add_companies(request):
                     cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
                       address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
                        is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type,
-                    billing_city_id,has_self_booking_access,will_do_realtime_payment])
+                    billing_city_id,has_self_booking_access,will_do_realtime_payment,has_billing_admin_level])
                     company = dictfetchall(cursor)
                     print(company)
                     cursor.close()
@@ -355,6 +356,7 @@ def update_company(request):
         contact_person_email = request.POST.get('contact_person_email', '')
 
         has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+        has_billing_admin_level = request.POST.get('has_billing_admin_level', '')
         has_auth_level = request.POST.get('has_auth_level', '')
         no_of_auth_level = request.POST.get('no_of_auth_level', '')
         has_assessment_codes = request.POST.get('has_assessment_codes', '')
@@ -384,7 +386,7 @@ def update_company(request):
                     cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
                       has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
                        is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type,
-                                                       has_self_booking_access,will_do_realtime_payment])
+                        has_self_booking_access,will_do_realtime_payment,has_billing_admin_level])
                     company = dictfetchall(cursor)
                     cursor.close()
                     company = dictfetchall(cursor)
@@ -2228,6 +2230,191 @@ def delete_billing_entity(request):
         return JsonResponse(data)
 
 
+def add_cotrav_billing_entity(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+
+        user_id = request.POST.get('user_id', '')
+        entity_name = request.POST.get('entity_name', '')
+        billing_city_id = request.POST.get('billing_city_id')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        address_line_1 = request.POST.get('address_line_1', '')
+        address_line_2 = request.POST.get('address_line_2', '')
+        address_line_3 = request.POST.get('address_line_3', '')
+        gst_id = request.POST.get('gst_id', '')
+        pan_no = request.POST.get('pan_no', '')
+
+        entity_id = request.POST.get('entity_id')
+        is_delete = request.POST.get('is_delete')
+
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
+
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('addNewCotravBillingEntity', [user_id,user_type,entity_name,billing_city_id,contact_person_name,
+                                                                        contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
+                                                                        gst_id,pan_no,entity_id,is_delete])
+                    result = dictfetchall(cursor)
+                    print(result)
+                    cursor.close()
+
+                    company = dictfetchall(cursor)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        data = {'success': 1, 'message': "Billing Entity Added Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def update_cotrav_billing_entity(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+
+        user_id = request.POST.get('user_id', '')
+        entity_name = request.POST.get('entity_name', '')
+        billing_city_id = request.POST.get('billing_city_id')
+        contact_person_name = request.POST.get('contact_person_name', '')
+        contact_person_email = request.POST.get('contact_person_email', '')
+        contact_person_no = request.POST.get('contact_person_no', '')
+        address_line_1 = request.POST.get('address_line_1', '')
+        address_line_2 = request.POST.get('address_line_2', '')
+        address_line_3 = request.POST.get('address_line_3', '')
+        gst_id = request.POST.get('gst_id', '')
+        pan_no = request.POST.get('pan_no', '')
+
+        entity_id = request.POST.get('entity_id')
+
+        if corporate_id:
+            corporate_id = corporate_id
+        else:
+            corporate_id = '0'
+
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateCotravBillingEntity', [user_id,user_type,entity_name,billing_city_id,contact_person_name,
+                                                                        contact_person_email,contact_person_no,address_line_1,address_line_2,address_line_3,
+                                                                        gst_id,pan_no,entity_id])
+                    cursor.close()
+                    company = dictfetchall(cursor)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        data = {'success': 1, 'message': "Billing Entity Updated Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def delete_cotrav_billing_entity(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        entity_id = request.POST.get('entity_id')
+        is_delete = request.POST.get('is_delete')
+        print("enitititi id")
+        print(entity_id)
+        if entity_id:
+            entity_id = entity_id
+        else:
+            entity_id = '0'
+
+        if is_delete:
+            is_delete = is_delete
+        else:
+            is_delete = '0'
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('deleteCotravBillingEntity',[user_id, user_type, entity_id])
+                    cursor.close()
+                    company = dictfetchall(cursor)
+                    print(company)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        data = {'success': 1, 'message': "Billing Entity Deleted Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def add_group(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -2385,7 +2572,7 @@ def add_subgroup(request):
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
         corporate_id = request.POST.get('corporate_id', '')
-
+        print("dsasdasdasd")
         user_id = request.POST.get('user_id', '')
         subgroup_name = request.POST.get('subgroup_name', '')
         group_id = request.POST.get('group_id', '')
@@ -2407,7 +2594,7 @@ def add_subgroup(request):
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
         access_token = request.POST.get('access_token_auth', '')
         password = request.POST.get('password', '')
-
+        print(password)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -2417,8 +2604,9 @@ def add_subgroup(request):
                 try:
                     cursor.callproc('addNewCorporateSubGroup', [user_id,corporate_id,user_type,subgroup_name,group_id,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
                                                              is_water_bottles,is_reverse_logistics,access_token,password])
-
+                    print(subgroup_name)
                     company = dictfetchall(cursor)
+                    print(company)
                     if company:
                         data = {'success': 0, 'message': company}
                     else:
@@ -2429,7 +2617,8 @@ def add_subgroup(request):
                     return JsonResponse(data)
                 except Exception as e:
                     print(e)
-                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    print("Exception")
+                    data = {'success': 0, 'message': "Error in Data Insert"+e}
                     return JsonResponse(data)
 
             else:
@@ -3321,6 +3510,10 @@ def add_employee(request):
         designation = request.POST.get('designation', '')
         home_city = request.POST.get('home_city', '')
         home_address = request.POST.get('home_address', '')
+        reporting_manager = request.POST.get('reporting_manager', '')
+        employee_band = request.POST.get('employee_band', '')
+        
+        
         assistant_id = request.POST.get('assistant_id', '')
         date_of_birth = request.POST.get('date_of_birth', '')
         if date_of_birth:
@@ -3347,6 +3540,11 @@ def add_employee(request):
             assistant_id = assistant_id
         else:
             assistant_id = 0
+        
+        if reporting_manager:
+            reporting_manager = reporting_manager
+        else:
+            reporting_manager = 0
 
         if age:
             pass
@@ -3362,7 +3560,7 @@ def add_employee(request):
                     result = cursor.callproc('addNewCorporateEmployee', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
                     fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,is_delete,employee_id,
-                    billing_entity_id,corporate_id,password,username])
+                    billing_entity_id,corporate_id,password,username,reporting_manager,employee_band])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3418,6 +3616,8 @@ def update_employee(request):
         home_address = request.POST.get('home_address', '')
         assistant_id = request.POST.get('assistant_id', '')
         date_of_birth = request.POST.get('date_of_birth', '')
+        reporting_manager = request.POST.get('reporting_manager', '')
+        employee_band = request.POST.get('employee_band', '')
 
         if date_of_birth and date_of_birth != 'None':
             date_of_birth = datetime.strptime(date_of_birth, '%d-%m-%Y')
@@ -3437,7 +3637,7 @@ def update_employee(request):
                 try:
                     result = cursor.callproc('updateEmployeeDetails', [user_id,user_type,spoc_id, core_employee_id, employee_cid,
                     employee_name, employee_email, employee_contact, age, gender, id_proof_type, id_proof_no, is_active, has_dummy_email,
-                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,employee_id,billing_entity_id])
+                    fcm_regid, is_cxo, designation, home_city, home_address, assistant_id, date_of_birth,employee_id,billing_entity_id,reporting_manager,employee_band])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -4413,6 +4613,16 @@ def view_taxi_booking(request):
                     actions = dictfetchall(cursor3)
                     cursor3.close()
 
+                    if emp[0]['is_invoice']:
+                        cursor2 = connection.cursor()
+                        invoice_id = emp[0]['invoice_id']
+                        print(invoice_id)
+                        print("iiiiiiinnnnnvvvvvoooo")
+                        cursor2.callproc('getallTaxiInvoiceActionLog', [invoice_id])
+                        invoicess = dictfetchall(cursor2)
+                        emp[0]['InvoiceActionLog'] = invoicess
+                        cursor2.close()
+
                     emp[0]['Passangers'] = passanger
                     emp[0]['ActionLogs'] = actions
                     data = {'success': 1, 'Bookings': emp}
@@ -4459,6 +4669,16 @@ def view_bus_booking(request):
                     actions = dictfetchall(cursor3)
                     cursor3.close()
 
+                    if emp[0]['is_invoice']:
+                        cursor2 = connection.cursor()
+                        invoice_id = emp[0]['invoice_id']
+                        print(invoice_id)
+                        print("iiiiiiinnnnnvvvvvoooo")
+                        cursor2.callproc('getallTaxiInvoiceActionLog', [invoice_id])
+                        invoicess = dictfetchall(cursor2)
+                        emp[0]['InvoiceActionLog'] = invoicess
+                        cursor2.close()
+
                     emp[0]['Passangers'] = passanger
                     emp[0]['ActionLogs'] = actions
                     data = {'success': 1, 'Bookings': emp}
@@ -4504,6 +4724,16 @@ def view_train_booking(request):
                     cursor3.callproc('getAllTrainBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    if emp[0]['is_invoice']:
+                        cursor2 = connection.cursor()
+                        invoice_id = emp[0]['invoice_id']
+                        print(invoice_id)
+                        print("iiiiiiinnnnnvvvvvoooo")
+                        cursor2.callproc('getallTaxiInvoiceActionLog', [invoice_id])
+                        invoicess = dictfetchall(cursor2)
+                        emp[0]['InvoiceActionLog'] = invoicess
+                        cursor2.close()
 
                     emp[0]['Passangers'] = passanger
                     emp[0]['ActionLogs'] = actions
@@ -4555,6 +4785,16 @@ def view_hotel_booking(request):
                     cursor3.callproc('getAllHotelBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    if emp[0]['is_invoice']:
+                        cursor2 = connection.cursor()
+                        invoice_id = emp[0]['invoice_id']
+                        print(invoice_id)
+                        print("iiiiiiinnnnnvvvvvoooo")
+                        cursor2.callproc('getallTaxiInvoiceActionLog', [invoice_id])
+                        invoicess = dictfetchall(cursor2)
+                        emp[0]['InvoiceActionLog'] = invoicess
+                        cursor2.close()
 
                     emp[0]['Passangers'] = passanger
                     emp[0]['ActionLogs'] = actions
@@ -4610,6 +4850,14 @@ def view_flight_booking(request):
                     cursor3.callproc('getAllFlightBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    if emp[0]['is_invoice']:
+                        cursor2 = connection.cursor()
+                        invoice_id = emp[0]['invoice_id']
+                        cursor2.callproc('getallTaxiInvoiceActionLog', [invoice_id])
+                        invoicess = dictfetchall(cursor2)
+                        emp[0]['InvoiceActionLog'] = invoicess
+                        cursor2.close()
 
                     emp[0]['Passangers'] = passanger
                     emp[0]['Flights'] = flights
@@ -5303,6 +5551,7 @@ def add_flight_booking(request):
         no_of_seats = request.POST.get('no_of_seats', '')
         employees = request.POST.getlist('employees', '')
         employees = ",".join(employees)
+        print(employees)
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -6016,7 +6265,38 @@ def report_hotel_booking(request):
         return JsonResponse(data)
 
 
-def get_auth_token(request):
+def get_flight_access_token(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getFlightAccessToken', [])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Token': train}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def generate_auth_token(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
@@ -6065,83 +6345,143 @@ def get_flight_search(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
+        try:
+            trip_type = request.POST.get('trip_type', '')
+            return_date = request.POST.get('return_date', '')
+            fl_class = request.POST.get('fl_class', '')
+            no_of_seats = request.POST.get('no_of_seats', '')
+            from_city = request.POST.get('from_city', '')
+            to_city = request.POST.get('to_city', '')
+            departure_date = request.POST.get('departure_date', '')
+            d_date = parse(departure_date).strftime("%Y-%m-%d")
+            print(d_date)
+            if return_date:
+                return_date = parse(return_date).strftime("%Y-%m-%d")
+            else:
+                return_date = ""
 
-        AUTH_TOKEN = request.POST.get('auth_token', '')
-        SESSION_ID = request.POST.get('session_id', '')
+            user = {}
+            user_token = req_token.split()
+            if user_token[0] == 'Token':
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+                if user:
+                    try:
 
-        trip_type = request.POST.get('trip_type', '')
-        return_date = request.POST.get('return_date', '')
-        fl_class = request.POST.get('fl_class', '')
-        no_of_seats = request.POST.get('no_of_seats', '')
-        from_city = request.POST.get('from_city', '')
-        to_city = request.POST.get('to_city', '')
-        departure_date = request.POST.get('departure_date', '')
-        d_date = parse(departure_date).strftime("%Y-%m-%d")
-
-        if return_date:
-            return_date = parse(return_date).strftime("%Y-%m-%d")
-        else:
-            return_date = ""
-
-        user = {}
-        user_token = req_token.split()
-        if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
-            if user:
-                try:
-                    url = "http://mdt.ksofttechnology.com/API/FLIGHT"
-                    payload = {
-                            "TYPE": "AIR",
-                            "NAME": "GET_FLIGHT",
+                        cursor = connection.cursor()
+                        cursor.callproc('getFlightAccessToken', [])
+                        token = dictfetchall(cursor)
+                        cursor.close()
+                        AUTH_TOKEN = token[0]['access_token']
+                        url = "http://auth.ksofttechnology.com/API/AUTH"
+                        payload = {
+                            "TYPE": "AUTH",
+                            "NAME": "VERIFY_AUTH_TOKEN",
                             "STR": [
-                                {
-                                    "AUTH_TOKEN": ""+AUTH_TOKEN,
-                                    "SESSION_ID": ""+SESSION_ID,
-                                    "TRIP": ""+trip_type,
-                                    "SECTOR": "D",
-                                    "SRC": ""+from_city,
-                                    "DES": ""+to_city,
-                                    "DEP_DATE": ""+d_date,
-                                    "RET_DATE": ""+return_date,
-                                    "ADT": ""+no_of_seats,
-                                    "CHD": "0",
-                                    "INF": "0",
-                                    "PC": ""+fl_class,
-                                    "PF": "",
-                                    "HS": "D"
-                                }
+                                {"TOKEN": AUTH_TOKEN, "MODULE": "B2B", "HS": "D"}
                             ]
                         }
+                        print(payload)
+                        r = requests.post(url, json=payload)
+                        print(r)
+                        db_token = r.json()
+                        print(db_token)
+                        print("old DADADA")
 
-                    headers = {}
-                    print(payload)
-                    r = requests.post(url, json=payload)
-                    api_response = r.json()
-                    data = {'success': 1, 'Data': api_response}
-                    return JsonResponse(data)
-                except Exception as e:
-                    data = {'success': 0, 'Data': e}
+                        if db_token['STATUS'] == "FAILED":
+                            url = "http://auth.ksofttechnology.com/API/AUTH"
+                            payload = {
+                                "TYPE": "AUTH",
+                                "NAME": "GET_AUTH_TOKEN",
+                                "STR": [
+                                    {
+                                        "A_ID": "79394396",
+                                        "U_ID": "Taxivaxi",
+                                        "PWD": "Taxi$Vaxi1234",
+                                        "MODULE": "B2B",
+                                        "HS": "D"
+                                    }
+                                ]
+                            }
+
+                            headers = {}
+                            r = requests.post(url, json=payload)
+                            new_token = r.json()
+                            print(new_token)
+                            NEW_AUTH_TOKEN = new_token['RESULT']
+
+                            #old_token = db_token['RESULT']
+                            cursor = connection.cursor()
+                            cursor.callproc('addFlightAccessToken', [AUTH_TOKEN,NEW_AUTH_TOKEN])
+                            token = dictfetchall(cursor)
+                            cursor.close()
+
+                        else:
+                            AUTH_TOKEN = db_token['RESULT']
+
+                        url = "http://mdt.ksofttechnology.com/API/FLIGHT"
+                        payload = {
+                                "TYPE": "AIR",
+                                "NAME": "GET_FLIGHT",
+                                "STR": [
+                                    {
+                                        "AUTH_TOKEN": ""+AUTH_TOKEN,
+                                        "SESSION_ID": "XKWP9TWKSDJ4PAKXKUHE1WM72GTBPO13FTUGF454CIGLQYM6F9",
+                                        "TRIP": ""+trip_type,
+                                        "SECTOR": "",
+                                        "SRC": ""+from_city,
+                                        "DES": ""+to_city,
+                                        "DEP_DATE": ""+d_date,
+                                        "RET_DATE": ""+return_date,
+                                        "ADT": ""+no_of_seats,
+                                        "CHD": "0",
+                                        "INF": "0",
+                                        "PC": ""+fl_class,
+                                        "PF": "",
+                                        "HS": "D"
+                                    }
+                                ]
+                            }
+
+                        headers = {}
+                        print(payload)
+                        r = requests.post(url, json=payload)
+                        api_response = r.json()
+                        data = {'success': 1, 'Data': api_response}
+                        return JsonResponse(data)
+                    except Exception as e:
+                        data = {'success': 0, 'Data': e}
+                        return JsonResponse(data)
+                else:
+                    data = {'success': 0, 'error': "User Information Not Found"}
                     return JsonResponse(data)
             else:
-                data = {'success': 0, 'error': "User Information Not Found"}
+                data = {'success': 0, 'Corporates': "Token Not Found"}
                 return JsonResponse(data)
-        else:
-            data = {'success': 0, 'Corporates': "Token Not Found"}
+        except Exception as e:
+            print("EXCEPTION API")
+            data = {'success': 0, 'Data': e}
             return JsonResponse(data)
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
 
+
 def get_flight_fare_search(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
-
+        flight_1 = ""
+        flight_2 = ""
         trip_string = request.POST.get('trip_string', '')
         UID = request.POST.get('UID', '')
         ID = request.POST.get('ID', '')
         TID = request.POST.get('TID', '')
+        
+        UID2 = request.POST.get('UID2', '')
+        ID2 = request.POST.get('ID2', '')
+        TID2 = request.POST.get('TID2', '')
+
         src = request.POST.get('src', '')
         des = request.POST.get('des', '')
         ret_date = request.POST.get('ret_date', '')
@@ -6151,6 +6491,8 @@ def get_flight_fare_search(request):
         L_OW = request.POST.get('L_OW', '')
         H_OW = request.POST.get('H_OW', '')
         T_TIME = request.POST.get('T_TIME', '')
+        L_RT = request.POST.get('L_RT', '')
+        H_RT = request.POST.get('H_RT', '')
 
         dep_date = request.POST.get('dep_date', '')
         d_date = parse(dep_date).strftime("%Y-%m-%d")
@@ -6167,7 +6509,7 @@ def get_flight_fare_search(request):
                         "TYPE": "AIR",
                         "STR": [
                             {
-                                "FLIGHT": {
+                                "FLIGHT" : {
                                     "UID": str(UID),
                                     "ID": str(ID),
                                     "TID": str(TID)
@@ -6200,10 +6542,64 @@ def get_flight_fare_search(request):
                         ],
 
                     }
-                    print(payload)
+
+                    payload2 = {
+                        "NAME": "FARE_CHECK",
+                        "TYPE": "AIR",
+                        "STR": [
+                            {
+
+                                "FLIGHTOW" : {
+                                    "UID": str(UID),
+                                    "ID": str(ID),
+                                    "TID": str(TID)
+                                },
+                                "FLIGHTRT": {
+                                    "UID": str(UID2),
+                                    "ID": str(ID2),
+                                    "TID": str(TID2)
+                                },
+                                "PARAM": {
+                                    "src": str(src),
+                                    "des": str(des),
+                                    "dep_date": str(d_date),
+                                    "ret_date": ""+ret_date,
+                                    "adt": ""+adt,
+                                    "chd": ""+chd,
+                                    "inf": ""+inf,
+                                    "L_OW": ""+L_OW,
+                                    "H_OW": ""+H_OW,
+                                    "L_RT": ""+L_RT,
+                                    "H_RT": ""+H_RT,
+                                    "T_TIME": ""+T_TIME,
+                                    "Trip_String": ""+trip_string
+                                },
+                                "GSTINFO": {
+                                    "Address": "1/1075/1/2 GF 4, Mehrauli, New Delhi 110030",
+                                    "Company": "BAI INFOSOLUTIONS PRIVATE LIMITED",
+                                    "Email": "vinod@taxivaxi.com",
+                                    "Mobile": "11321654654",
+                                    "Number": "07AAGCB3556P1Z7",
+                                    "Pin": "110030",
+                                    "State": "New Delhi",
+                                    "Type": "GST Type",
+                                    "hasGST": 'true'
+                                  }
+                            }
+                        ],
+
+                    }
+                    #print(payload)
+                    #print(payload2)
                     headers = {}
-                    r = requests.post(url, json=payload)
+                    r = {}
+                    if UID2:
+                        r = requests.post(url, json=payload2)
+                    else:
+                        r = requests.post(url, json=payload)
                     api_response = r.json()
+                    print("API TYPE")
+                    print(type(api_response))
                     data = {'success': 1, 'Data': api_response}
                     return JsonResponse(data)
                 except Exception as e:
@@ -6224,85 +6620,117 @@ def save_flight_booking(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
-
         flightdata = request.POST.get('flightdata', '')
+        print("SAVER DATAF TYpe")
+        print(type(flightdata))
+        UID2 = request.POST.get('UID2', '')
+        is_mobile = request.POST.get('is_mobile', '')
 
-        employee_name_1 = request.POST.get('employee_name_1', '')
+        employees_name = request.POST.getlist('employee_name_1', '')
+        dict = []  # create an empty array
 
-        flightdata = flightdata.replace("'", '"')
-        flightdata = flightdata.replace("None", "null")
-        flightdata = flightdata.replace("False", "null")
-        flightdata = flightdata.replace("True", "null")
-        flightdata = flightdata.replace('"FEE": "', '"FEE": ')
-        flightdata = flightdata.replace('", "TAG":', ', "TAG":')
-        # print(flightdata[3840])
-        va = json.loads(flightdata)
-        print(va['FLIGHT'])
+        for name in employees_name:
+            dict.append({
+                "apnr": "",
+                "baggage": "",
+                "dob": "",
+                "fare": "",
+                "ffn": "",
+                "fn": name,
+                "gpnr": "",
+                "ln": "TestA",
+                "meal": "",
+                "mn": "",
+                "nat": "",
+                "other_info": "",
+                "pi": "",
+                "refundable": "",
+                "status": "",
+                "tc": "",
+                "tktno": "",
+                "ttl": "Mr",
+                "type": "adult",
+                "year": ""
+            })
+
         user = {}
+        payload = {}
+        payload2 = {}
+
+        r = ""
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
+                    if is_mobile:
+                        print("type of ini_object", type(flightdata))
+                        flightdata = json.loads(flightdata, strict=False) 
+                    else:
+                        flightdata = eval(flightdata)
+
+                    va = flightdata
                     url = "http://mdt.ksofttechnology.com/API/flight"
-                    payload = {
-                        "STATUS": [
-                            {
-                                "status": "T"
-                            }
-                        ],
-                        "FLIGHT": str(va['FLIGHT']),
-                        "CON_FLIGHT": str(va['CON_FLIGHT']),
-                        "FARE": str(va['FARE']),
-                        "PARAM": str(va['PARAM']),
-                        "Deal": str(va['Deal']),
-                        "FARE_RULE": str(va['FARE_RULE']),
 
-                        "PAX": [
-                            {
-                                "apnr": "",
-                                "baggage": "",
-                                "dob": "",
-                                "fare": "",
-                                "ffn": "",
-                                "fn": str(employee_name_1),
-                                "gpnr": "",
-                                "ln": "",
-                                "meal": "",
-                                "mn": "",
-                                "nat": "",
-                                "other_info": "",
-                                "pi": "",
-                                "refundable": "",
-                                "status": "",
-                                "tc": "",
-                                "tktno": "",
-                                "ttl": "Mr",
-                                "type": "adult",
-                                "year": ""
-                            },
-
-
-                        ],
-                        "TYPE": "DC",
-                        "NAME": "PNR_CREATION",
-                        "Others": [
-                            {
-                                "REMARK": "OTHER INFO FOR FUTURE/LEAVE BLANK FOR NOW",
-                                "CUSTOMER_EMAIL": "vinod@taxivaxi.in",
-                                "CUSTOMER_MOBILE": "9717163216"
-                            }
-                        ]
-                    }
-
+                    if UID2:
+                        payload2 = {
+                            "PARAM": va['PARAM'],
+                            "STATUSOW": va['STATUSOW'],
+                            "FLIGHTOW": va['FLIGHTOW'],
+                            "CON_FLIGHTOW": va['CON_FLIGHTOW'],
+                            "FAREOW": va['FAREOW'],
+                            "PARAMOW": va['PARAMOW'],
+                            "STATUSRT": va['STATUSRT'],
+                            "FLIGHTRT": va['FLIGHTRT'],
+                            "CON_FLIGHTRT": va['CON_FLIGHTRT'],
+                            "FARERT": va['FARERT'],
+                            "PARAMRT": va['PARAMRT'],
+                            "Deal": va['Deal'],
+                            "FARE_RULE": va['FARE_RULE'],
+                            "PAX": dict,
+                            "TYPE": "DC",
+                            "NAME": "PNR_CREATION",
+                            "Others": [
+                                {
+                                    "REMARK": "79394396",
+                                    "CUSTOMER_EMAIL": "balwant@taxivaxi.in",
+                                    "CUSTOMER_MOBILE": "8669152900"
+                                }
+                            ]
+                        }
+                    else:
+                        payload = {
+                            "STATUS": va['STATUS'],
+                            "FLIGHT": va['FLIGHT'],
+                            "CON_FLIGHT": va['CON_FLIGHT'],
+                            "FARE": va['FARE'],
+                            "PARAM": va['PARAM'],
+                            "Deal": va['Deal'],
+                            "FARE_RULE": va['FARE_RULE'],
+                            "GSTINFO": va['GSTINFO'],
+                            "PAX": dict,
+                            "TYPE": "DC",
+                            "NAME": "PNR_CREATION",
+                            "Others": [
+                                {
+                                    "REMARK": "79394396",
+                                    "CUSTOMER_EMAIL": "balwant@taxivaxi.in",
+                                    "CUSTOMER_MOBILE": "8669152900"
+                                }
+                            ]
+                        }
                     headers = {}
-                    print(payload)
-                    r = requests.post(url, json=payload)
+                    if UID2:
+                        r = requests.post(url, json=payload2)
+                    else:
+                        r = requests.post(url, json=payload)
                     api_response = r.json()
-                    data = {'success': 1, 'Data': api_response}
+                    data = {'success': 1, 'Data':api_response}
                     return JsonResponse(data)
                 except Exception as e:
-                    data = {'success': 0, 'Data': e}
+                    print("in EXCEPTION sss")
+                    print(e)
+                    data = {'success': 0, 'Data': ""}
                     return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
@@ -6328,31 +6756,392 @@ def get_flight_pnr_details(request):
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
+                    client_session = user_token[1]
+                    CLIENT_SESSIONID =  client_session[0:40]
                     url = "http://mdt.ksofttechnology.com/API/flight"
                     payload = {
-
                             "NAME": "PNR_RETRIVE",
                             "TYPE": "DC",
                             "STR": [
                                 {
-                                    "BOOKINGID": "APIP637127916477026220O1aa4",
-                                    "CLIENT_SESSIONID": "2d97c21a-abfd-4c7b-a9ae-cbd83ba0bcbc",
+                                    "BOOKINGID": ""+pnr,
+                                    "CLIENT_SESSIONID": "XKWP9TWKSDJ4PAKXKUHE1WM72GTBPO13FTUGF454CIGLQYM6F9",
                                     "HS": "D",
                                     "MODULE": "B2B",
                                 }
                             ],
-                            
-
                     }
 
                     headers = {}
-
+                    #print(payload)
                     r = requests.post(url, json=payload)
                     api_response = r.json()
+                    #print(api_response)
                     data = {'success': 1, 'Data': api_response}
                     return JsonResponse(data)
                 except Exception as e:
-                    data = {'success': 0, 'Data': e}
+                    data = {'success': 0, 'Data': ""}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def add_flight_booking_with_invoice(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        flightdata = request.POST.get('flightdata', '')
+        UID2 = request.POST.get('UID2', '')
+
+        user_id = request.POST.get('spoc_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+        billing_entity_id = request.POST.get('entity_id', '')
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+        flight_type = request.POST.get('flight_class', '')
+
+
+        employee_name_1 = request.POST.get('employee_name_1', '')
+        employee_name_2 = request.POST.get('employee_name_2', '')
+        employee_name_3 = request.POST.get('employee_name_3', '')
+        employee_name_4 = request.POST.get('employee_name_4', '')
+        employee_name_5 = request.POST.get('employee_name_5', '')
+        employee_name_6 = request.POST.get('employee_name_6', '')
+
+        kafila_booking_id = request.POST.get('kafila_booking_id', '')
+        timezone.activate(pytz.timezone("Asia/Kolkata"))
+        booking_datetime = timezone.localtime(timezone.now())
+
+        is_email = 1
+        is_sms = 1
+        client_ticket =""
+
+        if billing_entity_id:
+            pass
+        else:
+            billing_entity_id = 0
+
+        employees = []
+        employees_name = []
+        no_of_emp = int(no_of_seats) + 1
+        for i in range(1, no_of_emp):
+            employees.append(request.POST.get('employee_id_' + str(i), ''))
+            employees_name.append(request.POST.get('employee_name_' + str(i), ''))
+            print(employees)
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    client_session = user_token[1]
+                    CLIENT_SESSIONID =  client_session[0:40]
+                    url = "http://mdt.ksofttechnology.com/API/flight"
+                    payload = {
+                            "NAME": "PNR_RETRIVE",
+                            "TYPE": "DC",
+                            "STR": [
+                                {
+                                    "BOOKINGID": ""+kafila_booking_id,
+                                    "CLIENT_SESSIONID": "XKWP9TWKSDJ4PAKXKUHE1WM72GTBPO13FTUGF454CIGLQYM6F9",
+                                    "HS": "D",
+                                    "MODULE": "B2B",
+                                }
+                            ],
+                    }
+
+                    headers = {}
+                    #print(payload)
+                    r = requests.post(url, json=payload)
+                    booking1 = r.json()
+
+                    print(booking1['FLIGHTOW'])
+                    if not ('FLIGHT' in booking1 or 'FLIGHTOW' in booking1):
+                        data = {'success': 0, 'error': "Pnr Not Generated"}
+                        return JsonResponse(data)
+                    else:
+                        ticket_number = []
+                        pnr_no = []
+                        flight_no = []
+                        flight_name = []
+                        arrival_time = []
+                        departure_time = []
+                        flight_to = []
+                        flight_from = []
+                        is_return_flight = []
+                        flight_type = flight_type
+                        journey_type = ""
+                        from_location =""
+                        to_location = ""
+
+                        departure_datetime =""
+                        preferred_flight =""
+                        booking_email = ""
+                        meal_is_include = ''
+                        last_booking_id = 0
+
+                        if UID2:
+                            no_of_stops = booking1['FLIGHTOW'][0]['STOP']
+                            flight_type = flight_type
+                            fare_type = booking1['FLIGHTOW'][0]['FARE_TYPE']
+                            meal_is_include = ''
+                            no_of_passanger = booking1['PARAM'][0]['adt']
+                            employee_booking_id = employees
+                            ticket_price = booking1['FLIGHTOW'][0]['AMOUNT']
+                            journey_type = "Round Trip"
+                            from_location = booking1['FLIGHTOW'][0]['DES_NAME']
+                            to_location = booking1['FLIGHTOW'][0]['ORG_NAME']
+                            departure_datetime = datetime.strptime(booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+
+                            if booking1['CON_FLIGHTOW']:
+                                for flightt in booking1['CON_FLIGHTOW']:
+                                    ticket_number.append(booking1['FLIGHTOW'][0]['PCC'])
+                                    pnr_no.append(booking1['PAXOW'][0]['apnr'])
+                                    flight_no.append(flightt['FLIGHT_NO'])
+                                    flight_name.append(flightt['FLIGHT_NAME'])
+                                    arrival_time1 = datetime.strptime(
+                                        flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
+                                        "%Y-%m-%d %H:%M:%S")
+                                    arrival_time.append(arrival_time1)
+                                    arrival_time2 = datetime.strptime(
+                                        flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
+                                        "%Y-%m-%d %H:%M:%S")
+                                    departure_time.append(arrival_time2)
+                                    flight_to.append(flightt['DES_NAME'])
+                                    flight_from.append(flightt['ORG_NAME'])
+                                    is_return_flight.append('0')
+                            else:
+                                ticket_number.append(booking1['FLIGHTOW'][0]['PCC'])
+                                pnr_no.append(booking1['PAXOW'][0]['apnr'])
+                                flight_no.append(booking1['FLIGHTOW'][0]['FLIGHT_NO'])
+                                flight_name.append(booking1['FLIGHTOW'][0]['FLIGHT_NAME'])
+                                arrival_time1 = datetime.strptime(
+                                    booking1['FLIGHTOW'][0]['ARRV_DATE'] + " " +
+                                    booking1['FLIGHTOW'][0][
+                                        'ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                arrival_time.append(arrival_time1)
+                                arrival_time2 = datetime.strptime(
+                                    booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0][
+                                        'DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                departure_time.append(arrival_time2)
+                                flight_to.append(booking1['FLIGHTOW'][0]['DES_NAME'])
+                                flight_from.append(booking1['FLIGHTOW'][0]['ORG_NAME'])
+                                is_return_flight.append('0')
+
+                            if booking1['CON_FLIGHTRT']:
+                                for flightt in booking1['CON_FLIGHTRT']:
+                                    ticket_number.append(booking1['FLIGHTRT'][0]['PCC'])
+                                    pnr_no.append(booking1['PAXRT'][0]['apnr'])
+                                    flight_no.append(flightt['FLIGHT_NO'])
+                                    flight_name.append(flightt['FLIGHT_NAME'])
+                                    arrival_time1 = datetime.strptime(
+                                        flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
+                                        "%Y-%m-%d %H:%M:%S")
+                                    arrival_time.append(arrival_time1)
+                                    arrival_time2 = datetime.strptime(
+                                        flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
+                                        "%Y-%m-%d %H:%M:%S")
+                                    departure_time.append(arrival_time2)
+                                    flight_to.append(flightt['DES_NAME'])
+                                    flight_from.append(flightt['ORG_NAME'])
+                                    is_return_flight.append('1')
+                            else:
+                                ticket_number.append(booking1['FLIGHTRT'][0]['PCC'])
+                                pnr_no.append(booking1['PAXRT'][0]['apnr'])
+                                flight_no.append(booking1['FLIGHTRT'][0]['FLIGHT_NO'])
+                                flight_name.append(booking1['FLIGHTRT'][0]['FLIGHT_NAME'])
+                                arrival_time1 = datetime.strptime(
+                                    booking1['FLIGHTRT'][0]['ARRV_DATE'] + " " +
+                                    booking1['FLIGHTRT'][0][
+                                        'ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                arrival_time.append(arrival_time1)
+                                arrival_time2 = datetime.strptime(
+                                    booking1['FLIGHTRT'][0]['DEP_DATE'] + " " + booking1['FLIGHTRT'][0][
+                                        'DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                departure_time.append(arrival_time2)
+                                flight_to.append(booking1['FLIGHTRT'][0]['DES_NAME'])
+                                flight_from.append(booking1['FLIGHTRT'][0]['ORG_NAME'])
+                                is_return_flight.append('1')
+
+                                print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
+
+
+                        else:
+                            no_of_stops = booking1['FLIGHT'][0]['STOP']
+                            flight_type = flight_type
+                            fare_type = booking1['FLIGHT'][0]['FARE_TYPE']
+                            meal_is_include = ''
+                            no_of_passanger = booking1['FLIGHT'][0]['SEAT']
+                            employee_booking_id = employees
+                            ticket_price = booking1['FLIGHT'][0]['AMOUNT']
+                            journey_type = "One Way"
+                            from_location = booking1['FLIGHTOW'][0]['DES_NAME']
+                            to_location = booking1['FLIGHTOW'][0]['ORG_NAME']
+                            departure_datetime = datetime.strptime(booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+
+                            if booking1['CON_FLIGHT']:
+                                for flightt in booking1['CON_FLIGHT']:
+                                    ticket_number.append(booking1['FLIGHT'][0]['PCC'])
+                                    pnr_no.append(booking1['PAXOW'][0]['apnr'])
+                                    flight_no.append(flightt['FLIGHT_NO'])
+                                    flight_name.append(flightt['FLIGHT_NAME'])
+                                    arrival_time1 = datetime.strptime(
+                                        flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
+                                        "%Y-%m-%d %H:%M:%S")
+                                    arrival_time.append(arrival_time1)
+                                    arrival_time2 = datetime.strptime(
+                                        flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
+                                        "%Y-%m-%d %H:%M:%S")
+                                    departure_time.append(arrival_time2)
+                                    flight_to.append(flightt['DES_NAME'])
+                                    flight_from.append(flightt['ORG_NAME'])
+                                print("INNNNNNNNNNNN IFFFFFFFFFFFFF")
+                            else:
+                                ticket_number.append(booking1['FLIGHT'][0]['PCC'])
+                                pnr_no.append(booking1['PAX'][0]['apnr'])
+                                flight_no.append(booking1['FLIGHT'][0]['FLIGHT_NO'])
+                                flight_name.append(booking1['FLIGHT'][0]['FLIGHT_NAME'])
+                                arrival_time1 = datetime.strptime(booking1['FLIGHT'][0]['ARRV_DATE'] + " " + booking1['FLIGHT'][0]['ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                arrival_time.append(arrival_time1)
+                                arrival_time2 = datetime.strptime(booking1['FLIGHT'][0]['DEP_DATE'] + " " + booking1['FLIGHT'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                departure_time.append(arrival_time2)
+                                flight_to.append(booking1['FLIGHT'][0]['DES_NAME'])
+                                flight_from.append(booking1['FLIGHT'][0]['ORG_NAME'])
+                                print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
+
+                        cursor = connection.cursor()
+                        try:
+                            cursor.callproc('addFlightBooking',
+                                            ["Flight", journey_type, flight_type, from_location, to_location,
+                                             booking_datetime, departure_datetime,
+                                             preferred_flight, assessment_code, no_of_seats,
+                                             group_id, subgroup_id, spoc_id, corporate_id, billing_entity_id,
+                                             reason_booking, user_id, user_type, employees, booking_email,
+                                             assessment_city_id, '@last_booking_id'])
+                            booking_id = dictfetchall(cursor)
+                            print(booking_id)
+                            if booking_id:
+                                data = {'success': 0, 'message': booking_id}
+                            else:
+                                cursor.execute("SELECT @last_booking_id")
+                                last_booking_id = cursor.fetchone()[0]
+                                print(last_booking_id)
+                                cursor.close()
+                                cursor2 = connection.cursor()
+                                cursor2.callproc('viewFlightBooking', [last_booking_id])
+                                emp = dictfetchall(cursor2)
+                                cursor2.close()
+
+                                cursor1 = connection.cursor()
+                                cursor1.callproc('getAllFlightBookingPassangers', [last_booking_id])
+                                passanger = dictfetchall(cursor1)
+                                emp[0]['Passangers'] = passanger
+                                cursor1.close()
+
+                                cursor3 = connection.cursor()
+                                cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                                approvers = dictfetchall(cursor3)
+                                cursor3.close()
+
+                                cursor4 = connection.cursor()
+                                cursor4.callproc('assignFlightBooking',
+                                                [flight_type, flight_type, journey_type, no_of_stops, last_booking_id,
+                                                 meal_is_include, fare_type, user_id, user_type, ticket_price,100, 18,
+                                                 18, 118, 1,18, 0, 0, 18, 0,0, 18,0, 0, 0,ticket_price, 0, 1,1, 18, 9, 9,"", "", 0, 0,0, 1, 1])
+                                result = dictfetchall(cursor4)
+
+                                cursor4.close()
+                                no_of_stops = int(no_of_stops)
+                                final_stop = no_of_stops+2
+                                for x in range(final_stop):
+                                    cursor5 = connection.cursor()
+                                    cursor5.callproc('addFlightBookingFlights',
+                                                     [flight_name[x], flight_no[x], pnr_no[x], flight_from[x],
+                                                      flight_to[x], departure_time[x], arrival_time[x], last_booking_id,
+                                                      user_id, user_type, is_return_flight[x]])
+                                    result = dictfetchall(cursor5)
+                                    cursor5.close()
+
+                                for xx in range(int(no_of_passanger)):
+                                    cursor26 = connection.cursor()
+                                    cursor26.callproc('updateFlightPassangerTickectNo',
+                                                     [ticket_number[xx], employee_booking_id[xx], last_booking_id])
+                                    result = dictfetchall(cursor26)
+
+                                    cursor26.close()
+
+                                company = dictfetchall(cursor)
+                                print(company)
+                                if company:
+                                    data = {'success': 0, 'message': company}
+                                else:
+                                    print("Last Booking ID")
+                                    cursor27 = connection.cursor()
+                                    cursor27.callproc('viewFlightBooking', [last_booking_id])
+                                    emp = dictfetchall(cursor27)
+                                    cursor27.close()
+
+                                    cursor11 = connection.cursor()
+                                    cursor11.callproc('getAllFlightBookingPassangers', [last_booking_id])
+                                    passanger = dictfetchall(cursor11)
+                                    emp[0]['Passangers'] = passanger
+                                    cursor11.close()
+
+                                    cursor22 = connection.cursor()
+                                    cursor22.callproc('getAllFlightBookingFlights', [last_booking_id])
+                                    flights = dictfetchall(cursor22)
+                                    cursor22.close()
+
+                                    emp[0]['Flights'] = flights
+
+                                    get_voucher_path = ''
+                                    if client_ticket:
+                                        voucher = emp[0]
+                                        bus_pdf = Flight(voucher)
+                                        get_vou = bus_pdf.get(request)
+                                        get_voucher_path = get_vou[1]
+                                    else:
+                                        get_voucher_path = ""
+
+                                    add_booking_email = AddBooking_Email()
+                                    if is_email == '1':
+                                        resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
+                                    if is_sms == '1':
+                                        resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
+
+                                    add_booking_email = Assign_Booking_Email()
+                                    if is_sms:
+                                        resp1 = add_booking_email.send_client_sms(emp, "Flight")
+                                    if is_email:
+                                        resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
+
+                            cursor.close()
+                            data = {'success': 1, 'message': "Insert Success", 'last_booking_id': last_booking_id}
+                            return JsonResponse(data)
+
+                        except Exception as e:
+                            print(e)
+                            data = {'success': 0, 'message': "Error in Data Insert"}
+                            return JsonResponse(data)
+
+                except Exception as e:
+                    print("EXCEPTIONSNSNSNSN")
+                    print(e)
+                    data = {'success': 0, 'Data': "Exception"}
                     return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}

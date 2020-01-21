@@ -27,8 +27,8 @@
             {% endfor %}
             {% endif %}
             <div class="row">
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
+                <div class="col-md-4">
+                    <div class="card card-topline-aqua">
                         <div class="card-head">
                             <header>General Information</header>
 
@@ -96,7 +96,7 @@
 
 
                  <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
+                    <div class="card card-topline-aqua">
                         <div class="card-head">
                             <header>Billing Access Details</header>
 
@@ -190,8 +190,8 @@
 
 
 
-                <div class="col-md-4 col-sm-4">
-                    <div class="card card-box">
+                <div class="col-md-4">
+                    <div class="card card-topline-aqua">
                         <div class="card-head">
                             <header>Access Details</header>
 
@@ -394,16 +394,20 @@
 
 
 
-                            <div class="form-group">
-                                <div class="offset-md-3 col-md-9">
-                                    <button type="submit" class="btn btn-info">Submit</button>
-                                    <button type="button" onclick="history.back();" class="btn btn-default">Cancel</button>
-                                </div>
-                            </div>
+
 
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <input type="submit" value="Submit" class="btn btn-info">
+                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
+
             </div>
         </form>
     </div>

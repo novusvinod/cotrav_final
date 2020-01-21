@@ -43,7 +43,9 @@
 
                         </div>
                         <div class="card-body " id="bar-parent">
+            {% for corp_acces in corp_access %}
 
+                {% if corp_acces.no_of_auth_level == 2 %}
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Group Name</label>
                                 <select class="form-control col-sm-8 myselect" name="group_id">
@@ -63,9 +65,8 @@
                                     {% endif %}
                             </select>
                             </div>
-
                             <div class="form-group row">
-                                <label class="col-sm-4" >SubGroup Group</label>
+                                <label class="col-sm-4" >Select SubGroup Group</label>
                                 <select class="form-control col-sm-8 myselect" name="subgroup_id">
                                     <option value="">Select SubGroup</option>
                                     {% if spoc %}
@@ -81,7 +82,27 @@
                                     {% endif %}
                                 </select>
                             </div>
-
+                   {% endif %}
+{% if corp_acces.no_of_auth_level == 1 %}
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Select SubGroup Group</label>
+                                <select class="form-control col-sm-8 myselect" name="subgroup_id">
+                                    <option value="">Select SubGroup</option>
+                                    {% if spoc %}
+                                    {% for spoc in spoc %}
+                                    {% for group in subgroups %}
+                                    <option value="{{group.id}}" {% if group.id == spoc.subgroup_id %} selected {%endif%}>{{group.subgroup_name}}</option>
+                                    {% endfor %}
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for group in subgroups %}
+                                    <option value="{{group.id}}">{{group.subgroup_name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+{% endif %}
+{% endfor %}
                             <div class="form-group row">
                                 <label class="col-sm-4" >User CID</label>
                                 {% if spoc %}

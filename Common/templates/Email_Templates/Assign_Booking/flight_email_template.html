@@ -144,10 +144,13 @@
            <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
            <tr>
          <td style="font-size: 12px; line-height: 30px;text-align: center;">From City :       {{ flight.from_city }}</td>
-            <a href="#"><td style="font-size: 12px;text-align: center;"> From City  :       {{ flight.to_city }}</td></a>
-          <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Departure Datetime :     {{ flight.departure_datetime }}</a></td>
-<td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Arrival Datetime :     {{ flight.arrival_datetime }}</a></td>
+            <a href="#"><td style="font-size: 12px;text-align: center;"> To City  :       {{ flight.to_city }}</td></a>
+
        </tr>
+               <tr>
+                   <td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Departure Datetime :     {{ flight.departure_datetime }}</a></td>
+<td style="font-size: 12px; text-align: center;"> <a href="#" style="color: black; text-decoration-line: none;">Arrival Datetime :     {{ flight.arrival_datetime }}</a></td>
+               </tr>
 
 
     </table>

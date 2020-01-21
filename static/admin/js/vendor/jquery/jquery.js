@@ -3276,7 +3276,7 @@ jQuery.Callbacks = function( options ) {
 				}
 			}
 
-			// Forget the data if we're done with it
+			// Forgot the data if we're done with it
 			if ( !options.memory ) {
 				memory = false;
 			}

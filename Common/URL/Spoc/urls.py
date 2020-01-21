@@ -54,4 +54,16 @@ urlpatterns = [
     path('Corporate/Spoc/download-billing-entities', spoc_views.download_billing_entities),
     path('Corporate/Spoc/download-employees', spoc_views.download_employees),
     path('Corporate/Spoc/download-spocs', spoc_views.download_spocs),
+
+    path('Corporate/Spoc/taxi-billing/<int:id>', spoc_views.taxi_billing),
+    path('Corporate/Spoc/bus-billing/<int:id>', spoc_views.bus_billing),
+    path('Corporate/Spoc/train-billing/<int:id>', spoc_views.train_billing),
+    path('Corporate/Spoc/flight-billing/<int:id>', spoc_views.flight_billing),
+    path('Corporate/Spoc/hotel-billing/<int:id>', spoc_views.hotel_billing),
+
+    path('Corporate/Spoc/taxi-billing/verify', spoc_views.taxi_billing_verify),
+    path('Corporate/Spoc/bus-billing/verify', spoc_views.bus_billing_verify),
+    path('Corporate/Spoc/train-billing/verify', spoc_views.train_billing_verify),
+    path('Corporate/Spoc/flight-billing/verify', spoc_views.flight_billing_verify),
+    path('Corporate/Spoc/hotel-billing/verify', spoc_views.hotel_billing_verify),
 ]

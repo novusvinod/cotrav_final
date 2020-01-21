@@ -1,6 +1,6 @@
 from django.urls import path,include
 from Common.VIEW.Agent import agent_views
-from landing.leads_generation import  lead_detail_view , leads , lead_update , lead_create , lead_delete, lead_assigned
+from landing.leads_generation import lead_detail_view, leads, lead_update, lead_create, lead_delete, lead_assigned, lead_doc_delete
 
 urlpatterns = [
     #Agent Path
@@ -22,6 +22,9 @@ urlpatterns = [
 
     path('agents/company-operation-management', agent_views.company_operation_management),
     path('agents/company-relationship-manager', agent_views.company_relationship_manager),
+
+    path('agents/cotrav-billing-entities', agent_views.cotrav_billing_entities),
+    path('agents/add-cotrav-billing-entity/<int:id>', agent_views.add_cotrav_billing_entities),
 
     path('agents/billing_entities/<int:id>', agent_views.company_billing_entities),
     path('agents/rates/<int:id>', agent_views.company_rates),
@@ -139,5 +142,20 @@ urlpatterns = [
     path('agents/download-spocs', agent_views.download_spocs),
     path('agents/download-employees', agent_views.download_employees),
 
+    path('agents/cancel-flight-booking-passengers/<int:id>', agent_views.cancel_flight_booking_passengers),
+
+    path('agents/taxi-billing/<int:id>', agent_views.taxi_billing, name='agent-taxi-billing'),
+    path('agents/bus-billing/<int:id>', agent_views.bus_billing, name='agent-bus-billing'),
+    path('agents/train-billing/<int:id>', agent_views.train_billing, name='agent-train-billing'),
+    path('agents/flight-billing/<int:id>', agent_views.flight_billing, name='agent-flight-billing'),
+    path('agents/hotel-billing/<int:id>', agent_views.hotel_billing, name='agent-hotel-billing'),
+
+    path('agents/taxi-billing/verify', agent_views.taxi_billing_verify, name='agent-taxi-billing-verify'),
+    path('agents/bus-billing/verify', agent_views.bus_billing_verify, name='agent-bus-billing-verify'),
+    path('agents/train-billing/verify', agent_views.train_billing_verify, name='agent-train-billing-verify'),
+    path('agents/flight-billing/verify', agent_views.flight_billing_verify, name='agent-flight-billing-verify'),
+    path('agents/hotel-billing/verify', agent_views.hotel_billing_verify, name='agent-hotel-billing-verify'),
+
+    path('agents/lead-doc-delete/<int:pk>', lead_doc_delete, name='lead-doc-delete'),
 
 ]

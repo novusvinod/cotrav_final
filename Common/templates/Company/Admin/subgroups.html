@@ -23,6 +23,8 @@
                 <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
                  <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
+                {% for corp_acces in corp_access %}
+
                 {% if corp_acces.no_of_auth_level == 2 %}
                 <div class="form-group row" >
 
@@ -37,7 +39,7 @@
                             </div>
                     </div>
                 {% endif %}
-
+{% endfor %}
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">SubGroup Name</label>
                             <div class="col-sm-7">

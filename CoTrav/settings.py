@@ -174,8 +174,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 EMAIL_HOST = 'smtp.taxivaxi.in'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'balwant@taxivaxi.in'
-EMAIL_HOST_PASSWORD = 'BalwantC13!#'
+EMAIL_HOST_USER = 'cotrav@taxivaxi.in'
+EMAIL_HOST_PASSWORD = 'Creative12@'
 EMAIL_USE_TLS = True
 
 

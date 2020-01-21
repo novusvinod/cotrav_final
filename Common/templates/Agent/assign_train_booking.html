@@ -102,7 +102,7 @@
 
                         <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" name="no_of_seats" placeholder="No Of Seats"
+					                     <input class = "mdl-textfield__input" id="no_of_seats" name="no_of_seats" placeholder="No Of Seats"
                                      readonly  type="text" value="{{ booking.no_of_seats }}" >
 					                     <label class = "mdl-textfield__label">No Of Seats</label>
 					                  </div>
@@ -641,7 +641,8 @@ function valueChanged()
       {
 
       management_fee = data["Fees"][0].service_fees_type_value
-      $('#mng_fee').val(management_fee);
+      no_of_passanger = $('#no_of_seats').val();
+      $('#mng_fee').val(management_fee*no_of_passanger);
       $('#oper_mng_fee').val(management_fee);
        });
 

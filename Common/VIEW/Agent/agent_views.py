@@ -54,6 +54,7 @@ def generate_pdf_file(request):
     connection.close()  # Cleanup
     return 1
 
+
 def agent_homepage(request):
     if 'agent_login_type' in request.session:
         user_type = request.session['agent_login_type']
@@ -87,7 +88,7 @@ def agent_login_action(request):
                 messages.success(request, 'Login Successfully..!')
                 print("hjgjhfjfj")
                 print(user)
-                return redirect("/agents/agent_home")
+                return HttpResponseRedirect("/agents/agent_home")
         else:
             messages.error(request, 'Invalid Email Or Password..!')
             return render(request,'Agent/corporate_agent_login.html',context)
@@ -104,9 +105,9 @@ def agent_logout_action(request):
         user.save()  # this will update only
         del request.session['agent_login_type']
         del request.session['agent_access_token']
-        return redirect("/agents/login")
+        return HttpResponseRedirect("/agents/login")
     else:
-        return redirect("/agents/login")
+        return HttpResponseRedirect("/agents/login")
 
 
 def taxi_types(request):
@@ -315,6 +316,7 @@ def add_company(request):
             gst_id = request.POST.get('gst_id', '')
 
             has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+            has_billing_admin_level = request.POST.get('has_billing_admin_level', '')
             has_auth_level = request.POST.get('has_auth_level', '')
             no_of_auth_level = request.POST.get('no_of_auth_level', '')
             has_assessment_codes = request.POST.get('has_assessment_codes', '')
@@ -348,7 +350,7 @@ def add_company(request):
                       'address_line_2': address_line_2,'address_line_3': address_line_3, 'gst_id': gst_id,'has_billing_spoc_level':has_billing_spoc_level,
                       'has_auth_level': has_auth_level,'no_of_auth_level':no_of_auth_level,'has_assessment_codes':
                       has_assessment_codes,'is_radio': is_radio, 'is_local': is_local, 'is_outstation': is_outstation, 'is_bus': is_bus,
-                       'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
+                       'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,'has_billing_admin_level': has_billing_admin_level,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,'is_spoc':is_spoc,'password':password,'cotrav_agent_id':user_id,
                        'user_type':user_type,'billing_city_id':billing_city_id,'will_do_realtime_payment':will_do_realtime_payment,'has_self_booking_access':has_self_booking_access}
 
@@ -403,7 +405,6 @@ def edit_company(request, id):
             contact_person_name = request.POST.get('contact_person_name', '')
             contact_person_no = request.POST.get('contact_person_no', '')
             contact_person_email = request.POST.get('contact_person_email', '')
-            has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
             has_auth_level = request.POST.get('has_auth_level', '')
             no_of_auth_level = request.POST.get('no_of_auth_level', '')
             has_assessment_codes = request.POST.get('has_assessment_codes', '')
@@ -419,6 +420,8 @@ def edit_company(request, id):
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             has_self_booking_access = request.POST.get('has_self_booking_access', '')
             will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
+            has_billing_spoc_level = request.POST.get('has_billing_spoc_level', '')
+            has_billing_admin_level = request.POST.get('has_billing_admin_level', '')
 
             user_id = request.POST.get('user_id', '')
 
@@ -430,7 +433,7 @@ def edit_company(request, id):
                       'has_auth_level': has_auth_level,'no_of_auth_level':no_of_auth_level,'has_assessment_codes':
                       has_assessment_codes,'is_radio': is_radio, 'is_local': is_local, 'is_outstation': is_outstation, 'is_bus': is_bus,
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
-                       'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
+                       'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,'has_billing_admin_level':has_billing_admin_level,
                        'will_do_realtime_payment':will_do_realtime_payment,'has_self_booking_access':has_self_booking_access,
             'corporate_id': corporate_id,'user_id':user_id,'user_type':user_type}
             print(payload)
@@ -1706,6 +1709,8 @@ def add_employee(request, id):
             designation = request.POST.get('designation', '')
             home_city = request.POST.get('home_city', '')
             home_address = request.POST.get('home_address', '')
+            reporting_manager = request.POST.get('reporting_manager', '')
+            employee_band = request.POST.get('employee_band', '')
 
             date_of_birth = request.POST.get('date_of_birth', '')
             if date_of_birth and date_of_birth != 'None':
@@ -1735,7 +1740,8 @@ def add_employee(request, id):
                        'employee_contact':employee_contact,'age':age,'gender':gender,'id_proof_type':id_proof_type,'id_proof_no':id_proof_no,
                        'is_active':is_active,'has_dummy_email':has_dummy_email,'fcm_regid':fcm_regid,'is_cxo':is_cxo,'employee_id': employee_id,
                        'designation':designation,'home_city':home_city,'home_address':home_address,'assistant_id':assistant_id,'date_of_birth':date_of_birth,
-                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id,'username':username}
+                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id,'username':username,'reporting_manager':reporting_manager,
+                       'employee_band':employee_band}
 
             url = ""
             print(payload)
@@ -1776,10 +1782,10 @@ def add_employee(request, id):
             companies = getDataFromAPI(login_type, access_token, url_companies, payload)
             companies = companies['Corporates']
 
-            # url_city = settings.API_BASE_URL + "cities"
-            # cities = getDataFromAPI(login_type, access_token, url_city, payload)
-            # cities = cities['Cities']
-            cities = ""
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['Cities']
+
 
             url_spoc = settings.API_BASE_URL + "spocs"
             company_spoc = getDataFromAPI(login_type, access_token, url_spoc, payload)
@@ -4544,6 +4550,104 @@ def assign_flight_booking(request,id):
         return HttpResponseRedirect("/agents/login")
 
 
+def cancel_flight_booking_passengers(request,id):
+    if 'agent_login_type' in request.session:
+        if request.method == 'POST':
+            tax_on_management_fee = 0
+            refund_amount = 0
+            cancel_comment=0
+            management_fee_igst = 0
+            management_fee_cgst = 0
+            management_fee_sgst = 0
+            management_fee_igst_rate = 0
+            management_fee_cgst_rate = 0
+            management_fee_sgst_rate = 0
+            cgst = 0
+            sgst = 0
+            igst = 0
+            igst_amount = 0
+            cgst_amount = 0
+            sgst_amount = 0
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            current_url = request.POST.get('current_url', '')
+            booking_id = request.POST.get('booking_id', '')
+            user_id = request.POST.get('user_id', '')
+            no_of_passenger = request.POST.get('no_of_passanger', '')
+            employees = request.POST.getlist('cancel_employee_id', '')
+            refund_amount = request.POST.get('refund_amount', '')
+            cancel_comment = request.POST.get('cancel_comment', '')
+            igst_rate = request.POST.get('igst_rate', '')
+            if igst_rate:
+                igst_rate = int(igst_rate)
+            else:
+                igst_rate = 0
+
+            ticket_price = request.POST.get('ticket_price', '')
+            if ticket_price:
+                pass
+            else:
+                ticket_price = 0
+            old_ticket_price = int(ticket_price)
+            ticket_price = int(ticket_price) - int(refund_amount)
+            management_fee = request.POST.get('management_fee', '')
+            tax_mng_amt = ticket_price*0.18
+            tax_on_management_fee = int(management_fee)*0.18
+            tax_on_management_fee_percentage = 18
+            sub_total = ticket_price+int(management_fee)+tax_mng_amt+tax_on_management_fee+tax_on_management_fee_percentage
+
+            if int(igst_rate) > 0:
+                management_fee_igst = 18
+                management_fee_cgst = 0
+                management_fee_sgst = 0
+                management_fee_igst_rate = 18
+                management_fee_cgst_rate = 0
+                management_fee_sgst_rate = 0
+                cgst = 18
+                sgst = 0
+                igst = 0
+                igst_amount = sub_total * 0.18
+                cgst_amount = 0
+                sgst_amount = 0
+            else:
+                management_fee_igst = 0
+                management_fee_cgst = 9
+                management_fee_sgst = 9
+                management_fee_igst_rate = 0
+                management_fee_cgst_rate = 9
+                management_fee_sgst_rate = 9
+                cgst = 0
+                sgst = 9
+                igst = 9
+                igst_amount = 0
+                cgst_amount = sub_total * 0.9
+                sgst_amount = sub_total * 0.9
+
+            url = settings.API_BASE_URL + "cancel_flight_booking_passengers"
+            payload = {'booking_id': booking_id,'user_id':user_id,'user_type':login_type,'no_of_passenger':no_of_passenger,
+                       'ticket_price': ticket_price, 'management_fee': management_fee, 'tax_mng_amt': tax_mng_amt,
+                       'tax_on_management_fee': tax_on_management_fee,'refund_amount':refund_amount,'cancel_comment':cancel_comment,
+                       'tax_on_management_fee_percentage': tax_on_management_fee_percentage, 'sub_total': sub_total,
+                       'management_fee_igst': management_fee_igst, 'management_fee_cgst': management_fee_cgst,
+                       'management_fee_sgst': management_fee_sgst, 'management_fee_igst_rate': management_fee_igst_rate,
+                       'management_fee_cgst_rate': management_fee_cgst_rate,'old_ticket_price':old_ticket_price,
+                       'management_fee_sgst_rate': management_fee_sgst_rate, 'cgst': cgst, 'sgst': sgst, 'igst': igst,
+                       'igst_amount': igst_amount,'cgst_amount': cgst_amount,'sgst_amount': sgst_amount,'employees':employees
+                       }
+            print(payload)
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, 'Employee Canceled Successfully')
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+
+            else:
+                messages.error(request, 'Employee Cancel Fails')
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
 def accept_flight_booking(request):
     if 'agent_login_type' in request.session:
         login_type = request.session['agent_login_type']
@@ -6962,6 +7066,488 @@ def download_employees(request):
     workbook.save(response)
 
     return response
+
+
+def taxi_billing(request,id):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "agent_taxi_bookings"
+        payload = {'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/agent_taxi_billing.html",{'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Agent/agent_taxi_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def bus_billing(request,id):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "agent_bus_bookings"
+        payload = {'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        #print(company)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/agent_bus_billing.html", {'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Agent/agent_bus_billing.html", {'billing_type': id})
+
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def train_billing(request,id):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "agent_train_bookings"
+        payload = {'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/agent_train_billing.html",{'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Agent/agent_train_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def flight_billing(request,id):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "agent_flight_bookings"
+        payload = {'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/agent_flight_billing.html",
+                          {'bookings': booking,'billing_type': id, 'corporates': companies})
+        else:
+            return render(request, "Agent/agent_flight_billing.html", {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def hotel_billing(request,id):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        url = settings.API_BASE_URL + "agent_hotel_bookings"
+        payload = {'booking_type': id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Agent/agent_hotel_billing.html",{'bookings': booking,'billing_type': id, 'corporates': companies})
+        else:
+            return render(request, "Agent/agent_hotel_billing.html", {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def taxi_billing_verify(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id, 'invoice_id': invoice_id}
+            #print(payload)
+            vry_url = settings.API_BASE_URL + "agent_verify_taxi_bookings"
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Verify Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Verify..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_revise_taxi_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Revise Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Revise..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'update_invoice' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_update_taxi_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Updated Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Updated..!")
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def bus_billing_verify(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_verify_bus_bookings"
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Verify Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Verify..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_revise_bus_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Revise Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Revise..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'update_invoice' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            print("updateetetet")
+            vry_url = settings.API_BASE_URL + "agent_update_bus_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Updated Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Updated..!")
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def train_billing_verify(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_verify_train_bookings"
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Verify Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Verify..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_revise_train_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Revise Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Revise..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'update_invoice' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_update_train_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Updated Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Updated..!")
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def hotel_billing_verify(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_verify_hotel_bookings"
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Verify Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Verify..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_revise_hotel_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Revise Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Revise..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'update_invoice' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_update_hotel_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Updated Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Updated..!")
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def flight_billing_verify(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_verify_flight_bookings"
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Verify Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Verify..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_revise_flight_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Revise Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Revise..!")
+                return HttpResponseRedirect(current_url, {})
+        elif 'update_invoice' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id, 'invoice_comments': invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "agent_update_flight_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                messages.success(request, "Invoice Updated Successfully..!")
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, "Invoice Not Updated..!")
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def cotrav_billing_entities(request):
+    if 'agent_login_type' in request.session:
+        if id:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            payload = {'': id}
+            url = settings.API_BASE_URL + "get_cotrav_billing_entities"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            operator = operator['Enitity']
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities["Cities"]
+            
+            return render(request, 'Agent/cotrav_billing_entities.html', {'billing_entities': operator, 'cities':cities})
+        else:
+            return render(request, 'Agent/cotrav_billing_entities.html', {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def add_cotrav_billing_entities(request,id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+        corporate_id = request.POST.get('corporate_id', '')
+
+        if 'agent_login_type' in request.session:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+
+            entity_name = request.POST.get('entity_name', '')
+            billing_city_id = request.POST.get('billing_city_id')
+            contact_person_name = request.POST.get('contact_person_name', '')
+            contact_person_email = request.POST.get('contact_person_email', '')
+            contact_person_no = request.POST.get('contact_person_no', '')
+            address_line_1 = request.POST.get('address_line_1', '')
+            address_line_2 = request.POST.get('address_line_2', '')
+            address_line_3 = request.POST.get('address_line_3', '')
+            gst_id = request.POST.get('gst_id', '')
+            pan_no = request.POST.get('pan_no', '')
+
+            entity_id = request.POST.get('entity_id')
+
+            delete_id = request.POST.get('delete_id')
+
+            payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
+                       'access_token': access_token,
+                       'entity_name': entity_name, 'billing_city_id': billing_city_id,
+                       'contact_person_name': contact_person_name, 'contact_person_email': contact_person_email,
+                       'contact_person_no': contact_person_no, 'address_line_1': address_line_1,
+                       'address_line_2': address_line_2,
+                       'address_line_3': address_line_3, 'gst_id': gst_id, 'pan_no': pan_no, 'entity_id': entity_id,
+                       'is_delete': delete_id, }
+
+            url = ""
+            if entity_id:
+                url = settings.API_BASE_URL + "update_cotrav_billing_entities"
+                operation_message = "Company Entity Updaed Successfully..!"
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_cotrav_billing_entities"
+                    operation_message = "Company Entity Deleted Successfully..!"
+
+            else:
+                url = settings.API_BASE_URL + "add_cotrav_billing_entities"
+                operation_message = "Company Entity Added Successfully..!"
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect("/agents/cotrav-billing-entities", {'message': "Added Successfully"})
+            else:
+                messages.error(request, company['message'])
+                return HttpResponseRedirect("/agents/cotrav-billing-entities", {'message': "Record Not Added"})
+        else:
+            return HttpResponseRedirect("/agents/login")
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

@@ -1,6 +1,8 @@
 import random
 import string
 
+import requests
+from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render , redirect , get_object_or_404
@@ -18,7 +20,7 @@ from django.urls import reverse_lazy
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from landing.models import Leadgeneration , LeadComments , LeadLog
+from landing.models import Leadgeneration , LeadComments , LeadLog , Document
 from Common.models import Corporate_Agent, Corporate
 from landing.cotrav_messeging import LeadGenerationEmail
 
@@ -73,12 +75,6 @@ def my_handler(sender, instance , created , **kwargs):
 
     if(created) :
         print ("create call")
-        message = "New Lead Generated with id " + str(instance.id) + " and status Lead Created "
-        signup = SignupEmail(corporate_name, corporate_location, contact_person_name, contact_person_no,
-                             contact_person_email, message)
-        resp1 = signup.send_email()
-
-        print(resp1)
     else:
         print("update call")
         print(instance.id)
@@ -144,12 +140,11 @@ def my_handler(sender, instance , created , **kwargs):
                 message = "Lead with Company Name " + str(instance.Company_Name) + " is converted to new Corporate in Corporate database after Leads closed-win status"
 
         elif instance.Status == "Assigned":
-            message = " <br> Company Name: " + str(
-            instance.Company_Name) + "<br> Customer Name:  " + instance.Contact_Name + "<br> Contact Email : " + instance.Contact_Email + " <br>  Contact Number : " + instance.Contact_Number + " Kindly take it further. "
+            message = " <br> Company Name: " + str(instance.Company_Name) + "<br> Customer Name:  " + instance.Contact_Name + "<br> Contact Email : " + instance.Contact_Email + " <br>  Contact Number : " + instance.Contact_Number + " Kindly take it further. "
             # message = "Lead with id " + str(instance.id) + " is updated and assigned to agent " + ag_email
         else:
             message = ""
-            message = " <br> Company Name: "+instance.corporate_name+"<br> Customer Name:  "+instance.contact_person_name+"<br> Contact Email : "+instance.contact_person_email+" <br>  Contact Number : "+instance.contact_person_no+"<br><br> Kindly take it further. "
+            message = " <br> Company Name: "+instance.Company_Name+"<br> Customer Name:  "+ instance.Contact_Name +"<br> Contact Email : "+ instance.Contact_Email +" <br>  Contact Number : "+ instance.Contact_Number +"<br><br> Kindly take it further. "
             status = instance.Status
             signup = Lead_Status_Change_Email(message,status,ag_email,ag_name)
             resp1 = signup.send_email()
@@ -173,7 +168,8 @@ def file_upload(request,lead_id):
     path = default_storage.save(save_path, request.FILES['Attachments'])
     doc_name = request.POST.get('doc_name', '')
     lead = Leadgeneration.objects.get(id=lead_id)
-    document = Document.objects.create(document=path, upload_by=lead, doc_name=doc_name)
+   #document = Document.objects.create(document=path, upload_by=lead, doc_name=doc_name)
+    document = Document.objects.create(document=str(file_up), upload_by=lead, doc_name=doc_name)
     return JsonResponse({'document': document.id})
 
 
@@ -187,11 +183,13 @@ def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
     if request.method == 'POST':
 
         form = LeadUpdateForm(request.POST or None,request.FILES, instance=lead , initial={'Comments': ''})
-
+        print(form.is_valid())
         if form.is_valid():
             edit_lead = form.save()
             if request.FILES:
+                print("i m gere")
                 resp = file_upload(request, edit_lead.pk)
+                print(resp)
             new_comment = form.cleaned_data['Comments']
             status_action = form.cleaned_data['Status']
             # print(new_lead.pk)
@@ -199,7 +197,9 @@ def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
             cmt = LeadComments()
             cmt.lead_id = edit_lead.pk
             cmt.comment = new_comment
-            cmt.created_by = request.user.id
+            print(request.user.id)
+            cmt.created_by = request.user
+            cmt.created_at = timezone.now()
             cmt.save()
             log = LeadLog()
             log.lead_id = edit_lead.pk
@@ -211,6 +211,7 @@ def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
             messages.success(request, "Lead Status Updated Successfully..!")
             return redirect('lead-list')
         else:
+            print(form.errors)
             messages.error(request, "Lead Status Not Updated ..!")
             form = LeadUpdateForm(request.POST or None, instance=lead , initial={'Comments': ''})
             return render(request, template_name, {'form': form, 'comments': comments, 'attachments': attachment, 'form_title': 'Update Lead'})
@@ -239,7 +240,7 @@ def lead_create(request, template_name='landing/leadgeneration_form.html'):
             cmt = LeadComments()
             cmt.lead_id = new_lead.pk
             cmt.comment = new_comment
-            cmt.created_by = request.user.id
+            cmt.created_by = request.user
             cmt.save()
             log = LeadLog()
             log.lead_id = new_lead.pk
@@ -247,6 +248,40 @@ def lead_create(request, template_name='landing/leadgeneration_form.html'):
             log.status_action = status_action
             log.action_initiated_by = request.user.id
             log.save()
+            print("Save Data")
+            print(request.POST.get('is_email'))
+            is_email = request.POST.get('is_email')
+            is_sms = request.POST.get('is_sms')
+
+            if is_email:
+                print("in email")
+                Contact_Name = request.POST.get('Contact_Name', '')
+                Company_Name = request.POST.get('Company_Name', '')
+                Contact_Number = request.POST.get('Contact_Number', '')
+                Contact_Email = request.POST.get('Contact_Email', '')
+                corporate_location = request.POST.get('Company_Location', '')
+                message = "Thank you for contacting us, our sales person will get in touch with you as earliest as possible.<br><br>Regards,<br>CoTrav"
+                signup = SignupEmail(Company_Name, corporate_location, Contact_Name, Contact_Number,
+                                     Contact_Email, message)
+                resp1 = signup.send_email()
+                print(resp1)
+            if is_sms:
+                print("in smsm")
+                sender_id = 'COTRAV'
+                exotel_sid = "novuslogic1"
+                exotel_key = "6ae4c99860c31346203da94dc98a4de7fd002addc5848182"
+                exotel_token = "a2c78520d23942ad9ad457b81de2ee3f3be743a8188f8c39"
+                Contact_no = request.POST.get('Contact_Number')
+                sms_body = "Thank you for contacting us, our sales person will get in touch with you as earliest as possible.<br><br>Regards,<br>CoTrav";
+
+                requests.post(
+                    'https://twilix.exotel.in/v1/Accounts/{exotel_sid}/Sms/send.json'.format(exotel_sid=exotel_sid),
+                    auth=(exotel_key, exotel_token),
+                    data={
+                        'From': sender_id,
+                        'To': Contact_no,
+                        'Body': sms_body
+                    })
 
             messages.success(request, "Lead Created Successfully..!")
             return redirect('lead-list')
@@ -286,6 +321,18 @@ def lead_assigned(request, template_name='landing/leadgeneration_list.html'):
         resp1 = signup.send_email()
         return redirect('lead-list')
     return render(request, template_name, {})
+
+
+@login_required(login_url='/agents/login')
+def lead_doc_delete(request, pk ):
+    lead = get_object_or_404(Document, pk=pk)
+    if request.method == 'POST':
+        lead.delete()
+
+    return HttpResponse('deleted')
+
+
+
 
 
 ##########################

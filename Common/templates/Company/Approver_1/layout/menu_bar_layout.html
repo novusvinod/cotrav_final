@@ -106,28 +106,39 @@
                          </li>
 
                         </li>
+
+
+						{% if user.is_bus == 1 %}
                          <li class="mega-menu-dropdown" id="bus_li_menu">
                             <a href="/Corporate/Approver_1/bus-bookings/2" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
 
                             </a>
                         </li>
+						{% endif %}
 
+
+						{% if user.is_train == 1 %}
                         <li class="mega-menu-dropdown" id="train_li_menu">
                             <a href="/Corporate/Approver_1/train-bookings/2" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
                             </a>
 
 
                         </li>
+						{% endif %}
+						{% if user.is_hotel == 1 %}
                         <li class="mega-menu-dropdown" id="hotel_li_menu">
                             <a href="/Corporate/Approver_1/hotel-bookings/2" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
                             </a>
                         </li>
+						{% endif %}
 
+						{% if user.is_flight == 1 %}
                         <li class="mega-menu-dropdown" id="flight_li_menu">
                             <a href="/Corporate/Approver_1/flight-bookings/2" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
                             </a>
 
                         </li>
+						{% endif %}
 <!--                        <li class="mega-menu-dropdown">-->
 <!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">restaurant_menu</i>Meal-->
 
@@ -211,32 +222,37 @@
 	                            </a>
 	                        </li>
 
-	                            <li class="nav-item" >
-	                        <a href="/Corporate/Approver_1/bus-bookings/2" class="nav-link nav-toggle">
-	                            <i class="material-icons">directions_bus</i> Bus
-	                            </a>
-	                        </li>
+	                            						{% if user.is_bus == 1 %}
+                         <li class="mega-menu-dropdown" id="bus_li_menu">
+                            <a href="/Corporate/Approver_1/bus-bookings/2" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
 
-	                            <li class="nav-item">
-	                        <a href="/Corporate/Approver_1/train-bookings/2" class="nav-link nav-toggle">
-	                        <i class="material-icons">directions_subway</i> Train
-	                            </a>
-	                        </li>
+                            </a>
+                        </li>
+						{% endif %}
 
 
-	                            <li class="nav-item" >
-	                        <a href="/Corporate/Approver_1/hotel-bookings/2" class="nav-link nav-toggle">
-	                           <i class="material-icons">hotel</i> Hotel
-	                            </a>
-	                        </li>
+						{% if user.is_train == 1 %}
+                        <li class="mega-menu-dropdown" id="train_li_menu">
+                            <a href="/Corporate/Approver_1/train-bookings/2" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
+                            </a>
 
-	                            <li class="nav-item">
-	                        <a href="/Corporate/Approver_1/flight-bookings/2" class="nav-link nav-toggle">
-	                        <i class="material-icons">flight</i> Flight
 
-	                            </a>
+                        </li>
+						{% endif %}
+						{% if user.is_hotel == 1 %}
+                        <li class="mega-menu-dropdown" id="hotel_li_menu">
+                            <a href="/Corporate/Approver_1/hotel-bookings/2" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
+                            </a>
+                        </li>
+						{% endif %}
 
-	                        </li>
+						{% if user.is_flight == 1 %}
+                        <li class="mega-menu-dropdown" id="flight_li_menu">
+                            <a href="/Corporate/Approver_1/flight-bookings/2" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
+                            </a>
+
+                        </li>
+						{% endif %}
 
 
 

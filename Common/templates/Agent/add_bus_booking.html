@@ -5,10 +5,6 @@
 {% if user %}
 <!-- start page content -->
 
-{% load static %}
-<link href="{% static 'assets/css/select2_custome.css' %}" rel="stylesheet" type="text/css" />
-
-
 {% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -23,158 +19,121 @@
             <input type="hidden" name="group_id" id="group_id">
             <input type="hidden" name="subgroup_id" id="subgroup_id">
              <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-
-            <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
-								<div class="card-head">
-									<header>Booking Details: </header>
-                                     <div class="tools">
-
-										 <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-                                        <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-                                        <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-
-                    <div class="card-body row">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>Booking Details</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
 
 
-                              <div class="col-lg-2 p-t-20">
-                                    <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                     <select name="corporate_id" id="corporate_id" class="mdl-textfield__input js-select2" required>
-                                         <option value="">--Select Company--</option>
+                              <div class="form-group row">
+                                    <label class="col-sm-4" >Select Company</label>
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 myselect" required>
+                                         <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
                                         {% endfor %}
                                     </select>
-                                  <label class = "mdl-textfield__label" >Select Company</label>
-                                </div>
-                              </div>
-
-                                <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield  mdl-textfield--floating-label txt-full-width is-dirty">
-										  <input class = "mdl-textfield__input" type = "file" name="email_attachment" >
-										  <label class = "mdl-textfield__label" >Email Copy</label>
-					                  </div>
                                 </div>
 
-                                <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield  mdl-textfield--floating-label txt-full-width is-dirty">
-										  <input type="text" class="mdl-textfield__input" name="from" id="pickup_location" required>
-										  <label class = "mdl-textfield__label" >From City*</label>
-					                  </div>
-                                </div>
+                                 <div class="form-group row">
+                                                    <label class="col-sm-4">Booking Email Copy</label>
+                                                    <input type="file" class="col-sm-8 form-control" name="email_attachment"  placeholder="Booking Email Copy" >
+                                                    </div>
 
-                                <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield  mdl-textfield--floating-label txt-full-width is-dirty">
-										  <input type="text" class="mdl-textfield__input" name="to" id="drop_location" required>
-										  <label class = "mdl-textfield__label" >To City*</label>
-					                  </div>
-                                </div>
-
-                                <div class="col-lg-2 p-t-20">
-                                    <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                     <select name="bus_type" class="mdl-textfield__input js-select2" required>
-                                         <option value="">--Select Bus Type-- </option>
-                                         <option value="1">AC Seater</option>
-                                          <option value="2">AC Sleeper</option>
-                                          <option value="3">NON AC Seater</option>
-                                          <option value="4">NON AC Sleeper</option>
-                                    </select>
-                                  <label class = "mdl-textfield__label" >Bus Type*</label>
-                                </div>
-                              </div>
-
-                            <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield  mdl-textfield--floating-label txt-full-width is-dirty">
-										  <input type="text" class="mdl-textfield__input" name="preferred_bus" required>
-										  <label class = "mdl-textfield__label" >Preferred Bus*</label>
-					                  </div>
+                              <div class="form-group row">
+                                <label class="col-sm-4" >From City*</label>
+                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From City" required>
                             </div>
 
-                            <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-					                     <input class = "mdl-textfield__input date-format" type = "text" name="journey_datetime" required>
-					                     <label class = "mdl-textfield__label">Journey Date From*</label>
-					                  </div>
+                              <div class="form-group row">
+                                <label class="col-sm-4" >To City*</label>
+                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To City" required>
                             </div>
 
-                             <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-					                     <input class = "mdl-textfield__input date-format" type = "text" name="journey_datetime_to" required>
-					                     <label class = "mdl-textfield__label">Journey Date To*</label>
-					                  </div>
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Bus Type*</label>
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect">
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
+                                  </select>
+                            </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Preferred Bus*</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus">
                             </div>
 
 
-                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-					                     <input class = "mdl-textfield__input date-format" type = "text" id="booking_datetime" name="booking_datetime" required>
-					                     <label class = "mdl-textfield__label">Booking Date*</label>
-					                  </div>
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Journey Date From*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime" placeholder="Journey Date From" required>
                             </div>
 
-                        <div class="col-lg-2 p-t-20">
-                                    <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                     <select name="assessment_code" id="assessment_code" class="mdl-textfield__input js-select2" required>
-                                           <option value="">--Select Assessment Code--</option>
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Journey Date To*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" name="journey_datetime_to" placeholder="Journey Date To" required>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Booking Date*</label>
+                                 <input type="text" class="form-control col-sm-8 date-format" id="booking_datetime" name="booking_datetime" placeholder="Booking Date/Time" required>
+                            </div>
+
+                          <div class="form-group row">
+                                <label class="col-sm-4" >Assessment Code*</label>
+                                   <select name="assessment_code" id="assessment_code" class="form-control col-sm-8 myselect">
+                                        <option value="">Select Assessment Code </option>
                                     </select>
-                                  <label class = "mdl-textfield__label" >Assessment Code*</label>
-                                </div>
-                              </div>
+                            </div>
 
-
-                        <div class="col-lg-2 p-t-20">
-                                    <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                     <select name="assessment_city_id" id="assessment_city_id" class="mdl-textfield__input js-select2" required>
-                                           <option value="">--Select Assessment City--</option>
+                              <div class="form-group row">
+                                <label class="col-sm-4" >Assessment City*</label>
+                                   <select name="assessment_city_id" id="assessment_city_id" class="form-control col-sm-8 myselect">
+                                        <option value="">Select Assessment City </option>
                                     </select>
-                                  <label class = "mdl-textfield__label" >Assessment City*</label>
-                                </div>
-                              </div>
+                            </div>
 
 
-                        <div class="col-lg-2 p-t-20">
-                                    <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-                                     <select id="entity_id" name="entity_id" class="mdl-textfield__input js-select2" required>
-                                           <option value="">--Select Billing Entity--</option>
-                                    </select>
-                                  <label class = "mdl-textfield__label" >Billing Entity*</label>
-                                </div>
-                              </div>
+                             <div class="form-group row">
+                                <label class="col-sm-4" >Select Billing Entity*</label>
+                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 myselect" required>
+                                      <option value="">Select Billing Entity </option>
 
-                         <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input js-select2 tour_type" name="is_sms">
-
-                                                <option value="0">No</option>
-												<option value="1">Yes</option>
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Send SMS</label>
-                                       </div>
-									</div>
-
-                         <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-											<select class="mdl-textfield__input js-select2 tour_type" name="is_email">
-
-                                                <option value="0">No</option>
-												<option value="1">Yes</option>
-                                            </select>
-                                         <label class = "mdl-textfield__label" >Send Email</label>
-                                       </div>
-									</div>
+                                  </select>
+                            </div>
 
 
-                         <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
-					                     <textarea class = "mdl-textfield__input" name="reason_booking"> </textarea>
-					                     <label class = "mdl-textfield__label">Booking Reason/ Comment*</label>
-					                  </div>
-						            </div>
+                               <div class="form-group row">
+                                <label class="col-sm-4" >Booking Reason/ Comment*</label>
+                                <textarea name="reason_booking" class="form-control col-sm-8" placeholder="Reason/Comment for Booking"></textarea>
+                            </div>
 
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Send SMS</label>
+                                 <select name="is_sms" class="form-control col-sm-8 tour_type">
+                                      <option value="0">No</option>
+                                      <option value="1">Yes</option>
+                                  </select>
+                            </div>
+
+                         <div class="form-group row">
+                                <label class="col-sm-4" >Send SMS</label>
+                                 <select name="is_email" class="form-control col-sm-8 tour_type">
+                                      <option value="0">No</option>
+                                      <option value="1">Yes</option>
+                                  </select>
+                            </div>
 
 
                         </div>
@@ -187,336 +146,143 @@
 
 
 
-             <div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Passanger Details: </header>
-                                     <div class="tools">
+            <div class="col-md-7">
+             <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>SPOC and Passanger Details</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
 
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                         <div class="form-group row">
+                                <label class="col-sm-2" >Select Spoc*</label>
+                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-9 myselect" required>
+                                      <option value="">Select Spoc </option>
+                                  </select>
+                            </div>
 
-                                    </div>
-								</div> <!-- card-head class end -->
 
-                                <div class="card-body row">
-						            <div class="col-lg-6 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                <select id="spoc_id" name="spoc_id" class="mdl-textfield__input js-select2" placeholder="Select Spoc" required>
-                                      <option value="">--Select Spoc--</option>
-                                    </select>
 
-                                      <label class = "mdl-textfield__label">Select Spoc </label>
-
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                                        <select id="no_of_seats" name="no_of_seats" class="mdl-textfield__input no_of_seats js-select2" placeholder="Select No Of Employye" required>
+                               <div class="form-group row">
+                                <label class="col-sm-2" >Number Of Employees*</label>
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-9 no_of_seats myselect" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     <option value="4">4</option>
-                                    <option value="5" style="display: none">5</option>
-                                    <option value="6" style="display: none">6</option>
+                                    <option value="5" >5</option>
+                                    <option value="6" >6</option>
                                 </select>
-
-
-
-
-
-
-                                      </div>
-						            </div>
-
-                                    <div class="form-group row" id="emp_row_1">
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                           <select name="employee_id_1" id="employee_id_1" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value="">--Select Employee--</option>
-                                                {% for employee in employees %}
-                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
-                                                {% endfor %}
-                                           </select>
-
-                                          <label class = "mdl-textfield__label">Select Employee</label>
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="emp_id_1" id="emp_id_1" class="mdl-textfield__input" placeholder="Employee Id">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_name_1" id="employee_name_1" class="mdl-textfield__input" placeholder="Name">
-
-
-                                      </div>
-						            </div>
-
-                                         <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_contact_1" id="employee_contact_1" class="mdl-textfield__input" placeholder="Contact No">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_email_1" id="employee_email_1" class="mdl-textfield__input" placeholder="Email">
-
-
-                                      </div>
-						            </div>
-
-
-
-
-                                    </div>
-
-                              <!-- second employee -->
-                                    <div class="form-group row" id="emp_row_2">
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                           <select name="employee_id_2" id="employee_id_2" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                              <option value="">--Select Employee--</option>
-                                                {% for employee in employees %}
-                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
-                                                {% endfor %}
-                                           </select>
-
-                                          <label class = "mdl-textfield__label">Select Employee</label>
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="emp_id_2" id="emp_id_2" class="mdl-textfield__input" placeholder="Employee Id">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_name_2" id="employee_name_2" class="mdl-textfield__input" placeholder="Name">
-
-
-                                      </div>
-						            </div>
-
-                                         <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_contact_2" id="employee_contact_2" class="mdl-textfield__input" placeholder="Contact No">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_email_2" id="employee_email_2" class="mdl-textfield__input" placeholder="Email">
-
-
-                                      </div>
-						            </div>
-
-
-
-
-                                    </div>
-
-                              <!-- end -->
-
-                                    <!-- third employee -->
-                                    <div class="form-group row" id="emp_row_3">
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                           <select name="employee_id_3" id="employee_id_3" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value="">--Select Employee--</option>
-                                                {% for employee in employees %}
-                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
-                                                {% endfor %}
-                                           </select>
-
-                                          <label class = "mdl-textfield__label">Select Employee</label>
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="emp_id_3" id="emp_id_3" class="mdl-textfield__input" placeholder="Employee Id">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_name_3" id="employee_name_3" class="mdl-textfield__input" placeholder="Name">
-
-
-                                      </div>
-						            </div>
-
-                                         <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_contact_3" id="employee_contact_3" class="mdl-textfield__input" placeholder="Contact No">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_email_3" id="employee_email_3" class="mdl-textfield__input" placeholder="Email">
-
-
-                                      </div>
-						            </div>
-
-
-
-
-                                    </div>
-
-                              <!-- end -->
-
-
-
-                                     <!-- fourth employee -->
-                                    <div class="form-group row" id="emp_row_4">
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                           <select name="employee_id_4" id="employee_id_4" class="mdl-textfield__input js-select2" placeholder="Select Employee">
-                                               <option value="">--Select Employee--</option>
-                                                {% for employee in employees %}
-                                                <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
-                                                {% endfor %}
-                                           </select>
-
-                                          <label class = "mdl-textfield__label">Select Employee</label>
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="emp_id_4" id="emp_id_4" class="mdl-textfield__input" placeholder="Employee Id">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_name_4" id="employee_name_4" class="mdl-textfield__input" placeholder="Name">
-
-
-                                      </div>
-						            </div>
-
-                                         <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_contact_4" id="employee_contact_4" class="mdl-textfield__input" placeholder="Contact No">
-
-
-                                      </div>
-						            </div>
-
-                                        <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-
-                                          <input type="text" name="employee_email_4" id="employee_email_4" class="mdl-textfield__input" placeholder="Email">
-
-
-                                      </div>
-						            </div>
-
-
-
-
-                                    </div>
-
-                              <!-- end -->
-
-
                             </div>
-            </div>
-            </div>
 
-                 <div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
+                               <div class="form-group row" id="emp_row_1">
+                                    <label class="col-sm-2" >Employee 1</label>
+                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-2 myselect">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="emp_id_1" id="emp_id_1" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_1" id="employee_name_1" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_1" id="employee_email_1" class="form-control col-sm-2" placeholder="Email">
+                                </div>
 
-                                     <div class="tools">
+                              <div class="form-group row" id="emp_row_2">
+                                    <label class="col-sm-2" >Employee 2</label>
+                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-2 myselect">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}" >{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                   <input type="text" name="emp_id_2" id="emp_id_2" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_2" id="employee_name_2" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_2" id="employee_contact_2" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_2" id="employee_email_2" class="form-control col-sm-2" placeholder="Email">
+                                </div>
 
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                              <div class="form-group row"  id="emp_row_3">
+                                    <label class="col-sm-2" >Employee 3</label>
+                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-2 myselect">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                   <input type="text" name="emp_id_3" id="emp_id_3" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_3" id="employee_name_3" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_3" id="employee_contact_3" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_3" id="employee_email_3" class="form-control col-sm-2" placeholder="Email">
+                                </div>
 
-                                    </div>
-								</div> <!-- card-head class end -->
+                              <div class="form-group row"  id="emp_row_4" >
+                                    <label class="col-sm-2" >Employee 4</label>
+                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-2 myselect">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                   <input type="text" name="emp_id_4" id="emp_id_4" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_4" id="employee_name_4" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_4" id="employee_contact_4" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_4" id="employee_email_4" class="form-control col-sm-2" placeholder="Email">
+                                </div>
 
-                     <div class="card-body row">
+                               <div class="form-group row"  id="emp_row_5" >
+                                    <label class="col-sm-2" >Employee 5</label>
+                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-2 myselect">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="emp_id_5" id="emp_id_5" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_5" id="employee_name_5" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_5" id="employee_contact_5" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_5" id="employee_email_5" class="form-control col-sm-2" placeholder="Email">
+                                </div>
 
+                               <div class="form-group row"  id="emp_row_6" >
+                                    <label class="col-sm-2" >Employee 6</label>
+                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-2 myselect">
+                                        {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="text" name="emp_id_6" id="emp_id_6" class="form-control col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_6" id="employee_name_6" class="form-control col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_6" id="employee_email_6" class="form-control col-sm-2" placeholder="Email">
+                                </div>
 
-
-                         <div class="col-lg-12"  align="center">
-							              	<button class="btn btn-info mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-											  Submit
-											</button>
-
-                              <button class="btn btn-danger mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  >
-											  Cancel
-											</button>
-							            </div>
-
+                          </div>
 
 
 
                 </div>
+                </div>
 
-                            </div>
+            <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <input type="submit" value="Submit" class="btn btn-info">
+                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
 
 
-</div>
-        </div><!-- row end -->
 
+
+        </div>
         </form>
-
     </div>
 </div>
+<!-- end page content -->
+
+
 
 
 
@@ -530,15 +296,6 @@
 
 <script type="text/javascript">
 
-   $(".js-select2").select2({
-        theme: "material",
-        width: 'resolve'
-    });
-
-    $(".select2-selection__arrow")
-        .addClass("material-icons")
-        .html("arrow_drop_down");
-
 
 $(document).ready(function() {
 
@@ -547,6 +304,9 @@ $(document).ready(function() {
   $('#emp_row_4').hide();
   $('#emp_row_5').hide();
   $('#emp_row_6').hide();
+var today = moment().format('DD-MM-YYYY HH:mm:ss');
+document.getElementById("booking_datetime").value = today;
+
 
  var input = document.getElementById('pickup_location');
   var autocomplete = new google.maps.places.Autocomplete(input);
@@ -554,8 +314,6 @@ $(document).ready(function() {
   var input = document.getElementById('drop_location');
   var autocomplete = new google.maps.places.Autocomplete(input);
 
-var today = moment().format('DD-MM-YYYY HH:mm:ss');
-document.getElementById("booking_datetime").value = today;
 
 });
 
@@ -636,8 +394,6 @@ $("#corporate_id").change(function(){
   $('#taxi_type_id').empty();
   $('#spoc_id').empty();
   $('#entity_id').empty();
-  $('#assessment_code').empty();
-  $('#assessment_city_id').empty();
 
    var corporate_id =  $(this).val();
    var_url = '/api/'+'billing_entities'
@@ -656,12 +412,11 @@ $("#corporate_id").change(function(){
        //alert(data['Entitys']);
        if(data['Entitys'].length != 0){
         entities = data['Entitys']
-        $('#entity_id').append($("<option value=''>--Select Billing Entity--</option>"));
+        $('#entity_id').append($("<option value=''>Select Billing Entity</option>"));
          for (var i=0;i<entities.length;i++) {
             $('#entity_id').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
          }
        }else{
-       $('#entity_id').append($("<option value=''>--Select Billing Entity--</option>"));
         alert('No Entity Available')
        }
        });
@@ -674,13 +429,12 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['Spocs'].length != 0){
         spocs = data['Spocs']
-        $('#spoc_id').append($("<option value=''>--Select Spoc--</option>"));
+        $('#spoc_id').append($("<option value=''>Select Spoc</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#spoc_id').append($("<option value='"+spocs[i].id+','+spocs[i].group_id+','+spocs[i].subgroup_id+" '>"+spocs[i].user_name+"</option>"));
 
          }
        }else{
-       $('#spoc_id').append($("<option value=''>--Select Spoc--</option>"));
         alert('No SPOC Available')
        }
        });
@@ -693,12 +447,11 @@ $("#corporate_id").change(function(){
        //alert(data['Spocs']);
        if(data['AssCodes'].length != 0){
         spocs = data['AssCodes']
-        $('#assessment_code').append($("<option value=''>--Select Assessment Code--</option>"));
+
          for (var i=0;i<spocs.length;i++) {
             $('#assessment_code').append($("<option value='"+spocs[i].id+"'>"+spocs[i].assessment_code+"</option>"));
          }
        }else{
-       $('#assessment_code').append($("<option value=''>--Select Assessment Code--</option>"));
         alert('No Assessment Code Available')
        }
        });
@@ -711,13 +464,11 @@ $("#corporate_id").change(function(){
       {
        //alert(data['Spocs']);
        if(data['AssCity'].length != 0){
-        spocs = data['AssCity'];
-        $('#assessment_city_id').append($("<option value=''>--Select Assessment City--</option>"));
+        spocs = data['AssCity']
          for (var i=0;i<spocs.length;i++) {
             $('#assessment_city_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].city_name+"</option>"));
          }
        }else{
-       $('#assessment_city_id').append($("<option value=''>--Select Assessment City--</option>"));
         alert('No Assessment City Available')
        }
        });
@@ -752,12 +503,12 @@ $("#spoc_id").change(function(){
 
        if(data['Employees'].length != 0){
         employee = data['Employees'];
-        $('#employee_id_1').append($("<option value=''>--Select Employee--</option>"));
-        $('#employee_id_2').append($("<option value=''>--Select Employee--</option>"));
-        $('#employee_id_3').append($("<option value=''>--Select Employee--</option>"));
-        $('#employee_id_4').append($("<option value=''>--Select Employee--</option>"));
-        $('#employee_id_5').append($("<option value=''>--Select Employee--</option>"));
-        $('#employee_id_6').append($("<option value=''>--Select Employee--</option>"));
+        $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
          for (var i=0;i<employee.length;i++) {
 
             $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
@@ -771,9 +522,9 @@ $("#spoc_id").change(function(){
 
        var emp_len = data['Employees'].length;
        for (var i=emp_len+1;i<7;i++) {
-       var valueToCompare = $(".no_of_seats option[value='"+i+"']").text();
+       var valueToCompare = $("#no_of_seats option[value='"+i+"']").text();
             if(valueToCompare == i) {
-                $(".no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
+                $("#no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
             }
        }
 

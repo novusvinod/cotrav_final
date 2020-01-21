@@ -129,6 +129,7 @@
             <input type="hidden" name="booking_id" value="{{booking.id}}">
             <input type="hidden" name="user_id" value="{{user.id}}">
             <input type="hidden" name="no_of_passanger" value="{{booking.no_of_seats}}">
+            <input type="hidden" id="no_of_seats" name="no_of_seats" value="{{booking.no_of_seats}}">
             <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
             <input type="hidden" name="tax_on_management_fee" id="tax_on_management_fee" value="0">
@@ -907,7 +908,8 @@ function valueChanged()
       function(data)
       {
       management_fee = data["Fees"][0].service_fees_type_value
-      $('#mng_fee').val(management_fee);
+      no_of_passanger = $('#no_of_seats').val();
+      $('#mng_fee').val(management_fee*no_of_passanger);
       $('#oper_mng_fee').val(management_fee);
        });
 

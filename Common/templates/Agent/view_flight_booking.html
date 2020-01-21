@@ -4,7 +4,7 @@
 
 {% if user %}
 <!-- start page content -->
-
+{% include 'cotrav_alert_message.html' %}
 
  <div class="page-content-wrapper">
                 <div class="page-content">
@@ -13,11 +13,10 @@
                      Flight Booking Details
                      </div>
                    </div>
-
-
+					
                     {% for booking in bookings %}
 
-						{% if booking.status_client >= 5 %}
+						{% if booking.status_cotrav >= 4 %}
                       <div class="row">
 						<div class="col-sm-12">
 							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
@@ -377,6 +376,14 @@
 
 					 <div class="row">
 						<div class="col-sm-12">
+							<form method="post" action="/agents/cancel-flight-booking-passengers/{{booking.id}}">
+								<input type="hidden" name="user_id" value="{{user.id}}">
+								<input type="hidden" name="booking_id" value="{{booking.id}}">
+								<input type="hidden" name="no_of_passanger" value="{{booking.no_of_seats}}">
+								<input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+								<input type="hidden" name="ticket_price" value="{{ booking.ticket_price }}">
+								<input type="hidden" name="management_fee" value="{{ booking.management_fee }}">
+								<input type="hidden" name="igst_rate" value="{{ booking.igst_rate }}">
 							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
 								<div class="card-head">
 									<header>Passenger Details: </header>
@@ -390,6 +397,14 @@
 								{% for passanger in booking.Passangers %}
 
 								<div class="card-body row">
+
+									<div class="col-lg-1 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class="checkbox checkbox-icon-red" type="checkbox" name="cancel_employee_id" value="{{ passanger.id }}">
+
+					                  </div>
+						            </div>
+
 						            <div class="col-lg-3 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                     <input class = "mdl-textfield__input" type = "text" name="employee_name"  id = "employee_name" value="{{ passanger.employee_name }}" readonly>
@@ -411,32 +426,48 @@
 					                  </div>
 						            </div>
 
-									<div class="col-lg-2 p-t-20">
+									<div class="col-lg-1 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                     <input class = "mdl-textfield__input" type = "text" id = "age" name="age" value="{{ passanger.age }}" readonly>
 					                     <label class = "mdl-textfield__label">Age</label>
 					                  </div>
 						            </div>
 
-									<div class="col-lg-2 p-t-20">
+									<div class="col-lg-1 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
 					                     <input class = "mdl-textfield__input" type = "text" id = "gender" name="gender" value="{{ passanger.gender }}" readonly>
 					                     <label class = "mdl-textfield__label">Gender</label>
 					                  </div>
 						            </div>
 
-
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
 								</div>
 
 								{% endfor %}
 
+								<div class="card-body row">
+								<div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "number" name="refund_amount" required>
+					                     <label class = "mdl-textfield__label">Refundable Amount</label>
+					                  </div>
+						            </div>
+								<div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" name="cancel_comment" required>
+					                     <label class = "mdl-textfield__label">Comment</label>
+					                  </div>
+						            </div>
+									<div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield txt-full-width">
+					                     <input class = "mdl-textfield__input btn btn-warning" type = "submit" value="Cancel Employee">
+
+					                  </div>
+						            </div>
+
+								</div>
+
 							</div>
+							</form>
 						</div>
 					</div>
 

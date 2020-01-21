@@ -51,6 +51,21 @@ class Corporate_Agent(models.Model):
     password = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
     last_login = models.DateTimeField(max_length=100)
+    has_radio_booking_access = models.CharField(max_length=100)
+    has_local_booking_access = models.CharField(max_length=100)
+    has_outstation_booking_access = models.CharField(max_length=100)
+    has_bus_booking_access = models.CharField(max_length=100)
+    has_train_booking_access = models.CharField(max_length=100)
+    has_hotel_booking_access = models.CharField(max_length=100)
+    has_flight_booking_access = models.CharField(max_length=100)
+    has_meal_booking_access = models.CharField(max_length=100)
+    has_water_bottles_booking_access = models.CharField(max_length=100)
+    has_reverse_logistics_booking_access = models.CharField(max_length=100)
+    has_billing_access = models.CharField(max_length=100)
+    has_voucher_payment_access = models.CharField(max_length=100)
+    has_voucher_approval_access = models.CharField(max_length=100)
+    is_super_admin = models.CharField(max_length=100)
+
     class Meta:
         db_table = "corporate_agents"
 

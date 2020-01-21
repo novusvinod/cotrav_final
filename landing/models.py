@@ -1,4 +1,6 @@
 from django.db import models
+
+from Common.models import Corporate_Agent
 from landing.utils import get_choice
 from django.contrib.contenttypes.fields import GenericRelation
 
@@ -65,7 +67,8 @@ class Leadgeneration(models.Model):
 class LeadComments(models.Model):
      lead = models.ForeignKey(Leadgeneration, on_delete=models.CASCADE , related_name='lead_id')
      comment = models.CharField(max_length=255)
-
+     created_by = models.ForeignKey(Corporate_Agent, on_delete=models.CASCADE , related_name='created_by')
+     created_at = models.CharField(max_length=255)
      class Meta:
          db_table = "lead_comments"
 

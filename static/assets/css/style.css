@@ -1,4 +1,4 @@
-
+ {% load static %}
 
 
 
@@ -9193,4 +9193,15 @@ margin-right: 17px;
     margin-top: -9px;
 }
 
+.tets{
+color:read
+}
+
+.fltLogo {
+    background-image: url('../../assets/img/flight_icon.png');
+    background-repeat: no-repeat;
+    height: 16px;
+    margin: auto;
+    width: 15px;
+}
 

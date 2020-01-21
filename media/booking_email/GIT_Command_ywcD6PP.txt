@@ -1,0 +1,54 @@
+Initialize the local directory as a Git repository.
+$ git init
+
+Add the files in your new local repository. This stages them for the first commit.
+$ git add .
+
+Commit the files that you've staged in your local repository.
+$ git commit -m "First commit"
+
+# Sets the new remote
+$ git remote add origin remote repository URL
+
+# Verifies the new remote URL
+$ git remote -v
+
+# Pushes the changes in your local repository up to the remote repository you specified as the origin
+$ git push origin master
+
+--------------- Add Changes To Remote Directory----------------
+
+git fetch && git checkout <branch>
+
+$ git add .
+$ git commit -m "adding a change from the feature branch"
+$ git push origin <branch>
+
+
+----------------Get Updated Code From Repo ------------
+git reset --hard HEAD
+git clean -xffd
+git pull
+
+------------Add only Files Changes To Remote Directory------------
+git add login.php
+git commit -m "Fixed bug in login.php"
+git push origin my_branch
+
+
+----------- create new branch-----------
+git checkout -b your_branch
+
+
+(1) First fetch all changes:
+
+$ git fetch --all
+
+(2) Then reset the master:
+
+$ git reset --hard origin/master
+
+(3) Pull/update:
+
+$ git pull
+

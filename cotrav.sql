@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 18, 2019 at 09:27 AM
+-- Generation Time: Jan 10, 2020 at 06:12 AM
 -- Server version: 5.7.23
 -- PHP Version: 5.6.38
 
@@ -970,6 +970,16 @@ INSERT INTO employee_train_booking(train_booking_id,employee_id) VALUES(train_bo
 COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `addFlightAccessToken`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addFlightAccessToken` (IN `old_access_token` VARCHAR(255), IN `new_access_token` VARCHAR(255))  NO SQL
+BEGIN
+
+UPDATE `kafila_api_flight_access_token` SET `expire_date` = NOW() WHERE `kafila_api_flight_access_token`.`access_token` = old_access_token;
+
+INSERT INTO `kafila_api_flight_access_token` (`id`, `access_token`, `expire_date`, `created`, `modified`) VALUES (NULL, new_access_token, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+END$$
+
 DROP PROCEDURE IF EXISTS `addFlightBooking`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addFlightBooking` (IN `usage_type` VARCHAR(100), IN `journey_type` VARCHAR(100), IN `flight_class` VARCHAR(250), IN `from_location` VARCHAR(100), IN `to_location` VARCHAR(100), IN `booking_datetime` DATETIME, IN `departure_datetime` DATETIME, IN `preferred_flight` VARCHAR(100), IN `assessment_code` INT, IN `no_of_seats` INT, IN `group_id` INT, IN `subgroup_id` INT, IN `spoc_id` INT, IN `corporate_id` INT, IN `billing_entity_id` INT, IN `reason_booking` VARCHAR(100), IN `user_id` INT, IN `user_type` INT, IN `employees` VARCHAR(100), IN `booking_email` VARCHAR(255), IN `assessment_city_id` INT, OUT `last_booking_id` INT)  NO SQL
 BEGIN
@@ -1867,10 +1877,31 @@ END$$
 DROP PROCEDURE IF EXISTS `addTaxiInvoice`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addTaxiInvoice` (IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `igst_amount` FLOAT, IN `cgst_amount` FLOAT, IN `sgst_amount` FLOAT, IN `hours_done` FLOAT, IN `allowed_hours` FLOAT, IN `extra_hours` FLOAT, IN `charge_hour` FLOAT, IN `days` FLOAT, IN `start_km` FLOAT, IN `end_km` FLOAT, IN `kms_done` FLOAT, IN `allowed_kms` FLOAT, IN `extra_kms` FLOAT, IN `extra_km_rate` FLOAT, IN `base_rate` FLOAT, IN `extra_hr_charges` FLOAT, IN `extra_km_charges` FLOAT, IN `driver_allowance` FLOAT, IN `total_excluding_tax` FLOAT, IN `other_charges` FLOAT, IN `total` FLOAT, IN `sub_total` FLOAT, IN `radio_rate` FLOAT, IN `bb_entity` INT, IN `cotrav_billing_entity` INT, IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT)  NO SQL
 BEGIN
+	DECLARE invoice_id INT DEFAULT 0;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
 INSERT INTO `taxi_booking_client_invoice` (tax_on_management_fee,tax_on_management_fee_percentage,management_fee_igst,management_fee_cgst,management_fee_sgst,management_fee_igst_rate,management_fee_cgst_rate, management_fee_sgst_rate,igst_amount,cgst_amount,sgst_amount,hours_done,allowed_hours,extra_hours,charge_hour,days,start_km,end_km,kms_done,allowed_kms,extra_kms,extra_km_rate,base_rate,extra_hr_charges,extra_km_charges,driver_allowance,total_excluding_tax,other_charges,total,sub_total,radio_rate,bb_entity,cotrav_billing_entity,booking_id) VALUES (tax_on_management_fee,tax_on_management_fee_percentage,management_fee_igst,management_fee_cgst,management_fee_sgst,management_fee_igst_rate,management_fee_cgst_rate, management_fee_sgst_rate,igst_amount,cgst_amount,sgst_amount,hours_done,allowed_hours,extra_hours,charge_hour,days,start_km,end_km,kms_done,allowed_kms,extra_kms,extra_km_rate,base_rate,extra_hr_charges,extra_km_charges,driver_allowance,total_excluding_tax,other_charges,total,sub_total,radio_rate,bb_entity,cotrav_billing_entity,booking_id);
 
+SET invoice_id = LAST_INSERT_ID();
 
+INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
 
+UPDATE taxi_bookings SET status_cotrav = 5, is_invoice=1, invoice_id= invoice_id WHERE id = booking_id;
+
+COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `addTaxiModel`$$
@@ -2442,6 +2473,7 @@ END$$
 DROP PROCEDURE IF EXISTS `assignBusBooking`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `assignBusBooking` (IN `ticket_no` VARCHAR(100), IN `pnr_no` VARCHAR(100), IN `assign_bus_type_id` INT, IN `seat_no` VARCHAR(15), IN `portal_used` VARCHAR(100), IN `operator_name` VARCHAR(100), IN `operator_contact` VARCHAR(100), IN `boarding_point` VARCHAR(100), IN `boarding_datetime` DATETIME, IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `ticket_price` FLOAT, IN `management_fee` FLOAT, IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `sub_total` FLOAT, IN `cotrav_billing_entity` FLOAT, IN `igst` FLOAT, IN `cgst` FLOAT, IN `sgst` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `tax_mng_amt` FLOAT, IN `oper_ticket_price` FLOAT, IN `oper_commission` FLOAT, IN `oper_commission_type` FLOAT, IN `oper_cotrav_billing_entity` FLOAT, IN `oper_igst` FLOAT, IN `oper_cgst` FLOAT, IN `oper_sgst` FLOAT, IN `client_ticket_path` VARCHAR(255), IN `vender_ticket_path` VARCHAR(255), IN `igst_amount` FLOAT, IN `cgst_amount` FLOAT, IN `sgst_amount` FLOAT)  NO SQL
 BEGIN
+DECLARE invoice_id INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
        GET DIAGNOSTICS CONDITION 1 
@@ -2457,7 +2489,7 @@ BEGIN
     
     START TRANSACTION;
     
-UPDATE bus_bookings SET ticket_no=ticket_no, pnr_no=pnr_no, assign_bus_type_id=assign_bus_type_id, seat_no=seat_no, portal_used=portal_used,operator_name=operator_name,operator_contact=operator_contact,boarding_point=boarding_point,boarding_datetime=boarding_datetime,status_cotrav=4 WHERE id = booking_id;
+UPDATE bus_bookings SET ticket_no=ticket_no, pnr_no=pnr_no, assign_bus_type_id=assign_bus_type_id, seat_no=seat_no, portal_used=portal_used,operator_name=operator_name,operator_contact=operator_contact,boarding_point=boarding_point,boarding_datetime=boarding_datetime,status_cotrav=5 WHERE id = booking_id;
 
 INSERT INTO bus_bookings_action_log(booking_id, action, action_date, user_id, user_type) VALUES (booking_id, 4, action_date, user_id, user_type);
 
@@ -2466,13 +2498,18 @@ INSERT INTO bus_booking_client_invoice (booking_id ,ticket_price ,management_fee
 
 INSERT INTO bus_booking_vender_invoice (booking_id ,ticket_price,vender_commission,vender_commission_type,cotrav_billing_entity,igst,cgst,sgst,vender_ticket,igst_amount,cgst_amount,sgst_amount) VALUES (booking_id ,oper_ticket_price,oper_commission,oper_commission_type,oper_cotrav_billing_entity,oper_igst,oper_cgst,oper_sgst,vender_ticket_path,igst_amount,cgst_amount,sgst_amount);
 
+SET invoice_id = LAST_INSERT_ID();
 
+INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), '',user_id, user_type);
+
+UPDATE bus_bookings SET status_cotrav = 5, is_invoice=1, invoice_id= invoice_id WHERE id = booking_id;
 COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `assignFlightBooking`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `assignFlightBooking` (IN `flight_type` VARCHAR(100), IN `seat_type` VARCHAR(100), IN `trip_type` VARCHAR(100), IN `no_of_stops` INT, IN `booking_id` INT, IN `meal_is_include` INT, IN `fare_type` VARCHAR(100), IN `user_id` INT, IN `user_type` INT, IN `ticket_price` FLOAT, IN `management_fee` FLOAT, IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `sub_total` FLOAT, IN `cotrav_billing_entity` FLOAT, IN `igst` FLOAT, IN `cgst` FLOAT, IN `sgst` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `tax_mng_amt` FLOAT, IN `oper_ticket_price` FLOAT, IN `oper_commission` FLOAT, IN `oper_commission_type` FLOAT, IN `oper_cotrav_billing_entity` FLOAT, IN `oper_igst` FLOAT, IN `oper_cgst` FLOAT, IN `oper_sgst` FLOAT, IN `client_ticket_path` VARCHAR(255), IN `vender_ticket_path` VARCHAR(255), IN `igst_amount` FLOAT, IN `cgst_amount` FLOAT, IN `sgst_amount` FLOAT, IN `operator_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `assignFlightBooking` (IN `flight_type` VARCHAR(100), IN `seat_type` VARCHAR(100), IN `trip_type` VARCHAR(100), IN `no_of_stops` INT, IN `booking_id` INT, IN `meal_is_include` INT, IN `fare_type` VARCHAR(100), IN `user_id` INT, IN `user_type` INT, IN `ticket_price` FLOAT, IN `management_fee` FLOAT, IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `sub_total` FLOAT, IN `cotrav_billing_entity` FLOAT, IN `igst` FLOAT, IN `cgst` FLOAT, IN `sgst` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `tax_mng_amt` FLOAT, IN `oper_ticket_price` FLOAT, IN `oper_commission` FLOAT, IN `oper_commission_type` FLOAT, IN `oper_cotrav_billing_entity` FLOAT, IN `oper_igst` FLOAT, IN `oper_cgst` FLOAT, IN `oper_sgst` FLOAT, IN `client_ticket_path` VARCHAR(255), IN `vender_ticket_path` VARCHAR(255), IN `igst_amount` FLOAT, IN `cgst_amount` FLOAT, IN `sgst_amount` FLOAT, IN `operator_id` INT, IN `vendor_booking_id` VARCHAR(255))  NO SQL
 BEGIN
+DECLARE invoice_id INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
        GET DIAGNOSTICS CONDITION 1 
@@ -2488,7 +2525,7 @@ BEGIN
     
     START TRANSACTION;
     
-UPDATE flight_bookings SET flight_type=flight_type, seat_type=seat_type, trip_type=trip_type, no_of_stops=no_of_stops, meal_is_include=meal_is_include, fare_type=fare_type, status_cotrav=4, vendor_id=operator_id WHERE id = booking_id;
+UPDATE flight_bookings SET flight_type=flight_type, seat_type=seat_type, trip_type=trip_type, no_of_stops=no_of_stops, meal_is_include=meal_is_include, fare_type=fare_type, status_cotrav=5, vendor_id=operator_id, vendor_booking_id=vendor_booking_id WHERE id = booking_id;
 
 INSERT INTO flight_bookings_action_log(booking_id, action, action_date, user_id, user_type) VALUES (booking_id, 4, NOW(), user_id, user_type);
 
@@ -2499,8 +2536,11 @@ INSERT INTO flight_booking_client_invoice (booking_id ,ticket_price ,management_
 INSERT INTO flight_booking_vender_invoice (booking_id ,ticket_price,vender_commission,vender_commission_type,cotrav_billing_entity,igst,cgst,sgst,vender_ticket,igst_amount,cgst_amount,sgst_amount) VALUES (booking_id ,oper_ticket_price,oper_commission,oper_commission_type,oper_cotrav_billing_entity,oper_igst,oper_cgst,oper_sgst,vender_ticket_path,igst_amount,cgst_amount,sgst_amount);
 
 
+SET invoice_id = LAST_INSERT_ID();
 
+INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), '',user_id, user_type);
 
+UPDATE flight_bookings SET status_cotrav = 5, is_invoice=1, invoice_id= invoice_id WHERE id = booking_id;
 
 COMMIT;
 END$$
@@ -2508,6 +2548,7 @@ END$$
 DROP PROCEDURE IF EXISTS `assignHotelBooking`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `assignHotelBooking` (IN `assign_hotel_id` INT, IN `assign_room_type` INT, IN `is_ac_room` INT, IN `daily_brakefast` INT, IN `is_prepaid` INT, IN `agent_booking_id` VARCHAR(100), IN `comment` VARCHAR(100), IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `total_room_price` DOUBLE, IN `voucher_number` VARCHAR(100), IN `portal_used` INT, IN `commission_earned` DOUBLE, IN `ticket_price` FLOAT, IN `management_fee` FLOAT, IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `sub_total` FLOAT, IN `cotrav_billing_entity` FLOAT, IN `igst` FLOAT, IN `cgst` FLOAT, IN `sgst` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `tax_mng_amt` FLOAT, IN `oper_ticket_price` FLOAT, IN `oper_commission` FLOAT, IN `oper_commission_type` FLOAT, IN `oper_igst` FLOAT, IN `oper_cgst` FLOAT, IN `oper_sgst` FLOAT, IN `client_ticket_path` VARCHAR(255), IN `vender_ticket_path` VARCHAR(255), IN `igst_amount` FLOAT, IN `cgst_amount` FLOAT, IN `sgst_amount` FLOAT)  NO SQL
 BEGIN
+DECLARE invoice_id INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
        GET DIAGNOSTICS CONDITION 1 
@@ -2522,7 +2563,7 @@ BEGIN
     END;
     
     START TRANSACTION;
-UPDATE hotel_bookings SET assign_hotel_id=assign_hotel_id, assign_room_type=assign_room_type, is_ac_room=is_ac_room, daily_brakefast=daily_brakefast, is_prepaid=is_prepaid, agent_booking_id=agent_booking_id,total_room_price=total_room_price,voucher_number=voucher_number,portal_used=portal_used, commission_earned=commission_earned,comment=comment,status_cotrav=4 WHERE id = booking_id;
+UPDATE hotel_bookings SET assign_hotel_id=assign_hotel_id, assign_room_type=assign_room_type, is_ac_room=is_ac_room, daily_brakefast=daily_brakefast, is_prepaid=is_prepaid, agent_booking_id=agent_booking_id,total_room_price=total_room_price,voucher_number=voucher_number,portal_used=portal_used, commission_earned=commission_earned,comment=comment,status_cotrav=5 WHERE id = booking_id;
 
 INSERT INTO hotel_bookings_action_log(booking_id, action, action_date, user_id, user_type) VALUES (booking_id, 4, action_date, user_id, user_type);
 
@@ -2530,6 +2571,12 @@ INSERT INTO hotel_booking_client_invoice (booking_id ,ticket_price ,management_f
 
 
 INSERT INTO hotel_booking_vender_invoice (booking_id ,ticket_price,vender_commission,vender_commission_type,cotrav_billing_entity,igst,cgst,sgst,vender_ticket,igst_amount,cgst_amount,sgst_amount) VALUES (booking_id ,oper_ticket_price,oper_commission,oper_commission_type,cotrav_billing_entity,oper_igst,oper_cgst,oper_sgst,vender_ticket_path,igst_amount,cgst_amount,sgst_amount);
+
+SET invoice_id = LAST_INSERT_ID();
+
+INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, user_id, user_type) VALUES (invoice_id, 1, NOW(), user_id, user_type);
+
+UPDATE hotel_bookings SET status_cotrav = 5, is_invoice=1, invoice_id= invoice_id WHERE id = booking_id;
 
 COMMIT;
 END$$
@@ -2583,6 +2630,7 @@ END$$
 DROP PROCEDURE IF EXISTS `assignTrainBooking`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `assignTrainBooking` (IN `ticket_no` VARCHAR(100), IN `pnr_no` VARCHAR(100), IN `assign_bus_type_id` INT, IN `seat_no` VARCHAR(15), IN `portal_used` VARCHAR(100), IN `operator_name` VARCHAR(100), IN `operator_contact` VARCHAR(100), IN `boarding_point` VARCHAR(100), IN `boarding_datetime` DATETIME, IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `train_name` VARCHAR(255), IN `ticket_price` FLOAT, IN `management_fee` FLOAT, IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `sub_total` FLOAT, IN `cotrav_billing_entity` FLOAT, IN `igst` FLOAT, IN `cgst` FLOAT, IN `sgst` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `tax_mng_amt` FLOAT, IN `client_ticket_path` VARCHAR(255))  NO SQL
 BEGIN
+DECLARE invoice_id INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
        GET DIAGNOSTICS CONDITION 1 
@@ -2597,16 +2645,65 @@ BEGIN
     END;
     
     START TRANSACTION;
-UPDATE train_bookings SET ticket_no=ticket_no, pnr_no=pnr_no, assign_bus_type_id=assign_bus_type_id, seat_no=seat_no, portal_used=portal_used,operator_name=operator_name,operator_contact=operator_contact,boarding_point=boarding_point,boarding_datetime=boarding_datetime,status_cotrav=4,train_name=train_name WHERE id = booking_id;
+UPDATE train_bookings SET ticket_no=ticket_no, pnr_no=pnr_no, assign_bus_type_id=assign_bus_type_id, seat_no=seat_no, portal_used=portal_used,operator_name=operator_name,operator_contact=operator_contact,boarding_point=boarding_point,boarding_datetime=boarding_datetime,status_cotrav=5,train_name=train_name WHERE id = booking_id;
 
 INSERT INTO train_bookings_action_log(booking_id, action, action_date, user_id, user_type) VALUES (booking_id, 4, action_date, user_id, user_type);
 
 
 INSERT INTO train_booking_client_invoice (booking_id ,ticket_price ,management_fee , tax_on_management_fee , tax_on_management_fee_percentage ,sub_total ,cotrav_billing_entity , igst ,cgst,sgst,management_fee_igst,management_fee_cgst,management_fee_sgst,management_fee_igst_rate,management_fee_cgst_rate,management_fee_sgst_rate ,client_ticket) VALUES  (booking_id ,ticket_price ,management_fee , tax_on_management_fee , tax_on_management_fee_percentage ,sub_total ,cotrav_billing_entity , igst ,cgst,sgst,management_fee_igst,management_fee_cgst,management_fee_sgst,management_fee_igst_rate,management_fee_cgst_rate,management_fee_sgst_rate ,client_ticket_path);
 
+SET invoice_id = LAST_INSERT_ID();
 
+INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, user_id, user_type) VALUES (invoice_id, 1, NOW(), user_id, user_type);
+
+UPDATE train_bookings SET status_cotrav = 5, is_invoice=1, invoice_id= invoice_id WHERE id = booking_id;
 
 COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `cancelFlightBookingPassanger`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cancelFlightBookingPassanger` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `ticket_price` FLOAT, IN `management_fee` FLOAT, IN `tax_on_management_fee` FLOAT, IN `tax_on_management_fee_percentage` FLOAT, IN `sub_total` FLOAT, IN `igst` FLOAT, IN `cgst` FLOAT, IN `sgst` FLOAT, IN `management_fee_igst` FLOAT, IN `management_fee_cgst` FLOAT, IN `management_fee_sgst` FLOAT, IN `management_fee_igst_rate` FLOAT, IN `management_fee_cgst_rate` FLOAT, IN `management_fee_sgst_rate` FLOAT, IN `tax_mng_amt` FLOAT, IN `igst_amount` FLOAT, IN `cgst_amount` FLOAT, IN `sgst_amount` FLOAT, IN `old_ticket_price` FLOAT, IN `refund_amount` FLOAT, IN `cancel_comment` VARCHAR(255), IN `employees` VARCHAR(255))  NO SQL
+BEGIN
+	DECLARE _next TEXT DEFAULT NULL;
+	DECLARE _nextlen INT DEFAULT NULL;
+	DECLARE _value TEXT DEFAULT NULL;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+UPDATE flight_booking_client_invoice f SET f.ticket_price=ticket_price, f.management_fee=management_fee, f.tax_on_management_fee=tax_on_management_fee, f.tax_on_management_fee_percentage=tax_on_management_fee_percentage, f.sub_total=sub_total, f.igst=igst, f.cgst=cgst, f.sgst=sgst, f.management_fee_igst=management_fee_igst, f.management_fee_cgst=management_fee_cgst, f.management_fee_sgst=management_fee_sgst, f.management_fee_igst_rate=management_fee_igst_rate,
+f.management_fee_cgst_rate=management_fee_cgst_rate, f.management_fee_sgst_rate=management_fee_sgst_rate, f.old_ticket_price=old_ticket_price, f.refund_amount=refund_amount WHERE f.id = booking_id;
+
+iterator:
+LOOP
+  IF LENGTH(TRIM(employees)) = 0 OR employees IS NULL THEN
+    LEAVE iterator;
+  END IF;
+  SET _next = SUBSTRING_INDEX(employees,',',1);
+  SET _nextlen = LENGTH(_next);
+  SET _value = TRIM(_next);
+
+UPDATE employee_flight_booking f SET f.is_cancel=1, f.cancellation_charges=refund_amount, f.cancellation_comment=cancel_comment WHERE f.employee_id = _value AND f.flight_booking_id=booking_id;
+
+  SET employees = INSERT(employees,1,_nextlen + 1,'');
+END LOOP;
+
+COMMIT;
+
+
+
 END$$
 
 DROP PROCEDURE IF EXISTS `changeUserPassword`$$
@@ -2659,8 +2756,383 @@ COMMIT;
 
 END$$
 
+DROP PROCEDURE IF EXISTS `correctionInvoiceAgentBusBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceAgentBusBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+    UPDATE bus_bookings SET status_client = 7, status_cotrav=15 WHERE id = booking_id;
+
+ INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 3, NOW(), invoice_comment, user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceAgentFlightBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceAgentFlightBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+    UPDATE flight_bookings SET status_client = 7, status_cotrav=15 WHERE id = booking_id;
+
+ INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 3, NOW(), invoice_comment, user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceAgentHotelBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceAgentHotelBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+    UPDATE hotel_bookings SET status_client = 7, status_cotrav=15 WHERE id = booking_id;
+
+ INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 3, NOW(), invoice_comment, user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceAgentTaxiBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceAgentTaxiBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+    UPDATE taxi_bookings SET status_client = 7, status_cotrav=15 WHERE id = booking_id;
+
+ INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 3, NOW(), invoice_comment, user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceAgentTrainBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceAgentTrainBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+    UPDATE train_bookings SET status_client = 7, status_cotrav=15 WHERE id = booking_id;
+
+ INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 3, NOW(), invoice_comment, user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestAdminBusBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestAdminBusBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE bus_bookings SET status_client = 11, status_cotrav=9 WHERE id = booking_id;
+
+INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestAdminFlightBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestAdminFlightBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE flight_bookings SET status_client = 11, status_cotrav=9 WHERE id = booking_id;
+
+INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestAdminHotelBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestAdminHotelBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE hotel_bookings SET status_client = 11, status_cotrav=9 WHERE id = booking_id;
+
+INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestAdminTaxiBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestAdminTaxiBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE taxi_bookings SET status_client = 11, status_cotrav=9 WHERE id = booking_id;
+
+INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestAdminTrainBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestAdminTrainBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE train_bookings SET status_client = 11, status_cotrav=9 WHERE id = booking_id;
+
+INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestSpocBusBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestSpocBusBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE bus_bookings SET status_client = 9, status_cotrav=7 WHERE id = booking_id;
+
+INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestSpocFlightBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestSpocFlightBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE flight_bookings SET status_client = 9, status_cotrav=7 WHERE id = booking_id;
+
+INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestSpocHotelBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestSpocHotelBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE hotel_bookings SET status_client = 9, status_cotrav=7 WHERE id = booking_id;
+
+INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestSpocTaxiBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestSpocTaxiBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE taxi_bookings SET status_client = 9, status_cotrav=7 WHERE id = booking_id;
+
+INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `correctionInvoiceRequestSpocTrainBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `correctionInvoiceRequestSpocTrainBooking` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT, IN `invoice_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE train_bookings SET status_client = 9, status_cotrav=7 WHERE id = booking_id;
+
+INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(), invoice_comment, user_id, user_type);
+
+COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `create_corporate_with_basic_details`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_corporate_with_basic_details` (IN `corporate_name` VARCHAR(100), IN `corporate_code` VARCHAR(50), IN `contact_person_name` VARCHAR(100), IN `contact_person_no` VARCHAR(15), IN `contact_person_email` VARCHAR(100), IN `bill_corporate_name` VARCHAR(100), IN `address_line_1` VARCHAR(100), IN `address_line_2` VARCHAR(100), IN `address_line_3` VARCHAR(100), IN `gst_id` VARCHAR(100), IN `has_billing_spoc_level` TINYINT(4), IN `has_auth_level` TINYINT(4), IN `no_of_auth_level` TINYINT(4), IN `has_assessment_codes` TINYINT(4), IN `is_radio` TINYINT(4), IN `is_local` TINYINT(4), IN `is_outstation` TINYINT(4), IN `is_bus` TINYINT(4), IN `is_train` TINYINT(4), IN `is_hotel` TINYINT(4), IN `is_meal` TINYINT(4), IN `is_flight` TINYINT(4), IN `is_water_bottles` TINYINT(4), IN `is_reverse_logistics` TINYINT(4), IN `is_spoc` TINYINT(4), IN `password` VARCHAR(255), IN `cotrav_agent_id` INT(11), IN `user_type` INT, IN `billing_city_id` INT, IN `has_self_booking_access` INT, IN `will_do_realtime_payment` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_corporate_with_basic_details` (IN `corporate_name` VARCHAR(100), IN `corporate_code` VARCHAR(50), IN `contact_person_name` VARCHAR(100), IN `contact_person_no` VARCHAR(15), IN `contact_person_email` VARCHAR(100), IN `bill_corporate_name` VARCHAR(100), IN `address_line_1` VARCHAR(100), IN `address_line_2` VARCHAR(100), IN `address_line_3` VARCHAR(100), IN `gst_id` VARCHAR(100), IN `has_billing_spoc_level` TINYINT(4), IN `has_auth_level` TINYINT(4), IN `no_of_auth_level` TINYINT(4), IN `has_assessment_codes` TINYINT(4), IN `is_radio` TINYINT(4), IN `is_local` TINYINT(4), IN `is_outstation` TINYINT(4), IN `is_bus` TINYINT(4), IN `is_train` TINYINT(4), IN `is_hotel` TINYINT(4), IN `is_meal` TINYINT(4), IN `is_flight` TINYINT(4), IN `is_water_bottles` TINYINT(4), IN `is_reverse_logistics` TINYINT(4), IN `is_spoc` TINYINT(4), IN `password` VARCHAR(255), IN `cotrav_agent_id` INT(11), IN `user_type` INT, IN `billing_city_id` INT, IN `has_self_booking_access` INT, IN `will_do_realtime_payment` INT, IN `has_billing_admin_level` INT)  NO SQL
 BEGIN
 
 DECLARE gen_corporate_id INT DEFAULT 0;
@@ -2687,11 +3159,11 @@ DECLARE gen_corporate_id INT DEFAULT 0;
     
     START TRANSACTION;
     
-    INSERT INTO corporates(corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, 		is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics,will_do_realtime_payment,has_self_booking_access) VALUES(corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, 							has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics,will_do_realtime_payment,has_self_booking_access);
+    INSERT INTO corporates(corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation,is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics,will_do_realtime_payment,has_self_booking_access,has_billing_spoc_level,has_billing_admin_level) VALUES(corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics,will_do_realtime_payment,has_self_booking_access, billing_spoc_level, has_billing_admin_level);
     
     SET gen_corporate_id = LAST_INSERT_ID();
     
-    INSERT INTO corporate_action_log (corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics, is_deleted, action_date, corporate_id, user_id,user_type, action,is_reverse_logistics,will_do_realtime_payment,has_self_booking_access) select corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics, is_deleted, NOW(), gen_corporate_id, cotrav_agent_id,user_type, 'ADD',is_reverse_logistics,will_do_realtime_payment,has_self_booking_access from corporates where id = gen_corporate_id ;
+    INSERT INTO corporate_action_log (corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics, is_deleted, action_date, corporate_id, user_id,user_type, action,will_do_realtime_payment,has_self_booking_access) select corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics, is_deleted, NOW(), gen_corporate_id, cotrav_agent_id,user_type, 'ADD',will_do_realtime_payment,has_self_booking_access from corporates where id = gen_corporate_id ;
     
     INSERT INTO corporate_logins(corporate_id, email, password, name, contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics) VALUES(gen_corporate_id, contact_person_email, password, contact_person_name,contact_person_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics);
     
@@ -3427,9 +3899,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdminBusBookings` (IN `corpor
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-   
-   WHEN 1 THEN 
 SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
 	from bus_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -3441,83 +3910,45 @@ SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_
     LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
 LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.boarding_datetime;
-   
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
 
-    WHEN 4 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
-    
-    
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.corporate_id=corporate_id AND (b.status_cotrav = 3 OR b.status_client IN(2,4,6,15)) order by b.boarding_datetime;
+WHERE
 
-END CASE;
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.corporate_id=corporate_id AND (b.status_cotrav = 3 OR b.status_client IN(2,4,6,15))
+
+
+WHEN booking_type = 15 THEN 
+b.status_client IN(10)
+
+WHEN booking_type = 16 THEN 
+b.status_client IN(11)
+
+WHEN booking_type = 17 THEN 
+b.status_client IN(12)
+
+END 
+
+order by b.boarding_datetime;
 	
 END$$
 
@@ -3527,9 +3958,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdminFlightBookings` (IN `cor
 	DECLARE qrt,from_date,to_date varchar(20);
 	
 	SET curr_dt = (SELECT NOW());
-
-   CASE booking_type
-    WHEN 1 THEN 
+	   
 SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
 	from flight_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -3537,61 +3966,43 @@ SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_date
     left join corporate_spocs `spoc` on b.spoc_id = spoc.id
     left join corporate_agents `ca` on b.last_action_by = ca.id
     left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.departure_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.departure_datetime;
-    
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime order by b.departure_datetime;
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime AND b.status_cotrav=4 order by b.departure_datetime;
+WHERE
 
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime order by b.departure_datetime;
+CASE 
 
-    WHEN 5 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime AND b.status_cotrav=4 order by b.departure_datetime;
-
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.corporate_id=corporate_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.departure_datetime;
-
-END CASE;
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.departure_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-   
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.corporate_id=corporate_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
+
+WHEN booking_type = 15 THEN 
+b.status_client IN(10)
+
+WHEN booking_type = 16 THEN 
+b.status_client IN(11)
+
+WHEN booking_type = 17 THEN 
+b.status_client IN(12)
+
+END 
+
+order by b.departure_datetime;
 	
 END$$
 
@@ -3601,10 +4012,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdminHotelBookings` (IN `corp
 	DECLARE qrt,from_date,to_date varchar(20);
 	
 	SET curr_dt = (SELECT NOW());
-  
-   
-   CASE booking_type
-       WHEN 1 THEN 
+	   
 SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
 	from hotel_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -3617,90 +4025,43 @@ SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime
 	left join cities c on b.from_city_id = c.id
 	left join cities c1 on b.from_area_id = c1.id
 	left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.checkin_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.checkin_datetime;
-    
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-	left join room_types rt on b.room_type_id = rt.id
-	left join operators o on b.assign_hotel_id = o.id
-	left join cities c on b.from_city_id = c.id
-	left join cities c1 on b.from_area_id = c1.id
-	left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime order by b.checkin_datetime;
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,opr.operator_name, opr.operator_contact,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join operators `opr` on b.assign_hotel_id = opr.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime AND b.corporate_id=corporate_id AND b.status_cotrav=4  AND b.status_client IN(1,3,5,7) order by b.checkin_datetime;
+WHERE
 
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
+CASE 
 
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime order by b.checkin_datetime;
-
-    WHEN 5 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime AND b.corporate_id=corporate_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7) order by b.checkin_datetime;
-
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) AND b.corporate_id=corporate_id order by b.checkin_datetime;
-
-END CASE;
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.checkin_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-   
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime AND b.corporate_id=corporate_id AND b.status_cotrav=4  AND b.status_client IN(1,3,5,7)
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime AND b.corporate_id=corporate_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7)
+    
+    
+WHEN booking_type = 6 THEN 
+(b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) AND b.corporate_id=corporate_id
+
+WHEN booking_type = 15 THEN 
+b.status_client IN(10)
+
+WHEN booking_type = 16 THEN 
+b.status_client IN(11)
+
+WHEN booking_type = 17 THEN 
+b.status_client IN(12)
+
+END 
+
+order by b.checkin_datetime;
 	
 END$$
 
@@ -3711,8 +4072,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdminTaxiBookings` (IN `corpo
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-    WHEN 1 THEN 
 SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
 	from taxi_bookings `b`
 	left join taxi_types `tt` on b.taxi_id = tt.id
@@ -3726,115 +4085,48 @@ SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,D
     LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
     LEFT JOIN operator_drivers od ON b.driver_id = od.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.cotrav_status=4 AND b.corporate_id = corporate_id AND DATE_FORMAT(b.pickup_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.pickup_datetime;
-    
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.corporate_id = corporate_id AND b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime order by b.pickup_datetime;
-    
-    WHEN 3 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.corporate_id = corporate_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7)  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime AND b.status_cotrav=4 order by b.pickup_datetime;
-    
-    WHEN 4 THEN 
-   SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.corporate_id = corporate_id AND b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime order by b.pickup_datetime;
+	LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
 
+WHERE
 
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.corporate_id = corporate_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime AND b.status_cotrav=4 order by b.pickup_datetime;
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav=4 AND b.corporate_id = corporate_id AND DATE_FORMAT(b.pickup_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
+   
+WHEN booking_type = 2 THEN 
+b.corporate_id = corporate_id AND b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
     
-
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.corporate_id = corporate_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.pickup_datetime;
     
-        WHEN 7 THEN 
-   SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.corporate_id = corporate_id AND b.status_cotrav=13 order by b.pickup_datetime;
+WHEN booking_type = 3 THEN 
+b.corporate_id = corporate_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7)  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
 
-END CASE;
+WHEN booking_type = 4 THEN 
+b.corporate_id = corporate_id AND b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.corporate_id = corporate_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.corporate_id = corporate_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
 
+WHEN booking_type = 7 THEN 
+b.corporate_id = corporate_id AND b.status_cotrav=13
+
+WHEN booking_type = 15 THEN 
+b.corporate_id = corporate_id AND b.status_client IN(10)
+
+WHEN booking_type = 16 THEN 
+b.corporate_id = corporate_id AND b.status_client IN(11)
+
+WHEN booking_type = 17 THEN 
+b.corporate_id = corporate_id AND b.status_client IN(12)
+
+END 
+
+order by b.pickup_datetime;
 	
 END$$
 
@@ -3845,9 +4137,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdminTrainBookings` (IN `corp
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-   
-   WHEN 1 THEN 
 SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
 	from train_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -3861,93 +4150,44 @@ SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_
     LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
 LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.boarding_datetime;
-   
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
 
-    WHEN 4 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
-    
-    
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav >= 1 AND b.corporate_id=corporate_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))  order by b.boarding_datetime;
+WHERE
 
-END CASE;
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.corporate_id=corporate_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.corporate_id=corporate_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.corporate_id=corporate_id AND (b.status_cotrav = 3 OR b.status_client IN(2,4,6,15))
+
+WHEN booking_type = 15 THEN 
+b.status_client IN(10)
+
+WHEN booking_type = 16 THEN 
+b.status_client IN(11)
+
+WHEN booking_type = 17 THEN 
+b.status_client IN(12)
+
+END 
+
+order by b.boarding_datetime;
 	
 END$$
 
@@ -3957,11 +4197,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAgentBusBookings` (IN `bookin
 	DECLARE qrt,from_date,to_date varchar(20);
 	
 	SET curr_dt = (SELECT NOW());
-	
-   
-   CASE booking_type
-   
-   WHEN 1 THEN 
+	   
 SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
 	from bus_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -3973,83 +4209,59 @@ SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_
     LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
 LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.boarding_datetime;
-   
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav = 4  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
 
-    WHEN 4 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
-    
-    
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where (b.status_cotrav=3 OR b.status_client IN(2,4,6,15) )  order by b.boarding_datetime;
+WHERE
 
-END CASE;
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
+WHEN booking_type = 2 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime 
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav = 4  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 
+
+WHEN booking_type = 4 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 
+    
+    
+WHEN booking_type = 6 THEN 
+(b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
+
+WHEN booking_type = 13 THEN 
+b.status_cotrav IN(5)
+
+WHEN booking_type = 14 THEN 
+b.status_cotrav IN(6)
+
+WHEN booking_type = 15 THEN 
+b.status_cotrav IN(8)
+
+WHEN booking_type = 16 THEN 
+b.status_cotrav IN(7,9,15)
+
+WHEN booking_type = 17 THEN 
+b.status_cotrav IN(10)
+
+WHEN booking_type = 18 THEN 
+b.status_cotrav IN(11)
+
+WHEN booking_type = 19 THEN 
+b.status_cotrav IN(14)
+
+WHEN booking_type = 20 THEN 
+b.status_cotrav IN(12)
+
+END 
+
+order by b.boarding_datetime;
 	
 END$$
 
@@ -4059,9 +4271,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAgentFlightBookings` (IN `boo
 	DECLARE qrt,from_date,to_date varchar(20);
 	
 	SET curr_dt = (SELECT NOW());
-
-   CASE booking_type
-    WHEN 1 THEN 
+	   
 SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
 	from flight_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -4069,74 +4279,69 @@ SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_date
     left join corporate_spocs `spoc` on b.spoc_id = spoc.id
     left join corporate_agents `ca` on b.last_action_by = ca.id
     left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.departure_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.departure_datetime;
-    
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime order by b.departure_datetime;
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime AND b.status_cotrav=4 order by b.departure_datetime;
 
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime order by b.departure_datetime;
+WHERE
 
-    WHEN 5 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime AND b.status_cotrav=4 order by b.departure_datetime;
+CASE 
 
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join corporate_assessment_codes c on b.assessment_code = c.id
-	where (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.departure_datetime;
-
-END CASE;
+WHEN booking_type = 1 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.departure_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-   
+WHEN booking_type = 2 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+
+WHEN booking_type = 4 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+(b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
+
+WHEN booking_type = 13 THEN 
+b.status_cotrav IN(5)
+
+WHEN booking_type = 14 THEN 
+b.status_cotrav IN(6)
+
+WHEN booking_type = 15 THEN 
+b.status_cotrav IN(8)
+
+WHEN booking_type = 16 THEN 
+b.status_cotrav IN(7,9,15)
+
+WHEN booking_type = 17 THEN 
+b.status_cotrav IN(10)
+
+WHEN booking_type = 18 THEN 
+b.status_cotrav IN(11)
+
+WHEN booking_type = 19 THEN 
+b.status_cotrav IN(14)
+
+WHEN booking_type = 20 THEN 
+b.status_cotrav IN(12)
+
+END 
+
+   order by b.departure_datetime;
 	
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllAgentHotelBookings`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAgentHotelBookings` (IN `booking_type` INT)  BEGIN
-DECLARE curr_dt DATETIME;
-DECLARE qrt,from_date,to_date varchar(20);
-
-SET curr_dt = (SELECT NOW());
- 
-   
-   CASE booking_type
-       WHEN 1 THEN
+	DECLARE curr_dt DATETIME;
+	DECLARE qrt,from_date,to_date varchar(20);
+	
+	SET curr_dt = (SELECT NOW());
+	   
 SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name,co.assessment_code assessment_code
 from hotel_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -4144,102 +4349,66 @@ from hotel_bookings `b`
     left join corporate_spocs `spoc` on b.spoc_id = spoc.id
     left join corporate_agents `ca` on b.last_action_by = ca.id
     left join hotel_types ht on b.bucket_priority_1 = ht.id
-left join room_types rt on b.room_type_id = rt.id
+	left join room_types rt on b.room_type_id = rt.id
 left join operators o on b.assign_hotel_id = o.id
 left join cities c on b.from_city_id = c.id
 left join cities c1 on b.from_area_id = c1.id
 left join cities c2 on b.preferred_area = c2.id
     LEFT JOIN corporate_assessment_codes co on b.assessment_code = co.id
-where b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.checkin_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.checkin_datetime;
+
+WHERE
+
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.checkin_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-    WHEN 2 THEN
-SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name,co.assessment_code assessment_code
-from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-left join room_types rt on b.room_type_id = rt.id
-left join operators o on b.assign_hotel_id = o.id
-left join cities c on b.from_city_id = c.id
-left join cities c1 on b.from_area_id = c1.id
-left join cities c2 on b.preferred_area = c2.id
-    LEFT JOIN corporate_assessment_codes co on b.assessment_code = co.id
-where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime order by b.checkin_datetime;
-   
-    WHEN 3 THEN
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,opr.operator_name, opr.operator_contact,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name,co.assessment_code assessment_code
-from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join operators `opr` on b.assign_hotel_id = opr.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-    LEFT JOIN corporate_assessment_codes co on b.assessment_code = co.id
-where b.status_client IN(3,5,7) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime AND b.status_cotrav=4 order by b.checkin_datetime;
+WHEN booking_type = 2 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_client IN(3,5,7) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime AND b.status_cotrav=4
 
-    WHEN 4 THEN
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name,co.assessment_code assessment_code
+WHEN booking_type = 4 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_client IN(3,5,7) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime AND b.status_cotrav=4
+    
+    
+WHEN booking_type = 6 THEN 
+(b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
 
-from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-    LEFT JOIN corporate_assessment_codes co on b.assessment_code = co.id
-where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime order by b.checkin_datetime;
+WHEN booking_type = 13 THEN 
+b.status_cotrav IN(5)
 
-    WHEN 5 THEN
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name,co.assessment_code assessment_code
+WHEN booking_type = 14 THEN 
+b.status_cotrav IN(6)
 
-from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-    LEFT JOIN corporate_assessment_codes co on b.assessment_code = co.id
-where b.status_client IN(3,5,7) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime AND b.status_cotrav=4 order by b.checkin_datetime;
+WHEN booking_type = 15 THEN 
+b.status_cotrav IN(8)
 
-    WHEN 6 THEN
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name,co.assessment_code assessment_code
+WHEN booking_type = 16 THEN 
+b.status_cotrav IN(7,9,15)
 
-from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-    LEFT JOIN corporate_assessment_codes co on b.assessment_code = co.id
-where (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.checkin_datetime;
+WHEN booking_type = 17 THEN 
+b.status_cotrav IN(10)
 
-END CASE;
-   
-   
+WHEN booking_type = 18 THEN 
+b.status_cotrav IN(11)
 
+WHEN booking_type = 19 THEN 
+b.status_cotrav IN(14)
+
+WHEN booking_type = 20 THEN 
+b.status_cotrav IN(12)
+
+END 
+
+order by b.checkin_datetime;
+	
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllAgentsDetails`$$
@@ -4257,9 +4426,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAgentTrainBookings` (IN `book
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-   
-   WHEN 1 THEN 
 SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
 	from train_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -4272,94 +4438,60 @@ SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_
     LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
     LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.boarding_datetime;
-   
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 3 THEN 
-   SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav = 4  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
+    LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
 
-    WHEN 4 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
-    
-    
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))  order by b.boarding_datetime;
+WHERE
 
-END CASE;
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(4) AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
+WHEN booking_type = 2 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime 
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav = 4  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 
+
+WHEN booking_type = 4 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 5 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav = 4 AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 
+    
+    
+WHEN booking_type = 6 THEN 
+(b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
+
+WHEN booking_type = 13 THEN 
+b.status_cotrav IN(5)
+
+WHEN booking_type = 14 THEN 
+b.status_cotrav IN(6)
+
+WHEN booking_type = 15 THEN 
+b.status_cotrav IN(8)
+
+WHEN booking_type = 16 THEN 
+b.status_cotrav IN(7,9,15)
+
+WHEN booking_type = 17 THEN 
+b.status_cotrav IN(10)
+
+WHEN booking_type = 18 THEN 
+b.status_cotrav IN(11)
+
+WHEN booking_type = 19 THEN 
+b.status_cotrav IN(14)
+
+WHEN booking_type = 20 THEN 
+b.status_cotrav IN(12)
+
+END 
+
+order by b.boarding_datetime;
 	
 END$$
 
@@ -5322,6 +5454,22 @@ LEFT JOIN status_cotrav sc ON bbal.action = sc.id
 
 WHERE bbal.booking_id = booking_id$$
 
+DROP PROCEDURE IF EXISTS `getallBusInvoiceActionLog`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getallBusInvoiceActionLog` (IN `invoice_id` INT)  NO SQL
+SELECT bbal.user_id, bbal.invoice_comment, sc.status_name, bbal.user_type, DATE_FORMAT(bbal.action_date, '%d-%m-%Y %H:%i') as action_date, ut.name, ( CASE bbal.user_type
+WHEN 10 THEN (SELECT ca.user_name FROM corporate_agents ca WHERE ca.id = bbal.user_id)
+WHEN 1 THEN (SELECT cl.name FROM corporate_logins cl WHERE cl.id = bbal.user_id)
+WHEN 2 THEN (SELECT sb.name FROM corporate_subgroup_authenticater sb WHERE sb.id = bbal.user_id)
+WHEN 3 THEN (SELECT g.name FROM corporate_group_authenticator g WHERE g.id = bbal.user_id)
+WHEN 4 THEN (SELECT s.user_name FROM corporate_spocs s WHERE s.id = bbal.user_id)
+ELSE 1
+                                    END ) AS employee_name FROM bus_booking_client_invoice_action_log bbal
+
+LEFT JOIN user_type ut ON bbal.user_type = ut.id
+LEFT JOIN invoice_status sc ON bbal.action = sc.id
+
+WHERE bbal.invoice_id = invoice_id$$
+
 DROP PROCEDURE IF EXISTS `getAllBusTypes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllBusTypes` ()  NO SQL
 BEGIN
@@ -6283,6 +6431,22 @@ LEFT JOIN status_cotrav sc ON bbal.action = sc.id
 
 WHERE bbal.booking_id = booking_id$$
 
+DROP PROCEDURE IF EXISTS `getallFlightInvoiceActionLog`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getallFlightInvoiceActionLog` (IN `invoice_id` INT)  NO SQL
+SELECT bbal.user_id, bbal.invoice_comment, sc.status_name, bbal.user_type, DATE_FORMAT(bbal.action_date, '%d-%m-%Y %H:%i') as action_date, ut.name, ( CASE bbal.user_type
+WHEN 10 THEN (SELECT ca.user_name FROM corporate_agents ca WHERE ca.id = bbal.user_id)
+WHEN 1 THEN (SELECT cl.name FROM corporate_logins cl WHERE cl.id = bbal.user_id)
+WHEN 2 THEN (SELECT sb.name FROM corporate_subgroup_authenticater sb WHERE sb.id = bbal.user_id)
+WHEN 3 THEN (SELECT g.name FROM corporate_group_authenticator g WHERE g.id = bbal.user_id)
+WHEN 4 THEN (SELECT s.user_name FROM corporate_spocs s WHERE s.id = bbal.user_id)
+ELSE 1
+                                    END ) AS employee_name FROM flight_booking_client_invoice_action_log bbal
+
+LEFT JOIN user_type ut ON bbal.user_type = ut.id
+LEFT JOIN invoice_status sc ON bbal.action = sc.id
+
+WHERE bbal.invoice_id = invoice_id$$
+
 DROP PROCEDURE IF EXISTS `getAllHotelBankAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllHotelBankAccount` (IN `hotel_id` INT)  NO SQL
 BEGIN
@@ -6327,6 +6491,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllHotelContacts` (IN `hotel_id`
 BEGIN
 SELECT oc.* FROM hotel_contacts oc WHERE oc.hotel_id = hotel_id AND oc.is_deleted =0; 
 END$$
+
+DROP PROCEDURE IF EXISTS `getallHotelInvoiceActionLog`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getallHotelInvoiceActionLog` (IN `invoice_id` INT)  NO SQL
+SELECT bbal.user_id, bbal.invoice_comment, sc.status_name, bbal.user_type, DATE_FORMAT(bbal.action_date, '%d-%m-%Y %H:%i') as action_date, ut.name, ( CASE bbal.user_type
+WHEN 10 THEN (SELECT ca.user_name FROM corporate_agents ca WHERE ca.id = bbal.user_id)
+WHEN 1 THEN (SELECT cl.name FROM corporate_logins cl WHERE cl.id = bbal.user_id)
+WHEN 2 THEN (SELECT sb.name FROM corporate_subgroup_authenticater sb WHERE sb.id = bbal.user_id)
+WHEN 3 THEN (SELECT g.name FROM corporate_group_authenticator g WHERE g.id = bbal.user_id)
+WHEN 4 THEN (SELECT s.user_name FROM corporate_spocs s WHERE s.id = bbal.user_id)
+ELSE 1
+                                    END ) AS employee_name FROM hotel_booking_client_invoice_action_log bbal
+
+LEFT JOIN user_type ut ON bbal.user_type = ut.id
+LEFT JOIN invoice_status sc ON bbal.action = sc.id
+
+WHERE bbal.invoice_id = invoice_id$$
 
 DROP PROCEDURE IF EXISTS `getAllHotels`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllHotels` ()  NO SQL
@@ -6900,126 +7080,51 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllSpocBusBookings` (IN `spoc_id
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
+SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
+	from bus_bookings `b`
+    left join status_client `bs` on b.status_client = bs.id
+    left join status_cotrav `cs` on b.status_cotrav = cs.id
+    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
+    left join corporate_agents `ca` on b.last_action_by = ca.id
+    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
+    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
+    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
+    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
+LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
+WHERE
+
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-   WHEN 1 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.boarding_datetime;
-   
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime
     
     
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
+WHEN booking_type = 3 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime
 
-    WHEN 4 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime
+    
+WHEN booking_type = 5 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime
     
     
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
-    
-    
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav >= 1 AND b.spoc_id=spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))  order by b.boarding_datetime;
+WHEN booking_type = 6 THEN 
+b.status_cotrav >= 1 AND b.spoc_id=spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
 
-WHEN 11 THEN
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
+WHEN booking_type = 11 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime
 
-WHEN 12 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name bus_type_priority_1, bt2.name bus_type_priority_2, abt.name assign_bus_type_id
-	from bus_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN bus_types bt ON b.bus_type_priority_1 = bt.id
-    LEFT JOIN bus_types bt2 ON b.bus_type_priority_1 = bt2.id
-    LEFT JOIN bus_types abt ON b.bus_type_priority_1 = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
+WHEN booking_type = 12 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime
 
-END CASE;
-   
+
+END 
+
+order by b.boarding_datetime;
 	
 END$$
 
@@ -7029,9 +7134,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllSpocFlightBookings` (IN `spoc
 	DECLARE qrt,from_date,to_date varchar(20);
 	
 	SET curr_dt = (SELECT NOW());
-
-   CASE booking_type
-    WHEN 1 THEN 
+	   
 SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
 	from flight_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -7039,80 +7142,40 @@ SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_date
     left join corporate_spocs `spoc` on b.spoc_id = spoc.id
     left join corporate_agents `ca` on b.last_action_by = ca.id
     LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.departure_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.departure_datetime;
-    
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime order by b.departure_datetime;
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime AND b.status_cotrav=4 order by b.departure_datetime;
 
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime order by b.departure_datetime;
+WHERE
 
-    WHEN 5 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime AND b.status_cotrav=4 order by b.departure_datetime;
+CASE 
 
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.spoc_id=spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.departure_datetime;
-
-WHEN 11 THEN
-SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime order by b.departure_datetime;
-    
-WHEN 12 THEN
-SELECT b.*,DATE_FORMAT(b.departure_datetime, '%d-%m-%Y %H:%i') as departure_datetime,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,c.assessment_code assessment_code
-	from flight_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes c on b.assessment_code = c.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime order by b.departure_datetime;
-END CASE;
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.departure_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-   
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+    
+WHEN booking_type = 3 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+    
+WHEN booking_type = 5 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.spoc_id=spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
+
+
+WHEN booking_type = 11 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.departure_datetime
+
+WHEN booking_type = 12 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND ((b.departure_datetime between from_date and to_date) OR b.is_invoice = 0 ) AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.departure_datetime
+
+END 
+
+order by b.departure_datetime;
 	
 END$$
 
@@ -7122,137 +7185,53 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllSpocHotelBookings` (IN `spoc_
 	DECLARE qrt,from_date,to_date varchar(20);
 	
 	SET curr_dt = (SELECT NOW());
-  
+	   
+SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
+	from hotel_bookings `b`
+    left join status_client `bs` on b.status_client = bs.id
+    left join status_cotrav `cs` on b.status_cotrav = cs.id
+    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
+    left join corporate_agents `ca` on b.last_action_by = ca.id
+    left join hotel_types ht on b.bucket_priority_1 = ht.id
+	left join room_types rt on b.room_type_id = rt.id
+	left join operators o on b.assign_hotel_id = o.id
+	left join cities c on b.from_city_id = c.id
+	left join cities c1 on b.from_area_id = c1.id
+	left join cities c2 on b.preferred_area = c2.id
+
+WHERE
+
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.checkin_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
-   CASE booking_type
-       WHEN 1 THEN 
-SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-	left join room_types rt on b.room_type_id = rt.id
-	left join operators o on b.assign_hotel_id = o.id
-	left join cities c on b.from_city_id = c.id
-	left join cities c1 on b.from_area_id = c1.id
-	left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.checkin_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.checkin_datetime;
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime
     
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-	left join room_types rt on b.room_type_id = rt.id
-	left join operators o on b.assign_hotel_id = o.id
-	left join cities c on b.from_city_id = c.id
-	left join cities c1 on b.from_area_id = c1.id
-	left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime order by b.checkin_datetime;
+WHEN booking_type = 3 THEN 
+DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime AND b.spoc_id=spoc_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7)
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime
     
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,opr.operator_name, opr.operator_contact,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join operators `opr` on b.assign_hotel_id = opr.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime AND b.spoc_id=spoc_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7) order by b.checkin_datetime;
-
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime order by b.checkin_datetime;
-
-    WHEN 5 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime AND b.spoc_id=spoc_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7) order by b.checkin_datetime;
-
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-    left join room_types rt on b.room_type_id = rt.id
-    left join operators o on b.assign_hotel_id = o.id
-    left join cities c on b.from_city_id = c.id
-    left join cities c1 on b.from_area_id = c1.id
-    left join cities c2 on b.preferred_area = c2.id
-	where (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) AND b.spoc_id=spoc_id order by b.checkin_datetime;
-
-WHEN 11 THEN
-SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-	left join room_types rt on b.room_type_id = rt.id
-	left join operators o on b.assign_hotel_id = o.id
-	left join cities c on b.from_city_id = c.id
-	left join cities c1 on b.from_area_id = c1.id
-	left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime order by b.checkin_datetime;
+WHEN booking_type = 5 THEN 
+DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime AND b.spoc_id=spoc_id AND b.status_cotrav=4 AND b.status_client IN(1,3,5,7)
     
-WHEN 12 THEN
-SELECT b.*,DATE_FORMAT(b.checkin_datetime, '%d-%m-%Y %H:%i') as checkin_datetime,DATE_FORMAT(b.checkout_datetime, '%d-%m-%Y %H:%i') as checkout_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name,ht.name hotel_type_name, rt.name room_type_name, o.operator_name, o.operator_contact, c.name from_city_name, c1.name from_area_id_name, c2.name preferred_area_name
-	from hotel_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join hotel_types ht on b.bucket_priority_1 = ht.id
-	left join room_types rt on b.room_type_id = rt.id
-	left join operators o on b.assign_hotel_id = o.id
-	left join cities c on b.from_city_id = c.id
-	left join cities c1 on b.from_area_id = c1.id
-	left join cities c2 on b.preferred_area = c2.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime order by b.checkin_datetime;
+    
+WHEN booking_type = 6 THEN 
+(b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) AND b.spoc_id=spoc_id
 
 
-END CASE;
-   
-   
+WHEN booking_type = 11 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.checkin_datetime
+
+WHEN booking_type = 12 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.checkin_datetime
+
+END 
+
+order by b.checkin_datetime;
 	
 END$$
 
@@ -7263,8 +7242,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllSPOCTaxiBookings` (IN `spoc_i
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-    WHEN 1 THEN 
 SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
 from taxi_bookings `b`
 left join taxi_types `tt` on b.taxi_id = tt.id
@@ -7274,108 +7251,64 @@ left join taxi_types `tt` on b.taxi_id = tt.id
     left join corporate_spocs `spoc` on b.spoc_id = spoc.id
     left join operators `opr` on b.operator_id = opr.id
     left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.status_cotrav=4 and b.spoc_id = spoc_id AND DATE_FORMAT(b.pickup_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.pickup_datetime;
+
+WHERE
+
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav=4 and b.spoc_id = spoc_id AND DATE_FORMAT(b.pickup_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
+   
+WHEN booking_type = 2 THEN 
+b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
     
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime order by b.pickup_datetime;
+WHEN booking_type = 3 THEN 
+b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav=4  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
+
+WHEN booking_type = 4 THEN 
+b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime
     
-    WHEN 3 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav=4  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime AND b.status_cotrav=4 order by b.pickup_datetime;
+WHEN booking_type = 5 THEN 
+b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav=4 AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime
     
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime order by b.pickup_datetime;
-
-
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_client IN(1,3,5,7) AND b.status_cotrav=4 AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime order by b.pickup_datetime;
     
+WHEN booking_type = 6 THEN 
+b.spoc_id = spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
 
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.pickup_datetime;
-    
-        WHEN 7 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_cotrav=13 order by b.pickup_datetime;
+WHEN booking_type = 7 THEN
+b.spoc_id = spoc_id AND b.status_cotrav=13
 
-WHEN 11 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime order by b.pickup_datetime;
+WHEN booking_type = 11 THEN 
+b.spoc_id = spoc_id AND b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
 
-WHEN 12 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-where b.spoc_id = spoc_id AND b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime order by b.pickup_datetime;
+WHEN booking_type = 12 THEN 
+b.spoc_id = spoc_id AND b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime 
 
-END CASE;
 
+WHEN booking_type = 13 THEN 
+b.status_client IN(8)
+
+WHEN booking_type = 14 THEN 
+b.status_client IN(10)
+
+WHEN booking_type = 15 THEN 
+b.status_client IN(9)
+
+WHEN booking_type = 16 THEN 
+b.status_client IN(12)
+
+WHEN booking_type = 18 THEN 
+b.status_client IN(13)
+
+WHEN booking_type = 19 THEN 
+b.status_client IN(16)
+
+WHEN booking_type = 20 THEN 
+b.status_client IN(14)
+
+END 
+
+order by b.pickup_datetime;
 	
 END$$
 
@@ -7386,9 +7319,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllSpocTrainBookings` (IN `spoc_
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-   
-   WHEN 1 THEN 
 SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
 	from train_bookings `b`
     left join status_client `bs` on b.status_client = bs.id
@@ -7402,124 +7332,41 @@ SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_
     LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
 LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(4) AND b.spoc_id = spoc_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.boarding_datetime;
-   
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id = spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 3 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id = spoc_id  AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
 
-    WHEN 4 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id = spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
-    
-    
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id = spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime AND b.status_cotrav=4 order by b.boarding_datetime;
-    
-    
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav >= 1 AND b.spoc_id = spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))  order by b.boarding_datetime;
+WHERE
 
-WHEN 11 THEN
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id = spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) < b.pickup_from_datetime order by b.boarding_datetime;
-    
-WHEN 12 THEN
-SELECT b.*,DATE_FORMAT(b.pickup_from_datetime, '%d-%m-%Y %H:%i') as pickup_from_datetime,DATE_FORMAT(b.pickup_to_datetime, '%d-%m-%Y %H:%i') as pickup_to_datetime ,DATE_FORMAT(b.booking_datetime, '%d-%m-%Y %H:%i') as booking_datetime,DATE_FORMAT(b.boarding_datetime, '%d-%m-%Y %H:%i') as boarding_datetime,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,ca.user_name cotrav_agent_name, CONCAT(rs.station_name,' (',rs.station_code,' )')  drop_location, CONCAT(rs1.station_name,' (',rs1.station_code,' )') pickup_location,csc.assessment_code as assessment_code, ac.city_name as assessment_city_id,bt.name train_type_priority_1, bt2.name train_type_priority_2, abt.name assign_bus_type_id
-	from train_bookings `b`
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    left join railway_stations rs on b.drop_location = rs.id
-    left join railway_stations rs1 on b.pickup_location = rs1.id
-    LEFT JOIN train_types bt ON b.train_type_priority_1 = bt.id
-    LEFT JOIN train_types bt2 ON b.train_type_priority_2 = bt2.id
-    LEFT JOIN train_types abt ON b.assign_bus_type_id = abt.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-	where b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id = spoc_id AND DATE_SUB(NOW(), INTERVAL 12 HOUR) > b.pickup_from_datetime order by b.boarding_datetime;
-END CASE;
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_cotrav IN(4) AND b.spoc_id=spoc_id AND DATE_FORMAT(b.pickup_from_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
    
+WHEN booking_type = 2 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime
+    
+    
+WHEN booking_type = 3 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime
+
+WHEN booking_type = 4 THEN 
+b.status_cotrav IN(1,2) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime
+    
+WHEN booking_type = 5 THEN 
+b.status_cotrav = 4 AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.status_cotrav >= 1 AND b.spoc_id=spoc_id AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
+
+WHEN booking_type = 11 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_from_datetime
+
+WHEN booking_type = 12 THEN 
+b.status_cotrav IN(1,2,4) AND b.status_client IN(1,3,5,7) AND b.spoc_id=spoc_id AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_from_datetime
+
+
+END 
+
+order by b.boarding_datetime;
 	
 END$$
 
@@ -7539,9 +7386,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllTaxiBookings` (IN `booking_ty
 	
 	SET curr_dt = (SELECT NOW());
 	   
-   CASE booking_type
-    WHEN 1 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
+SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id, corp.corporate_name, cbe.entity_name, tbci.id invoice_id,tbci.sub_total , od.driver_name, od.driver_contact
 from taxi_bookings `b`
 left join taxi_types `tt` on b.taxi_id = tt.id
     left join cities `c` on b.city_id = c.id
@@ -7551,109 +7396,68 @@ left join taxi_types `tt` on b.taxi_id = tt.id
     left join operators `opr` on b.operator_id = opr.id
     left join corporate_agents `ca` on b.last_action_by = ca.id
     LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND b.status_cotrav=4 AND DATE_FORMAT(b.pickup_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d') order by b.pickup_datetime;
-    
-    WHEN 2 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
+	LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
+	LEFT JOIN corporates corp ON b.corporate_id = corp.id
+    LEFT JOIN corporate_billing_entities cbe ON b.billing_entity_id = cbe.id
+    LEFT JOIN taxi_booking_client_invoice tbci ON b.invoice_id = tbci.id
     LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime order by b.pickup_datetime;
+WHERE
+
+CASE 
+
+WHEN booking_type = 1 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav=4 AND DATE_FORMAT(b.pickup_datetime, '%Y %m %d') LIKE DATE_FORMAT(NOW(), '%Y %m %d')
+   
+WHEN booking_type = 2 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
     
-    WHEN 3 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND b.status_cotrav=4  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime AND b.status_cotrav=4 order by b.pickup_datetime;
     
-    WHEN 4 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime order by b.pickup_datetime;
+WHEN booking_type = 3 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav=4  AND DATE_SUB(NOW(), INTERVAL 2 HOUR) < b.pickup_datetime
 
-
-    WHEN 5 THEN 
-SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact,spoc.email, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name,cr.package_name,cr.base_rate,od.driver_name,od.driver_contact,od.licence_no,od.driver_email, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-	from taxi_bookings `b`
-	left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `sc` on b.status_client = sc.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_rates cr ON b.rate_id = cr.id
-    LEFT JOIN operator_drivers od ON b.driver_id = od.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND b.status_cotrav=4 AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime AND b.status_cotrav=4 order by b.pickup_datetime;
+WHEN booking_type = 4 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav IN(1,2) AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime
     
-
-    WHEN 6 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15)) order by b.pickup_datetime;
     
-        WHEN 7 THEN 
-    SELECT b.*,DATE_FORMAT(b.pickup_datetime, '%d-%m-%Y %H:%i') as pickup_datetime,DATE_FORMAT(b.booking_date, '%d-%m-%Y %H:%i') as booking_date, tt.name `taxi_type_name`,c.name `city_name`,bs.status `client_status`,cs.status `cotrav_status`,spoc.user_name,spoc.user_contact, opr.operator_name, opr.operator_contact,ca.user_name cotrav_agent_name, csc.assessment_code as assessment_code, ac.city_name as assessment_city_id
-from taxi_bookings `b`
-left join taxi_types `tt` on b.taxi_id = tt.id
-    left join cities `c` on b.city_id = c.id
-    left join status_client `bs` on b.status_client = bs.id
-    left join status_cotrav `cs` on b.status_cotrav = cs.id
-    left join corporate_spocs `spoc` on b.spoc_id = spoc.id
-    left join operators `opr` on b.operator_id = opr.id
-    left join corporate_agents `ca` on b.last_action_by = ca.id
-    LEFT JOIN corporate_assessment_codes csc ON b.assessment_code = csc.id
-LEFT JOIN corporate_assessment_cities ac ON b.assessment_city_id = ac.id
-where b.status_client IN(3,5,7) AND b.status_cotrav=13 order by b.pickup_datetime;
+WHEN booking_type = 5 THEN 
+b.status_client IN(3,5,7) AND b.status_cotrav=4 AND DATE_SUB(NOW(), INTERVAL 2 HOUR) > b.pickup_datetime
+    
+    
+WHEN booking_type = 6 THEN 
+b.status_client IN(3,5,7) AND (b.status_cotrav=3 OR b.status_client IN(2,4,6,15))
 
-END CASE;
 
+WHEN booking_type = 7 THEN 
+b.status_cotrav IN(13)
+
+
+WHEN booking_type = 13 THEN 
+b.status_cotrav IN(5)
+
+WHEN booking_type = 14 THEN 
+b.status_cotrav IN(6)
+
+WHEN booking_type = 15 THEN 
+b.status_cotrav IN(8)
+
+WHEN booking_type = 16 THEN 
+b.status_cotrav IN(7,9,15)
+
+WHEN booking_type = 17 THEN 
+b.status_cotrav IN(10)
+
+WHEN booking_type = 18 THEN 
+b.status_cotrav IN(11)
+
+WHEN booking_type = 19 THEN 
+b.status_cotrav IN(14)
+
+WHEN booking_type = 20 THEN 
+b.status_cotrav IN(12)
+
+END 
+
+order by b.pickup_datetime;
 	
 END$$
 
@@ -7672,6 +7476,22 @@ LEFT JOIN user_type ut ON bbal.user_type = ut.id
 LEFT JOIN status_cotrav sc ON bbal.action = sc.id
 
 WHERE bbal.booking_id = booking_id$$
+
+DROP PROCEDURE IF EXISTS `getallTaxiInvoiceActionLog`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getallTaxiInvoiceActionLog` (IN `invoice_id` INT)  NO SQL
+SELECT bbal.user_id, bbal.invoice_comment, sc.status_name, bbal.user_type, DATE_FORMAT(bbal.action_date, '%d-%m-%Y %H:%i') as action_date, ut.name, ( CASE bbal.user_type
+WHEN 10 THEN (SELECT ca.user_name FROM corporate_agents ca WHERE ca.id = bbal.user_id)
+WHEN 1 THEN (SELECT cl.name FROM corporate_logins cl WHERE cl.id = bbal.user_id)
+WHEN 2 THEN (SELECT sb.name FROM corporate_subgroup_authenticater sb WHERE sb.id = bbal.user_id)
+WHEN 3 THEN (SELECT g.name FROM corporate_group_authenticator g WHERE g.id = bbal.user_id)
+WHEN 4 THEN (SELECT s.user_name FROM corporate_spocs s WHERE s.id = bbal.user_id)
+ELSE 1
+                                    END ) AS employee_name FROM taxi_booking_client_invoice_action_log bbal
+
+LEFT JOIN user_type ut ON bbal.user_type = ut.id
+LEFT JOIN invoice_status sc ON bbal.action = sc.id
+
+WHERE bbal.invoice_id = invoice_id$$
 
 DROP PROCEDURE IF EXISTS `getAllTaxiModels`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllTaxiModels` ()  NO SQL
@@ -7718,6 +7538,22 @@ LEFT JOIN user_type ut ON bbal.user_type = ut.id
 LEFT JOIN status_cotrav sc ON bbal.action = sc.id
 
 WHERE bbal.booking_id = booking_id$$
+
+DROP PROCEDURE IF EXISTS `getallTrainInvoiceActionLog`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getallTrainInvoiceActionLog` (IN `invoice_id` INT)  NO SQL
+SELECT bbal.user_id, bbal.invoice_comment, sc.status_name, bbal.user_type, DATE_FORMAT(bbal.action_date, '%d-%m-%Y %H:%i') as action_date, ut.name, ( CASE bbal.user_type
+WHEN 10 THEN (SELECT ca.user_name FROM corporate_agents ca WHERE ca.id = bbal.user_id)
+WHEN 1 THEN (SELECT cl.name FROM corporate_logins cl WHERE cl.id = bbal.user_id)
+WHEN 2 THEN (SELECT sb.name FROM corporate_subgroup_authenticater sb WHERE sb.id = bbal.user_id)
+WHEN 3 THEN (SELECT g.name FROM corporate_group_authenticator g WHERE g.id = bbal.user_id)
+WHEN 4 THEN (SELECT s.user_name FROM corporate_spocs s WHERE s.id = bbal.user_id)
+ELSE 1
+                                    END ) AS employee_name FROM train_booking_client_invoice_action_log bbal
+
+LEFT JOIN user_type ut ON bbal.user_type = ut.id
+LEFT JOIN invoice_status sc ON bbal.action = sc.id
+
+WHERE bbal.invoice_id = invoice_id$$
 
 DROP PROCEDURE IF EXISTS `getAllTrainTypes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllTrainTypes` ()  NO SQL
@@ -7805,6 +7641,12 @@ ELSE
 	SELECT cr.id, cr.package_name, cr.city_id FROM corporate_rates cr;
 END IF;
 
+END$$
+
+DROP PROCEDURE IF EXISTS `getFlightAccessToken`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFlightAccessToken` ()  NO SQL
+BEGIN
+SELECT * FROM kafila_api_flight_access_token ORDER BY id DESC LIMIT 1;
 END$$
 
 DROP PROCEDURE IF EXISTS `getLoginDetails`$$
@@ -9166,8 +9008,32 @@ BEGIN
 
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCancelFlightBookingPassanger`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCancelFlightBookingPassanger` (IN `booking_id` INT, IN `employee_id` INT, IN `refund_amount` FLOAT, IN `cancel_comment` VARCHAR(255))  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+UPDATE employee_flight_booking f SET f.is_cancel=1, f.cancellation_charges=refund_amount, f.cancellation_comment=cancel_comment WHERE f.employee_id = employee_id AND f.flight_booking_id=booking_id; 
+
+COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateCorporate`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCorporate` (IN `corporate_name` VARCHAR(100), IN `corporate_code` VARCHAR(50), IN `contact_person_name` VARCHAR(100), IN `contact_person_no` VARCHAR(15), IN `contact_person_email` VARCHAR(100), IN `has_billing_spoc_level` TINYINT(4), IN `has_auth_level` TINYINT(4), IN `no_of_auth_level` TINYINT(4), IN `has_assessment_codes` TINYINT(4), IN `is_radio` TINYINT(4), IN `is_local` TINYINT(4), IN `is_outstation` TINYINT(4), IN `is_bus` TINYINT(4), IN `is_train` TINYINT(4), IN `is_hotel` TINYINT(4), IN `is_meal` TINYINT(4), IN `is_flight` TINYINT(4), IN `is_water_bottles` TINYINT(4), IN `is_reverse_logistics` TINYINT(4), IN `corporate_id` INT(11), IN `user_id` INT(11), IN `user_type` INT, IN `has_self_booking_access` INT, IN `will_do_realtime_payment` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCorporate` (IN `corporate_name` VARCHAR(100), IN `corporate_code` VARCHAR(50), IN `contact_person_name` VARCHAR(100), IN `contact_person_no` VARCHAR(15), IN `contact_person_email` VARCHAR(100), IN `has_billing_spoc_level` TINYINT(4), IN `has_auth_level` TINYINT(4), IN `no_of_auth_level` TINYINT(4), IN `has_assessment_codes` TINYINT(4), IN `is_radio` TINYINT(4), IN `is_local` TINYINT(4), IN `is_outstation` TINYINT(4), IN `is_bus` TINYINT(4), IN `is_train` TINYINT(4), IN `is_hotel` TINYINT(4), IN `is_meal` TINYINT(4), IN `is_flight` TINYINT(4), IN `is_water_bottles` TINYINT(4), IN `is_reverse_logistics` TINYINT(4), IN `corporate_id` INT(11), IN `user_id` INT(11), IN `user_type` INT, IN `has_self_booking_access` INT, IN `will_do_realtime_payment` INT, IN `has_billing_admin_level` INT)  NO SQL
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -9184,7 +9050,7 @@ BEGIN
     
     START TRANSACTION;
     
-    UPDATE corporates SET corporate_name=corporate_name, corporate_code=corporate_code, contact_person_name=contact_person_name, contact_person_no=contact_person_no, contact_person_email=contact_person_email, has_auth_level=has_auth_level, no_of_auth_level=no_of_auth_level, has_assessment_codes=has_assessment_codes, is_radio=is_radio, is_local=is_local, is_outstation=is_outstation, is_bus=is_bus, is_train=is_train, is_hotel=is_hotel, is_meal=is_meal, is_flight=is_flight, is_water_bottles=is_water_bottles, is_reverse_logistics=is_reverse_logistics,has_self_booking_access=has_self_booking_access,will_do_realtime_payment=will_do_realtime_payment WHERE id = corporate_id;
+    UPDATE corporates SET corporate_name=corporate_name, corporate_code=corporate_code, contact_person_name=contact_person_name, contact_person_no=contact_person_no, contact_person_email=contact_person_email, has_auth_level=has_auth_level, no_of_auth_level=no_of_auth_level, has_assessment_codes=has_assessment_codes, is_radio=is_radio, is_local=is_local, is_outstation=is_outstation, is_bus=is_bus, is_train=is_train, is_hotel=is_hotel, is_meal=is_meal, is_flight=is_flight, is_water_bottles=is_water_bottles, is_reverse_logistics=is_reverse_logistics,has_self_booking_access=has_self_booking_access,will_do_realtime_payment=will_do_realtime_payment,has_billing_admin_level=has_billing_admin_level,has_billing_spoc_level=has_billing_spoc_level WHERE id = corporate_id;
     
     INSERT INTO corporate_action_log (corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics, is_deleted, action_date, corporate_id, user_id,user_type, action,will_do_realtime_payment,has_self_booking_access) select corporate_name, corporate_code, contact_person_name, contact_person_no, contact_person_email, has_auth_level, no_of_auth_level, has_assessment_codes, is_radio, is_local, is_outstation, is_bus, is_train, is_hotel, is_meal, is_flight, is_water_bottles, is_reverse_logistics, is_deleted, NOW(), corporate_id, user_id,user_type, 'UPDATE',will_do_realtime_payment,has_self_booking_access from corporates where id = corporate_id ;
     
@@ -9912,6 +9778,476 @@ INSERT INTO taxi_types_action_log (name, is_deleted, taxi_type_id, user_id, user
 COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `verifyInvoiceAdminBusBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAdminBusBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE bus_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+    
+INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAdminFlightBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAdminFlightBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE flight_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+    
+INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAdminHotelBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAdminHotelBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE hotel_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+    
+INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAdminTaxiBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAdminTaxiBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE taxi_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+    
+INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAdminTrainBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAdminTrainBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+
+    UPDATE train_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+    
+INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAgentBusBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAgentBusBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_spoc_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE bus_bookings SET status_client = 8, status_cotrav=6 WHERE id = booking_id;
+
+ELSE
+
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+	UPDATE bus_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+       
+    
+    ELSE
+    UPDATE bus_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+        
+END IF;
+END IF;
+
+ INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 2, NOW(),'', user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAgentFlightBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAgentFlightBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_spoc_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE flight_bookings SET status_client = 8, status_cotrav=6 WHERE id = booking_id;
+
+ELSE
+
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+	UPDATE flight_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+       
+    
+    ELSE
+    UPDATE flight_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+        
+END IF;
+END IF;
+
+ INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 2, NOW(),'', user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAgentHotelBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAgentHotelBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_spoc_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE hotel_bookings SET status_client = 8, status_cotrav=6 WHERE id = booking_id;
+
+ELSE
+
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+	UPDATE hotel_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+       
+    
+    ELSE
+    UPDATE hotel_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+        
+END IF;
+END IF;
+
+ INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 2, NOW(),'', user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAgentTaxiBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAgentTaxiBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_spoc_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE taxi_bookings SET status_client = 8, status_cotrav=6 WHERE id = booking_id;
+
+ELSE
+
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+	UPDATE taxi_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+       
+    
+    ELSE
+    UPDATE taxi_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+        
+END IF;
+END IF;
+
+ INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 2, NOW(),'', user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceAgentTrainBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceAgentTrainBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_spoc_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE train_bookings SET status_client = 8, status_cotrav=6 WHERE id = booking_id;
+
+ELSE
+
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+	UPDATE train_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+       
+    
+    ELSE
+    UPDATE train_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+        
+END IF;
+END IF;
+
+ INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 2, NOW(),'', user_id, user_type);
+    
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceSpocBusBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceSpocBusBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE bus_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+
+ELSE
+UPDATE bus_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+END IF;
+
+INSERT INTO bus_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceSpocFlightBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceSpocFlightBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE flight_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+
+ELSE
+UPDATE flight_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+END IF;
+
+INSERT INTO flight_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceSpocHotelBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceSpocHotelBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE hotel_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+
+ELSE
+UPDATE hotel_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+END IF;
+
+INSERT INTO hotel_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceSpocTaxiBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceSpocTaxiBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE taxi_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+
+ELSE
+UPDATE taxi_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+END IF;
+
+INSERT INTO taxi_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyInvoiceSpocTrainBookings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyInvoiceSpocTrainBookings` (IN `booking_id` INT, IN `user_id` INT, IN `user_type` INT, IN `corporate_id` INT, IN `invoice_id` INT)  NO SQL
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+       GET DIAGNOSTICS CONDITION 1 
+@sqlstate = RETURNED_SQLSTATE, 
+   
+@errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+  SET 
+@full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+  SELECT 
+@full_error;
+      ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+    
+IF(SELECT has_billing_admin_level from corporates where id = corporate_id) = 1 THEN
+    UPDATE train_bookings SET status_client = 10, status_cotrav=8 WHERE id = booking_id;
+
+ELSE
+UPDATE train_bookings SET status_client = 12, status_cotrav=10 WHERE id = booking_id;
+END IF;
+
+INSERT INTO train_booking_client_invoice_action_log(invoice_id, action, action_date, invoice_comment, user_id, user_type) VALUES (invoice_id, 1, NOW(),'', user_id, user_type);
+
+COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `viewAgentDetails`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `viewAgentDetails` (IN `agent_id` INT)  NO SQL
 BEGIN
@@ -10476,14 +10812,16 @@ CREATE TABLE IF NOT EXISTS `bus_bookings` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bus_bookings`
 --
 
 INSERT INTO `bus_bookings` (`id`, `reference_no`, `vendor_booking_id`, `voucher_no`, `booking_email`, `drop_location`, `pickup_location`, `booking_datetime`, `pickup_from_datetime`, `pickup_to_datetime`, `preferred_bus`, `boarding_point`, `boarding_datetime`, `assessment_code`, `assessment_city_id`, `bus_type_priority_1`, `bus_type_priority_2`, `bus_type_priority_3`, `no_of_seats`, `last_action_by`, `operator_name`, `operator_contact`, `ticket_no`, `pnr_no`, `assign_bus_type_id`, `seat_no`, `portal_used`, `status_client`, `status_cotrav`, `is_invoice`, `invoice_id`, `group_id`, `subgroup_id`, `spoc_id`, `corporate_id`, `billing_entity_id`, `reason_booking`, `created`, `modified`) VALUES
-(1, 'CTBUS000001', NULL, NULL, '', 'Delhi', 'Pune', '2019-12-13 22:57:13', '2019-12-18 22:57:06', '2019-12-20 22:57:10', 'Direct bus', 'Abhayapuri Asam (AYU )', '2019-12-19 22:58:17', '1', 1, 1, 1, 1, 1, 1, '1', '', 'TICKET421421', '2142151512521', 2, '245', '1', 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', '2019-12-13 22:57:31', '2019-12-18 11:12:37');
+(1, 'CTBUS000001', NULL, NULL, '', 'Delhi', 'Pune', '2019-12-13 22:57:13', '2019-12-18 22:57:06', '2019-12-20 22:57:10', 'Direct bus', 'Abhayapuri Asam (AYU )', '2019-12-19 22:58:17', '1', 1, 1, 1, 1, 1, 1, '1', '', 'TICKET421421', '2142151512521', 2, '245', '1', 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', '2019-12-13 22:57:31', '2019-12-18 11:12:37'),
+(2, 'CTBUS000002', NULL, NULL, '/media/booking_email/Test_cmmmd.txt', 'Mumbai Central Railway Station Building, Mumbai Central, Mumbai, Maharashtra, India', 'Pune, Maharashtra, India', '2019-12-28 13:08:35', '2019-12-31 13:08:58', '2020-01-03 13:09:01', 'Direct Train', NULL, NULL, '1', 1, 2, 2, 2, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 2, 0, NULL, 1, 1, 1, 1, 1, ' test', '2019-12-28 13:09:28', '2019-12-28 13:10:04'),
+(3, 'CTBUS000003', NULL, NULL, '/media/booking_email/GIT_Command.txt', 'Pune Railway Station, Ambegaon BK, Pune, Maharashtra, India', 'Pimpri-Chinchwad, Maharashtra, India', '2020-01-08 11:17:12', '2020-01-09 11:17:33', '2020-01-11 11:17:37', 'MSRTC Bus', 'Pune Junction (PUNE )', '2020-02-02 18:26:11', '0', 0, 1, 1, 1, 1, 1, '2', '', 'TICKET421421', '2142151512521', 1, '', '1', 7, 5, 1, 2, 0, 0, 2, 2, 2, ' test hai bhai', '2020-01-08 11:17:58', '2020-01-08 11:50:14');
 
 -- --------------------------------------------------------
 
@@ -10500,7 +10838,7 @@ CREATE TABLE IF NOT EXISTS `bus_bookings_action_log` (
   `user_id` int(11) NOT NULL,
   `user_type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bus_bookings_action_log`
@@ -10509,7 +10847,12 @@ CREATE TABLE IF NOT EXISTS `bus_bookings_action_log` (
 INSERT INTO `bus_bookings_action_log` (`id`, `booking_id`, `action`, `action_date`, `user_id`, `user_type`) VALUES
 (1, 1, 1, '2019-12-13 22:57:31', 1, 10),
 (2, 1, 2, '2019-12-13 22:57:40', 1, 10),
-(3, 1, 4, '0000-00-00 00:00:00', 1, 10);
+(3, 1, 4, '0000-00-00 00:00:00', 1, 10),
+(4, 2, 1, '2019-12-28 13:09:28', 1, 10),
+(5, 2, 2, '2019-12-28 13:10:04', 1, 10),
+(6, 3, 1, '2020-01-08 11:17:58', 1, 10),
+(7, 3, 2, '2020-01-08 11:18:07', 1, 10),
+(8, 3, 4, '0000-00-00 00:00:00', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -10541,14 +10884,42 @@ CREATE TABLE IF NOT EXISTS `bus_booking_client_invoice` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bus_booking_client_invoice`
 --
 
 INSERT INTO `bus_booking_client_invoice` (`id`, `booking_id`, `ticket_price`, `management_fee`, `tax_on_management_fee`, `tax_on_management_fee_percentage`, `sub_total`, `cotrav_billing_entity`, `igst`, `cgst`, `sgst`, `management_fee_igst`, `management_fee_cgst`, `management_fee_sgst`, `management_fee_igst_rate`, `management_fee_cgst_rate`, `management_fee_sgst_rate`, `client_ticket`, `status`, `created`, `modified`) VALUES
-(1, 1, 520, '100', 18, 18, 638, 1, 18, 0, 0, 18.00, 0.00, 0.00, 18.00, 0.00, 0.00, 'D:/Taxivaxi_Python_Projects/CoTrav/media/bus/client_ticket/cotrav.sql', 1, '2019-12-13 22:58:58', '2019-12-13 22:58:58');
+(1, 1, 520, '100', 18, 18, 638, 1, 18, 0, 0, 18.00, 0.00, 0.00, 18.00, 0.00, 0.00, 'D:/Taxivaxi_Python_Projects/CoTrav/media/bus/client_ticket/cotrav.sql', 1, '2019-12-13 22:58:58', '2019-12-13 22:58:58'),
+(2, 3, 1000, '100', 18, 0, 1118, 1, 0, 0, 0, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 'D:/Taxivaxi_Python_Projects/CoTrav/media/bus/client_ticket/bus_tickett_client.txt', 1, '2020-01-08 11:50:14', '2020-01-08 11:50:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bus_booking_client_invoice_action_log`
+--
+
+DROP TABLE IF EXISTS `bus_booking_client_invoice_action_log`;
+CREATE TABLE IF NOT EXISTS `bus_booking_client_invoice_action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_id` int(11) NOT NULL,
+  `action` int(11) NOT NULL,
+  `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `invoice_comment` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bus_booking_client_invoice_action_log`
+--
+
+INSERT INTO `bus_booking_client_invoice_action_log` (`id`, `invoice_id`, `action`, `action_date`, `invoice_comment`, `user_id`, `user_type`, `created`, `modified`) VALUES
+(1, 2, 1, '2020-01-08 11:50:14', '', 1, 10, '2020-01-08 11:50:14', '2020-01-08 11:50:14');
 
 -- --------------------------------------------------------
 
@@ -10619,14 +10990,15 @@ CREATE TABLE IF NOT EXISTS `bus_booking_vender_invoice` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bus_booking_vender_invoice`
 --
 
 INSERT INTO `bus_booking_vender_invoice` (`id`, `booking_id`, `ticket_price`, `vender_commission`, `vender_commission_type`, `cotrav_billing_entity`, `igst`, `cgst`, `sgst`, `igst_amount`, `cgst_amount`, `sgst_amount`, `vender_ticket`, `status`, `created`, `modified`) VALUES
-(1, 1, 320, 200, '1', 1, 18, 0, 0, 57.6, 0, 0, 'D:/Taxivaxi_Python_Projects/CoTrav/media/bus/vender_ticket/bus_tickett_vendor.txt', 1, '2019-12-13 22:58:58', '2019-12-13 22:58:58');
+(1, 1, 320, 200, '1', 1, 18, 0, 0, 57.6, 0, 0, 'D:/Taxivaxi_Python_Projects/CoTrav/media/bus/vender_ticket/bus_tickett_vendor.txt', 1, '2019-12-13 22:58:58', '2019-12-13 22:58:58'),
+(2, 3, 1000, 10, '1', 0, 0, 0, 0, 180, 0, 0, 'D:/Taxivaxi_Python_Projects/CoTrav/media/bus/vender_ticket/bus_tickett_vendor_YsV2bYD.txt', 1, '2020-01-08 11:50:14', '2020-01-08 11:50:14');
 
 -- --------------------------------------------------------
 
@@ -16446,6 +16818,8 @@ CREATE TABLE IF NOT EXISTS `corporates` (
   `no_of_auth_level` tinyint(4) NOT NULL DEFAULT '0',
   `has_assessment_codes` tinyint(4) NOT NULL DEFAULT '0',
   `has_employee_booking_access` int(11) NOT NULL DEFAULT '1',
+  `has_billing_spoc_level` int(11) NOT NULL DEFAULT '1',
+  `has_billing_admin_level` int(11) NOT NULL DEFAULT '1',
   `is_radio` int(11) NOT NULL DEFAULT '1',
   `is_local` int(11) NOT NULL DEFAULT '1',
   `is_outstation` int(11) NOT NULL DEFAULT '1',
@@ -16464,15 +16838,17 @@ CREATE TABLE IF NOT EXISTS `corporates` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `corporate_name` (`corporate_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporates`
 --
 
-INSERT INTO `corporates` (`id`, `corporate_name`, `corporate_code`, `contact_person_name`, `contact_person_no`, `contact_person_email`, `has_auth_level`, `no_of_auth_level`, `has_assessment_codes`, `has_employee_booking_access`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `has_self_booking_access`, `will_do_realtime_payment`, `is_deleted`, `corporate_city`, `created`, `modified`) VALUES
-(1, 'COTRAV', 'COTRAV', 'Balwant Chauhan', '9579477262', 'balwant@taxivaxi.in', 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, NULL, '2019-11-17 20:51:18', '2019-12-18 13:41:00'),
-(2, 'NOKIA', 'NOKIA', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in', 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, NULL, '2019-12-10 15:21:46', '2019-12-18 13:17:58');
+INSERT INTO `corporates` (`id`, `corporate_name`, `corporate_code`, `contact_person_name`, `contact_person_no`, `contact_person_email`, `has_auth_level`, `no_of_auth_level`, `has_assessment_codes`, `has_employee_booking_access`, `has_billing_spoc_level`, `has_billing_admin_level`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `has_self_booking_access`, `will_do_realtime_payment`, `is_deleted`, `corporate_city`, `created`, `modified`) VALUES
+(1, 'COTRAV', 'COTRAV', 'Balwant Chauhan', '9579477262', 'balwant@taxivaxi.in', 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, NULL, '2019-11-17 20:51:18', '2019-12-18 13:41:00'),
+(2, 'NOKIA', 'NOKIA', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in', 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, NULL, '2019-12-10 15:21:46', '2020-01-08 11:08:27'),
+(3, 'BAI INFO SOLUTIONS', 'BAIINFO', 'Balwant Chauhan', '9579477262', 'cotrav_balwant@taxivaxi.in', 0, 2, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-30 22:48:40', '2020-01-08 11:08:22'),
+(4, 'tet', 'NOKIAds', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in11', 0, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, NULL, '2019-12-30 22:55:01', '2020-01-06 14:55:44');
 
 -- --------------------------------------------------------
 
@@ -16510,7 +16886,7 @@ CREATE TABLE IF NOT EXISTS `corporate_action_log` (
   `user_type` int(11) NOT NULL,
   `action` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_action_log`
@@ -16518,7 +16894,10 @@ CREATE TABLE IF NOT EXISTS `corporate_action_log` (
 
 INSERT INTO `corporate_action_log` (`id`, `corporate_name`, `corporate_code`, `contact_person_name`, `contact_person_no`, `contact_person_email`, `has_auth_level`, `no_of_auth_level`, `has_assessment_codes`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `has_self_booking_access`, `will_do_realtime_payment`, `is_deleted`, `action_date`, `corporate_id`, `user_id`, `user_type`, `action`) VALUES
 (1, 'COTRAV', 'COTRAV', 'Balwant Chauhan', '9579477262', 'balwant@taxivaxi.in', 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, '2019-11-17 20:51:18', 1, 1, 10, 'ADD'),
-(2, 'NOKIA', 'NOKIA', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in', 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, '2019-12-18 13:17:58', 2, 1, 10, 'UPDATE');
+(2, 'NOKIA', 'NOKIA', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in', 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, '2019-12-18 13:17:58', 2, 1, 10, 'UPDATE'),
+(3, 'tet', 'NOKIAds', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in11', 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, '2019-12-30 22:55:01', 4, 1, 10, 'ADD'),
+(4, 'tet', 'NOKIAds', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in11', 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, '2020-01-06 14:53:35', 4, 1, 10, 'UPDATE'),
+(5, 'tet', 'NOKIAds', 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in11', 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, '2020-01-06 14:55:44', 4, 1, 10, 'UPDATE');
 
 -- --------------------------------------------------------
 
@@ -16563,7 +16942,7 @@ CREATE TABLE IF NOT EXISTS `corporate_agents` (
 --
 
 INSERT INTO `corporate_agents` (`id`, `emp_id`, `email`, `contact_no`, `user_name`, `password`, `old_password`, `profile_image`, `has_radio_booking_access`, `has_local_booking_access`, `has_outstation_booking_access`, `has_bus_booking_access`, `has_train_booking_access`, `has_hotel_booking_access`, `has_flight_booking_access`, `has_meal_booking_access`, `has_water_bottles_booking_access`, `has_reverse_logistics_booking_access`, `has_billing_access`, `has_voucher_payment_access`, `has_voucher_approval_access`, `is_super_admin`, `status`, `last_login`, `created`, `modified`) VALUES
-(1, 'EMP054', 'balwant@taxivaxi.in', '9579477262', 'Balwant Chauhan', 'pbkdf2_sha256$150000$KbFktaRJsV3C$WxTFEDXcAGMKfxehS0WoNbczVnpJa+emuxobg4b8uJk=', NULL, NULL, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, '2019-12-18 07:45:55', '2018-10-08 13:14:53', '2019-12-18 13:15:55');
+(1, 'EMP054', 'balwant@taxivaxi.in', '9579477262', 'Balwant Chauhan', 'pbkdf2_sha256$150000$KbFktaRJsV3C$WxTFEDXcAGMKfxehS0WoNbczVnpJa+emuxobg4b8uJk=', NULL, NULL, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, '2020-01-09 12:24:59', '2018-10-08 13:14:53', '2020-01-09 17:54:58');
 
 -- --------------------------------------------------------
 
@@ -16621,7 +17000,7 @@ CREATE TABLE IF NOT EXISTS `corporate_agent_access_tokens` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `agent_id` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_agent_access_tokens`
@@ -16652,7 +17031,36 @@ INSERT INTO `corporate_agent_access_tokens` (`id`, `agent_id`, `access_token`, `
 (22, 1, 'LN537X3AR6GPQ259NEW5JBCENT05GOC72LA2HL6ZT28NPG3BR323KE369B1C', '2019-12-16 15:55:53', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-16 15:50:19'),
 (23, 1, 'VDYH1KCQSIHQ72W360OFCQFUGGNF6LEYN33WBMEIDOWX6DG63BY4O7TZ0L2O', '2019-12-17 18:06:42', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-17 18:03:41'),
 (24, 1, 'ZRAN9OW7NDHVNCE5SMWCVCJEFU3DDUDEY1UW8XKWYCX385EQEN68N2S6GPS2', '2019-12-18 11:05:32', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 10:44:13'),
-(25, 1, 'XMX1B6MLPN5GS2J8EON7247M95GM1B99KN3K1BVD98JFGXSBULHOBQPB33WY', '2019-12-18 13:39:18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 13:15:55');
+(25, 1, 'XMX1B6MLPN5GS2J8EON7247M95GM1B99KN3K1BVD98JFGXSBULHOBQPB33WY', '2019-12-18 13:39:18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 13:15:55'),
+(26, 1, 'ULGASGDQ1C81N3LMOH9FKPJUAAUA0PBC56WPXP7FL2QWZRFD7OKGHE0P9Z8A', '2020-01-18 17:40:27', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 17:40:27'),
+(27, 1, 'IDHJQ91W5F7GKRNH1Y7WAK1CHL8YBPUWXIKUSZSN5BQUR8UZ4L9G6B4Q2SHN', '2019-12-26 18:49:43', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-26 18:49:33'),
+(28, 1, 'BZZGET9ZSPZKRKFA4ZQ9XRBIB9N6RH46WKQYHU2JDL502PY0AMBFFUFG7N79', '2020-01-28 13:07:04', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-28 13:07:04'),
+(29, 1, '7PN9KH25SO20N5UIZ0A7880XIRCLA6DYP3JE6ZEPTJIVBZ8YXZ0QICNBARAZ', '2019-12-28 16:54:40', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-28 15:29:56'),
+(30, 1, 'ZS7WXBHAFA2X72A7ANL5QJ5SDKIDBT8JSAVK5MUWSR65W46F1CJ325WT502N', '2020-01-28 17:47:51', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-28 17:47:51'),
+(31, 1, 'V68W45XB3MQI8UH5QLFD4NPX31OQG6HCCDX2KU69TMXQT0T4M6DVA5G0X8RZ', '2019-12-30 11:54:17', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-30 10:56:28'),
+(32, 1, 'Y2UMPP87LYUCI07I7ALASNO78WU4PQNG6N3WCWQTFGTO8RIMUHBNBC3MB46A', '2020-01-30 15:12:44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-30 15:12:44'),
+(33, 1, '6U6HFI4KMHQWCDTTGHKCC8XG4J3PRIPS89Q8MEGTJ24O7PTEXTLI56OXGZHL', '2020-01-30 22:47:04', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-30 22:47:04'),
+(34, 1, 'UWNIMFQ7ZDD7FGC4VZJV67LPHZ7KNTFNOOB71098IX2H0NCZPGBF9F7VMXF8', '2020-01-31 13:28:20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-31 13:28:20'),
+(35, 1, '25FVN05X4K9TJHN5OKAMVMM6W7H61CTG0VWNYMKP4A8GYG2MMG8XO8FOPUAZ', '2020-01-31 21:52:28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-31 21:52:28'),
+(36, 1, 'QOFVWO84YSUPJGWPU3WU938PKHZLLMAX0JPP3RTI2RT9GOI0EYIV6Z0NNHCQ', '2020-02-03 17:40:30', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 17:40:30'),
+(37, 1, 'CNA0A9FILJP74FTRRP45LGTIBRWSTC610NTQT0CEP0B7EM6LAW7B1XSEG1WO', '2020-02-03 21:42:30', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 21:42:30'),
+(38, 1, 'UZXNL9K396J9CZHU3N2O1QIQ0TXMHVUAVBG8B5KC5JBAMS4RZA8IADESJNZX', '2020-02-03 23:46:48', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 23:46:48'),
+(39, 1, 'U5R5IYGYMEA2IDOG5SYVIVAYRJG0WG1MQSCLFKWV7QEYTW5GKE0O2EN46GHS', '2020-02-04 10:19:15', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-04 10:19:15'),
+(40, 1, 'YE63LWR87GF0RXW4L9WFU6CASGV5YZ04YGNQX9FGNKB74BMT4HOH0C59SMMN', '2020-02-04 12:47:46', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-04 12:47:46'),
+(41, 1, 'A9ZW9Q0D2JBUBDVZA2FAYPB1YB634B7LV1UXCYWWKG3MCPJS8UZ8SZ2TFV3B', '2020-02-04 15:34:37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-04 15:34:37'),
+(42, 1, 'NAF6PCTSHJ74X8GY6YD25A34KLXY9PG6DDC98C09JDP7CX0W3RYGAII7653M', '2020-02-04 17:34:47', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-04 17:34:47'),
+(43, 1, 'SDZLJQQU51DVELH5EEBU6KFEFGYBALT4IQXNQY1E25FO4S7D2ULKRO2CPN7Y', '2020-02-06 10:56:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-06 10:56:13'),
+(44, 1, 'VCQHZOOOBCLHLGGO8WIE20T9D0GRWULFO2R8G1GROKFQ6R0QPZUXYAP9BFLG', '2020-02-06 13:07:12', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-06 13:07:12'),
+(45, 1, 'G8WPRWUMCJVJDRFLBD6I6F19SUEZ34PC0HOFIPHLVQZ9W88F0Z1T0YBA628N', '2020-02-06 15:53:56', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-06 15:53:56'),
+(46, 1, 'OY7LKEC95TD0KGORJIYTI5Z915FVYCCQ22CS5G5CGOKBHLP101KJUZA3VRP8', '2020-02-07 12:29:37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-07 12:29:37'),
+(47, 1, 'TPUQ8UTTFXXQ6W41Q0JXVVQG3HE942XJ9I7R1PLDVYIWULZC6KAVPQ3ETGG0', '2020-01-07 17:02:01', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-07 15:12:58'),
+(48, 1, 'Z8HTSFEPQR4RFAOICG8GZY9Y96I9P9DIED12U788K1BQQBBKJI2J8DXCPZWA', '2020-02-07 17:08:09', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-07 17:08:09'),
+(49, 1, 'TU9GTRQMITIK7OU9OA673HJU2IO7ZJYWWUZKLVJIDT06NKVECDFGMDEZ0UZB', '2020-01-08 12:51:42', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-08 11:07:01'),
+(50, 1, '06R02SUQHLB3JRSJIL25ZHTQE99GJNL3SD7C1KC31VTQ8F6I1IE5UMBXAJ6P', '2020-02-08 13:49:58', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-08 13:49:58'),
+(51, 1, 'LD6FFBRUYOASYM6R0AB2Z2OEJSIEXD36B16IXEZRZAFCU3CFU2RTKOC7SG6K', '2020-02-08 17:42:31', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-08 17:42:31'),
+(52, 1, 'CAGZWM8ZDKW5RIMXJEIJLVXK0AUPH1SE5QKZHW7IHDDZ1WPUHKK15XJIGAZQ', '2020-01-09 17:04:16', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 17:02:54'),
+(53, 1, 'X07YYS8WBSNW5D3ROZYQXGQOR1ZKTE838QE7BZAV9H5K1WAC33TTXZ4YGDDT', '2020-02-09 17:09:11', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 17:09:11'),
+(54, 1, 'UAL4T7366L8K8A4QO9RJML4SSV8WKFED0IDXCPJUL8W90OQO0OAQLO4VIIYW', '2020-01-09 18:40:48', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 17:54:58');
 
 --
 -- Triggers `corporate_agent_access_tokens`
@@ -16794,7 +17202,7 @@ CREATE TABLE IF NOT EXISTS `corporate_assessment_dates` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_assessment_dates`
@@ -16803,8 +17211,7 @@ CREATE TABLE IF NOT EXISTS `corporate_assessment_dates` (
 INSERT INTO `corporate_assessment_dates` (`id`, `assessment_id`, `from_date`, `to_date`, `created`, `modified`) VALUES
 (13, 1, '2019-11-18', '2019-11-30', '2019-11-18 23:22:08', '2019-11-18 23:22:08'),
 (14, 2, '2019-11-21', '2020-11-30', '2019-11-21 00:24:12', '2019-12-02 16:27:16'),
-(15, 3, '2019-12-07', '2019-12-07', '2019-12-07 23:27:26', '2019-12-07 23:27:26'),
-(16, 1, '2019-12-12', '2020-12-12', '2019-12-12 18:26:33', '2019-12-12 18:26:33');
+(15, 3, '2019-12-07', '2019-12-07', '2019-12-07 23:27:26', '2019-12-07 23:27:26');
 
 -- --------------------------------------------------------
 
@@ -16831,14 +17238,17 @@ CREATE TABLE IF NOT EXISTS `corporate_billing_entities` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `entity_name` (`entity_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_billing_entities`
 --
 
 INSERT INTO `corporate_billing_entities` (`id`, `corporate_id`, `entity_name`, `billing_city_id`, `contact_person_name`, `contact_person_email`, `contact_person_no`, `address_line_1`, `address_line_2`, `address_line_3`, `gst_id`, `pan_no`, `is_deleted`, `created`, `modified`) VALUES
-(1, 1, 'COTRAV', 2763, 'Balwant Chauhan', 'balwant@taxivaxi.in', '8888888888', 'Sr. No. 12, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '27ASDSDS313AS311', 'ASDSDS313AS3', 0, '2019-12-12 18:18:06', '2019-12-12 18:18:06');
+(1, 1, 'COTRAV', 2763, 'Balwant Chauhan', 'balwant@taxivaxi.in', '8888888888', 'Sr. No. 12, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '27ASDSDS313AS311', 'ASDSDS313AS3', 0, '2019-12-12 18:18:06', '2019-12-12 18:18:06'),
+(2, 2, 'COTRAV1', 2763, 'Balwant Chauhan', 'balwant@taxivaxi.in', '8888888888', 'Sr. No. 12, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '27ASDSDS313AS311', 'ASDSDS313AS3', 0, '2019-12-20 15:14:36', '2019-12-20 15:14:36'),
+(3, 1, 'test', 2763, 'Test Name', 'Test@email.com', '9876543234', '', '', '', '', '', 0, '2019-12-20 17:28:44', '2019-12-20 17:28:44'),
+(4, 4, 'NOKIA11', 3127, 'Balwant Chauhan', 'balwant@taxivaxi.in11', '8888888888', 'Flate No 101,, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '1', NULL, 0, '2019-12-30 22:55:01', '2019-12-30 22:55:01');
 
 -- --------------------------------------------------------
 
@@ -16867,14 +17277,17 @@ CREATE TABLE IF NOT EXISTS `corporate_billing_entities_action_log` (
   `user_id` int(11) DEFAULT NULL,
   `action` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_billing_entities_action_log`
 --
 
 INSERT INTO `corporate_billing_entities_action_log` (`id`, `corporate_id`, `entity_name`, `billing_city_id`, `contact_person_name`, `contact_person_email`, `contact_person_no`, `address_line_1`, `address_line_2`, `address_line_3`, `gst_id`, `pan_no`, `is_deleted`, `action_date`, `entity_id`, `user_type`, `user_id`, `action`) VALUES
-(1, 1, 'COTRAV', 2763, 'Balwant Chauhan', 'balwant@taxivaxi.in', '8888888888', 'Sr. No. 12, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '27ASDSDS313AS311', 'ASDSDS313AS3', 0, '2019-12-12 18:18:06', 1, 10, 1, 'ADD');
+(1, 1, 'COTRAV', 2763, 'Balwant Chauhan', 'balwant@taxivaxi.in', '8888888888', 'Sr. No. 12, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '27ASDSDS313AS311', 'ASDSDS313AS3', 0, '2019-12-12 18:18:06', 1, 10, 1, 'ADD'),
+(2, 2, 'COTRAV1', 2763, 'Balwant Chauhan', 'balwant@taxivaxi.in', '8888888888', 'Sr. No. 12, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '27ASDSDS313AS311', 'ASDSDS313AS3', 0, '2019-12-20 15:14:36', 2, 1, 1, 'ADD'),
+(3, 1, 'test', 2763, 'Test Name', 'Test@email.com', '9876543234', '', '', '', '', '', 0, '2019-12-20 17:28:44', 3, 1, 1, 'ADD'),
+(4, 4, 'NOKIA11', NULL, 'Balwant Chauhan', 'balwant@taxivaxi.in11', '8888888888', 'Flate No 101,, Deepa co. socity', 'Banner Pashan Link Road', 'Pune', '1', NULL, 0, '2019-12-30 22:55:01', 4, 10, 1, 'ADD');
 
 -- --------------------------------------------------------
 
@@ -16913,14 +17326,16 @@ CREATE TABLE IF NOT EXISTS `corporate_employees` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_employees`
 --
 
 INSERT INTO `corporate_employees` (`id`, `corporate_id`, `spoc_id`, `core_employee_id`, `employee_cid`, `employee_name`, `employee_email`, `employee_contact`, `username`, `password`, `age`, `gender`, `id_proof_type`, `id_proof_no`, `is_active`, `has_dummy_email`, `fcm_regid`, `is_cxo`, `designation`, `home_city`, `home_address`, `assistant_id`, `date_of_birth`, `billing_entity_id`, `last_login`, `is_deleted`, `created`, `modified`) VALUES
-(1, 1, 1, '', '', 'Balwant Employee', 'balwant@taxivaxi.in', '98765432144', 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$KbFktaRJsV3C$WxTFEDXcAGMKfxehS0WoNbczVnpJa+emuxobg4b8uJk=', 21, 'Male', '', '', 1, 0, NULL, 0, 'CODER', 2763, '', 0, '1998-12-12', 1, '2019-12-14 11:22:14', 0, '2019-12-12 18:23:40', '2019-12-14 16:52:13');
+(1, 1, 1, '', '', 'Balwant Employee', 'balwant@taxivaxi.in', '98765432144', 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$KbFktaRJsV3C$WxTFEDXcAGMKfxehS0WoNbczVnpJa+emuxobg4b8uJk=', 21, 'Male', '', '', 1, 0, NULL, 0, 'CODER', 2763, '', 0, '1998-12-12', 1, '2019-12-28 11:55:45', 0, '2019-12-12 18:23:40', '2019-12-28 17:25:45'),
+(2, 2, 2, NULL, NULL, 'Balwant Spoc22', 'balwant@taxivaxi.in111', '98765432144', NULL, NULL, 0, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, '2019-12-28 17:04:39', 0, '2019-12-28 17:04:39', '2019-12-28 17:04:39'),
+(3, 4, 3, NULL, NULL, 'Balwant Chauhan', 'balwant@taxivaxi.in11', '8888888888', 'balwant@taxivaxi.in11', 'pbkdf2_sha256$150000$UtkzDOeBbnBQ$IXZuxr55Ms22Wrjnu3WSFUcgD4hqT/ykAaCYmtwi4HI=', 0, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, 3127, NULL, 0, NULL, NULL, '2019-12-30 22:55:02', 0, '2019-12-30 22:55:02', '2019-12-30 22:55:02');
 
 -- --------------------------------------------------------
 
@@ -16959,7 +17374,7 @@ CREATE TABLE IF NOT EXISTS `corporate_employees_action_log` (
   `user_type` int(11) NOT NULL,
   `action` varchar(60) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_employees_action_log`
@@ -16967,7 +17382,9 @@ CREATE TABLE IF NOT EXISTS `corporate_employees_action_log` (
 
 INSERT INTO `corporate_employees_action_log` (`id`, `corporate_id`, `spoc_id`, `core_employee_id`, `employee_cid`, `employee_name`, `employee_email`, `employee_contact`, `age`, `gender`, `id_proof_type`, `id_proof_no`, `is_active`, `has_dummy_email`, `fcm_regid`, `is_cxo`, `designation`, `home_city`, `home_address`, `assistant_id`, `date_of_birth`, `billing_entity_id`, `action_date`, `is_deleted`, `employee_id`, `user_id`, `user_type`, `action`) VALUES
 (1, 1, 0, NULL, NULL, 'Balwant Spoc', 'balwant@taxivaxi.in', '98765432144', 0, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, '2019-12-12 18:23:40', 0, 1, 1, 10, 'ADD'),
-(2, 1, 1, '', '', 'Balwant Employee', 'balwant@taxivaxi.in', '98765432144', 21, 'Male', '', '', 1, 0, NULL, 0, 'CODER', '2763', '', 0, '1998-12-12 00:00:00', 1, '2019-12-12 18:24:57', 0, 1, 1, 10, 'UPDATE');
+(2, 1, 1, '', '', 'Balwant Employee', 'balwant@taxivaxi.in', '98765432144', 21, 'Male', '', '', 1, 0, NULL, 0, 'CODER', '2763', '', 0, '1998-12-12 00:00:00', 1, '2019-12-12 18:24:57', 0, 1, 1, 10, 'UPDATE'),
+(3, 2, 0, NULL, NULL, 'Balwant Spoc22', 'balwant@taxivaxi.in111', '98765432144', 0, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, '2019-12-28 17:04:39', 0, 2, 1, 1, 'ADD'),
+(4, 4, 3, NULL, NULL, 'Balwant Chauhan', 'balwant@taxivaxi.in11', '8888888888', 0, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, '3127', NULL, 0, NULL, NULL, '2019-12-30 22:55:02', 0, 3, 1, 10, 'ADD');
 
 -- --------------------------------------------------------
 
@@ -16985,14 +17402,15 @@ CREATE TABLE IF NOT EXISTS `corporate_employee_access_token` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_people_access_token` (`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_employee_access_token`
 --
 
 INSERT INTO `corporate_employee_access_token` (`id`, `employee_id`, `access_token`, `expiry_date`, `user_agent`, `created`) VALUES
-(1, 1, 'S3SH31BZE8LEUBKNIHFTGNRA1WXCFAAVTPNI4MCCAZHWMQHOW81VDDSPZWM1', '2020-01-14 16:52:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36', '2019-12-14 16:52:13');
+(1, 1, 'S3SH31BZE8LEUBKNIHFTGNRA1WXCFAAVTPNI4MCCAZHWMQHOW81VDDSPZWM1', '2020-01-14 16:52:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36', '2019-12-14 16:52:13'),
+(2, 1, 'SBM9M58QLIVFYKEANQL3CZ3465USAZEXVYP2UWH9G2UAUGD37EKXO5TGKUC3', '2019-12-28 17:35:05', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-28 17:25:45');
 
 --
 -- Triggers `corporate_employee_access_token`
@@ -17229,14 +17647,15 @@ CREATE TABLE IF NOT EXISTS `corporate_logins` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_logins`
 --
 
 INSERT INTO `corporate_logins` (`id`, `corporate_id`, `email`, `password`, `name`, `contact_no`, `is_deleted`, `last_login`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `created`, `modified`) VALUES
-(1, 2, 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$KbFktaRJsV3C$WxTFEDXcAGMKfxehS0WoNbczVnpJa+emuxobg4b8uJk=', 'Balwant Chauhan', '8888888888', 0, '2019-12-17 12:36:53', 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, '2019-12-10 15:21:48', '2019-12-17 18:06:53');
+(1, 1, 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$KbFktaRJsV3C$WxTFEDXcAGMKfxehS0WoNbczVnpJa+emuxobg4b8uJk=', 'Balwant Chauhan', '8888888888', 0, '2020-01-09 12:25:41', 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, '2019-12-10 15:21:48', '2020-01-09 17:55:40'),
+(2, 4, 'balwant@taxivaxi.in11', 'pbkdf2_sha256$150000$UtkzDOeBbnBQ$IXZuxr55Ms22Wrjnu3WSFUcgD4hqT/ykAaCYmtwi4HI=', 'Balwant Chauhan', '8888888888', 0, '2019-12-30 18:30:14', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2019-12-30 22:55:01', '2019-12-31 00:00:13');
 
 -- --------------------------------------------------------
 
@@ -17269,14 +17688,15 @@ CREATE TABLE IF NOT EXISTS `corporate_logins_action_log` (
   `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `action` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_logins_action_log`
 --
 
 INSERT INTO `corporate_logins_action_log` (`id`, `corporate_id`, `email`, `password`, `name`, `contact_no`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `is_deleted`, `admin_id`, `user_id`, `user_type`, `action_date`, `action`) VALUES
-(1, 2, 'balwant@taxivaxi.in', '', 'Balwant Chauhan', '8888888888', 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, NULL, 1, 1, 10, '2019-12-10 15:21:48', 'ADD');
+(1, 2, 'balwant@taxivaxi.in', '', 'Balwant Chauhan', '8888888888', 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, NULL, 1, 1, 10, '2019-12-10 15:21:48', 'ADD'),
+(2, 4, 'balwant@taxivaxi.in11', 'pbkdf2_sha256$150000$UtkzDOeBbnBQ$IXZuxr55Ms22Wrjnu3WSFUcgD4hqT/ykAaCYmtwi4HI=', 'Balwant Chauhan', '8888888888', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 2, 1, 10, '2019-12-30 22:55:01', 'ADD');
 
 -- --------------------------------------------------------
 
@@ -17294,7 +17714,7 @@ CREATE TABLE IF NOT EXISTS `corporate_login_access_tokens` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `subgroup_authenticater_id` (`corporate_login_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_login_access_tokens`
@@ -17307,7 +17727,19 @@ INSERT INTO `corporate_login_access_tokens` (`id`, `corporate_login_id`, `access
 (4, 1, '27N5BHILKAA8CGBA5E2NLTDLYO34Q0FZTUOFERIAR10GPNE3PGTXZEQEL0IM', '2019-12-12 19:23:10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36', '2019-12-12 19:23:03'),
 (5, 1, 'JAQM0Z17H84HYDWZ1GYSHHBSA8JYV4O5XJIPTA9BST9KG8GB8WMIJJZHZ8HE', '2019-12-17 14:12:06', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-17 12:58:57'),
 (6, 1, 'DF3VCRTQ58BB1979E3R0LSM8YMEHINC83J92UJPNUJQKEGW4ANE02UYSIWE5', '2019-12-17 18:02:44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-17 18:00:30'),
-(7, 1, 'Y09ROW4PLHW4JRQCVN78ZQXZNW9H205ZQZVLS5AP0G5NBWJ6FORWG2U3DWMY', '2019-12-17 18:07:20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-17 18:06:53');
+(7, 1, 'Y09ROW4PLHW4JRQCVN78ZQXZNW9H205ZQZVLS5AP0G5NBWJ6FORWG2U3DWMY', '2019-12-17 18:07:20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-17 18:06:53'),
+(8, 1, 'ZQTLMLKTSRH65IGR091NGGQJ1FVN7YVUU2YPIMZBKTK8NMN50WTUC4KHSD7Q', '2020-01-20 15:13:56', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-20 15:13:56'),
+(9, 1, 'TZY8Y5U11VE2TAW0J6SPUOGG7T92U8RYKCKAJG28RI2GWMI28MRHG68EXPU9', '2019-12-23 11:33:55', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-23 11:30:19'),
+(10, 1, 'VFL9CUKLAFW1BCL0APZ4CH5NE7ERUB6PUY04FD4BPVDT4UJ067EV9AFFEO8E', '2019-12-23 11:44:54', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-23 11:34:37'),
+(11, 1, 'HQJHCJXI9R1WL75GZU0EYX3LXV1NR2STO0IS15RE2YUQ3KA3F4F8RPI9EXOQ', '2019-12-26 18:48:55', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-26 18:48:33'),
+(12, 1, 'JNNGO7LSXRQRO9RM393TVF9MZ83TG9HQPW7CICRK0IPBU9PTNAFNASZUY6CU', '2019-12-28 17:25:37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-28 16:54:54'),
+(13, 1, 'RA5QWU5M2LZVA98WG98TFZYU9ROHE4WNQBSCTNB33489L72PJC0P259F0DPV', '2019-12-30 11:55:43', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-30 10:49:45'),
+(14, 1, 'Q6F6MOC4E5YUZR38O4WEVSD0LNU1ABQSGN9JVXEVY7W71RJHZU05DIFC5XC8', '2019-12-30 23:59:20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-30 23:59:09'),
+(15, 2, 'QAPOZ4FDI8JZS3CI7MA94T35IELSOZJXW8C73H59PUH7OK1WSHMTMD0H6J2P', '2020-01-31 00:00:00', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-31 00:00:00'),
+(16, 2, 'LFZ6J6AJ4I3DBDKASPAALHQ20YKZSMFUZQH9E0IEXBNFHGSSZPSY45U6HS8D', '2020-01-31 00:00:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-31 00:00:13'),
+(17, 1, '8MS7UMTV2QPCPT44QZY7GMB6OXRWX4LDYTLUPYYYP8AX3X0BMTJRQAIXT4NR', '2020-02-02 11:45:14', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-02 11:45:14'),
+(18, 1, '2GY27HJZMGVH0E9XBB19PTP73D58J44VXTMOXMQUBWQTHZJ8X0JZX1XDTH0R', '2020-02-07 17:02:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-07 17:02:13'),
+(19, 1, '9U2W37ZOXEF5YW6D2QTJ9INX95LETA43TYK03RZK8NQB7I1F86C1D1DWVDVZ', '2020-01-09 18:37:54', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 17:55:40');
 
 --
 -- Triggers `corporate_login_access_tokens`
@@ -17337,7 +17769,15 @@ CREATE TABLE IF NOT EXISTS `corporate_management_fees` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `corporate_management_fees`
+--
+
+INSERT INTO `corporate_management_fees` (`id`, `corporate_id`, `service_fees_type_id`, `service_fees_type_value`, `service_fees_type`, `is_deleted`, `created`, `modified`) VALUES
+(1, 2, 4, 100.00, 1, 0, '2020-01-08 11:37:24', '2020-01-08 11:37:24'),
+(2, 1, 1, 100.00, 1, 0, '2020-01-08 11:37:52', '2020-01-08 11:37:52');
 
 -- --------------------------------------------------------
 
@@ -17359,7 +17799,15 @@ CREATE TABLE IF NOT EXISTS `corporate_management_fees_action_log` (
   `action` varchar(100) NOT NULL,
   `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `corporate_management_fees_action_log`
+--
+
+INSERT INTO `corporate_management_fees_action_log` (`id`, `corporate_id`, `service_fees_type_id`, `service_fees_type_value`, `service_fees_type`, `is_deleted`, `fee_id`, `user_id`, `user_type`, `action`, `action_date`) VALUES
+(1, 2, 4, 100.00, 1, 0, 1, 1, 10, 'ADD', '2020-01-08 11:37:24'),
+(2, 1, 1, 100.00, 1, 0, 2, 1, 10, 'ADD', '2020-01-08 11:37:52');
 
 -- --------------------------------------------------------
 
@@ -17559,14 +18007,16 @@ CREATE TABLE IF NOT EXISTS `corporate_spocs` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_spocs`
 --
 
 INSERT INTO `corporate_spocs` (`id`, `access_token`, `corporate_id`, `group_id`, `subgroup_id`, `user_cid`, `user_name`, `user_contact`, `email`, `username`, `password`, `old_password`, `profile_image`, `budget`, `expense`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `status`, `has_single_employee`, `fcm_regid`, `last_login`, `is_deleted`, `created`, `modified`) VALUES
-(1, NULL, 1, 1, 1, '13124214', 'Balwant Spoc', '98765432144', 'balwant@taxivaxi.in', 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$ZZgpws2HOv0H$dB8I1qVDBn8sk17Y/DgIjuHUBx8DyaFpwv1h37cdWMk=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-18 08:09:37', 0, '2019-12-12 18:23:40', '2019-12-18 13:39:36');
+(1, NULL, 1, 1, 1, '13124214', 'Balwant Spoc', '98765432144', 'balwant@taxivaxi.in', 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$ZZgpws2HOv0H$dB8I1qVDBn8sk17Y/DgIjuHUBx8DyaFpwv1h37cdWMk=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2020-01-10 06:03:38', 0, '2019-12-12 18:23:40', '2020-01-10 11:33:38'),
+(2, NULL, 2, 0, 0, '13124214', 'Balwant Spoc22', '98765432144', 'balwant@taxivaxi.in111', 'balwant@taxivaxi.in111', 'pbkdf2_sha256$150000$HeUrUwEAkiqR$NL7ldfo3yFprQLpN5D7+ylj5jqnKTor7g8znly0tNeQ=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-28 17:04:39', 0, '2019-12-28 17:04:39', '2019-12-28 17:04:39'),
+(3, NULL, 4, 0, 0, NULL, 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in11', 'balwant@taxivaxi.in11', 'pbkdf2_sha256$150000$UtkzDOeBbnBQ$IXZuxr55Ms22Wrjnu3WSFUcgD4hqT/ykAaCYmtwi4HI=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-30 22:55:01', 0, '2019-12-30 22:55:01', '2019-12-30 22:55:01');
 
 -- --------------------------------------------------------
 
@@ -17611,14 +18061,16 @@ CREATE TABLE IF NOT EXISTS `corporate_spocs_action_log` (
   `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `action` varchar(60) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_spocs_action_log`
 --
 
 INSERT INTO `corporate_spocs_action_log` (`id`, `access_token`, `corporate_id`, `group_id`, `subgroup_id`, `user_cid`, `user_name`, `user_contact`, `email`, `username`, `password`, `old_password`, `profile_image`, `budget`, `expense`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `status`, `has_single_employee`, `fcm_regid`, `last_login`, `spoc_id`, `user_type`, `user_id`, `action_date`, `action`) VALUES
-(1, NULL, 1, 1, 1, '13124214', 'Balwant Spoc', '98765432144', 'balwant@taxivaxi.in', 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$ZZgpws2HOv0H$dB8I1qVDBn8sk17Y/DgIjuHUBx8DyaFpwv1h37cdWMk=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-12 18:23:40', 1, 10, 1, '2019-12-12 18:23:40', 'ADD');
+(1, NULL, 1, 1, 1, '13124214', 'Balwant Spoc', '98765432144', 'balwant@taxivaxi.in', 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$ZZgpws2HOv0H$dB8I1qVDBn8sk17Y/DgIjuHUBx8DyaFpwv1h37cdWMk=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-12 18:23:40', 1, 10, 1, '2019-12-12 18:23:40', 'ADD'),
+(2, NULL, 2, 0, 0, '13124214', 'Balwant Spoc22', '98765432144', 'balwant@taxivaxi.in111', 'balwant@taxivaxi.in111', 'pbkdf2_sha256$150000$HeUrUwEAkiqR$NL7ldfo3yFprQLpN5D7+ylj5jqnKTor7g8znly0tNeQ=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-28 17:04:39', 2, 1, 1, '2019-12-28 17:04:39', 'ADD'),
+(3, NULL, 4, 0, 0, NULL, 'Balwant Chauhan', '8888888888', 'balwant@taxivaxi.in11', 'balwant@taxivaxi.in11', 'pbkdf2_sha256$150000$UtkzDOeBbnBQ$IXZuxr55Ms22Wrjnu3WSFUcgD4hqT/ykAaCYmtwi4HI=', NULL, NULL, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, NULL, '2019-12-30 22:55:01', 3, 10, 1, '2019-12-30 22:55:01', 'ADD');
 
 -- --------------------------------------------------------
 
@@ -17635,7 +18087,7 @@ CREATE TABLE IF NOT EXISTS `corporate_spoc_access_tokens` (
   `user_agent` varchar(200) DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_spoc_access_tokens`
@@ -17648,7 +18100,43 @@ INSERT INTO `corporate_spoc_access_tokens` (`id`, `spoc_id`, `access_token`, `ex
 (4, 1, 'FO4KA7K6RMCES158J41QLA3TILB7LQ3J9HXHUSTBKGLCL69UYE0ODGVODYU9', '2019-12-17 18:00:14', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-17 16:38:45'),
 (5, 1, 'E7DANLDS8X00UIVC1VT15CTUNY80XKLVKDN5YMC0A24I318VPKOZ1VBEOM9S', '2019-12-18 10:44:05', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 10:34:01'),
 (6, 1, 'K0WU0XT3CJGBKESEDXRLXJCLNE2HIXT69WSKS2E99G4SCPSISLZ2JFBW4D73', '2019-12-18 13:15:45', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 12:47:29'),
-(7, 1, '92BCG00FK1NDP9PGN4CZA8Q3AYWKOCOXZH853P9EKSKBZ3ZJ5HS5CWLD5988', '2020-01-18 13:39:36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 13:39:36');
+(7, 1, '92BCG00FK1NDP9PGN4CZA8Q3AYWKOCOXZH853P9EKSKBZ3ZJ5HS5CWLD5988', '2020-01-18 13:39:36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 13:39:36'),
+(8, 1, 'LLK1HCXTYJ058AVOBQUJFMKOPHXQMGAH0BXPLQUJQHKFHRGRO5G07JVKF0OX', '2020-01-18 15:40:09', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-18 15:40:09'),
+(9, 1, '8Y5TGUITGHKTZ4WNRJBMV9TQ9INJQ4KLHK2P61BYELFVKGTLYEQ21COO3WBP', '2020-01-19 11:53:37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-19 11:53:37'),
+(10, 1, 'DBFMY7JS4XRY0Y6E0MD7K1KDHGWW6MQI11ZHCVALYA719MFTJ8O45IF72ZUK', '2020-01-19 16:50:30', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-19 16:50:30'),
+(11, 1, 'G30Q606OE8FDWOHBZ7ZN9NYWQUE3XRVBCL316IAVXZUN3P0OZBH2RGOF6LQS', '2020-01-19 18:53:00', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-19 18:53:00'),
+(12, 1, 'BFJN6J1VV29YUSOV6KJ1XDOZ0Y6VZCC2N0SRQT34ZHW2AHKNIQMCW0JA4BZ1', '2020-01-21 11:06:45', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-21 11:06:45'),
+(13, 1, 'YJKWHEDQJG3BKQ94Z3KM0RGVKAPM526W9WNIXH27RNTWEPS0NNQB1L4C1GKO', '2020-01-21 13:13:38', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-21 13:13:38'),
+(14, 1, 'UPQC4YF6XW9SBLFIKGIQVCZGPG91LTUZ2HA9186N5SJIX11EAVK1BE1D55T1', '2020-01-21 15:25:48', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-21 15:25:48'),
+(15, 1, 'AKZ6KGYB32G3QXWF80UWENKTCCHGFIX3517W8U6O5SLL6CEXWP92Z1B3XSZ9', '2020-01-21 17:33:30', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', '2019-12-21 17:33:30'),
+(16, 1, 'OKYFYZCTSDUSGY3BMHHW97E594NTSA22I23U8LGY0BTQTJYP0DBPYBNTCUCT', '2020-01-23 11:45:07', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-23 11:45:07'),
+(17, 1, 'UVMB2IDGCNRRS2W57PH4RU27C27DQGQOGUWV65G7X5FU5P08T00VOEQ7R6K9', '2020-01-23 14:06:29', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-23 14:06:29'),
+(18, 1, '8VBEMTXL2Q4EPINKC084RSWZZ3NRXM5NLMBFKWZJOOJAJIOCQGD9ZH6YCLAE', '2020-01-23 16:35:03', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-23 16:35:03'),
+(19, 1, 'NN9VQPU408YBHYJN5TFF2Z32P54YZOZSPNAGYBO5KII7085FVZ6B2IWC5IZ9', '2020-01-24 11:18:28', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-24 11:18:28'),
+(20, 1, 'XQ442KT23K6C1H2UKPRZ4MIV5G2OFZO0542EA2VUNIJSGG7FQBGWFDOIEVYO', '2020-01-24 16:49:47', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-24 16:49:47'),
+(21, 1, 'E5AGOFAYFDU6057W1E3RIZSY09TY4MCYNK428UENZS646R0B5UIP4B59H6OW', '2019-12-26 18:36:14', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-26 18:23:05'),
+(22, 1, 'JR0FHEUTNSZAU7488MRB4GMLNIWUB8XBVFNJBQT2URL1S1KNJUZE07T8MLQ8', '2020-01-27 13:10:37', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-27 13:10:37'),
+(23, 1, 'GOZ9LMKOGCOFL2MYFNJROEPY3KE6M19T9N5BD3M692ITGSUAZCY6IQJMBJ8X', '2020-01-27 15:18:36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-27 15:18:36'),
+(24, 1, '33PQNPECVHDA7MWFV7FG01SN1ORFGOZWPCSWC5ONOE9UJYNON3JLOUW750JI', '2020-01-27 17:20:08', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-27 17:20:08'),
+(25, 1, 'WKZXKK6H0TV6HGIWOOBISLJ4NV7UC2TALCHRM36LNIR9EKJKZO9IBKMLX7ZN', '2019-12-28 17:47:43', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-28 17:35:15'),
+(26, 1, '6UKVGJGPH8B392SEMEC1OE8BM3J11XDMKT8BL41A23SL0R569RJ0SIP2V41O', '2020-01-30 11:55:53', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-30 11:55:53'),
+(27, 1, 'XMN9K6BAQPJQRN33RL8Y89A27BRFTOQSU6B19RQ66FUWPJKCVUBLD8J7N6RW', '2020-01-31 12:05:53', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-31 12:05:53'),
+(28, 1, '5LCANV67HYZ072W32YQK8NVFXC3XUON9Q5KN3D7OFF988H9Q8O6QC4VJ05H8', '2020-01-31 21:49:52', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2019-12-31 21:49:52'),
+(29, 1, '8ZPU7FZK91PMO8JEXI4ECPJ9R6X3W7U07AISZJUGZ71OHLCETA2MTC2YE26H', '2020-02-01 13:39:42', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-01 13:39:42'),
+(30, 1, '90GI0663VMQM0DLZ09I8SPRF7BU5ZZMTQ61ED6TLLUNQS3FA5EKY38MITK79', '2020-02-01 17:00:23', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-01 17:00:23'),
+(31, 1, 'S4AZHECYSBJ2RT4AOO3EJ2YETWQORT5MT0R0JKPNCO0N0285W1KOHRGR5JNT', '2020-02-02 11:45:18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-02 11:45:18'),
+(32, 1, 'RLWKR20NVCTWMY0VOZOQZXCMTNZ7QQL50I46I0BS69RXZQ6TQ0CUAT807K7X', '2020-02-02 14:52:20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-02 14:52:20'),
+(33, 1, 'R4TUDBQR0BMMA2WQGUN4I6BB542YNDZ7WQSF9QYEAY1ANOO1JSWAN7EAK924', '2020-02-02 16:54:05', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-02 16:54:05'),
+(34, 1, 'RKF6OR4TC261ZY30Z5YSIL92GUM87O84TY0EAD4PJZ8KCYE9V6W74M1GPD6Y', '2020-02-03 13:20:21', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 13:20:21'),
+(35, 1, 'RUWZF51XFPCGA6ZANKGC3VTTJZA2X476OMNDPX7SPM1WFQZEFIAZGU7HW5V0', '2020-01-03 18:19:44', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 16:00:33'),
+(36, 1, 'ZVBHC5PZW888ZRG0D1B5WJCBZ94UL8KRAS2508FL27ECAHVF0HB5IGBDR6K2', '2020-01-03 18:26:42', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 18:25:13'),
+(37, 1, 'R9O8TU7PT2QWV8RVXBTEMC6T0MHIARK5F0MTL0ZBT1OBJTLBDE7RJMBDMUFT', '2020-02-08 13:20:51', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-08 13:20:51'),
+(38, 1, 'ODO342D2CGIVFIJL6UDLTMH545XVDH35L8BSKEMR2E72T1CBIBRQBVOCZW98', '2020-01-09 17:55:32', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 17:04:38'),
+(39, 1, '4Q2ZZQMF77E7167N3ZGCK0PSD085MJ6LM3U4053WV5NSBQ2WM5U2PPU68EZ2', '2020-02-09 18:40:59', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 18:40:59'),
+(40, 1, 'XXA17BVPIKUHND8IMULMXTNC7MZI9J1UQ06D1QBP0YXGZK3DOAD02UGE92I4', '2020-02-09 20:57:53', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 20:57:53'),
+(41, 1, 'MJD0NVF4NXSBL59SNFZBFZCWTZHNHF8BSOFR5MALB572K63X50C41PRK66RP', '2020-02-09 22:58:46', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 22:58:46'),
+(42, 1, 'PR18YBFC7NNAUH2N1KET7Z6MIUB2EK7ZCURACA93WAC5ZZFSI5B1KDPBLMZN', '2020-02-09 23:11:18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-09 23:11:18'),
+(43, 1, 'EWLB5D78MC6RI2ERZCUZ27R67M8HEN82U4L836IUSE4E3I1UOLKTNXAQ0UQI', '2020-02-10 11:33:38', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-10 11:33:38');
 
 --
 -- Triggers `corporate_spoc_access_tokens`
@@ -17678,14 +18166,15 @@ CREATE TABLE IF NOT EXISTS `corporate_subgroups` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `corporate_id` (`corporate_id`,`group_id`,`subgroup_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_subgroups`
 --
 
 INSERT INTO `corporate_subgroups` (`id`, `corporate_id`, `group_id`, `subgroup_name`, `is_deleted`, `created`, `modified`) VALUES
-(1, 1, 1, 'Jio Pune', 0, '2019-12-12 18:21:57', '2019-12-12 18:21:57');
+(1, 1, 1, 'Jio Pune', 0, '2019-12-12 18:21:57', '2019-12-12 18:21:57'),
+(2, 4, 0, 'test1111', 0, '2019-12-31 00:00:54', '2019-12-31 00:00:54');
 
 -- --------------------------------------------------------
 
@@ -17753,14 +18242,15 @@ CREATE TABLE IF NOT EXISTS `corporate_subgroup_authenticater` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_subgroup_authenticater`
 --
 
 INSERT INTO `corporate_subgroup_authenticater` (`id`, `subgroup_id`, `cid`, `name`, `email`, `contact_no`, `password`, `old_password`, `profile_image`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `access_token`, `status`, `corporate_id`, `device_id`, `fcm_regid`, `last_login`, `is_deleted`, `created`, `modified`) VALUES
-(1, 1, 'HCL13212231', 'Balwant Auth2', 'balwant@taxivaxi.in', '9876543210', 'pbkdf2_sha256$150000$WcPp4y6J6JAv$Gl+5HoKqfKLQMoe3zwjgmzE9bl4WSYM/EyLj7aLsmZc=', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '8Z5H3GPNQLSIGKUMR7T3ON060KBL95OBN4LDV6UK7PCPAP91P34KCXPSLJV4', 1, 1, NULL, NULL, '2019-12-12 18:21:57', 0, '2019-12-12 18:21:57', '2019-12-12 18:21:57');
+(1, 1, 'HCL13212231', 'Balwant Auth2', 'balwant@taxivaxi.in', '9876543210', 'pbkdf2_sha256$150000$WcPp4y6J6JAv$Gl+5HoKqfKLQMoe3zwjgmzE9bl4WSYM/EyLj7aLsmZc=', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '8Z5H3GPNQLSIGKUMR7T3ON060KBL95OBN4LDV6UK7PCPAP91P34KCXPSLJV4', 1, 1, NULL, NULL, '2020-01-03 12:56:49', 0, '2019-12-12 18:21:57', '2020-01-03 18:26:48'),
+(2, 2, '121311', 'Ravi Singh111', 'baliram@taxivaxi.in111', '9876540111', 'pbkdf2_sha256$150000$LAuY1Unwzm3C$lwMWAMMjicQp0hjnb03oOQHPnvTY27TXkhukqxpJUE8=', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '', 1, 4, NULL, NULL, '2019-12-31 00:00:54', 0, '2019-12-31 00:00:54', '2019-12-31 00:00:54');
 
 -- --------------------------------------------------------
 
@@ -17778,7 +18268,15 @@ CREATE TABLE IF NOT EXISTS `corporate_subgroup_authenticater_access_tokens` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `subgroup_authenticater_id` (`subgroup_authenticater_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `corporate_subgroup_authenticater_access_tokens`
+--
+
+INSERT INTO `corporate_subgroup_authenticater_access_tokens` (`id`, `subgroup_authenticater_id`, `access_token`, `expiry_date`, `user_agent`, `created`) VALUES
+(1, 1, 'UCNFN7QG8ETCFPWHWE1N8CQOMHQJGH9BLZ6BR1LR4PFMHLANID2SMPUE3MKA', '2020-01-03 18:24:46', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 18:19:51'),
+(2, 1, 'D63BFFZ61F47UM3VJICND4NEPQWHQ7W6WZCBQI94B2JTJ5W7N8JOC14GNGWI', '2020-02-03 18:26:48', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36', '2020-01-03 18:26:48');
 
 --
 -- Triggers `corporate_subgroup_authenticater_access_tokens`
@@ -17831,14 +18329,15 @@ CREATE TABLE IF NOT EXISTS `corporate_subgroup_authenticater_action_log` (
   `action_date` datetime NOT NULL,
   `action` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `corporate_subgroup_authenticater_action_log`
 --
 
 INSERT INTO `corporate_subgroup_authenticater_action_log` (`id`, `subgroup_id`, `cid`, `name`, `email`, `contact_no`, `password`, `old_password`, `profile_image`, `is_radio`, `is_local`, `is_outstation`, `is_bus`, `is_train`, `is_hotel`, `is_meal`, `is_flight`, `is_water_bottles`, `is_reverse_logistics`, `access_token`, `status`, `corporate_id`, `device_id`, `fcm_regid`, `last_login`, `is_deleted`, `authenticator_id`, `user_id`, `user_type`, `action_date`, `action`) VALUES
-(1, 1, 'HCL13212231', 'Balwant Auth2', 'balwant@taxivaxi.in', '9876543210', 'pbkdf2_sha256$150000$WcPp4y6J6JAv$Gl+5HoKqfKLQMoe3zwjgmzE9bl4WSYM/EyLj7aLsmZc=', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '8Z5H3GPNQLSIGKUMR7T3ON060KBL95OBN4LDV6UK7PCPAP91P34KCXPSLJV4', 1, 1, NULL, NULL, '2019-12-12 18:21:57', 0, 1, 1, 10, '2019-12-12 18:21:57', 'ADD');
+(1, 1, 'HCL13212231', 'Balwant Auth2', 'balwant@taxivaxi.in', '9876543210', 'pbkdf2_sha256$150000$WcPp4y6J6JAv$Gl+5HoKqfKLQMoe3zwjgmzE9bl4WSYM/EyLj7aLsmZc=', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '8Z5H3GPNQLSIGKUMR7T3ON060KBL95OBN4LDV6UK7PCPAP91P34KCXPSLJV4', 1, 1, NULL, NULL, '2019-12-12 18:21:57', 0, 1, 1, 10, '2019-12-12 18:21:57', 'ADD'),
+(2, 2, '121311', 'Ravi Singh111', 'baliram@taxivaxi.in111', '9876540111', 'pbkdf2_sha256$150000$LAuY1Unwzm3C$lwMWAMMjicQp0hjnb03oOQHPnvTY27TXkhukqxpJUE8=', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '', 1, 4, NULL, NULL, '2019-12-31 00:00:54', 0, 2, 2, 1, '2019-12-31 00:00:54', 'ADD');
 
 -- --------------------------------------------------------
 
@@ -18575,7 +19074,57 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('ww515k36cenvcgc5kekwe7qdppcm5ajh', 'NGJhNDA4MGJhZjMyNjdmYWVhNjZiMmZkMTI3ZWZlZjI2YjljMzhiMjp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJJNlUyRjExNFgyMzY0SU5LNkNUSkhaNTY0Q0JORVhLNVdaMFRDWDVDSzVJMkJGSEFaMURGUFpWWlIxVjIiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-17 07:00:48.842900'),
 ('x82xuq3zivfm7hmzjymts004npw06vm8', 'ZDk3YzY2NTQ5ZjY2NmM1YjA1NjU2NWRlZGRmNzU4ODZmZDZhYWNiMjp7ImxvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJzcG9jX2FjY2Vzc190b2tlbiI6IkpDV0tKSEFIWElHSkQ4Uk84WTBRMENWQk5KTkZWT0g5NElIQ1RSSU9WSTlGWEszTkdQMlVZTVo5RDhDTyIsInNwb2NfbG9naW5fdHlwZSI6IjQifQ==', '2019-12-17 10:42:13.529073'),
 ('qky2y29bbgluh8k25r6tk2x5475wzhqb', 'NjM4OGU1YTFhNjkwM2JjZmE4YmYyMzdjNzg1NDFmZjkyODA3Nzg2Yzp7ImxvZ2luX3R5cGUiOiIxIiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-17 14:37:19.868256'),
-('pl68j4wft43ltbwexsq73e696c6rv96q', 'YTAzM2ZjZjgwMzQ3Yzg1ZmQ4ODQwMDhiZWU4YWY1OWUzZGM2ZTk4Yzp7ImxvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJzcG9jX2FjY2Vzc190b2tlbiI6IjkyQkNHMDBGSzFORFA5UEdONENaQThRM0FZV0tPQ09YWkg4NTNQOUVLU0tCWjNaSjVIUzVDV0xENTk4OCIsInNwb2NfbG9naW5fdHlwZSI6IjQifQ==', '2019-12-18 10:09:36.636061');
+('pl68j4wft43ltbwexsq73e696c6rv96q', 'YTAzM2ZjZjgwMzQ3Yzg1ZmQ4ODQwMDhiZWU4YWY1OWUzZGM2ZTk4Yzp7ImxvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJzcG9jX2FjY2Vzc190b2tlbiI6IjkyQkNHMDBGSzFORFA5UEdONENaQThRM0FZV0tPQ09YWkg4NTNQOUVLU0tCWjNaSjVIUzVDV0xENTk4OCIsInNwb2NfbG9naW5fdHlwZSI6IjQifQ==', '2019-12-18 10:09:36.636061'),
+('nv99cks725tzxxrtgljo0kxw9vgqpvfr', 'MDVhZjY3NzlkNTkyNjE0MTBjZDk5MmIyM2ViNGU0NDA4ZTg4MDE4Nzp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJMTEsxSENYVFlKMDU4QVZPQlFVSkZNS09QSFhRTUdBSDBCWFBMUVVKUUhLRkhSR1JPNUcwN0pWS0YwT1giLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-18 12:10:09.656018'),
+('es5ijs4c2c2etumq2aw7flcpoeswmke6', 'M2NlYjA0MTc3MmVhZDAzNjZmY2I1YzQxM2JhMTAyZTJjMTQ3NTc3Nzp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IlVMR0FTR0RRMUM4MU4zTE1PSDlGS1BKVUFBVUEwUEJDNTZXUFhQN0ZMMlFXWlJGRDdPS0dIRTBQOVo4QSIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2019-12-18 14:10:27.704542'),
+('sbvvaq55152ami5xtsy7zru1u9xia9u8', 'MTkzYWI1NGY1NjMxZTgzMjljOTQ2MWI2YzNiNWI1YjQ0MmI0ZGUyMzp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiI4WTVUR1VJVEdIS1RaNFdOUkpCTVY5VFE5SU5KUTRLTEhLMlA2MUJZRUxGVktHVExZRVEyMUNPTzNXQlAiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-19 08:23:38.040700'),
+('z8ap3e65x66w83ku0hzpt94j4f5tl9ad', 'YzcxODdjMzE2NzYxZGI3OWU0YzkwMWI3YmY1OWMyNTdhMTFjNDUzZTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJEQkZNWTdKUzRYUlkwWTZFME1EN0sxS0RIR1dXNk1RSTExWkhDVkFMWUE3MTlNRlRKOE80NUlGNzJaVUsiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-19 13:20:31.132727'),
+('bn4jv3qobateggb6fjh46qarvmuzz4d8', 'NjZhYTk3ODM5NTA5YmZkYTA2M2ZhY2NkZGNhNmM1Y2JmMTllYWIwOTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJHMzBRNjA2T0U4RkRXT0hCWjdaTjlOWVdRVUUzWFJWQkNMMzE2SUFWWFpVTjNQME9aQkgyUkdPRjZMUVMiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-19 15:23:00.568957'),
+('t7a2won5w4xicjlbx1h5jo24v5abl7p8', 'ZDAwOTIxNDUxYTI5MzYzMjRjOWQ2MzZmMjc2MjRmNTIxY2E1ZDk3ZDp7ImxvZ2luX3R5cGUiOiIxIiwiYWRtaW5fYWNjZXNzX3Rva2VuIjoiWlFUTE1MS1RTUkg2NUlHUjA5MU5HR1FKMUZWTjdZVlVVMllQSU1aQktUSzhOTU41MFdUVUM0S0hTRDdRIiwiYWRtaW5fbG9naW5fdHlwZSI6IjEiLCJfc2Vzc2lvbl9leHBpcnkiOjcyMDAsIl9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiQ29tbW9uLmJhY2tlbmRzLkN1c3RvbUNvbXBhbnlVc2VyQXV0aCIsIl9hdXRoX3VzZXJfaGFzaCI6IiJ9', '2019-12-20 11:43:57.041520'),
+('uvdb995e8obgbh8klvsmm2yqwp0v4xbz', 'NGJkNTlkYjlmYjUzYzlkOWEzMmY5MjVkNDExZWE4ZTYwYmNmNTM2NTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJZSktXSEVEUUpHM0JLUTk0WjNLTTBSR1ZLQVBNNTI2VzlXTklYSDI3Uk5UV0VQUzBOTlFCMUw0QzFHS08iLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-21 09:43:38.715374'),
+('pgaa44aoxy9it6wsux1lbgu923lasu3w', 'M2ZkNWU4ZDMwYjA3M2IwM2M2OTMzYzRiMmJiNjVjZGI3OWYwMjMyZjp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJCRkpONkoxVlYyOVlVU09WNktKMVhET1owWTZWWkNDMk4wU1JRVDM0WkhXMkFIS05JUU1DVzBKQTRCWjEiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-21 07:36:45.902012'),
+('wgvm9sc3me4rq442y1s34bva82mz76i7', 'NjlmZTI1Yzc5YzZkZGYzYjc4NDkzMWY4NjVmZjM1NDViMTExYTdmZTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJVUFFDNFlGNlhXOVNCTEZJS0dJUVZDWkdQRzkxTFRVWjJIQTkxODZONVNKSVgxMUVBVksxQkUxRDU1VDEiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-21 11:55:48.818031'),
+('23ov8sj2hm07k617xqyujjauknef8nej', 'N2Y2YTIwZjY3NmZhYTZkOTQwZTYxZjA5NDIwYzA4ZDhhMWRlYjFlYTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJBS1o2S0dZQjMyRzNRWFdGODBVV0VOS1RDQ0hHRklYMzUxN1c4VTZPNVNMTDZDRVhXUDkyWjFCM1hTWjkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-21 14:03:31.150923'),
+('rhvvr5alx2ks5dfmp4wlsydvawi0hcuf', 'MTdjMzg5OGIyNGRjYmZlNTc5MDAyMmRiYWM2YzJmMjNiNTdlMmJlZjp7ImxvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJzcG9jX2FjY2Vzc190b2tlbiI6Ik9LWUZZWkNUU0RVU0dZM0JNSEhXOTdFNTk0TlRTQTIySTIzVThMR1kwQlRRVEpZUDBEQlBZQk5UQ1VDVCIsInNwb2NfbG9naW5fdHlwZSI6IjQifQ==', '2019-12-23 08:15:07.232073'),
+('jstuobc0jshjes9h698fqwpa2qhrp4hl', 'NDVlNjk3YTE5NzJkYmQzOTQ4YzI4ZGQzZDA5ODU0ZDMyNTU5ODg1ZDp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJVVk1CMklER0NOUlJTMlc1N1BINFJVMjdDMjdEUUdRT0dVV1Y2NUc3WDVGVTVQMDhUMDBWT0VRN1I2SzkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-23 10:36:29.378538'),
+('5ig611eipjythq2k2kkd8piev0i0tq93', 'YTdmZWE4ZWYzZGY0NDBmNWIyNGM0NjM3MDc0NjVmNTkwYzYwZmZiNjp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiI4VkJFTVRYTDJRNEVQSU5LQzA4NFJTV1paM05SWE01TkxNQkZLV1pKT09KQUpJT0NRR0Q5Wkg2WUNMQUUiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-23 13:05:03.515306'),
+('mk1wez3ghsmu8j0005l9l90shun5nroj', 'ZGE1ZTZhYWQ0Mzk2OWJlNzVjZGVkNzRlNTY1ZDVkZTEyYWMwNTQwYjp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJOTjlWUVBVNDA4WUJIWUpONVRGRjJaMzJQNTRZWk9aU1BOQUdZQk81S0lJNzA4NUZWWjZCMklXQzVJWjkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-24 07:48:28.435399'),
+('wse05bj0pugmpqbm4x4br4e93yi0rz95', 'MjgyYjhhMGExNWFiYmE0ZDFmNTE0ZjI0NTJiZTM3OWQ4ZmQwNmUyZDp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJYUTQ0MktUMjNLNkMxSDJVS1BSWjRNSVY1RzJPRlpPMDU0MkVBMlZVTklKU0dHN0ZRQkdXRkRPSUVWWU8iLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-24 13:19:47.602067'),
+('zq192k7an8gavwqn3pgwtrgitui7gojk', 'OWVhZTI4NWNhYzgxZTM4MjFjMGQyNzEyNTI2Mjk1ZDA1MTk5MzA4ZDp7ImxvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2019-12-26 15:19:42.919485'),
+('j0ygbni9mwiqn6rlosgl9a7o1wb39qdd', 'NzNjMDg4NTVmZThkYWRhMGU3ZDU1NzY5NGZkZDRjOTBhNDM4ZTkyMTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJKUjBGSEVVVE5TWkFVNzQ4OE1SQjRHTUxOSVdVQjhYQlZGTkpCUVQyVVJMMVMxS05KVVpFMDdUOE1MUTgiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-27 09:40:37.528557'),
+('fkync98qp3xzqmiq205dau764p5r8rpn', 'NWQ5MDk3MzNhNGY3ZmQ2NzY4NzllNTI4NDk2YzQzMmE4N2Y1ZTQzZDp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJHT1o5TE1LT0dDT0ZMMk1ZRk5KUk9FUFkzS0U2TTE5VDlONUJEM002OTJJVEdTVUFaQ1k2SVFKTUJKOFgiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-27 11:48:36.341969'),
+('e84wus6wt2sj2aqspltq77kqn79c3dtz', 'MTYxYTAxNWNlNDg0NGY0NjI4ZjE5NDFkYjU1YTQwZGNiOTI1MDU4YTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiIzM1BRTlBFQ1ZIREE3TVdGVjdGRzAxU04xT1JGR09aV1BDU1dDNU9OT0U5VUpZTk9OM0pMT1VXNzUwSkkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2019-12-27 13:50:08.964869'),
+('33b1kiim5sm0o6oqg035hen3xucupblu', 'ZGFmYTQyNjVmNzE0MDQxMTA1ZTE2YTI5YTc0NDYyODRhNDY3MjBhMjp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IkJaWkdFVDlaU1BaS1JLRkE0WlE5WFJCSUI5TjZSSDQ2V0tRWUhVMkpETDUwMlBZMEFNQkZGVUZHN043OSIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2019-12-28 09:37:05.268889'),
+('cp4toy7k33sf8c6ctp2gfsph5hv8oirb', 'Zjc1NjRhZmUxYTQ3ZTc2YzA4YmY0ODM3NTMxMGJkMDE1Y2M0NTdkMjp7ImxvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIiwiYWdlbnRfYWNjZXNzX3Rva2VuIjoiWlM3V1hCSEFGQTJYNzJBN0FOTDVRSjVTREtJREJUOEpTQVZLNU1VV1NSNjVXNDZGMUNKMzI1V1Q1MDJOIiwiYWdlbnRfbG9naW5fdHlwZSI6IjEwIn0=', '2019-12-28 14:17:51.445676'),
+('giv8xcpuxjvr6p5oam1ifyl0aw1w2oqr', 'NGRmNGY0OTgwY2VlOGVmMzMzZjkxZDQwYzI2YWNkNGM4YzdlZDM0MDp7ImxvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJzcG9jX2FjY2Vzc190b2tlbiI6IjZVS1ZHSkdQSDhCMzkyU0VNRUMxT0U4Qk0zSjExWERNS1Q4Qkw0MUEyM1NMMFI1NjlSSjBTSVAyVjQxTyIsInNwb2NfbG9naW5fdHlwZSI6IjQifQ==', '2019-12-30 08:25:53.869800'),
+('etkkriw2j5vazsj79rk7i3fkdbl7sk7d', 'Mjc0ZDY4NmE0YjRkNDZjNzBjNzg1ZTFhNmVlN2FlMDFjNGM3MzEzYTp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IlkyVU1QUDg3TFlVQ0kwN0k3QUxBU05PNzhXVTRQUU5HNk4zV0NXUVRGR1RPOFJJTVVIQk5CQzNNQjQ2QSIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2019-12-30 11:42:46.039314'),
+('ybi6x83ddvfrhy0g8wgq57crmtbva8w8', 'ZDVjOGFlZTQ4ODczNjJmMDc5YTI2NWYxOGExMGVmNmE2OTQxMjU5OTp7Il9hdXRoX3VzZXJfaWQiOiIyIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiQ29tbW9uLmJhY2tlbmRzLkN1c3RvbUNvbXBhbnlVc2VyQXV0aCIsIl9hdXRoX3VzZXJfaGFzaCI6IiIsImxvZ2luX3R5cGUiOiIxIiwiYWRtaW5fYWNjZXNzX3Rva2VuIjoiTEZaNko2QUo0STNEQkRLQVNQQUFMSFEyMFlLWlNNRlVaUUg5RTBJRVhCTkZIR1NTWlBTWTQ1VTZIUzhEIiwiYWRtaW5fbG9naW5fdHlwZSI6IjEiLCJfc2Vzc2lvbl9leHBpcnkiOjcyMDB9', '2019-12-30 20:30:13.850573'),
+('wttgkqe6nmqws1wd9pz7u0jnmyksrl3p', 'YTNlNGUzZWJjMTllOGY4NDFiM2NkODYyODM4OWVlZjhjODQ3YWVkYjp7ImxvZ2luX3R5cGUiOiIxMCIsInNwb2NfYWNjZXNzX3Rva2VuIjoiWE1OOUs2QkFRUEpRUk4zM1JMOFk4OUEyN0JSRlRPUVNVNkIxOVJRNjZGVVdQSktDVlVCTEQ4SjdONlJXIiwic3BvY19sb2dpbl90eXBlIjoiNCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIiwiYWdlbnRfYWNjZXNzX3Rva2VuIjoiVVdOSU1GUTdaREQ3RkdDNFZaSlY2N0xQSFo3S05URk5PT0I3MTA5OElYMkgwTkNaUEdCRjlGN1ZNWEY4IiwiYWdlbnRfbG9naW5fdHlwZSI6IjEwIn0=', '2019-12-31 09:58:20.655286'),
+('jt7tf3mk8ols89wbsdvikj7qjp4hihir', 'NDZhMTA5MjJhNGJjMTY2OGNmZTlkNWEwMDEzZTA5MjRhYWYwMWFlZDp7ImxvZ2luX3R5cGUiOiIxMCIsInNwb2NfYWNjZXNzX3Rva2VuIjoiNUxDQU5WNjdIWVowNzJXMzJZUUs4TlZGWEMzWFVPTjlRNUtOM0Q3T0ZGOTg4SDlROE82UUM0VkowNUg4Iiwic3BvY19sb2dpbl90eXBlIjoiNCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIiwiYWdlbnRfYWNjZXNzX3Rva2VuIjoiMjVGVk4wNVg0SzlUSkhONU9LQU1WTU02VzdINjFDVEcwVldOWU1LUDRBOEdZRzJNTUc4WE84Rk9QVUFaIiwiYWdlbnRfbG9naW5fdHlwZSI6IjEwIn0=', '2019-12-31 18:22:29.170671'),
+('sp7k1hot4cl4fzxwegrge78gn0aq2fwa', 'ODUwZTU1NDI4ODAwYTk1YTNjYzcyY2I1YTBlYjIyMzAwZmE5Y2IzOTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiI4WlBVN0ZaSzkxUE1POEpFWEk0RUNQSjlSNlgzVzdVMDdBSVNaSlVHWjcxT0hMQ0VUQTJNVEMyWUUyNkgiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-01 10:09:43.215929'),
+('heiexpe5qp4tosv41o2aqukefxq2of7d', 'NGQ2Y2EyMjgwZmU4NWZmZDU4OTAzNzJiYTg2ZTRiZDFlZDI4MWJkZjp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiI5MEdJMDY2M1ZNUU0wRExaMDlJOFNQUkY3QlU1WlpNVFE2MUVENlRMTFVOUVMzRkE1RUtZMzhNSVRLNzkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-01 13:30:24.005997'),
+('zbkk52kkwxxi7zvvknncuo6t2b2bhkry', 'OTI2NTA4YzMxNzQxY2UzMmQ4MjA0ZDkyMzkyNzk5MjRiOGVmMmE4ODp7ImxvZ2luX3R5cGUiOiI0IiwiYWRtaW5fYWNjZXNzX3Rva2VuIjoiOE1TN1VNVFYyUVBDUFQ0NFFaWTdHTUI2T1hSV1g0TERZVExVUFlZWVA4QVgzWDBCTVRKUlFBSVhUNE5SIiwiYWRtaW5fbG9naW5fdHlwZSI6IjEiLCJfc2Vzc2lvbl9leHBpcnkiOjcyMDAsIl9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiQ29tbW9uLmJhY2tlbmRzLkN1c3RvbUNvbXBhbnlVc2VyQXV0aCIsIl9hdXRoX3VzZXJfaGFzaCI6IiIsInNwb2NfYWNjZXNzX3Rva2VuIjoiUzRBWkhFQ1lTQkoyUlQ0QU9PM0VKMllFVFdRT1JUNU1UMFIwSktQTkNPME4wMjg1VzFLT0hSR1I1Sk5UIiwic3BvY19sb2dpbl90eXBlIjoiNCJ9', '2020-01-02 08:15:18.769354'),
+('7bd6muqhc9jzm0w397dub5zenreenso1', 'Y2MyMTBjMTYwYjIxZjM1YTc4ZTJhYzBmZjg4M2ZhNmY1OTk3OWQ1ZTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJSNFRVREJRUjBCTU1BMldRR1VONEk2QkI1NDJZTkRaN1dRU0Y5UVlFQVkxQU5PTzFKU1dBTjdFQUs5MjQiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-02 13:24:06.079014'),
+('kb5a25jwpva9ji5oy0ktggv8x606wsxp', 'YzU4NzdjZjE3NjI3ZWI5MjYxZDA5MGRhNmM1YmYwMjY0NWVkYjk4NTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJSTFdLUjIwTlZDVFdNWTBWT1pPUVpYQ01UTlo3UVFMNTBJNDZJMEJTNjlSWFpRNlRRMENVQVQ4MDdLN1giLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-02 11:22:20.937455'),
+('m8hci44qpam8hpxnolqkwy5o1lic0b1n', 'ZjkyMDdkZGNmYmIzM2M1OWE4MmRjMTE5ZTIyM2FmMDk5YzBkOTU0ODp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJSS0Y2T1I0VEMyNjFaWTMwWjVZU0lMOTJHVU04N084NFRZMEVBRDRQSlo4S0NZRTlWNlc3NE0xR1BENlkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-03 09:50:21.660500'),
+('pno08d4yeyr3ess6jkmuqpi0qj21mzy1', 'YWU4YzIxN2E4OWRkNGQxYjI4YjQzMDU1MzhmYTBmMmY4MjQ4NjFjMTp7ImxvZ2luX3R5cGUiOiIyIiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJhZ2VudF9hY2Nlc3NfdG9rZW4iOiJRT0ZWV084NFlTVVBKR1dQVTNXVTkzOFBLSFpMTE1BWDBKUFAzUlRJMlJUOUdPSTBFWUlWNlowTk5IQ1EiLCJhZ2VudF9sb2dpbl90eXBlIjoiMTAiLCJhcHByb3Zlc18xX2FjY2Vzc190b2tlbiI6IkQ2M0JGRlo2MUY0N1VNM1ZKSUNORDRORVBRV0hRN1c2V1pDQlFJOTRCMkpUSjVXN044Sk9DMTRHTkdXSSIsImFwcHJvdmVzXzFfbG9naW5fdHlwZSI6IjIifQ==', '2020-01-03 14:56:48.564031'),
+('3zyycv35banc5wto78wjml47wb796ves', 'ZDdiNTkzMGViMWI3MTEzZTg0ODM0NjA2NTg2Yzg2ZmY1N2Q5NjgzNTp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IkNOQTBBOUZJTEpQNzRGVFJSUDQ1TEdUSUJSV1NUQzYxME5UUVQwQ0VQMEI3RU02TEFXN0IxWFNFRzFXTyIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-03 18:12:30.974359'),
+('vrmbr8zfgeyno05ch5xb0f37np60ero5', 'MzM4OGM5OTQxZmI4OTU4ZjkyNjdiZjAzMDg5MWMzZWE0ODU0MTE3MDp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IlVaWE5MOUszOTZKOUNaSFUzTjJPMVFJUTBUWE1IVlVBVkJHOEI1S0M1SkJBTVM0UlpBOElBREVTSk5aWCIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-03 20:16:48.829497'),
+('itk6no4ffd2zssb7rf4jekbh1bsc7x15', 'NmEwN2FiODhiNGM4NzE5ZDA3NzJlMDYyMTA3NzY3ZTM5ZTE5ZGY3ZTp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IlU1UjVJWUdZTUVBMklET0c1U1lWSVZBWVJKRzBXRzFNUVNDTEZLV1Y3UUVZVFc1R0tFME8yRU40NkdIUyIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-04 06:49:15.557498'),
+('cwmwvyshshm00vwtdxb0rno0ikrxzdbd', 'OWQzYmMxMDIwZjI5MDU5Y2Y3YzNjMjBjYzE4N2ExNjU5NTE4NDVlNjp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IllFNjNMV1I4N0dGMFJYVzRMOVdGVTZDQVNHVjVZWjA0WUdOUVg5RkdOS0I3NEJNVDRIT0gwQzU5U01NTiIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-04 09:17:46.752310'),
+('vegwg1ibfeut7s80gd9voq8yv8a2bkqk', 'YjcwNmZkNzVkMTY1NDU4NDZlZWJiZTI0ZDM4MTM1ZWY5NjAxZDY5ZDp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IkE5Wlc5UTBEMkpCVUJEVlpBMkZBWVBCMVlCNjM0QjdMVjFVWENZV1dLRzNNQ1BKUzhVWjhTWjJURlYzQiIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-04 12:04:38.088835'),
+('nu4sqo4ftym5v5yvqm33p9st6wzbrtkt', 'ZWVlOTE1YzFhMmMyZTMwYmU0M2NlODhmYTYzNDg2ODA4MDI1ZGFmNjp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6Ik5BRjZQQ1RTSEo3NFg4R1k2WUQyNUEzNEtMWFk5UEc2RERDOThDMDlKRFA3Q1gwVzNSWUdBSUk3NjUzTSIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-04 14:04:47.267788'),
+('hxbiwlcn0p1tix76h98frt78rvz5t6jd', 'NDdlM2ViZDk1NzViNzU2ZDZiNTkwMmVlZTFhNjQ0NDBkM2FiN2Q5Mzp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IlNEWkxKUVFVNTFEVkVMSDVFRUJVNktGRUZHWUJBTFQ0SVFYTlFZMUUyNUZPNFM3RDJVTEtSTzJDUE43WSIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-06 07:26:13.362401'),
+('i394i0ehhfiuzs7n9i0g8ctp8flezk36', 'MGU1MjcwNmJjYWMwNzM5ZGQ3Y2FhYWI0OWRjODM3ZmYzMTI2ZDk2Zjp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IlZDUUhaT09PQkNMSExHR084V0lFMjBUOUQwR1JXVUxGTzJSOEcxR1JPS0ZRNlIwUVBaVVhZQVA5QkZMRyIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-06 09:37:12.205425'),
+('w70gfk9g2y58grpr3bzsp62odmz33y6m', 'N2M3MWU4M2ZhNTVmM2NhM2YwOGRjZWJhNTgwNzVkNzUwNTM1ZDY0Mjp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6Ikc4V1BSV1VNQ0pWSkRSRkxCRDZJNkYxOVNVRVozNFBDMEhPRklQSExWUVo5Vzg4RjBaMVQwWUJBNjI4TiIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-06 12:23:56.372169'),
+('az8a98lqed9mlhy8b7a0xhk4e0twjqrr', 'MmY1MzU3YjVjYzFjNjJiMDg4Mzk0NTYzNmJmNjRhNDM4ODE3OTk2Yjp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6Ik9ZN0xLRUM5NVREMEtHT1JKSVlUSTVaOTE1RlZZQ0NRMjJDUzVHNUNHT0tCSExQMTAxS0pVWkEzVlJQOCIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-07 08:59:38.005878'),
+('ea8jc1kmbhs48nmlxobfuapgpitw3x5y', 'NTNkYWExMjllYWVkMmRmZTQ1Y2I0NDZhYWNkNTMwZDIwZmFmZDJhNTp7ImxvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIiwiYWRtaW5fYWNjZXNzX3Rva2VuIjoiMkdZMjdISlpNR1ZIMEU5WEJCMTlQVFA3M0Q1OEo0NFZYVE1PWE1RVUJXUVRIWko4WDBKWlgxWERUSDBSIiwiYWRtaW5fbG9naW5fdHlwZSI6IjEiLCJhZ2VudF9hY2Nlc3NfdG9rZW4iOiJaOEhUU0ZFUFFSNFJGQU9JQ0c4R1pZOVk5Nkk5UDlESUVEMTJVNzg4SzFCUVFCQktKSTJKOERYQ1BaV0EiLCJhZ2VudF9sb2dpbl90eXBlIjoiMTAifQ==', '2020-01-07 13:38:10.051536'),
+('5vx2c94bmcds5m9vrp7kh6ycv01tp8yi', 'MmViNzVjYjlhZGM4NDM1M2U5YmE5NjIyMzIyMGI2NmUyMmRhYjlkNTp7ImxvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIiwic3BvY19hY2Nlc3NfdG9rZW4iOiJSOU84VFU3UFQyUVdWOFJWWEJURU1DNlQwTUhJQVJLNUYwTVRMMFpCVDFPQkpUTEJERTdSSk1CRE1VRlQiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiYWdlbnRfYWNjZXNzX3Rva2VuIjoiMDZSMDJTVVFITEIzSlJTSklMMjVaSFRRRTk5R0pOTDNTRDdDMUtDMzFWVFE4RjZJMUlFNVVNQlhBSjZQIiwiYWdlbnRfbG9naW5fdHlwZSI6IjEwIn0=', '2020-01-08 10:19:59.191844'),
+('rt59c0gw9vkdgdhpf1lb5ac8cpexgmol', 'YmRjOGE0MWJiZDY0YWI4NGM4ZmY3NmFkNWU4OGM4N2RiNmZjMGJhMDp7ImxvZ2luX3R5cGUiOiIxMCIsImFnZW50X2FjY2Vzc190b2tlbiI6IkxENkZGQlJVWU9BU1lNNlIwQUIyWjJPRUpTSUVYRDM2QjE2SVhFWlJaQUZDVTNDRlUyUlRLT0M3U0c2SyIsImFnZW50X2xvZ2luX3R5cGUiOiIxMCIsIl9zZXNzaW9uX2V4cGlyeSI6NzIwMCwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJDb21tb24uYmFja2VuZHMuQ3VzdG9tQ29tcGFueVVzZXJBdXRoIiwiX2F1dGhfdXNlcl9oYXNoIjoiIn0=', '2020-01-08 14:12:31.864802'),
+('m4bszcbzcdb123q8g0gndy4tl5aiapak', 'OGQ2YmFlYzNmMzc4NTg2ZjFiZGQ0ZjBiMGQ5NmFmYTViODA1NGQxYTp7ImxvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIiLCJzcG9jX2FjY2Vzc190b2tlbiI6IjRRMlpaUU1GNzdFNzE2N04zWkdDSzBQU0QwODVNSjZMTTNVNDA1M1dWNU5TQlEyV001VTJQUFU2OEVaMiIsInNwb2NfbG9naW5fdHlwZSI6IjQifQ==', '2020-01-09 15:11:00.125773'),
+('5cx1j3fcis8k0llrys8atpzfakza4xtu', 'ZDA5MTBmZDRkZGMyMGEyZjViYTU2MzE4OWMzZWZjZWE2NTI4MGE5MDp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJYWEExN0JWUElLVUhORDhJTVVMTVhUTkM3TVpJOUoxVVEwNkQxUUJQMFlYR1pLM0RPQUQwMlVHRTkySTQiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-09 17:27:54.378899'),
+('gqiwder44pp2dl0ull9660xkavh15ku5', 'ODZhNzNkZmRjMTllY2ZiYTg0MGFkM2VlZDBjZjUyZmNmNDk2YWQ1Nzp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJQUjE4WUJGQzdOTkFVSDJOMUtFVDdaNk1JVUIyRUs3WkNVUkFDQTkzV0FDNVpaRlNJNUIxS0RQQkxNWk4iLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-09 19:41:19.553236'),
+('fgluocejxpan9xbnr5eji3ppz76tsr0v', 'ODg5ZWYwNGUyZmY3NTBmMjk3M2QyMjI0MmRkNzZkNzNhOTM5NGU5ZTp7ImxvZ2luX3R5cGUiOiI0Iiwic3BvY19hY2Nlc3NfdG9rZW4iOiJFV0xCNUQ3OE1DNlJJMkVSWkNVWjI3UjY3TThIRU44MlU0TDgzNklVU0U0RTNJMVVPTEtUTlhBUTBVUUkiLCJzcG9jX2xvZ2luX3R5cGUiOiI0IiwiX3Nlc3Npb25fZXhwaXJ5Ijo3MjAwLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6IkNvbW1vbi5iYWNrZW5kcy5DdXN0b21Db21wYW55VXNlckF1dGgiLCJfYXV0aF91c2VyX2hhc2giOiIifQ==', '2020-01-10 08:03:38.444958');
 
 -- --------------------------------------------------------
 
@@ -18634,14 +19183,16 @@ CREATE TABLE IF NOT EXISTS `employee_bus_booking` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `emp_booking_id` (`bus_booking_id`,`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `employee_bus_booking`
 --
 
 INSERT INTO `employee_bus_booking` (`id`, `bus_booking_id`, `employee_id`, `comment`, `comment_date`, `cancellation_charges`, `cancellation_comment`, `created`, `modified`) VALUES
-(1, 1, 1, NULL, NULL, 0, NULL, '2019-12-13 22:57:31', '2019-12-13 22:57:31');
+(1, 1, 1, NULL, NULL, 0, NULL, '2019-12-13 22:57:31', '2019-12-13 22:57:31'),
+(2, 2, 1, NULL, NULL, 0, NULL, '2019-12-28 13:09:28', '2019-12-28 13:09:28'),
+(3, 3, 2, NULL, NULL, 0, NULL, '2020-01-08 11:17:58', '2020-01-08 11:17:58');
 
 -- --------------------------------------------------------
 
@@ -18657,21 +19208,40 @@ CREATE TABLE IF NOT EXISTS `employee_flight_booking` (
   `employee_ticket_no` varchar(100) DEFAULT NULL,
   `comment` varchar(1000) DEFAULT NULL,
   `comment_date` datetime DEFAULT NULL,
+  `is_cancel` int(11) NOT NULL DEFAULT '0',
   `cancellation_charges` double NOT NULL DEFAULT '0',
   `cancellation_comment` varchar(100) DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `emp_booking_id` (`flight_booking_id`,`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `employee_flight_booking`
 --
 
-INSERT INTO `employee_flight_booking` (`id`, `flight_booking_id`, `employee_id`, `employee_ticket_no`, `comment`, `comment_date`, `cancellation_charges`, `cancellation_comment`, `created`, `modified`) VALUES
-(1, 1, 1, NULL, NULL, NULL, 0, NULL, '2019-12-14 16:49:01', '2019-12-14 16:49:01'),
-(2, 2, 1, NULL, NULL, NULL, 0, NULL, '2019-12-18 13:36:40', '2019-12-18 13:36:40');
+INSERT INTO `employee_flight_booking` (`id`, `flight_booking_id`, `employee_id`, `employee_ticket_no`, `comment`, `comment_date`, `is_cancel`, `cancellation_charges`, `cancellation_comment`, `created`, `modified`) VALUES
+(1, 1, 1, NULL, NULL, NULL, 1, 120, 'test hai bhai', '2019-12-14 16:49:01', '2020-01-06 17:34:53'),
+(2, 2, 1, 'B1234', NULL, NULL, 0, 0, NULL, '2019-12-18 13:36:40', '2020-01-04 16:50:28'),
+(3, 4, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-21 15:28:20', '2019-12-21 15:28:20'),
+(4, 5, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-21 15:36:20', '2019-12-21 15:36:20'),
+(5, 6, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-24 11:47:14', '2019-12-24 11:47:14'),
+(6, 7, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 12:54:34', '2019-12-31 12:54:34'),
+(7, 8, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 13:39:37', '2019-12-31 13:39:37'),
+(8, 9, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 13:44:52', '2019-12-31 13:44:52'),
+(9, 10, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 13:46:38', '2019-12-31 13:46:38'),
+(10, 11, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 13:57:13', '2019-12-31 13:57:13'),
+(11, 12, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 13:58:25', '2019-12-31 13:58:25'),
+(12, 13, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 13:59:19', '2019-12-31 13:59:19'),
+(13, 14, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 14:01:14', '2019-12-31 14:01:14'),
+(14, 15, 1, NULL, NULL, NULL, 0, 0, NULL, '2019-12-31 14:02:25', '2019-12-31 14:02:25'),
+(15, 16, 1, 'SGAPITESTIDD~DEV', NULL, NULL, 0, 0, NULL, '2019-12-31 14:04:32', '2019-12-31 14:04:48'),
+(16, 17, 1, NULL, NULL, NULL, 0, 0, NULL, '2020-01-01 17:08:58', '2020-01-01 17:08:58'),
+(17, 18, 1, NULL, NULL, NULL, 0, 0, NULL, '2020-01-03 17:41:51', '2020-01-03 17:41:51'),
+(18, 19, 1, NULL, NULL, NULL, 0, 0, NULL, '2020-01-03 17:43:07', '2020-01-03 17:43:07'),
+(19, 2, 2, NULL, NULL, NULL, 1, 1000, 'test kar raha hu', '2020-01-03 22:05:35', '2020-01-04 16:51:11'),
+(20, 20, 1, NULL, NULL, NULL, 0, 0, NULL, '2020-01-04 13:52:58', '2020-01-04 13:52:58');
 
 -- --------------------------------------------------------
 
@@ -18720,7 +19290,7 @@ CREATE TABLE IF NOT EXISTS `employee_taxi_booking` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `emp_booking_id` (`taxi_booking_id`,`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `employee_taxi_booking`
@@ -18729,7 +19299,10 @@ CREATE TABLE IF NOT EXISTS `employee_taxi_booking` (
 INSERT INTO `employee_taxi_booking` (`id`, `taxi_booking_id`, `employee_id`, `comment`, `comment_date`, `cancellation_charges`, `cancellation_comment`, `created`, `modified`) VALUES
 (1, 1, 1, NULL, NULL, 0, NULL, '2019-12-12 18:28:08', '2019-12-12 18:28:08'),
 (2, 2, 1, NULL, NULL, 0, NULL, '2019-12-13 15:19:37', '2019-12-13 15:19:37'),
-(3, 3, 1, NULL, NULL, 0, NULL, '2019-12-17 18:04:51', '2019-12-17 18:04:51');
+(3, 3, 1, NULL, NULL, 0, NULL, '2019-12-17 18:04:51', '2019-12-17 18:04:51'),
+(4, 4, 1, NULL, NULL, 0, NULL, '2019-12-28 16:32:19', '2019-12-28 16:32:19'),
+(5, 5, 1, NULL, NULL, 0, NULL, '2020-01-03 18:26:13', '2020-01-03 18:26:13'),
+(6, 6, 1, NULL, NULL, 0, NULL, '2020-01-08 11:09:35', '2020-01-08 11:09:35');
 
 -- --------------------------------------------------------
 
@@ -18750,14 +19323,15 @@ CREATE TABLE IF NOT EXISTS `employee_train_booking` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `emp_booking_id` (`train_booking_id`,`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `employee_train_booking`
 --
 
 INSERT INTO `employee_train_booking` (`id`, `train_booking_id`, `employee_id`, `comment`, `comment_date`, `cancellation_charges`, `cancellation_comment`, `created`, `modified`) VALUES
-(1, 1, 1, NULL, NULL, 0, NULL, '2019-12-14 16:25:03', '2019-12-14 16:25:03');
+(1, 1, 1, NULL, NULL, 0, NULL, '2019-12-14 16:25:03', '2019-12-14 16:25:03'),
+(2, 2, 1, NULL, NULL, 0, NULL, '2019-12-30 15:16:25', '2019-12-30 15:16:25');
 
 -- --------------------------------------------------------
 
@@ -22943,18 +23517,36 @@ CREATE TABLE IF NOT EXISTS `flight_bookings` (
   `billing_entity_id` int(11) DEFAULT NULL,
   `reason_booking` varchar(1500) DEFAULT NULL,
   `vendor_id` int(11) DEFAULT NULL,
+  `is_self_booking` int(11) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `flight_bookings`
 --
 
-INSERT INTO `flight_bookings` (`id`, `reference_no`, `vendor_booking_id`, `voucher_no`, `booking_email`, `usage_type`, `journey_type`, `flight_class`, `from_location`, `to_location`, `booking_datetime`, `departure_datetime`, `preferred_flight`, `assessment_code`, `assessment_city`, `no_of_seats`, `last_action_by`, `flight_type`, `seat_type`, `trip_type`, `fare_type`, `meal_is_include`, `no_of_stops`, `ticket_no`, `status_client`, `status_cotrav`, `is_invoice`, `invoice_id`, `group_id`, `subgroup_id`, `spoc_id`, `corporate_id`, `billing_entity_id`, `reason_booking`, `vendor_id`, `created`, `modified`) VALUES
-(1, 'CTFLT000001', NULL, NULL, '/media/booking_email/cotrav.sql', 'Flight', 'One Way', 'Economy', 'Pune International Airport, New Airport Road, Pune International Airport Area, Lohegaon, Pune, Mahar', 'Mumbai - Pune Expressway, Sector 4B, Asudgaon, Khanda Colony, Panvel, Navi Mumbai, Maharashtra, Indi', '2019-12-14 16:48:18', '2019-12-14 00:00:00', 'koi bhi chalega', '1', '1', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', 1, '2019-12-14 16:49:01', '2019-12-18 11:17:44'),
-(2, 'CTFLT000002', NULL, NULL, '/media/booking_email/bus_tickett_client.txt', 'Flight', 'One Way', 'Economy', 'Pune, Maharashtra, India', 'Delhi, India', '2019-12-18 13:36:08', '2019-12-19 00:00:00', 'test Flight', '1', '1', 1, 1, NULL, NULL, NULL, NULL, 0, NULL, NULL, 7, 2, 0, NULL, 1, 1, 1, 1, 1, 'test', NULL, '2019-12-18 13:36:40', '2019-12-18 13:36:49');
+INSERT INTO `flight_bookings` (`id`, `reference_no`, `vendor_booking_id`, `voucher_no`, `booking_email`, `usage_type`, `journey_type`, `flight_class`, `from_location`, `to_location`, `booking_datetime`, `departure_datetime`, `preferred_flight`, `assessment_code`, `assessment_city`, `no_of_seats`, `last_action_by`, `flight_type`, `seat_type`, `trip_type`, `fare_type`, `meal_is_include`, `no_of_stops`, `ticket_no`, `status_client`, `status_cotrav`, `is_invoice`, `invoice_id`, `group_id`, `subgroup_id`, `spoc_id`, `corporate_id`, `billing_entity_id`, `reason_booking`, `vendor_id`, `is_self_booking`, `created`, `modified`) VALUES
+(1, 'CTFLT000001', NULL, NULL, '/media/booking_email/cotrav.sql', 'Flight', 'One Way', 'Economy', 'Pune International Airport, New Airport Road, Pune International Airport Area, Lohegaon, Pune, Mahar', 'Mumbai - Pune Expressway, Sector 4B, Asudgaon, Khanda Colony, Panvel, Navi Mumbai, Maharashtra, Indi', '2019-12-14 16:48:18', '2019-12-14 00:00:00', 'koi bhi chalega', '1', '1', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', 1, 0, '2019-12-14 16:49:01', '2019-12-18 11:17:44'),
+(2, 'CTFLT000002', NULL, NULL, '/media/booking_email/bus_tickett_client.txt', 'Flight', 'One Way', 'Economy', 'Pune, Maharashtra, India', 'Delhi, India', '2019-12-18 13:36:08', '2019-12-19 00:00:00', 'test Flight', '1', '1', 1, 1, 'Domestic', 'Economy', 'One Way', 'Refundable', 1, 0, NULL, 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', 5, 0, '2019-12-18 13:36:40', '2019-12-31 13:32:16'),
+(4, 'CTFLT000004', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Delhi', 'Mumbai', '2019-12-21 15:28:21', '2020-02-21 00:00:00', '', '1', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2019-12-21 15:28:20', '2019-12-21 15:28:20'),
+(5, 'CTFLT000005', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Delhi', 'Mumbai', '2019-12-21 15:36:20', '2020-02-21 00:00:00', '', '1', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2019-12-21 15:36:20', '2019-12-21 15:36:20'),
+(6, 'CTFLT000006', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Delhi', 'Mumbai', '2019-12-24 11:47:14', '2020-01-24 00:00:00', '', '0', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2019-12-24 11:47:14', '2019-12-24 11:47:14'),
+(7, 'CTFLT000007', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Delhi', 'Mumbai', '2019-12-31 12:54:35', '2020-02-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 12:54:34', '2019-12-31 12:54:52'),
+(8, 'CTFLT000008', 'APIM637133963749960899M841a', NULL, '', 'Flight', 'One Way', 'Economy', 'Bangalore', 'Calcutta', '2019-12-31 13:39:38', '2020-03-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 13:39:37', '2019-12-31 13:39:53'),
+(9, 'CTFLT000009', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Bangalore', 'Calcutta', '2019-12-31 13:44:53', '2020-02-29 00:00:00', '', '1', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2019-12-31 13:44:52', '2019-12-31 13:44:52'),
+(10, 'CTFLT000010', 'API463713396795326921736613', NULL, '', 'Flight', 'One Way', 'Economy', 'Bangalore', 'Calcutta', '2019-12-31 13:46:38', '2020-02-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 13:46:38', '2019-12-31 13:46:54'),
+(11, 'CTFLT000011', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Calcutta', 'Goa', '2019-12-31 13:57:14', '2020-02-29 00:00:00', '', '1', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2019-12-31 13:57:13', '2019-12-31 13:57:13'),
+(12, 'CTFLT000012', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Calcutta', 'Goa', '2019-12-31 13:58:26', '2020-02-29 00:00:00', '', '1', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2019-12-31 13:58:25', '2019-12-31 13:58:25'),
+(13, 'CTFLT000013', 'API863713397556281793071fa1', NULL, '', 'Flight', 'One Way', 'Economy', 'Calcutta', 'Goa', '2019-12-31 13:59:19', '2020-02-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 13:59:19', '2019-12-31 13:59:35'),
+(14, 'CTFLT000014', 'API46371339767185992653adbb', NULL, '', 'Flight', 'One Way', 'Economy', 'Calcutta', 'Goa', '2019-12-31 14:01:15', '2020-02-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 14:01:14', '2019-12-31 14:01:30'),
+(15, 'CTFLT000015', 'APIV637133977429067898U4220', NULL, '', 'Flight', 'One Way', 'Economy', 'Calcutta', 'Goa', '2019-12-31 14:02:26', '2020-02-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 14:02:25', '2019-12-31 14:02:42'),
+(16, 'CTFLT000016', 'APIC637133978701729998Cd71e', NULL, '', 'Flight', 'One Way', 'Economy', 'Calcutta', 'Goa', '2019-12-31 14:04:33', '2020-02-29 00:00:00', '', '1', '0', 1, 0, '', 'Economy', 'One Way', '', 0, 1, NULL, 1, 4, 0, NULL, 1, 1, 1, 1, 0, '', 1, 0, '2019-12-31 14:04:32', '2019-12-31 14:04:48'),
+(17, 'CTFLT000017', NULL, NULL, '', 'Flight', 'One Way', 'Economy', 'Delhi', 'Mumbai', '2020-01-01 17:08:59', '2020-01-03 00:00:00', '', '1', '0', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1, 0, NULL, 1, 1, 1, 1, 0, '', NULL, 0, '2020-01-01 17:08:58', '2020-01-01 17:08:58'),
+(18, 'CTFLT000018', NULL, NULL, '/media/booking_email/IRCTC_user_name.txt', 'Flight', 'One Way', 'Economy', 'Pune, Maharashtra, India', 'Gorakhpur, Uttar Pradesh, India', '2020-01-03 17:41:03', '2020-01-29 00:00:00', 'koi bhi chalega', '1', '1', 1, 1, NULL, NULL, NULL, NULL, 0, NULL, NULL, 7, 2, 0, NULL, 1, 1, 1, 1, 0, ' ', NULL, 0, '2020-01-03 17:41:51', '2020-01-03 17:42:02'),
+(19, 'CTFLT000019', NULL, NULL, '/media/booking_email/GIT_Command.txt', 'Flight', 'One Way', 'Economy', 'Pune, Maharashtra, India', 'Allahabad, Uttar Pradesh, India', '2020-01-03 17:42:12', '2020-01-28 00:00:00', 'koi bhi chalega', '1', '1', 1, 1, NULL, NULL, NULL, NULL, 0, NULL, NULL, 7, 2, 0, NULL, 1, 1, 1, 1, 0, ' ', NULL, 0, '2020-01-03 17:43:07', '2020-01-03 17:43:17'),
+(20, 'CTFLT000020', NULL, NULL, '/media/booking_email/bus_tickett_client.txt', 'Flight', 'One Way', 'Economy', 'Pune, Maharashtra, India', 'Hyderabad, Telangana, India', '2020-01-04 13:52:19', '2020-01-14 00:00:00', 'koi bhi chalega', '1', '1', 1, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, 7, 1, 0, NULL, 1, 1, 1, 1, 0, ' ', NULL, 0, '2020-01-04 13:52:58', '2020-01-04 13:52:58');
 
 -- --------------------------------------------------------
 
@@ -22971,7 +23563,7 @@ CREATE TABLE IF NOT EXISTS `flight_bookings_action_log` (
   `user_id` int(11) NOT NULL,
   `user_type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `flight_bookings_action_log`
@@ -22980,7 +23572,37 @@ CREATE TABLE IF NOT EXISTS `flight_bookings_action_log` (
 INSERT INTO `flight_bookings_action_log` (`id`, `booking_id`, `action`, `action_date`, `user_id`, `user_type`) VALUES
 (1, 1, 1, '2019-12-14 16:49:01', 1, 10),
 (2, 2, 1, '2019-12-18 13:36:40', 1, 10),
-(3, 2, 2, '2019-12-18 13:36:49', 1, 10);
+(3, 2, 2, '2019-12-18 13:36:49', 1, 10),
+(4, 3, 1, '2019-12-21 13:41:32', 1, 4),
+(5, 4, 1, '2019-12-21 15:28:20', 1, 4),
+(6, 5, 1, '2019-12-21 15:36:20', 1, 4),
+(7, 6, 1, '2019-12-24 11:47:14', 1, 4),
+(8, 7, 1, '2019-12-31 12:54:34', 1, 4),
+(9, 7, 4, '2019-12-31 12:54:52', 1, 4),
+(10, 2, 4, '2019-12-31 13:32:16', 1, 10),
+(11, 2, 4, '2019-12-31 13:32:19', 1, 10),
+(12, 2, 4, '2019-12-31 13:32:20', 1, 10),
+(13, 8, 1, '2019-12-31 13:39:37', 1, 4),
+(14, 8, 4, '2019-12-31 13:39:53', 1, 4),
+(15, 9, 1, '2019-12-31 13:44:52', 1, 4),
+(16, 10, 1, '2019-12-31 13:46:38', 1, 4),
+(17, 10, 4, '2019-12-31 13:46:54', 1, 4),
+(18, 11, 1, '2019-12-31 13:57:13', 1, 4),
+(19, 12, 1, '2019-12-31 13:58:25', 1, 4),
+(20, 13, 1, '2019-12-31 13:59:19', 1, 4),
+(21, 13, 4, '2019-12-31 13:59:35', 1, 4),
+(22, 14, 1, '2019-12-31 14:01:14', 1, 4),
+(23, 14, 4, '2019-12-31 14:01:30', 1, 4),
+(24, 15, 1, '2019-12-31 14:02:25', 1, 4),
+(25, 15, 4, '2019-12-31 14:02:42', 1, 4),
+(26, 16, 1, '2019-12-31 14:04:32', 1, 4),
+(27, 16, 4, '2019-12-31 14:04:48', 1, 4),
+(28, 17, 1, '2020-01-01 17:08:58', 1, 4),
+(29, 18, 1, '2020-01-03 17:41:51', 1, 10),
+(30, 18, 2, '2020-01-03 17:42:02', 1, 10),
+(31, 19, 1, '2020-01-03 17:43:07', 1, 10),
+(32, 19, 2, '2020-01-03 17:43:17', 1, 10),
+(33, 20, 1, '2020-01-04 13:52:58', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -23009,6 +23631,42 @@ CREATE TABLE IF NOT EXISTS `flight_booking_client_invoice` (
   `management_fee_sgst_rate` float(4,2) NOT NULL,
   `client_ticket` varchar(255) DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT '1',
+  `old_ticket_price` int(11) NOT NULL DEFAULT '0',
+  `refund_amount` int(11) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `flight_booking_client_invoice`
+--
+
+INSERT INTO `flight_booking_client_invoice` (`id`, `booking_id`, `ticket_price`, `management_fee`, `tax_on_management_fee`, `tax_on_management_fee_percentage`, `sub_total`, `cotrav_billing_entity`, `igst`, `cgst`, `sgst`, `management_fee_igst`, `management_fee_cgst`, `management_fee_sgst`, `management_fee_igst_rate`, `management_fee_cgst_rate`, `management_fee_sgst_rate`, `client_ticket`, `status`, `old_ticket_price`, `refund_amount`, `created`, `modified`) VALUES
+(1, 1, 4954, '100', 18, 18, 5982, 1, 9, 0, 9, 0.00, 9.00, 9.00, 0.00, 9.00, 9.00, '', 1, 5074, 120, '2019-12-31 12:54:52', '2020-01-06 17:34:53'),
+(2, 2, 4078, '100', 18, 18, 4948, 1, 9, 0, 9, 0.00, 9.00, 9.00, 0.00, 9.00, 9.00, '', 1, 5078, 1000, '2019-12-31 13:32:16', '2020-01-04 16:51:11'),
+(5, 8, 5074, '100', 18, 18, 5192, 1, 934.56, 0, 0, 18.00, 0.00, 0.00, 913.32, 0.00, 0.00, '', 1, 0, 0, '2019-12-31 13:39:53', '2019-12-31 13:39:53'),
+(6, 10, 5074, '100', 18, 18, 5192, 1, 934.56, 0, 0, 18.00, 0.00, 0.00, 913.32, 0.00, 0.00, '', 1, 0, 0, '2019-12-31 13:46:54', '2019-12-31 13:46:54'),
+(7, 13, 5074, '100', 18, 18, 5192, 1, 934.56, 0, 0, 18.00, 0.00, 0.00, 913.32, 0.00, 0.00, '', 1, 0, 0, '2019-12-31 13:59:35', '2019-12-31 13:59:35'),
+(8, 14, 5074, '100', 18, 18, 5192, 1, 934.56, 0, 0, 18.00, 0.00, 0.00, 913.32, 0.00, 0.00, '', 1, 0, 0, '2019-12-31 14:01:30', '2019-12-31 14:01:30'),
+(9, 15, 5074, '100', 18, 18, 5192, 1, 934.56, 0, 0, 18.00, 0.00, 0.00, 913.32, 0.00, 0.00, '', 1, 0, 0, '2019-12-31 14:02:42', '2019-12-31 14:02:42'),
+(10, 16, 5074, '100', 18, 18, 5192, 1, 934.56, 0, 0, 18.00, 0.00, 0.00, 913.32, 0.00, 0.00, '', 1, 0, 0, '2019-12-31 14:04:48', '2019-12-31 14:04:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `flight_booking_client_invoice_action_log`
+--
+
+DROP TABLE IF EXISTS `flight_booking_client_invoice_action_log`;
+CREATE TABLE IF NOT EXISTS `flight_booking_client_invoice_action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_id` int(11) NOT NULL,
+  `action` int(11) NOT NULL,
+  `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `invoice_comment` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -23032,7 +23690,18 @@ CREATE TABLE IF NOT EXISTS `flight_booking_flights` (
   `departure_datetime` datetime NOT NULL,
   `arrival_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `flight_booking_flights`
+--
+
+INSERT INTO `flight_booking_flights` (`id`, `booking_id`, `flight_name`, `flight_no`, `pnr_no`, `from_city`, `to_city`, `departure_datetime`, `arrival_datetime`) VALUES
+(1, 2, 'Indigo India', 'FLT34242', 'PNR3452', 'Pune', 'Delhi', '2020-01-03 13:31:24', '2020-01-04 13:31:31'),
+(2, 2, 'Indigo India', 'FLT34242', 'PNR3452', 'Pune', 'Delhi', '2020-01-03 13:31:24', '2020-01-04 13:31:31'),
+(3, 2, 'Indigo India', 'FLT34242', 'PNR3452', 'Pune', 'Delhi', '2020-01-03 13:31:24', '2020-01-04 13:31:31'),
+(4, 16, 'Spice Jet', ' 472', 'YYEK7J', 'Delhi', 'Mumbai', '2020-03-10 21:10:00', '2020-03-11 07:10:00'),
+(5, 16, 'Spice Jet', ' 472', 'YYEK7J', 'Delhi', 'Hyderabad', '2020-03-10 21:10:00', '2020-03-10 23:25:00');
 
 -- --------------------------------------------------------
 
@@ -23059,7 +23728,23 @@ CREATE TABLE IF NOT EXISTS `flight_booking_vender_invoice` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `flight_booking_vender_invoice`
+--
+
+INSERT INTO `flight_booking_vender_invoice` (`id`, `booking_id`, `ticket_price`, `vender_commission`, `vender_commission_type`, `cotrav_billing_entity`, `igst`, `cgst`, `sgst`, `igst_amount`, `cgst_amount`, `sgst_amount`, `vender_ticket`, `status`, `created`, `modified`) VALUES
+(1, 7, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 12:54:52', '2019-12-31 12:54:52'),
+(2, 2, 11000, 0, '1', 1, 18, 0, 0, 0, 0, 0, '', 1, '2019-12-31 13:32:16', '2019-12-31 13:32:16'),
+(3, 2, 11000, 0, '1', 1, 18, 0, 0, 0, 0, 0, '', 1, '2019-12-31 13:32:20', '2019-12-31 13:32:20'),
+(4, 2, 11000, 0, '1', 1, 18, 0, 0, 0, 0, 0, '', 1, '2019-12-31 13:32:20', '2019-12-31 13:32:20'),
+(5, 8, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 13:39:53', '2019-12-31 13:39:53'),
+(6, 10, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 13:46:54', '2019-12-31 13:46:54'),
+(7, 13, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 13:59:35', '2019-12-31 13:59:35'),
+(8, 14, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 14:01:30', '2019-12-31 14:01:30'),
+(9, 15, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 14:02:42', '2019-12-31 14:02:42'),
+(10, 16, 5074, 0, '0', 1, 18, 0, 0, 913.32, 0, 0, '', 1, '2019-12-31 14:04:48', '2019-12-31 14:04:48');
 
 -- --------------------------------------------------------
 
@@ -23304,6 +23989,26 @@ INSERT INTO `hotel_booking_client_invoice` (`id`, `booking_id`, `ticket_price`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hotel_booking_client_invoice_action_log`
+--
+
+DROP TABLE IF EXISTS `hotel_booking_client_invoice_action_log`;
+CREATE TABLE IF NOT EXISTS `hotel_booking_client_invoice_action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_id` int(11) NOT NULL,
+  `action` int(11) NOT NULL,
+  `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `invoice_comment` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hotel_booking_hotels`
 --
 
@@ -23481,6 +24186,28 @@ INSERT INTO `hotel_types` (`id`, `name`, `room_occupancy`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `invoice_status`
+--
+
+DROP TABLE IF EXISTS `invoice_status`;
+CREATE TABLE IF NOT EXISTS `invoice_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `invoice_status`
+--
+
+INSERT INTO `invoice_status` (`id`, `status_name`) VALUES
+(1, 'Raised By'),
+(2, 'Verified By'),
+(3, 'Revise Request By');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `irctc_accounts`
 --
 
@@ -23623,6 +24350,32 @@ INSERT INTO `irctc_accounts` (`id`, `username`, `password`, `usage_limit`, `is_u
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `kafila_api_flight_access_token`
+--
+
+DROP TABLE IF EXISTS `kafila_api_flight_access_token`;
+CREATE TABLE IF NOT EXISTS `kafila_api_flight_access_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `access_token` varchar(255) NOT NULL,
+  `expire_date` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `kafila_api_flight_access_token`
+--
+
+INSERT INTO `kafila_api_flight_access_token` (`id`, `access_token`, `expire_date`, `created`, `modified`) VALUES
+(19, 'b00f847c-b9ad-46a3-aebe-8c38303350f4', '2020-01-03 13:25:01', '2020-01-03 13:17:40', '2020-01-03 13:25:01'),
+(20, 'b00f847c-b9ad-46a3-aebe-8c38303350f4', '2020-01-03 13:25:01', '2020-01-03 13:20:56', '2020-01-03 13:25:01'),
+(21, 'IP MISMATCHED OR NOT AUTHORIZED', '2020-01-03 16:01:08', '2020-01-03 13:25:01', '2020-01-03 16:01:08'),
+(22, '21ec5ac3-bbb2-45e7-835b-cefc746d0d15', NULL, '2020-01-03 16:01:08', '2020-01-09 18:39:04');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `lead_action_log`
 --
 
@@ -23698,7 +24451,7 @@ CREATE TABLE IF NOT EXISTS `operators` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `operators`
@@ -23706,9 +24459,10 @@ CREATE TABLE IF NOT EXISTS `operators` (
 
 INSERT INTO `operators` (`id`, `service_type_id`, `username`, `password`, `old_password`, `operator_name`, `operator_email`, `operator_contact`, `website`, `is_service_tax_applicable`, `service_tax_number`, `night_start_time`, `night_end_time`, `tds_rate`, `gst_id`, `pan_no`, `is_deleted`, `last_login`, `created`, `modified`) VALUES
 (1, 1, 'balwant@taxivaxi.in', 'pbkdf2_sha256$150000$4pe34r3kndaA$PI9FgyUTCDXbRdzLjVk20XZobSN2iKsfFJEDVGSHX5o=', NULL, 'Balwant Radio', 'balwant@taxivaxi.in', '9579477262', 'radio.com', 1, '', '00:00:00', '00:00:00', 0, '', '', 0, '2019-12-18 05:35:59', '2019-12-12 19:09:16', '2019-12-12 19:09:16'),
-(2, 4, 'bus@cotrav.com', 'Bus Operator', NULL, '', 'bus@cotrav.com', '325433453', 'hotel.com', 0, '', '00:00:00', '00:00:00', 0, '', '', 0, NULL, '2019-12-13 11:21:45', '2019-12-13 11:21:45'),
+(2, 4, 'bus@cotrav.com', 'Bus Operator', NULL, 'Balwant Bus', 'bus@cotrav.com', '325433453', 'hotel.com', 0, '', '00:00:00', '00:00:00', 0, '', '', 0, NULL, '2019-12-13 11:21:45', '2019-12-13 11:21:45'),
 (3, 6, 'hotel@cotrav.co.in', 'NA', NULL, 'OYO Corporate', 'hotel@cotrav.co.in', '9579477262', 'hotel.com', 1, 'NA', '00:00:00', '00:00:00', 0, '27ASDSDS313AS311', 'ASDSDS313AS3', 0, NULL, '2019-12-14 16:34:22', '2019-12-14 16:34:22'),
-(4, 6, 'tesr@gmail.com', 'NA', NULL, 'Direct Hotel', 'tesr@gmail.com', 'na', 'na', 1, 'NA', '00:00:00', '00:00:00', 0, '0', '0', 0, NULL, '2019-12-14 16:35:53', '2019-12-14 16:35:53');
+(4, 6, 'tesr@gmail.com', 'NA', NULL, 'Direct Hotel', 'tesr@gmail.com', 'na', 'na', 1, 'NA', '00:00:00', '00:00:00', 0, '0', '0', 0, NULL, '2019-12-14 16:35:53', '2019-12-14 16:35:53'),
+(5, 7, 'flight@taxivaxi.com', 'pbkdf2_sha256$150000$ZRonWiGc5c6Q$DjBsccP5CmUMpkPmpbEKVS27jX55NxVKpCfaJEqFVzo=', NULL, 'Flight Operator', 'flight@taxivaxi.com', '98765799182', 'flight@taxivaxi.com', 0, '', '10:10:00', '06:00:00', 0, '27ASDSDS313AS311', 'ASDSDS313AS3', 0, NULL, '2019-12-31 13:30:57', '2019-12-31 13:30:57');
 
 -- --------------------------------------------------------
 
@@ -23743,7 +24497,7 @@ CREATE TABLE IF NOT EXISTS `operators_action_log` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `operators_action_log`
@@ -23753,7 +24507,8 @@ INSERT INTO `operators_action_log` (`id`, `username`, `service_type_id`, `passwo
 (1, 'balwant@taxivaxi.in', 1, 'pbkdf2_sha256$150000$4pe34r3kndaA$PI9FgyUTCDXbRdzLjVk20XZobSN2iKsfFJEDVGSHX5o=', NULL, 'Balwant Radio', 'balwant@taxivaxi.in', '9579477262', 'radio.com', 1, '', '00:00:00', '00:00:00', 0, '', '', 0, 1, 1, 10, '2019-12-12 19:09:16', 'ADD', '2019-12-12 19:09:16', '2019-12-12 19:09:16'),
 (2, 'NA', 2, 'NA', NULL, '', 'NA', 'NA', '', 0, '', '00:00:00', '00:00:00', 0, '', '', 0, 2, 1, 10, '2019-12-13 11:21:45', 'ADD', '2019-12-13 11:21:45', '2019-12-13 11:21:45'),
 (3, 'hotel@cotrav.co.in', 6, 'NA', NULL, 'OYO Corporate', 'hotel@cotrav.co.in', '9579477262', 'hotel.com', 1, 'NA', '00:00:00', '00:00:00', 0, '27ASDSDS313AS311', 'ASDSDS313AS3', 0, 3, 1, 10, '2019-12-14 16:34:22', 'ADD', '2019-12-14 16:34:22', '2019-12-14 16:34:22'),
-(4, 'tesr@gmail.com', 6, 'NA', NULL, 'Direct Hotel', 'tesr@gmail.com', 'na', 'na', 1, 'NA', '00:00:00', '00:00:00', 0, '0', '0', 0, 4, 1, 10, '2019-12-14 16:35:53', 'ADD', '2019-12-14 16:35:53', '2019-12-14 16:35:53');
+(4, 'tesr@gmail.com', 6, 'NA', NULL, 'Direct Hotel', 'tesr@gmail.com', 'na', 'na', 1, 'NA', '00:00:00', '00:00:00', 0, '0', '0', 0, 4, 1, 10, '2019-12-14 16:35:53', 'ADD', '2019-12-14 16:35:53', '2019-12-14 16:35:53'),
+(5, 'flight@taxivaxi.com', 7, 'pbkdf2_sha256$150000$ZRonWiGc5c6Q$DjBsccP5CmUMpkPmpbEKVS27jX55NxVKpCfaJEqFVzo=', NULL, 'Flight Operator', 'flight@taxivaxi.com', '98765799182', 'flight@taxivaxi.com', 0, '', '10:10:00', '06:00:00', 0, '27ASDSDS313AS311', 'ASDSDS313AS3', 0, 5, 1, 10, '2019-12-31 13:30:57', 'ADD', '2019-12-31 13:30:57', '2019-12-31 13:30:57');
 
 -- --------------------------------------------------------
 
@@ -23898,7 +24653,7 @@ CREATE TABLE IF NOT EXISTS `operator_drivers` (
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `driver_contact` (`driver_contact`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `operator_drivers`
@@ -28887,7 +29642,7 @@ CREATE TABLE IF NOT EXISTS `status_client` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `status_client`
@@ -28908,7 +29663,8 @@ INSERT INTO `status_client` (`id`, `status`, `description`, `created`, `modified
 (12, 'Cleared for Billing', NULL, '2019-08-19 11:29:11', '2019-08-19 11:29:11'),
 (13, 'Billed - Pending for Payment', 'Tax Invoice Created', '2019-08-19 11:29:42', '2019-08-19 11:42:19'),
 (14, 'Paid', NULL, '2019-08-19 11:42:26', '2019-08-19 11:42:26'),
-(15, 'Cancelled By Admin', NULL, '2019-11-24 15:17:39', '2019-11-24 15:18:35');
+(15, 'Cancelled By Admin', NULL, '2019-11-24 15:17:39', '2019-11-24 15:18:35'),
+(16, 'Partial Paid', NULL, '2020-01-06 15:22:41', '2020-01-06 15:22:41');
 
 -- --------------------------------------------------------
 
@@ -28924,7 +29680,7 @@ CREATE TABLE IF NOT EXISTS `status_cotrav` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `status_cotrav`
@@ -28943,7 +29699,9 @@ INSERT INTO `status_cotrav` (`id`, `status`, `description`, `created`, `modified
 (10, 'Cleared for Billing', NULL, '2019-08-19 11:39:42', '2019-08-19 11:39:42'),
 (11, 'Billed - Pending for Payment', 'Tax Invoice Created', '2019-08-19 11:39:52', '2019-08-19 11:40:20'),
 (12, 'Paid', NULL, '2019-08-19 11:41:50', '2019-08-19 11:41:50'),
-(13, 'Operator Issue', NULL, '2019-09-17 11:57:18', '2019-09-17 11:57:18');
+(13, 'Operator Issue', NULL, '2019-09-17 11:57:18', '2019-09-17 11:57:18'),
+(14, 'Partial Paid', NULL, '2020-01-06 15:17:12', '2020-01-06 15:17:12'),
+(15, 'Correction Requested By Agent', NULL, '2020-01-07 14:54:49', '2020-01-07 14:54:49');
 
 -- --------------------------------------------------------
 
@@ -28964,7 +29722,7 @@ CREATE TABLE IF NOT EXISTS `taxis` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `taxis`
@@ -28993,7 +29751,8 @@ INSERT INTO `taxis` (`id`, `taxi_model_id`, `taxi_reg_no`, `make_year`, `garage_
 (20, '2', 'MH-12 GC1199', 2000, '0', 0, NULL, 0, '2019-11-24 02:39:49', '2019-11-24 02:39:49'),
 (21, '2', 'MH-12 GC1199', 2000, '0', 0, NULL, 0, '2019-11-24 02:41:44', '2019-11-24 02:41:44'),
 (22, '2', 'MH12 AA1111', 2000, '0', 0, NULL, 0, '2019-11-24 02:44:27', '2019-11-24 02:44:27'),
-(23, '3', 'MH11 AA007', 2000, '0', 0, NULL, 0, '2019-11-24 02:48:29', '2019-11-24 02:48:29');
+(23, '3', 'MH11 AA007', 2000, '0', 0, NULL, 0, '2019-11-24 02:48:29', '2019-11-24 02:48:29'),
+(24, '3', 'MH 12 GC1121', 2000, '0', 0, NULL, 0, '2020-01-07 15:15:24', '2020-01-07 15:15:24');
 
 -- --------------------------------------------------------
 
@@ -29019,7 +29778,7 @@ CREATE TABLE IF NOT EXISTS `taxis_action_log` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `taxis_action_log`
@@ -29049,7 +29808,8 @@ INSERT INTO `taxis_action_log` (`id`, `taxi_model_id`, `taxi_reg_no`, `make_year
 (21, '2', 'MH-12 GC1199', 2000, '0', 0, NULL, 0, 20, 1, 10, '2019-11-24 02:39:49', 'ADD', '2019-11-24 02:39:49', '2019-11-24 02:39:49'),
 (22, '2', 'MH-12 GC1199', 2000, '0', 0, NULL, 0, 21, 1, 10, '2019-11-24 02:41:44', 'ADD', '2019-11-24 02:41:44', '2019-11-24 02:41:44'),
 (23, '2', 'MH12 AA1111', 2000, '0', 0, NULL, 0, 22, 1, 10, '2019-11-24 02:44:27', 'ADD', '2019-11-24 02:44:27', '2019-11-24 02:44:27'),
-(24, '3', 'MH11 AA007', 2000, '0', 0, NULL, 0, 23, 1, 10, '2019-11-24 02:48:29', 'ADD', '2019-11-24 02:48:29', '2019-11-24 02:48:29');
+(24, '3', 'MH11 AA007', 2000, '0', 0, NULL, 0, 23, 1, 10, '2019-11-24 02:48:29', 'ADD', '2019-11-24 02:48:29', '2019-11-24 02:48:29'),
+(25, '3', 'MH 12 GC1121', 2000, '0', 0, NULL, 0, 24, 1, 10, '2020-01-07 15:15:24', 'ADD', '2020-01-07 15:15:24', '2020-01-07 15:15:24');
 
 -- --------------------------------------------------------
 
@@ -29094,16 +29854,19 @@ CREATE TABLE IF NOT EXISTS `taxi_bookings` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `taxi_bookings`
 --
 
 INSERT INTO `taxi_bookings` (`id`, `reference_no`, `vendor_booking_id`, `voucher_no`, `booking_email`, `operator_id`, `taxi_id`, `driver_id`, `tour_type`, `city_id`, `pickup_location`, `drop_location`, `pickup_datetime`, `booking_date`, `assessment_code`, `assessment_city_id`, `no_of_seats`, `status_client`, `status_cotrav`, `last_action_by`, `days`, `rate_id`, `taxi_type`, `is_invoice`, `invoice_id`, `group_id`, `subgroup_id`, `spoc_id`, `corporate_id`, `billing_entity_id`, `ass_code`, `reason_booking`, `created`, `modified`) VALUES
-(1, 'CTTXI000001', '', NULL, '/media/booking_email/cotrav.sql', 2, 21, 5, 2, 2763, 'Pune, Maharashtra, India', 'Mumbai, Maharashtra, India', '2019-12-13 18:27:43', '2019-12-12 18:27:09', '1', 1, 1, 7, 4, 1, 0, 1, 1, 0, NULL, 1, 1, 1, 1, 1, NULL, 'test', '2019-12-12 18:28:08', '2019-12-13 11:21:49'),
-(2, 'CTTXI000002', NULL, NULL, '/media/booking_email/bus_tickett_vendor.txt', 1, NULL, NULL, 1, 2763, 'Pune, Maharashtra, India', 'Railway Station, Nagpur, Sitabuldi, Nagpur, Maharashtra, India', '2019-12-14 15:19:01', '2019-12-13 15:18:40', '1', 1, 1, 7, 2, 1, 0, 0, 0, 0, NULL, 1, 1, 1, 1, 1, NULL, 'tetst', '2019-12-13 15:19:37', '2019-12-13 16:53:40'),
-(3, 'CTTXI000003', '', NULL, '', 1, 4, 5, 1, 2763, 'Pune, Maharashtra, India', 'Mumbai, Maharashtra, India', '2019-12-18 18:04:24', '2019-12-17 18:03:58', '1', 1, 1, 7, 4, 1, 0, 0, 0, 0, NULL, 1, 1, 1, 1, 1, NULL, 'test', '2019-12-17 18:04:51', '2019-12-17 18:06:05');
+(1, 'CTTXI000001', '', NULL, '/media/booking_email/cotrav.sql', 2, 21, 5, 2, 2763, 'Pune, Maharashtra, India', 'Mumbai, Maharashtra, India', '2019-12-13 18:27:43', '2019-12-12 18:27:09', '1', 1, 1, 12, 10, 1, 0, 1, 1, 1, 6, 1, 1, 1, 1, 1, NULL, 'test', '2019-12-12 18:28:08', '2020-01-07 18:37:05'),
+(2, 'CTTXI000002', '', NULL, '/media/booking_email/bus_tickett_vendor.txt', 1, 24, 5, 1, 2763, 'Pune, Maharashtra, India', 'Railway Station, Nagpur, Sitabuldi, Nagpur, Maharashtra, India', '2019-12-14 15:19:01', '2019-12-13 15:18:40', '1', 1, 1, 7, 15, 1, 0, 0, 0, 1, 8, 1, 1, 1, 1, 1, NULL, 'tetst', '2019-12-13 15:19:37', '2020-01-07 15:28:21'),
+(3, 'CTTXI000003', '', NULL, '', 1, 4, 5, 1, 2763, 'Pune, Maharashtra, India', 'Mumbai, Maharashtra, India', '2019-12-18 18:04:24', '2019-12-17 18:03:58', '1', 1, 1, 10, 8, 1, 0, 0, 0, 1, 7, 1, 1, 1, 1, 1, NULL, 'test', '2019-12-17 18:04:51', '2020-01-09 17:32:52'),
+(4, 'CTTXI000004', NULL, NULL, '', NULL, NULL, NULL, 1, 316, 'Warje Bridge, Giridhar Nagar, Warje, Pune, Maharashtra, India', 'Pune Railway Station, Ambegaon BK, Pune, Maharashtra, India', '2019-12-31 16:31:46', '2019-12-28 16:31:57', '1', 1, 1, 7, 2, 1, 0, 0, 2, 0, NULL, 1, 1, 1, 1, 1, NULL, ' test hai', '2019-12-28 16:32:19', '2019-12-30 11:49:22'),
+(5, 'CTTXI000005', NULL, NULL, '', NULL, NULL, NULL, 1, 2474, 'Pune Railway Station, Ambegaon BK, Pune, Maharashtra, India', 'Banner Desert Medical Center, South Dobson Road, Mesa, AZ, USA', '2020-01-03 18:25:54', '2020-01-03 18:26:14', '1', 1, 1, 3, 1, 0, 0, 0, 1, 0, NULL, 1, 1, 1, 1, 1, NULL, ' te', '2020-01-03 18:26:13', '2020-01-03 18:27:09'),
+(6, 'CTTXI000006', '', NULL, '', 1, 24, 5, 1, 2763, 'Pune Railway Station, Ambegaon BK, Pune, Maharashtra, India', 'Warje Bridge, Giridhar Nagar, Warje, Pune, Maharashtra, India', '2020-01-09 11:09:05', '2020-01-08 11:09:15', '1', 1, 1, 9, 7, 1, 0, 0, 1, 1, 9, 1, 1, 1, 1, 1, NULL, ' test hai bahi', '2020-01-08 11:09:35', '2020-01-09 17:50:25');
 
 -- --------------------------------------------------------
 
@@ -29120,7 +29883,7 @@ CREATE TABLE IF NOT EXISTS `taxi_bookings_action_log` (
   `user_id` int(11) NOT NULL,
   `user_type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `taxi_bookings_action_log`
@@ -29134,7 +29897,15 @@ INSERT INTO `taxi_bookings_action_log` (`id`, `booking_id`, `action`, `action_da
 (5, 2, 2, '2019-12-13 15:19:48', 1, 10),
 (6, 3, 1, '2019-12-17 18:04:51', 1, 10),
 (7, 3, 2, '2019-12-17 18:05:04', 1, 10),
-(8, 3, 4, '0000-00-00 00:00:00', 1, 10);
+(8, 3, 4, '0000-00-00 00:00:00', 1, 10),
+(9, 4, 1, '2019-12-28 16:32:19', 1, 10),
+(10, 4, 2, '2019-12-30 11:49:22', 1, 10),
+(11, 5, 1, '2020-01-03 18:26:13', 1, 4),
+(12, 5, 2, '2020-01-03 18:27:09', 1, 2),
+(13, 2, 4, '0000-00-00 00:00:00', 1, 10),
+(14, 6, 1, '2020-01-08 11:09:35', 1, 10),
+(15, 6, 2, '2020-01-08 11:09:49', 1, 10),
+(16, 6, 4, '0000-00-00 00:00:00', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -29188,14 +29959,54 @@ CREATE TABLE IF NOT EXISTS `taxi_booking_client_invoice` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modfied` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `taxi_booking_client_invoice`
 --
 
 INSERT INTO `taxi_booking_client_invoice` (`id`, `booking_id`, `bb_entity`, `cotrav_billing_entity`, `management_fee`, `tax_on_management_fee`, `tax_on_management_fee_percentage`, `management_fee_igst`, `management_fee_cgst`, `management_fee_sgst`, `management_fee_igst_rate`, `management_fee_cgst_rate`, `management_fee_sgst_rate`, `igst`, `cgst`, `sgst`, `igst_amount`, `cgst_amount`, `sgst_amount`, `hours_done`, `allowed_hours`, `extra_hours`, `charge_hour`, `days`, `start_km`, `end_km`, `kms_done`, `allowed_kms`, `extra_kms`, `extra_km_rate`, `base_rate`, `extra_hr_charges`, `extra_km_charges`, `driver_allowance`, `total_excluding_tax`, `other_charges`, `total`, `sub_total`, `radio_rate`, `status`, `client_status`, `created`, `modfied`) VALUES
-(3, 1, 1, 1, 100, 100, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 126, 0, 0, 0, 8, 0, 10, 0, 0, 100, 100, 80, 20, 10, 1200, 0, 200, 0, 1400, 0, 0, 0, 0, 1, 1, '2019-12-13 13:25:00', '2019-12-13 13:25:00');
+(7, 3, 1, 1, 100, 18, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1298, 1000, 1, 1, '2020-01-07 12:36:54', '2020-01-07 12:36:54'),
+(6, 1, 1, 1, 100, 100, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 126, 0, 0, 3, 8, 0, 10, 0, 0, 100, 100, 80, 20, 10, 1200, 0, 200, 0, 1400, 0, 1736, 1854, 0, 1, 1, '2020-01-07 12:36:17', '2020-01-07 12:36:17'),
+(8, 2, 1, 1, 100, 18, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 216, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1534, 1200, 1, 1, '2020-01-07 15:18:20', '2020-01-07 15:18:20'),
+(9, 6, 1, 1, 100, 18, 18, 18, 0, 0, 18, 0, 0, 0, 0, 0, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1298, 1000, 1, 1, '2020-01-08 11:13:35', '2020-01-08 11:13:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taxi_booking_client_invoice_action_log`
+--
+
+DROP TABLE IF EXISTS `taxi_booking_client_invoice_action_log`;
+CREATE TABLE IF NOT EXISTS `taxi_booking_client_invoice_action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_id` int(11) NOT NULL,
+  `action` int(11) NOT NULL,
+  `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `invoice_comment` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `taxi_booking_client_invoice_action_log`
+--
+
+INSERT INTO `taxi_booking_client_invoice_action_log` (`id`, `invoice_id`, `action`, `action_date`, `invoice_comment`, `user_id`, `user_type`, `created`, `modified`) VALUES
+(6, 8, 1, '2020-01-07 15:18:20', '', 1, 10, '2020-01-07 15:18:20', '2020-01-07 15:18:20'),
+(5, 6, 2, '2020-01-07 13:28:53', '', 1, 10, '2020-01-07 13:28:53', '2020-01-07 13:29:39'),
+(4, 7, 2, '2020-01-07 13:28:53', '', 1, 10, '2020-01-07 13:28:53', '2020-01-07 13:29:37'),
+(7, 8, 3, '2020-01-07 15:28:21', 'test', 1, 10, '2020-01-07 15:28:21', '2020-01-07 15:28:21'),
+(8, 6, 1, '2020-01-07 18:37:05', '', 1, 1, '2020-01-07 18:37:05', '2020-01-07 18:37:05'),
+(9, 9, 1, '2020-01-08 11:13:35', '', 1, 10, '2020-01-08 11:13:35', '2020-01-08 11:13:35'),
+(10, 9, 2, '2020-01-09 17:03:56', '', 1, 10, '2020-01-09 17:03:56', '2020-01-09 17:03:56'),
+(11, 7, 1, '2020-01-09 17:32:52', '', 1, 4, '2020-01-09 17:32:52', '2020-01-09 17:32:52'),
+(12, 9, 1, '2020-01-09 17:49:08', 'tet hai bahai\r\n', 1, 4, '2020-01-09 17:49:08', '2020-01-09 17:49:08'),
+(13, 9, 1, '2020-01-09 17:50:25', 'test', 1, 4, '2020-01-09 17:50:25', '2020-01-09 17:50:25'),
+(14, 9, 1, '2020-01-09 17:54:09', 'test hai yyaaar', 1, 4, '2020-01-09 17:54:09', '2020-01-09 17:54:09');
 
 -- --------------------------------------------------------
 
@@ -29261,6 +30072,25 @@ INSERT INTO `taxi_models_action_log` (`id`, `brand_name`, `model_name`, `taxi_ty
 (2, 'Honda', 'City', 1, 4, NULL, 0, 2, 1, 10, '2019-11-19 21:23:49', 'ADD', '2019-11-19 21:23:49', '2019-11-19 21:23:49'),
 (3, 'NA', 'Maruti', 27, 4, NULL, 0, 3, 1, 10, '2019-11-24 02:48:27', 'ADD', '2019-11-24 02:48:27', '2019-11-24 02:48:27'),
 (4, 'NA', 'Honda City', 1, 4, NULL, 0, 4, 1, 10, '2019-12-17 18:05:56', 'ADD', '2019-12-17 18:05:56', '2019-12-17 18:05:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taxi_revise_invoice_comments`
+--
+
+DROP TABLE IF EXISTS `taxi_revise_invoice_comments`;
+CREATE TABLE IF NOT EXISTS `taxi_revise_invoice_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `booking_id` int(11) NOT NULL,
+  `revise_request_datetime` datetime NOT NULL,
+  `revise_comment` text NOT NULL,
+  `revise_requestor_type` varchar(255) NOT NULL,
+  `revise_requested_by` varchar(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -29403,14 +30233,15 @@ CREATE TABLE IF NOT EXISTS `train_bookings` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `train_bookings`
 --
 
 INSERT INTO `train_bookings` (`id`, `reference_no`, `vendor_booking_id`, `voucher_no`, `booking_email`, `drop_location`, `pickup_location`, `booking_datetime`, `pickup_from_datetime`, `pickup_to_datetime`, `preferred_train`, `boarding_point`, `boarding_datetime`, `assessment_code`, `assessment_city_id`, `train_type_priority_1`, `train_type_priority_2`, `train_type_priority_3`, `no_of_seats`, `last_action_by`, `operator_name`, `operator_contact`, `train_name`, `ticket_no`, `pnr_no`, `assign_bus_type_id`, `seat_no`, `portal_used`, `status_client`, `status_cotrav`, `is_invoice`, `invoice_id`, `group_id`, `subgroup_id`, `spoc_id`, `corporate_id`, `billing_entity_id`, `reason_booking`, `created`, `modified`) VALUES
-(1, 'CTTRN000001', NULL, NULL, '/media/booking_email/cotrav.sql', '5', '4', '2019-12-14 16:24:22', '2019-12-15 16:24:39', '2019-12-18 16:24:43', '', '/operator/login', '2019-12-17 16:25:53', '1', 1, 2, 2, 2, 1, 1, '1', '9579477262', 'Satabdi Express Mail', 'Ticket11', '2142151512521', 2, 'B1-42', 'IRCTC', 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', '2019-12-14 16:25:03', '2019-12-14 16:26:16');
+(1, 'CTTRN000001', NULL, NULL, '/media/booking_email/cotrav.sql', '5', '4', '2019-12-14 16:24:22', '2019-12-15 16:24:39', '2019-12-18 16:24:43', '', '/operator/login', '2019-12-17 16:25:53', '1', 1, 2, 2, 2, 1, 1, '1', '9579477262', 'Satabdi Express Mail', 'Ticket11', '2142151512521', 2, 'B1-42', 'IRCTC', 7, 4, 0, NULL, 1, 1, 1, 1, 1, 'test', '2019-12-14 16:25:03', '2019-12-14 16:26:16'),
+(2, 'CTTRN000002', NULL, NULL, '/media/booking_email/test_cpanel.txt', '5', '4', '2019-12-30 15:15:38', '2019-12-30 15:15:59', '2020-01-04 15:16:02', '', NULL, NULL, '1', 1, 2, 2, 2, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 2, 0, NULL, 1, 1, 1, 1, 1, ' test', '2019-12-30 15:16:25', '2019-12-30 15:16:35');
 
 -- --------------------------------------------------------
 
@@ -29427,7 +30258,7 @@ CREATE TABLE IF NOT EXISTS `train_bookings_action_log` (
   `user_id` int(11) NOT NULL,
   `user_type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `train_bookings_action_log`
@@ -29436,7 +30267,9 @@ CREATE TABLE IF NOT EXISTS `train_bookings_action_log` (
 INSERT INTO `train_bookings_action_log` (`id`, `booking_id`, `action`, `action_date`, `user_id`, `user_type`) VALUES
 (1, 1, 1, '2019-12-14 16:25:03', 1, 10),
 (2, 1, 2, '2019-12-14 16:25:14', 1, 10),
-(3, 1, 4, '0000-00-00 00:00:00', 1, 10);
+(3, 1, 4, '0000-00-00 00:00:00', 1, 10),
+(4, 2, 1, '2019-12-30 15:16:25', 1, 10),
+(5, 2, 2, '2019-12-30 15:16:35', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -29476,6 +30309,26 @@ CREATE TABLE IF NOT EXISTS `train_booking_client_invoice` (
 
 INSERT INTO `train_booking_client_invoice` (`id`, `booking_id`, `ticket_price`, `management_fee`, `tax_on_management_fee`, `tax_on_management_fee_percentage`, `sub_total`, `cotrav_billing_entity`, `igst`, `cgst`, `sgst`, `management_fee_igst`, `management_fee_cgst`, `management_fee_sgst`, `management_fee_igst_rate`, `management_fee_cgst_rate`, `management_fee_sgst_rate`, `client_ticket`, `status`, `created`, `modified`) VALUES
 (1, 1, 2002, '100', 18, 18, 2120, 1, 18, 0, 0, 18.00, 0.00, 0.00, 18.00, 0.00, 0.00, 'D:/Taxivaxi_Python_Projects/CoTrav/media/train/client_ticket/cotrav.sql', 1, '2019-12-14 16:26:16', '2019-12-14 16:26:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `train_booking_client_invoice_action_log`
+--
+
+DROP TABLE IF EXISTS `train_booking_client_invoice_action_log`;
+CREATE TABLE IF NOT EXISTS `train_booking_client_invoice_action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_id` int(11) NOT NULL,
+  `action` int(11) NOT NULL,
+  `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `invoice_comment` varchar(255) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_type` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 

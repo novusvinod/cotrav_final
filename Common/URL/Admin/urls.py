@@ -85,5 +85,16 @@ urlpatterns = [
     path('Corporate/Admin/download-spocs', admin_views.download_spocs),
     path('Corporate/Admin/download-employees', admin_views.download_employees),
 
+    path('Corporate/Admin/taxi-billing/<int:id>', admin_views.taxi_billing),
+    path('Corporate/Admin/bus-billing/<int:id>', admin_views.bus_billing),
+    path('Corporate/Admin/train-billing/<int:id>', admin_views.train_billing),
+    path('Corporate/Admin/flight-billing/<int:id>', admin_views.flight_billing),
+    path('Corporate/Admin/hotel-billing/<int:id>', admin_views.hotel_billing),
+
+    path('Corporate/Admin/taxi-billing/verify', admin_views.taxi_billing_verify),
+    path('Corporate/Admin/bus-billing/verify', admin_views.bus_billing_verify),
+    path('Corporate/Admin/train-billing/verify', admin_views.train_billing_verify),
+    path('Corporate/Admin/flight-billing/verify', admin_views.flight_billing_verify),
+    path('Corporate/Admin/hotel-billing/verify', admin_views.hotel_billing_verify),
 
 ]

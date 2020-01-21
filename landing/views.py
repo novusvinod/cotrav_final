@@ -15,6 +15,7 @@ from django.contrib import messages
 from landing.utils import render_to_pdf
 from Common.email_settings import SignupEmail
 
+
 # Create your views here.
 def index_cs(request):
     return render(request,'comingsoon.html')
@@ -42,6 +43,8 @@ def signup(request):
         corporate_location = request.POST.get('corporate_location')
         Lead_Source = request.POST.get('Lead_Source')
         Hear_About_Us = request.POST.get('Hear_About_Us')
+        if Hear_About_Us == 'other':
+            Hear_About_Us = request.POST.get('input_Hear_About_Us')
         message = request.POST.get('message')
 
         Newcompany = Leadgeneration()
@@ -86,7 +89,7 @@ def contact(request):
         contact_person_name = request.POST.get('contact_person_name')
         contact_person_no = request.POST.get('contact_person_no')
         contact_person_email = request.POST.get('contact_person_email')
-        corporate_location = 'contactus'
+        corporate_location = ''
         Lead_Source = 'Contact Us'
         message = request.POST.get('message')
 
@@ -186,9 +189,9 @@ def Create_Token(request):
                 "NAME": "GET_AUTH_TOKEN",
                 "STR": [
                     {
-                        "A_ID": "27286260",
-                        "U_ID": "test",
-                        "PWD": "test",
+                        "A_ID": "79394396",
+                        "U_ID": "Taxivaxi",
+                        "PWD": "Taxi$Vaxi1234",
                         "MODULE": "B2B",
                         "HS": "D"
                     }
@@ -285,3 +288,5 @@ def get_pnr(request):
     else:
 
         return render(request, 'api_call.html')
+
+

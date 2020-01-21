@@ -11,54 +11,64 @@
         <section class="parallax position-relative box-hover" data-overlay-dark="6" data-background="{% static 'img/bg/bg-login.jpg' %}">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6 center-col">
-                        <div class="bg-white padding-30px-all sm-padding-20px-all border border-width-5">
-                            <div class="section-heading section-heading2">
-                                <h3>Sign-Up</h3>
+                     <div class="col-lg-6" style="margin: auto;">
+                   <h1 class="sec_sty">Welcome to Cotrav</h1>
+                         <h2  class="sec_sty_1">We offer you all your company's  <br>travelsolutions at one place.</h2>
+                          <p  class="sec_sty_2">Create your account and get moving with cotrav</p>
+                     </div>
+
+                    <div class="col-lg-6">
+                        <<div class="bg-white padding-30px-all sm-padding-20px-all border border-width-5 section_signup_width">
+                            <div class="section-heading section-heading2 section_margin">
+                                <h3 class="section_res_signup">Sign-Up</h3>
 
                             </div>
-                            <form action="signup" method="POST" class="registration-form">
+                            <form action="signup" method="POST" class="registration-form section_signup">
                                 <div class="row">
                                      
                                     <div class="col-11">
                                          <img src="{% static 'img/logos/6.png' %}" id="contact_icon1">
-                                        <input type="text" name="corporate_name" id="company_Name" required="required" placeholder="Name Of Your Company *" maxlength="70" class="medium-input input_signupform">
+                                        <input type="text" name="corporate_name" id="company_Name" required="required" placeholder="Name Of Your Company *" maxlength="70" class="medium-input input_signupform input_signup">
                                         <span class="err_msg">{{err_msg}}</span>
                                     </div>
 
                                        <div class="col-11">
                                          <img src="{% static 'img/logos/7.png' %}" id="contact_icon1">
-                                        <input type="text" name="corporate_location" id="company_location" required="required" placeholder="Location *" value="{{city}}" maxlength="70" class="medium-input input_signupform">
+                                        <input type="text" name="corporate_location" id="company_location" required="required" placeholder="Location *" value="{{city}}" maxlength="70" class="medium-input input_signupform input_signup">
                                     </div>
                                      <div class="col-11">
                                          <img src="{% static 'img/logos/1.png' %}" id="contact_icon1">
-                                        <input type="text" name="contact_person_name" id="Name" required="required" placeholder="Contact Person *" value="{{name}}" maxlength="70" class="medium-input input_signupform">
+                                        <input type="text" name="contact_person_name" id="Name" required="required" placeholder="Contact Person *" value="{{name}}" maxlength="70" class="medium-input input_signupform input_signup">
                                     </div>
                                       <div class="col-11">
                                             <img src="{% static 'img/logos/3.png' %}" id="contact_icon1">
-                                        <input type="text" name="contact_person_no" id="phone" placeholder="Contact Number" maxlength="10" value="{{number}}" class="medium-input input_signupform">
+                                        <input type="text" name="contact_person_no" id="phone" placeholder="Contact Number" maxlength="10" value="{{number}}" class="medium-input input_signupform input_signup">
                                     </div>
                                     <div class="col-11">
                                          <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
-                                        <input type="email" name="contact_person_email" id="Contact_email" required="required" placeholder="Contact Email *" value="{{email}}" maxlength="70" class="medium-input input_signupform">
+                                        <input type="email" name="contact_person_email" id="Contact_email" required="required" placeholder="Contact Email *" value="{{email}}" maxlength="70" class="medium-input input_signupform input_signup">
                                     </div>
 
                                     <div class="col-11">
                                         <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
-                                        <select name="Hear_About_Us" class="medium-input input_signupform" required>
+                                        <select name="Hear_About_Us" class="medium-input input_signupform input_signup" id="Hear_About_Us" required>
                                             <option value="">How Did You Hear About Us?</option>
                                             <option value="Website">Website</option>
                                             <option value="news paper">News Paper</option>
                                             <option value="Email">Email</option>
                                             <option value="mobile sms">Mobile SMS</option>
+                                            <option value="other">Others</option>
                                         </select>
 
+                                        <input type="text" style="display:none;" name="input_Hear_About_Us" id="input_field_here" class="medium-input input_signupform input_signup ">
+
                                    </div>
+
                                     <input type="hidden" value="Sign Up" name="Lead_Source">
 
                                     <div class="col-11">
                                        <img src="{% static 'img/logos/8.png' %}" id="contact_icon1">
-                                        <textarea name="message" rows="5" placeholder="Message:" data-constraints="@NotEmpty" value="{{message}}" class="medium-input input_signupform"></textarea>
+                                        <textarea name="message" rows="3" placeholder="Tell us more about your requirments.." data-constraints="@NotEmpty" value="{{message}}" class="medium-input input_signupform"></textarea>
                                     </div>
                                  
                                     <div class="col-12">
@@ -81,11 +91,27 @@
     <!-- end main-wrapper section -->
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
-
+    {% load static %}
+    <!-- start js include path -->
+    <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}" ></script>
 <script>
   var company_location = document.getElementById('company_location');
   var autocomplete = new google.maps.places.Autocomplete(company_location);
-
 </script>
 
+<script type="text/javascript">
+
+$('#Hear_About_Us').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    if(valueSelected == 'other'){
+        $('#input_field_here').show();
+        $("#input_field_here").prop('required',true);
+    }else{
+        $('#input_field_here').hide();
+        $("#input_field_here").prop('required',false);
+    }
+});
+
+</script>
 {% endblock %}

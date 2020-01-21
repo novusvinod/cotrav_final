@@ -516,10 +516,11 @@ def add_company_subgroup(request, id):
                        'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles':is_water_bottles,'is_reverse_logistics':is_reverse_logistics,
                        'password':password}
 
-            print(payload)
+            #print(payload)
             url = settings.API_BASE_URL + "add_subgroup"
             company = getDataFromAPI(login_type, access_token, url, payload)
-
+            print("sdsadasd")
+            print(company)
             if company['success'] == 1:
                 messages.success(request, 'Add Company Subgroup Added Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
@@ -1008,6 +1009,8 @@ def add_employee(request, id):
             designation = request.POST.get('designation', '')
             home_city = request.POST.get('home_city', '')
             home_address = request.POST.get('home_address', '')
+            reporting_manager = request.POST.get('reporting_manager', '')
+            employee_band = request.POST.get('employee_band', '')
 
             if is_cxo == '1':
                 assistant_id = request.POST.get('assistant_id', '')
@@ -1031,7 +1034,8 @@ def add_employee(request, id):
                        'employee_contact':employee_contact,'age':age,'gender':gender,'id_proof_type':id_proof_type,'id_proof_no':id_proof_no,
                        'is_active':is_active,'has_dummy_email':has_dummy_email,'fcm_regid':fcm_regid,'is_cxo':is_cxo,'employee_id': employee_id,
                        'designation':designation,'home_city':home_city,'home_address':home_address,'assistant_id':assistant_id,'date_of_birth':date_of_birth,
-                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id,'username':username}
+                       'delete_id': delete_id, 'password': password,'billing_entity_id':billing_entity_id,'username':username,'reporting_manager':reporting_manager,
+                       'employee_band':employee_band}
 
             url = ""
             print(payload)
@@ -1702,6 +1706,7 @@ def add_train_booking(request,id):
             url_bus_type = settings.API_BASE_URL + "train_types"
             bus_type = getDataFromAPI(login_type, access_token, url_bus_type, payload)
             train_types = bus_type['Types']
+
 
             # url_railway_stations = settings.API_BASE_URL + "railway_stations"
             # trains1 = getDataFromAPI(login_type, access_token, url_railway_stations, payload)
@@ -4926,6 +4931,295 @@ def download_employees(request):
     workbook.save(response)
 
     return response
+
+
+def taxi_billing(request,id):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        url = settings.API_BASE_URL + "admin_taxi_bookings"
+        payload = {'booking_type': id, 'corporate_id':request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        #print(company)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/admin_taxi_billing.html", {'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Company/Admin/admin_taxi_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def taxi_billing_verify(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id':verify_id, 'user_id':request.user.id, 'corporate_id':corporate_id, 'invoice_id':invoice_id}
+            print(payload)
+
+            vry_url = settings.API_BASE_URL + "admin_verify_taxi_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id,'invoice_comments':invoice_comments}
+            print(payload)
+            print("current url")
+            print(current_url)
+            vry_url = settings.API_BASE_URL + "admin_revise_taxi_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def bus_billing(request,id):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        url = settings.API_BASE_URL + "admin_bus_bookings"
+        payload = {'booking_type': id, 'corporate_id':request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/admin_bus_billing.html", {'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Company/Admin/admin_bus_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def train_billing(request,id):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        url = settings.API_BASE_URL + "admin_train_bookings"
+        payload = {'booking_type': id, 'corporate_id':request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/admin_train_billing.html",
+                          {'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Company/Admin/admin_train_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def flight_billing(request,id):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        url = settings.API_BASE_URL + "admin_flight_bookings"
+        payload = {'booking_type': id, 'corporate_id':request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/admin_flight_billing.html",{'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Company/Admin/admin_flight_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def hotel_billing(request,id):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        url = settings.API_BASE_URL + "admin_hotel_bookings"
+        payload = {'booking_type': id, 'corporate_id':request.user.corporate_id}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        #print(company)
+        if company['success'] == 1:
+            booking = company['Bookings']
+            return render(request, "Company/Admin/admin_hotel_billing.html",{'bookings': booking, 'billing_type': id})
+        else:
+            return render(request, "Company/Admin/admin_hotel_billing.html", {'billing_type': id})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def bus_billing_verify(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id':verify_id, 'user_id':request.user.id, 'corporate_id':corporate_id, 'invoice_id':invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_verify_bus_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id,'invoice_comments':invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_revise_bus_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def train_billing_verify(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id':verify_id, 'user_id':request.user.id, 'corporate_id':corporate_id, 'invoice_id':invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_verify_train_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id,'invoice_comments':invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_revise_train_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def hotel_billing_verify(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id':verify_id, 'user_id':request.user.id, 'corporate_id':corporate_id, 'invoice_id':invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_verify_hotel_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id,'invoice_comments':invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_revise_hotel_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def flight_billing_verify(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        if 'verify' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            current_url = request.POST.get('current_url')
+            payload = {'verify_id':verify_id, 'user_id':request.user.id, 'corporate_id':corporate_id, 'invoice_id':invoice_id}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_verify_flight_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+        elif 'revise' in request.POST:
+            verify_id = request.POST.getlist('booking_ids')
+            corporate_id = request.POST.getlist('corporate_ids')
+            invoice_id = request.POST.getlist('invoice_ids')
+            invoice_comments = request.POST.getlist('invoice_comments')
+            current_url = request.POST.get('current_url')
+
+            payload = {'verify_id': verify_id, 'user_id': request.user.id, 'corporate_id': corporate_id,
+                       'invoice_id': invoice_id,'invoice_comments':invoice_comments}
+            print(payload)
+            vry_url = settings.API_BASE_URL + "admin_revise_flight_bookings"
+
+            verify = getDataFromAPI(login_type, access_token, vry_url, payload)
+            if verify['success'] == 1:
+                return HttpResponseRedirect(current_url, {})
+            else:
+                return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+
+
+
+
+
+
 
 def calculate_age(born):
     print(born)

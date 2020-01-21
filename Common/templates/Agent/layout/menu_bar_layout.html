@@ -66,6 +66,8 @@
                             </a>
 
                         </li>
+						{% if user.is_super_admin == 1 %}
+
 						 <li class="mega-menu-dropdown ">
                             <a href="#" class="dropdown-toggle"> <i class="material-icons">local_taxi</i> Operator
  								<i class="fa fa-angle-down"></i>
@@ -90,7 +92,9 @@
 									</li>
 								</ul>
                         </li>
+						{% endif %}
 
+						{% if user.is_super_admin == 1 %}
 						 <li class="mega-menu-dropdown ">
                             <a href="#" class="dropdown-toggle"> <i class="material-icons">business</i>  Companies
  								<i class="fa fa-angle-down"></i>
@@ -102,21 +106,6 @@
 											<div class="row">
 												<div class="col-md-12">
 													<ul class="mega-menu-submenu">
-
-<!--														<li><a href="/agents/companies"><i class="fa fa-industry" aria-hidden="true"></i> View Companies</a></li>-->
-<!--													    <li><a href="/agents/add-company"><i class="fa fa-plus" aria-hidden="true"></i> Add Company</a></li>-->
-<!--														<li><a href="/agents/rates/0"><i class="fa fa-inr" aria-hidden="true"></i> Company Rates</a></li>-->
-<!--														<li><a href="/agents/admins/0"><i class="fa fa-user-secret" aria-hidden="true"></i> Company Admins</a></li>-->
-<!--														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> View Company Billing Enitity</a></li>-->
-<!--														<li><a href="/agents/groups/0"><i class="fa fa-group"></i> View All Groups</a></li>-->
-<!--														<li><a href="/agents/subgroups/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Subgroups</a></li>-->
-<!--														<li><a href="/agents/spocs/0"><i class="fa fa-user" aria-hidden="true"></i> View All SPOCs</a></li>-->
-<!--														<li><a href="/agents/employees/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Employees</a></li>-->
-<!--														<li><a href="/agents/assessment_cities/0"><i class="fa fa-simplybuilt" aria-hidden="true"></i> Assessment Cities</a></li>-->
-<!--														<li><a href="/agents/assessment_codes/0"><i class="fa fa-code" aria-hidden="true"></i> Assessment Codes</a></li>-->
-<!--														<li><a href="/agents/company-operation-management"><i class="fa fa-gear" aria-hidden="true"></i> Operation Management</a></li>-->
-<!--														<li><a href="/agents/company-relationship-manager"><i class="fa fa fa-handshake-o" aria-hidden="true"></i> Relationship Manager</a></li>-->
-<!--														<li><a href="/agents/agents"><i class="fa fa fa-user-circle-o" aria-hidden="true"></i> Corporate Agents</a></li>-->
 
 														<li><a href="/agents/companies"><i class="fa fa-industry" aria-hidden="true"></i> View Companies</a></li>
 														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> Billing Entities</a></li>
@@ -140,6 +129,7 @@
 									</li>
 								</ul>
                         </li>
+						{% endif %}
 
 						 <li class="mega-menu-dropdown ">
                             <a href="/agents/taxi-bookings/1" class="dropdown-toggle"> <i class="material-icons">local_taxi</i> Taxi
@@ -148,6 +138,7 @@
 
                         </li>
 
+						{% if user.is_super_admin == 1 or user.has_bus_booking_access == 1 %}
 
 						 <li class="mega-menu-dropdown ">
                             <a href="/agents/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i> Bus
@@ -156,15 +147,20 @@
 
                         </li>
 
+						{% endif %}
 
+
+
+						{% if user.is_super_admin == 1 or user.has_train_booking_access == 1 %}
 						<li class="mega-menu-dropdown ">
                             <a href="/agents/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_subway</i> Train
 
                             </a>
 
                         </li>
+						{% endif %}
 
-
+						{% if user.is_super_admin == 1 or user.has_hotel_booking_access == 1 %}
 						<li class="mega-menu-dropdown ">
                             <a href="#" class="dropdown-toggle"> <i class="material-icons">hotel</i> Hotel
  								<i class="fa fa-angle-down"></i>
@@ -187,99 +183,46 @@
 									</li>
 								</ul>
                         </li>
+						{% endif %}
 
 
+						{% if user.is_super_admin == 1 or user.has_flight_booking_access == 1 %}
                         <li class="mega-menu-dropdown ">
                             <a href="/agents/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight</i> Flight
 
                             </a>
 
                         </li>
+						{% endif %}
 
+
+
+						{% if user.is_super_admin == 1 or user.is_super_admin == 1 %}
 						<li class="mega-menu-dropdown ">
                             <a href="/agents/lead/" class="dropdown-toggle"> <i class="material-icons">person_add</i> Leads
 
                         </a>
 
                         </li>
+						{% endif %}
 
+						{% if user.is_super_admin == 1 %}
 						<li class="mega-menu-dropdown ">
                             <a href="/agents/agents" class="dropdown-toggle"> <i class="material-icons">supervisor_account</i>  Cotrav Agents
 
                             </a>
 
                         </li>
+						{% endif %}
 
+						{% if user.is_super_admin == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/cotrav-billing-entities" class="dropdown-toggle"> <i class="material-icons">payment</i>  Cotrav Billing Entities
 
-<!--                         <li class="mega-menu-dropdown ">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">local_dining</i> Meal-->
-<!-- 								<i class="fa fa-angle-down"></i>-->
-<!--                                <span class="arrow "></span>-->
-<!--                            </a>-->
-<!--								<ul class="dropdown-menu" style="min-width: 200px;">-->
-<!--									<li>-->
-<!--										<div class="mega-menu-content">-->
-<!--											<div class="row">-->
-<!--												<div class="col-md-12">-->
-<!--													<ul class="mega-menu-submenu">-->
-<!--														<li><a href="/agents/add-meal-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Meal Bookings</a></li>-->
-<!--														<li><a href="/agents/meal-bookings/0"><i class="fa fa-industry" aria-hidden="true"></i>View Meal Bookings</a></li>-->
+                            </a>
 
-
-<!--													</ul>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--									</li>-->
-<!--								</ul>-->
-<!--                        </li>-->
-
-
-<!--                         <li class="mega-menu-dropdown ">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">invert_colors</i> Water Bottle-->
-<!-- 								<i class="fa fa-angle-down"></i>-->
-<!--                                <span class="arrow "></span>-->
-<!--                            </a>-->
-<!--								<ul class="dropdown-menu" style="min-width: 200px;">-->
-<!--									<li>-->
-<!--										<div class="mega-menu-content">-->
-<!--											<div class="row">-->
-<!--												<div class="col-md-12">-->
-<!--													<ul class="mega-menu-submenu">-->
-<!--														<li><a href="/agents/waterbottele-taxi-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Water Bottle Bookings</a></li>-->
-<!--														<li><a href="/agents/waterbottele-bookings/0"><i class="fa fa-industry" aria-hidden="true"></i>View Water Bottle Bookings</a></li>-->
-
-
-<!--													</ul>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--									</li>-->
-<!--								</ul>-->
-<!--                        </li>-->
-
-<!--                         <li class="mega-menu-dropdown ">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">account_balance_wallet</i> Bills-->
-<!-- 								<i class="fa fa-angle-down"></i>-->
-<!--                                <span class="arrow "></span>-->
-<!--                            </a>-->
-<!--								<ul class="dropdown-menu" style="min-width: 200px;">-->
-<!--									<li>-->
-<!--										<div class="mega-menu-content">-->
-<!--											<div class="row">-->
-<!--												<div class="col-md-12">-->
-<!--													<ul class="mega-menu-submenu">-->
-<!--														<li><a href="/agents/add-taxi-booking/0"><i class="fa fa-plus" aria-hidden="true"></i>Add Taxi Bookings</a></li>-->
-<!--														<li><a href="/agents/taxi-bookings/0"><i class="fa fa-industry" aria-hidden="true"></i>View Taxi Bookings</a></li>-->
-
-
-<!--													</ul>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--									</li>-->
-<!--								</ul>-->
-<!--                        </li>-->
+                        </li>
+						{% endif %}
 
 
                     </ul>
@@ -294,101 +237,169 @@
  				<div class="sidemenu-container navbar-collapse collapse fixed-menu">
 	                <div id="remove-scroll">
 	                    <ul class="sidemenu page-header-fixed p-t-20" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-	                        <li class="sidebar-toggler-wrapper hide">
-	                            <div class="sidebar-toggler">
-	                                <span></span>
-	                            </div>
-	                        </li>
-	                        <li class="sidebar-user-panel">
-	                            <div class="user-panel">
+	                                                <li class="mega-menu-dropdown ">
+                            <a href="/agents/agent_home" class="dropdown-toggle"> <i class="material-icons">dashboard</i>  Home
 
+                            </a>
 
-	                            </div>
-	                        </li>
-	                        <li class="menu-heading">
-			                	<span>-- Main</span>
-			                </li>
+                        </li>
+						{% if user.is_super_admin == 1 %}
 
-	                              <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
-	                              <i class="fa fa-users" aria-hidden="true"></i>
-	                                <span class="title">All Operator</span>
-                                	<span class="arrow"></span>
-	                            </a>
-	                            <ul class="sub-menu">
-
+						 <li class="mega-menu-dropdown ">
+                            <a href="#" class="dropdown-toggle"> <i class="material-icons">local_taxi</i> Operator
+ 								<i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
+                            </a>
+								<ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/agents/operators"><i class="fa fa-users" aria-hidden="true"></i> All Operators</a></li>
 														<li><a href="/agents/operator-rates"><i class="fa fa-rupee" aria-hidden="true"></i> All Operator Rates</a></li>
 														<li><a href="/agents/operator-drivers"><i class="fa fa-drivers-license-o " aria-hidden="true"></i> All Operator Driver</a></li>
 														<li><a href="/agents/taxi-types"><i class="fa fa-cog" aria-hidden="true"></i> Taxi Types</a></li>
 														<li><a href="/agents/taxi-models"><i class="fa fa-automobile" aria-hidden="true"></i> Taxi Models</a></li>
 														<li><a href="/agents/taxis"><i class="fa fa-taxi" aria-hidden="true"></i> Taxis</a></li>
-	                            </ul>
-	                        </li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+                        </li>
+						{% endif %}
 
-	                                <li class="nav-item">
-	                        <a href="/agents/operators" class="nav-link nav-toggle">
-	                           <i class="material-icons">dashboard</i>  Companies
-	                             <span class="arrow"></span>
-	                            </a>
-	                            <ul class="sub-menu">
+						{% if user.is_super_admin == 1 %}
+						 <li class="mega-menu-dropdown ">
+                            <a href="#" class="dropdown-toggle"> <i class="material-icons">business</i>  Companies
+ 								<i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
+                            </a>
+								<ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
 
-													<li><a href="/agents/companies"><i class="fa fa-industry" aria-hidden="true"></i> View Companies</a></li>
-													    <li><a href="/agents/add-company"><i class="fa fa-plus" aria-hidden="true"></i> Add Company</a></li>
+														<li><a href="/agents/companies"><i class="fa fa-industry" aria-hidden="true"></i> View Companies</a></li>
+														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> Billing Entities</a></li>
 														<li><a href="/agents/rates/0"><i class="fa fa-inr" aria-hidden="true"></i> Company Rates</a></li>
+														<li class="dropdown-divider"></li>
+
+														<li><a href="/agents/groups/0"><i class="fa fa-group"></i> All Groups</a></li>
+														<li><a href="/agents/subgroups/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> All Subgroups</a></li>
+														<li class="dropdown-divider"></li>
 														<li><a href="/agents/admins/0"><i class="fa fa-user-secret" aria-hidden="true"></i> Company Admins</a></li>
-														<li><a href="/agents/billing_entities/0"><i class="fa fa-money" aria-hidden="true"></i> View Company Billing Enitity</a></li>
-														<li><a href="/agents/groups/0"><i class="fa fa-group"></i> View All Groups</a></li>
-														<li><a href="/agents/subgroups/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Subgroups</a></li>
-														<li><a href="/agents/spocs/0"><i class="fa fa-user" aria-hidden="true"></i> View All SPOCs</a></li>
-														<li><a href="/agents/employees/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> View All Employees</a></li>
+													   	<li><a href="/agents/spocs/0"><i class="fa fa-user" aria-hidden="true"></i> Company SPOCs</a></li>
+														<li><a href="/agents/employees/0"><i class="fa fa-user-circle-o" aria-hidden="true"></i> All Employees</a></li>
+														<li class="dropdown-divider"></li>
 														<li><a href="/agents/assessment_cities/0"><i class="fa fa-simplybuilt" aria-hidden="true"></i> Assessment Cities</a></li>
 														<li><a href="/agents/assessment_codes/0"><i class="fa fa-code" aria-hidden="true"></i> Assessment Codes</a></li>
-														<li><a href="/agents/agents"><i class="fa fa fa-user-circle-o" aria-hidden="true"></i> Corporate Agents</a></li>
 
-	                            </ul>
-	                        </li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+                        </li>
+						{% endif %}
 
-	                           <li class="nav-item">
-	                        <a href="/agents/taxi-bookings/1" class="nav-link nav-toggle">
-	                           <i class="material-icons">local_taxi</i> Taxi
-	                            </a>
+						 <li class="mega-menu-dropdown ">
+                            <a href="/agents/taxi-bookings/1" class="dropdown-toggle"> <i class="material-icons">local_taxi</i> Taxi
 
-	                        </li>
+                            </a>
 
-	                            <li class="nav-item">
-	                        <a href="/agents/bus-bookings/1" class="nav-link nav-toggle">
-	                            <i class="material-icons">directions_bus</i> Bus
-	                            </a>
+                        </li>
 
-	                        </li>
+						{% if user.is_super_admin == 1 or user.has_bus_booking_access == 1 %}
 
-	                            <li class="nav-item">
-	                        <a href="/agents/train-bookings/1" class="nav-link nav-toggle">
-	                        <i class="material-icons">directions_subway</i> Train
-	                            </a>
+						 <li class="mega-menu-dropdown ">
+                            <a href="/agents/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i> Bus
 
-	                        </li>
+                            </a>
 
+                        </li>
 
-	                            <li class="nav-item">
-	                        <a href="/agents/hotel-bookings/1" class="nav-link nav-toggle">
-	                           <i class="material-icons">hotel</i> Hotel
-	                            </a>
-
-	                        </li>
-
-	                            <li class="nav-item">
-	                        <a href="/agents/flight-bookings/1" class="nav-link nav-toggle">
-	                        <i class="material-icons">flight</i> Flight
-	                            </a>
-
-	                        </li>
+						{% endif %}
 
 
 
+						{% if user.is_super_admin == 1 or user.has_train_booking_access == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_subway</i> Train
 
-	                            </ul>
-	                        </li>
+                            </a>
+
+                        </li>
+						{% endif %}
+
+						{% if user.is_super_admin == 1 or user.has_hotel_booking_access == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="#" class="dropdown-toggle"> <i class="material-icons">hotel</i> Hotel
+ 								<i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
+                            </a>
+								<ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/agents/hotel-bookings/1"><i class="fa fa-list" aria-hidden="true"></i> All Hotel Booking</a></li>
+														<li><a href="/agents/hotels"><i class="fa fa-hotel" aria-hidden="true"></i> All Hotels</a></li>
+														<li><a href="/agents/hotel_booking_portals"><i class="fa fa-drivers-license-o " aria-hidden="true"></i> All Hotels Booking Portals</a></li>
+
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+                        </li>
+						{% endif %}
+
+
+						{% if user.is_super_admin == 1 or user.has_flight_booking_access == 1 %}
+                        <li class="mega-menu-dropdown ">
+                            <a href="/agents/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight</i> Flight
+
+                            </a>
+
+                        </li>
+						{% endif %}
+
+
+
+						{% if user.is_super_admin == 1 or user.is_super_admin == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/lead/" class="dropdown-toggle"> <i class="material-icons">person_add</i> Leads
+
+                        </a>
+
+                        </li>
+						{% endif %}
+
+						{% if user.is_super_admin == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/agents" class="dropdown-toggle"> <i class="material-icons">supervisor_account</i>  Cotrav Agents
+
+                            </a>
+
+                        </li>
+						{% endif %}
+
+						{% if user.is_super_admin == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="/agents/cotrav-billing-entities" class="dropdown-toggle"> <i class="material-icons">payment</i>  Cotrav Billing Entities
+
+                            </a>
+
+                        </li>
+						{% endif %}
 	                    </ul>
 	                </div>
                 </div>

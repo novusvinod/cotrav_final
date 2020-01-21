@@ -22,58 +22,47 @@
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
       <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>General Information</header>
+
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent">
+
+                                          <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Corporate Name</label>
+                                            <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="corporate_name" placeholder="Corporate Name" required>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Corporate Code</label>
+                                            <input type="text" class="col-sm-8 form-control" name="corporate_code"  placeholder="Corporate Code" required>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Contact Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_person_name" placeholder="Contact Name" required>
+                                        </div>
+
+                                         <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Contact No</label>
+                                            <input type="number" class="col-sm-8 form-control" name="contact_person_no" placeholder="Contact No" required>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Contact Email</label>
+                                            <input type="email" class="col-sm-8 form-control" name="contact_person_email" placeholder="Enter email address" required>
+                                        </div>
 
 
-                   <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
-								<div class="card-head">
-									<header>General Information: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" id="corporate_name" name="corporate_name" required   >
-					                     <label class = "mdl-textfield__label">Corporate Name</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="corporate_code"   required   >
-					                     <label class = "mdl-textfield__label">Corporate Code</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="contact_person_name"   required   >
-					                     <label class = "mdl-textfield__label">Contact Name</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="contact_person_no"   required   >
-					                     <label class = "mdl-textfield__label">Contact No</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="contact_person_email"   required   >
-					                     <label class = "mdl-textfield__label">Contact Email</label>
-					                  </div>
-						            </div>
 
 
 
@@ -83,93 +72,74 @@
 
 
 
-      <div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Billing Details: </header>
-                                     <div class="tools">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>Billing Details</header>
+                                     <button
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " >
 
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                                          <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Billing Company Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="bill_corporate_name" placeholder="Corporate Name">
+                                        </div>
 
-                                    </div>
-								</div> <!-- card-head class end -->
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Billing Address Line 1</label>
+                                            <input type="text" class="col-sm-8 form-control" name="address_line_1"  placeholder="Billing Address Line 1">
+                                        </div>
 
-                                <div class="card-body row">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4"  for="simpleFormEmail">Billing Address Line 2</label>
+                                            <input type="text" class="col-sm-8 form-control" name="address_line_2" placeholder="Billing Address Line 2">
+                                        </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="bill_corporate_name"   required   >
-					                     <label class = "mdl-textfield__label">Billing Company Name</label>
-					                  </div>
-						            </div>
+                                         <div class="form-group row">
+                                            <label class="col-sm-4"  for="simpleFormEmail">Billing Address Line 3</label>
+                                            <input type="text" class="col-sm-8 form-control" name="address_line_3" placeholder="Billing Address Line 3">
+                                        </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="address_line_1"   required   >
-					                     <label class = "mdl-textfield__label">Billing Address Line 1</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="address_line_2"   required   >
-					                     <label class = "mdl-textfield__label">Billing Address Line 2</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="address_line_3"   required   >
-					                     <label class = "mdl-textfield__label">Billing Address Line 3</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-										<div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-
-                                            <select class="mdl-textfield__input js-select2" name="billing_city_id" id="billing_city_id" required>
+                                     <div class="form-group row" id="billing_city_id1">
+                                        <label class="col-sm-4 control-label">Billing City</label>
+                                            <select class="col-sm-8 form-control myselect" name="billing_city_id" id="billing_city_id" required>
                                                 <option value="">Select City</option>
                                                 {% for city in cities %}
                                                 <option value="{{city.id}}">{{city.city_name}}</option>
                                                 {% endfor %}
                                             </select>
+                                    </div>
 
-                                        <label class = "mdl-textfield__label" >Billing City</label>
-                                       </div>
-									</div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4"  for="simpleFormEmail">GSTIN</label>
+                                            <input type="text" class="col-sm-8 form-control" name="gst_id" placeholder="GSTIN">
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="gst_id"   required   >
-					                     <label class = "mdl-textfield__label">GSTIN</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="has_billing_spoc_level">
+                                         <div class="form-group row">
+                                                <label class="col-sm-4"  for="simpleFormEmail">Has Billing Spoc Approval Level</label>
+                                              <select class="col-sm-8 form-control" name="has_billing_spoc_level">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Has Billing Spoc Approval Level</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="has_bill_approved_level">
+                                         <div class="form-group row">
+                                                <label class="col-sm-4" for="simpleFormEmail">Has Billing Admin Approval Level</label>
+                                                <select class="col-sm-8 form-control" name="has_bill_approved_level">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Has Billing Admin Approval Level</label>
-					                  </div>
-						            </div>
-
-
+	                                            </select>
+                                            </div>
 
                                 </div>
                             </div>
@@ -177,209 +147,209 @@
 
 
 
-  <div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Access Details: </header>
-                                     <div class="tools">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>Access Details</header>
+                                    <button id = "panel-button2"
+				                           class = "mdl-button mdl-js-button mdl-button--icon pull-right"
+				                           data-upgraded = ",MaterialButton">
+				                           <i class = "material-icons">more_vert</i>
+				                        </button>
+				                        <ul class = "mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+				                           data-mdl-for = "panel-button2">
+				                           <li class = "mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+				                           <li class = "mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
+				                        </ul>
+                                </div>
+                                <div class="card-body " id="bar-parent1">
 
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div> <!-- card-head class end -->
-
-                                <div class="card-body row">
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="has_auth_level">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Has Booking Approval Levels</label>
+                                            <div class="col-sm-8">
+                                                <select id="has_auth_level" class="form-control" name="has_auth_level">
 	                                                <option value="0">No</option>
                                                     <option value="1">Yes</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Has Booking Approval Levels</label>
-					                  </div>
-						            </div>
 
+	                                            </select>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_spoc">
+                                     <div class="form-group row" id="is_spoc_row">
+                                                <label class="col-sm-4 control-label" for="simpleFormEmail">IS SPOC</label>
+                                         <div class="col-sm-8">
+                                                <select class="form-control" name="is_spoc">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">IS SPOC</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                         </div>
+                                     </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="no_of_auth_level">
+
+                                    <div style="display: none;" id="no_of_auth_level" class="form-group row">
+                                            <label class="col-sm-4 control-label">Select Approval Levels</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="no_of_auth_level">
 	                                                <option value="1">1</option>
                                                     <option value="2">2</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Select Approval Levels</label>
-					                  </div>
-						            </div>
+
+	                                            </select>
+                                            </div>
+                                        </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="has_assessment_codes">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Has Assessment Codes</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="has_assessment_codes">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Has Assessment Codes</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_radio">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Radio Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_radio">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Radio Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_local">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Local Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_local">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Local Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_outstation">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label" >Outstation Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_outstation">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Outstation Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_bus">
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Bus Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_bus" >
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Bus Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_train">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Train Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_train">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Train Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_hotel">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Hotel Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_hotel">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Hotel Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
 
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_flight">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Flight Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_flight">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Flight Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_meal">
+                                         <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Meal Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_meal">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Meal Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_water_bottles">
+                                         <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Water Bottles Bookings</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_water_bottles">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Water Bottles Bookings</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <select class="mdl-textfield__input js-select2" name="is_reverse_logistics">
+                                          <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Reverse Logistics</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="is_reverse_logistics">
 	                                                <option value="1">Yes</option>
 	                                                <option value="0">No</option>
-	                                     </select>
-					                     <label class = "mdl-textfield__label">Reverse Logistics</label>
-					                  </div>
-						            </div>
+	                                            </select>
+                                            </div>
+                                        </div>
 
+                                    <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Has Self Booking Access</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="has_self_booking_access">
+	                                                <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+	                                            </select>
+                                            </div>
+                                        </div>
 
+                                    <div class="form-group row">
+                                            <label class="col-sm-4 control-label">Will Do Realtime Payment?</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" name="will_do_realtime_payment">
+	                                                 <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+	                                            </select>
+                                            </div>
+                                        </div>
 
                                 </div>
                             </div>
                         </div>
 
+                         <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <input type="submit" value="Submit" class="btn btn-info">
+                        <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
 
-   <div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div> <!-- card-head class end -->
-
-                     <div class="card-body row">
-
-
-
-                      <div class="col-lg-12"  align="center">
-							              	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-											  Submit
-											</button>
-
-                              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"   >
-											  Cancel
-											</button>
-                      </div>
-
-                     </div>
-                 </div>
-
-        </div><!-- row end -->
-
-       </div>
-</form>
-    </div></div>
+                    </div>
+ </form>
+  </div>
+</div>
 
 <!-- end page content -->
 

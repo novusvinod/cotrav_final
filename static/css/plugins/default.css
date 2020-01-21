@@ -2881,7 +2881,16 @@ section {padding: 90px 0; overflow: hidden;}
 }
 
 @media screen and (max-width: 991px) {
-
+.sec_sty{
+        text-align: center;
+    }
+    .sec_sty_1{
+        text-align: center;
+    }
+     .sec_sty_2{
+        text-align: center;
+        padding-bottom: 27px;
+    }
     .sm-height-auto { height: auto; }
 
     /* typography */

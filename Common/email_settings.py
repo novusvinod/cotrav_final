@@ -4,18 +4,17 @@ import requests
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 
-COTRAV_EMAILS = "balwant@taxivaxi.in"
+COTRAV_EMAILS = "cotrav@taxivaxi.in"
 COTRAV_NUMBERS = "9579477262,"
 
 
 class SignIn_OTP:
-
-    def send_email(self, email_to, generate_otp):
-        email_subject = "Cotrav - Verify Your Email"
-        email_body = "Dear User,<br><br>"+generate_otp+" is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
+    def send_email(self, email_to, email_subject, email_body):
+        #email_subject = "Cotrav - Verify Your Email"
+        #email_body = "Dear User,<br><br>"+generate_otp+" is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [email_to])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [email_to])
         msg.content_subtype = "html"
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -97,7 +96,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -108,7 +107,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -119,7 +118,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -130,7 +129,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -141,7 +140,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -228,7 +227,7 @@ class AddBooking_Email:
         email_subject = "CoTrav New User Login Credentials"
         email_body = "Dear " + username + ",<br> Url: cotrav.co/login <br> Email:" + username + "<br> Password:" + password + "<br> UserType:" + user_type + \
                      "<br> Thank you for Signup. <br><br>Please call at  for any query. <br><br>Rgrds,<br>CoTrav."
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [username])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [username])
         msg.content_subtype = "html"
         res = msg.send(fail_silently=True)
         return 1
@@ -258,7 +257,7 @@ class newUserAdd_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(tempalte, {'password':password, 'user_name': name,'user_type':user_type, 'username_email':username_email })
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [username_email])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [username_email])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -309,7 +308,7 @@ class Assign_Booking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         if gen_voucher_path:
             msg.attach_file(gen_voucher_path)
@@ -322,7 +321,7 @@ class Assign_Booking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         if gen_voucher_path:
             msg.attach_file(gen_voucher_path)
@@ -335,7 +334,7 @@ class Assign_Booking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
         msg.attach_alternative(html_content, "text/html")
         if gen_voucher_path:
             msg.attach_file(gen_voucher_path)
@@ -433,7 +432,7 @@ class SignupEmail():
         html_content = render_to_string(tempalte, {'company': self.company, 'location': self.company_location,
                                                    'user_name': self.cp_name, 'cp_no': self.cp_no,
                                                    'cp_email': self.cp_email, 'message': self.message})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [self.send_to,"balwant@taxivaxi.in"])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to,"cotrav@taxivaxi.in"])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -451,7 +450,7 @@ class SignupEmail():
         html_content = render_to_string(tempalte, {'company': self.company, 'location': self.company_location,
                                                    'cp_name': self.cp_name, 'cp_no': self.cp_no,
                                                    'cp_email': self.cp_email, 'message': self.message})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [self.cp_email])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.cp_email])
         msg.attach_alternative(html_content, "text/html")
 
         res = msg.send(fail_silently=True)
@@ -472,7 +471,7 @@ class Lead_Status_Change_Email():
     def send_email(self):
         email_subject = "Cotrav Lead Status Change"
         email_body = "Hi " + self.ag_name + ", <br><br> New Lead has been assigned to your queue <br><br> Details are as below,"+self.message+" <br><br> Please call at  for any query."+COTRAV_NUMBERS+" <br><br>Regards,<br>CoTrav."
-        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [self.send_to])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to])
         msg.content_subtype = "html"
         res = msg.send(fail_silently=True)
 

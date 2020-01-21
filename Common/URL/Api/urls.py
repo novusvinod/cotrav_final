@@ -16,6 +16,9 @@ urlpatterns = [
     path('api/login', api_views.login),
     path('api/logout', api_views.logout),
     path('api/get_cotrav_billing_entities', api_views.get_cotrav_billing_entities),
+    path('api/add_cotrav_billing_entities', api_views.add_cotrav_billing_entity),
+    path('api/update_cotrav_billing_entities', api_views.update_cotrav_billing_entity),
+    path('api/delete_cotrav_billing_entities', api_views.delete_cotrav_billing_entity),
     path('api/employee_dashboard', api_views.employee_dashboard),
     path('api/approver_1_dashboard', api_views.approver_1_dashboard),
     path('api/approver_2_dashboard', api_views.approver_2_dashboard),
@@ -177,12 +180,15 @@ urlpatterns = [
     path('api/report_hotel_booking', api_views.report_hotel_booking),
 
 
-    path('api/get_auth_token', api_views.get_auth_token),
+    path('api/generate_auth_token', api_views.generate_auth_token),
+    path('api/get_flight_access_token', api_views.get_flight_access_token),
     path('api/get_flight_search', api_views.get_flight_search),
     path('api/get_flight_fare_search', api_views.get_flight_fare_search),
     path('api/save_flight_booking', api_views.save_flight_booking),
     path('api/get_flight_pnr_details', api_views.get_flight_pnr_details),
 
+    path('api/cancel_flight_booking_passengers', api_views.get_flight_pnr_details),
+    path('api/add_flight_booking_with_invoice', api_views.add_flight_booking_with_invoice),
 
 
 ]

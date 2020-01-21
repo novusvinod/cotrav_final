@@ -87,6 +87,30 @@ urlpatterns = [
     path('api/assign_flight_booking', agent_api_view.assign_flight_booking),
 
     path('api/get_city_id', agent_api_view.get_city_id),
+    path('api/cancel_flight_booking_passengers', agent_api_view.cancel_flight_booking_passengers),
+
+    path('api/agent_verify_taxi_bookings', agent_api_view.agent_verify_taxi_bookings),
+    path('api/agent_revise_taxi_bookings', agent_api_view.agent_revise_taxi_bookings),
+    path('api/agent_verify_bus_bookings', agent_api_view.agent_verify_bus_bookings),
+    path('api/agent_revise_bus_bookings', agent_api_view.agent_revise_bus_bookings),
+    path('api/agent_verify_train_bookings', agent_api_view.agent_verify_train_bookings),
+    path('api/agent_revise_train_bookings', agent_api_view.agent_revise_train_bookings),
+    path('api/agent_verify_hotel_bookings', agent_api_view.agent_verify_hotel_bookings),
+    path('api/agent_revise_hotel_bookings', agent_api_view.agent_revise_hotel_bookings),
+    path('api/agent_verify_flight_bookings', agent_api_view.agent_verify_flight_bookings),
+    path('api/agent_revise_flight_bookings', agent_api_view.agent_revise_flight_bookings),
+
+    path('api/agent_update_taxi_bookings', agent_api_view.agent_update_taxi_bookings),
+    path('api/agent_update_bus_bookings', agent_api_view.agent_update_bus_bookings),
+    path('api/agent_update_train_bookings', agent_api_view.agent_update_train_bookings),
+    path('api/agent_update_hotel_bookings', agent_api_view.agent_update_hotel_bookings),
+    path('api/agent_update_flight_bookings', agent_api_view.agent_update_flight_bookings),
+
+    path('api/dashboard_sales_by_month', agent_api_view.dashboard_sales_by_month),
+    path('api/dashboard_bookings_by_month', agent_api_view.dashboard_bookings_by_month),
+    path('api/dashboard_sales_for_six_months', agent_api_view.dashboard_sales_for_six_months),
+    path('api/dashboard_bookings_for_six_months', agent_api_view.dashboard_bookings_for_six_months),
+    path('api/dashboard_sales_by_city', agent_api_view.dashboard_sales_by_city),
 
 
 ]

@@ -19,6 +19,7 @@
 
     <form method="post" action="/agents/assign-bus-booking/{{booking.id}}" enctype="multipart/form-data">
     <input type="hidden" name="booking_id" value="{{booking.id}}">
+    <input type="hidden" id="corporate_id" value="{{booking.corporate_id}}">
     <input type="hidden" name="user_id" value="{{user.id}}">
     <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
     <input type="hidden" name="checkin" id="checkin" value="{{ booking.checkin_datetime }}">
@@ -694,7 +695,7 @@ function valueChanged()
 
         $( document ).ready(function() {
 
-            var corporate_id =  1;
+            var corporate_id =  $('#corporate_id').val();;
 
             var service_type = 1;
 
@@ -710,9 +711,15 @@ function valueChanged()
         $.post( url,{ corporate_id: corporate_id , service_type: service_type },
       function(data)
       {
-         //alert(data)
-      management_fee = data["Fees"][0].service_fees_type_value
-      $('#mng_fee').val(management_fee);
+       //alert(JSON.stringify(data));
+      var management_fee = data["Fees"][0].service_fees_type_value
+      if(management_fee == ""){
+      	management_fee = 100
+      }else{
+      	management_fee = 100
+      }
+      var no_of_passanger = $('#no_of_seats').val();
+      $('#mng_fee').val(management_fee*no_of_passanger);
       $('#oper_mng_fee').val(management_fee);
        });
 

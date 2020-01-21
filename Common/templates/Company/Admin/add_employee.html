@@ -264,6 +264,40 @@
                                 {% endif %}
                             </div>
 
+
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Employee Band</label>
+                                {% if employee %}
+                                {% for employee in employee %}
+                                <input type="text" class="col-sm-8 form-control" name="employee_band" value="{{employee.employee_band|default:''}}"
+                                       placeholder="Employee Band">
+                                {% endfor %}
+                                {% else %}
+                                <input type="text" class="col-sm-8 form-control" name="employee_band"
+                                       placeholder="Employee Band">
+                                 {% endif %}
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4" >Reporting Manager</label>
+                                <select name="reporting_manager" id="reporting_manager" class="form-control col-sm-8 myselect">
+                                    <option value=" " >Select Reporting Manager</option>
+                                {% if employee %}
+                                {% for employe in employee %}
+                                {% for employee in employeess %}
+                                        <option value="{{employee.id}}" {% if employe.reporting_manager == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
+                                        {% endfor %}
+                                {% endfor %}
+                                {% else %}
+                                {% for employee in employees %}
+                                        <option value="{{employee.id}}">{{employee.employee_name}}</option>
+                                        {% endfor %}
+                                 {% endif %}
+                                </select>
+                            </div>
+
+
                              <div class="form-group row">
                                 <label class="col-sm-4" >Home Address</label>
                                 {% if employee %}

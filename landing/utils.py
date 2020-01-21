@@ -22,6 +22,7 @@ def get_choice():
 
     CHOICES = BLANK_CHOICE + tuple(Corporate_Agent.objects.values_list('id', 'user_name'))
 
+
     return CHOICES
 
 

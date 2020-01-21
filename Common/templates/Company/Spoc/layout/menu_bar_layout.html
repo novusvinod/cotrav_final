@@ -66,26 +66,7 @@
 
                         </li>
 
-<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-rates/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">dvr</i>  Rates-->
-<!--                            </a>-->
 
-<!--                        </li>-->
-<!--                        <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-groups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">group</i>  Group-->
-<!--                            </a>-->
-<!--                  -->
-<!--                        </li>-->
-<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-subgroups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">people_outline</i>  SubGroup-->
-<!--                            </a>-->
-
-<!--                        </li>-->
-<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-admins/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">school</i>  Admins-->
-<!--                            </a>-->
-
-<!--                        </li>-->
                         <li class="mega-menu-dropdown ">
 	                         <a href="/Corporate/Spoc/company-spocs/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC
                             
@@ -105,46 +86,38 @@
                          </li>
 
                         </li>
+
+						{% if user.is_bus == 1 %}
                          <li class="mega-menu-dropdown" id="bus_li_menu">
                             <a href="/Corporate/Spoc/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
                             </a>
 
 
                         </li>
+						{% endif %}
+						{% if user.is_train == 1 %}
                         <li class="mega-menu-dropdown" id="train_li_menu">
                             <a href="/Corporate/Spoc/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
                             </a>
 
 
                         </li>
+						{% endif %}
+						{% if user.is_hotel == 1 %}
                         <li class="mega-menu-dropdown" id="hotel_li_menu">
                             <a href="/Corporate/Spoc/hotel-bookings/1" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
                             </a>
 
                         </li>
+						{% endif %}
+						{% if user.is_flight == 1 %}
                         <li class="mega-menu-dropdown" id="flight_li_menu">
                             <a href="/Corporate/Spoc/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
                             </a>
 
                         </li>
-<!--                        <li class="mega-menu-dropdown">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">restaurant_menu</i>Meal-->
+						{% endif %}
 
-<!--                            </a>-->
-
-<!--                        </li>-->
-<!--                         <li class="mega-menu-dropdown">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">whatshot</i>Water Bottel-->
-
-<!--                            </a>-->
-
-<!--                        </li>-->
-<!--                         <li class="mega-menu-dropdown">-->
-<!--                            <a href="#" class="dropdown-toggle"> <i class="material-icons">menu</i>Bills-->
-
-<!--                            </a>-->
-
-<!--                        </li>-->
                     </ul>
                 </div>                			
 			</div>
@@ -169,26 +142,7 @@
 
                         </li>
 
-						 <li class="classic-menu-dropdown mega-menu-dropdown">
-                                <a href="/Corporate/Spoc/company-rates/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">dvr</i>  Rates
-                            </a>
 
-                        </li>
-<!--                        <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-groups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">group</i>  Group-->
-<!--                            </a>-->
-
-<!--                        </li>-->
-<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-subgroups/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">people_outline</i>  SubGroup-->
-<!--                            </a>-->
-
-<!--                        </li>-->
-<!--						 <li class="classic-menu-dropdown mega-menu-dropdown">-->
-<!--                                <a href="/Corporate/Spoc/company-admins/{{user.corporate_id}}" class=" megamenu-dropdown" data-close-others="true"> <i class="material-icons">school</i>  Admins-->
-<!--                            </a>-->
-
-<!--                        </li>-->
                         <li class="mega-menu-dropdown ">
 	                         <a href="/Corporate/Spoc/company-spocs/{{user.corporate_id}}" class="dropdown-toggle"> <i class="material-icons">person</i>SPOC
 
@@ -201,48 +155,44 @@
                             </a>
 
                         </li>
+                                                                       <li class="mega-menu-dropdown " id="taxi_li_menu">
+                             <a href="/Corporate/Spoc/taxi-bookings/1" class="dropdown-toggle"> <i class="material-icons">local_taxi</i>Taxi
+                            </a>
+
+                         </li>
+
+                        </li>
+
+						{% if user.is_bus == 1 %}
+                         <li class="mega-menu-dropdown" id="bus_li_menu">
+                            <a href="/Corporate/Spoc/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
+                            </a>
 
 
->
-
-	                           <li class="nav-item">
-	                        <a href="/Corporate/Spoc/taxi-bookings/1" class="nav-link nav-toggle">
-	                           <i class="material-icons">local_taxi</i> Taxi
-	                            </a>
-
-	                        </li>
-
-	                            <li class="nav-item">
-	                        <a href="/Corporate/Spoc/bus-bookings/1" class="nav-link nav-toggle">
-	                            <i class="material-icons">directions_bus</i> Bus
-	                            </a>
-
-	                        </li>
-
-	                            <li class="nav-item">
-	                        <a href="/Corporate/Spoc/train-bookings/1" class="nav-link nav-toggle">
-	                        <i class="material-icons">directions_subway</i> Train
-	                            </a>
-
-	                        </li>
+                        </li>
+						{% endif %}
+						{% if user.is_train == 1 %}
+                        <li class="mega-menu-dropdown" id="train_li_menu">
+                            <a href="/Corporate/Spoc/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
+                            </a>
 
 
-	                            <li class="nav-item">
-	                        <a href="/Corporate/Spoc/hotel-bookings/1" class="nav-link nav-toggle">
-	                           <i class="material-icons">hotel</i> Hotel
-	                            </a>
+                        </li>
+						{% endif %}
+						{% if user.is_hotel == 1 %}
+                        <li class="mega-menu-dropdown" id="hotel_li_menu">
+                            <a href="/Corporate/Spoc/hotel-bookings/1" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
+                            </a>
 
-	                        </li>
+                        </li>
+						{% endif %}
+						{% if user.is_flight == 1 %}
+                        <li class="mega-menu-dropdown" id="flight_li_menu">
+                            <a href="/Corporate/Spoc/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
+                            </a>
 
-	                            <li class="nav-item">
-	                        <a href="/Corporate/Spoc/flight-bookings/1" class="nav-link nav-toggle">
-	                        <i class="material-icons">flight</i> Flight
-	                            </a>
-
-	                        </li>
-
-
-
+                        </li>
+						{% endif %}
 
 	                            </ul>
 	                        </li>
