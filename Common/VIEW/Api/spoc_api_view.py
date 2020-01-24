@@ -498,7 +498,7 @@ def spoc_revise_taxi_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -587,7 +587,7 @@ def spoc_revise_bus_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -676,7 +676,7 @@ def spoc_revise_train_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -765,7 +765,7 @@ def spoc_revise_hotel_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -854,7 +854,7 @@ def spoc_revise_flight_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)

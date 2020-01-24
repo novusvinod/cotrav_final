@@ -75,7 +75,7 @@ def admin_accept_taxi_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptAdminTaxiBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -196,7 +196,7 @@ def admin_accept_bus_booking(request):
                     cursor.callproc('acceptAdminBusBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -229,7 +229,7 @@ def admin_reject_bus_booking(request):
                     cursor.callproc('rejectAdminBusBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -316,7 +316,7 @@ def admin_accept_train_booking(request):
                     cursor.callproc('acceptAdminTrainBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -349,7 +349,7 @@ def admin_reject_train_booking(request):
                     cursor.callproc('rejectAdminTrainBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -438,7 +438,7 @@ def admin_accept_hotel_booking(request):
                     cursor.callproc('acceptAdminHotelBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -471,7 +471,7 @@ def admin_reject_hotel_booking(request):
                     cursor.callproc('rejectAdminHotelBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -487,6 +487,7 @@ def admin_reject_hotel_booking(request):
         return JsonResponse(data)
 
 ############################### Flight #################################
+
 
 def admin_flight_bookings(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -558,7 +559,7 @@ def admin_accept_flight_booking(request):
                     cursor.callproc('acceptAdminFlightBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -591,7 +592,7 @@ def admin_reject_flight_booking(request):
                     cursor.callproc('rejectAdminFlightBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
                     cursor.close()
-                    data = {'success': 1, 'Bookings': emp}
+                    data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -672,7 +673,7 @@ def admin_revise_taxi_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -758,7 +759,7 @@ def admin_revise_bus_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -845,7 +846,7 @@ def admin_revise_train_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -926,7 +927,7 @@ def admin_revise_hotel_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
@@ -1008,7 +1009,7 @@ def admin_revise_flight_bookings(request):
                         print(emp)
                     cursor.close()
 
-                    data = {'success': 1, 'message': "invoice Verify Successfully"}
+                    data = {'success': 1, 'message': "invoice Revise Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)

@@ -176,6 +176,7 @@ def railway_stations(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
+
 def bus_booking_portals(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -1307,7 +1308,6 @@ def get_airports(request):
         return JsonResponse(data)
     
 
-
 def hotel_booking_portals(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -1961,8 +1961,8 @@ def update_taxi(request):
                     cursor = connection.cursor()
                     cursor.callproc('updateTaxi', [model_id,taxi_reg_no,make_year,garage_location,garage_distance,taxi_id,user_id,user_type])
                     cities = dictfetchall(cursor)
-                    cursor.close()
                     company = dictfetchall(cursor)
+                    cursor.close()
                     if company:
                         data = {'success': 0, 'message': company}
                     else:
@@ -2614,7 +2614,7 @@ def add_subgroup(request):
                     else:
                         add_user = newUserAdd_Email()
                         resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 1")
-                        data = {'success': 1, 'message': "Data Insert Successfully"}
+                        data = {'success': 1, 'message': "Subgroup Insert Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -3465,7 +3465,7 @@ def active_spoc(request):
                     if company:
                         data = {'success': 0, 'message': company}
                     else:
-                        data = {'success': 1, 'message': "Corporate Spoc Deleted Successfully"}
+                        data = {'success': 1, 'message': "Corporate Spoc Active Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -3700,6 +3700,7 @@ def delete_employee(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
 
 def add_agent(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -5105,8 +5106,7 @@ def add_taxi_booking(request):
                         if is_sms == '1':
                             resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Taxi")
 
-
-                        data = {'success': 1, 'message': "Insert Successfully"}
+                        data = {'success': 1, 'message': "Taxi Booking Added Successfully"}
                         return JsonResponse(data)
                     return JsonResponse(data)
                 except Exception as e:
@@ -5221,9 +5221,8 @@ def add_bus_booking(request):
                         if is_sms == '1':
                             resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Bus")
 
-
                     cursor.close()
-                    data = {'success': 1, 'message': "Insert Success"}
+                    data = {'success': 1, 'message': "Bus Booking Added Success"}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5349,7 +5348,7 @@ def add_train_booking(request):
                                 booking_id = dictfetchall(cursor)
 
                                 cursor.close()
-                                data = {'success': 1, 'message': "Insert Success"}
+                                data = {'success': 1, 'message': "Train Booking Added Success"}
                                 return JsonResponse(data)
                             except Exception as e:
                                 data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -5475,9 +5474,7 @@ def add_hotel_booking(request):
                         if is_sms == '1':
                             resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Hotel")
 
-
-
-                    data = {'success': 1, 'message': "Insert Success"}
+                    data = {'success': 1, 'message': "Hotel Booking Added Success"}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5597,10 +5594,8 @@ def add_flight_booking(request):
                         if is_sms == '1':
                             resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
 
-
-
                     cursor.close()
-                    data = {'success': 1, 'message': "Insert Success",'last_booking_id':last_booking_id}
+                    data = {'success': 1, 'message': "Hotel Booking Added Success",'last_booking_id':last_booking_id}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5619,6 +5614,7 @@ def add_flight_booking(request):
         return JsonResponse(data)
 
 ########## sanket added this #########
+
 
 def taxi_packages(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -5649,16 +5645,6 @@ def taxi_packages(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
-
-
-
-
-
-
-
-
-
-
 
 
 def employee_dashboard(request):
@@ -5917,6 +5903,7 @@ def get_cotrav_billing_entities(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
 
 def corporate_management_fees(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -6466,7 +6453,6 @@ def get_flight_search(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
-
 
 
 def get_flight_fare_search(request):

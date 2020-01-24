@@ -92,7 +92,7 @@ def approver_2_reject_taxi_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2TaxiBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+                    data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -197,7 +197,7 @@ def approver_2_reject_bus_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2BusBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+                    data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -213,6 +213,7 @@ def approver_2_reject_bus_booking(request):
         return JsonResponse(data)
 
 ##################### TRAIN #################
+
 
 def approver_2_train_bookings(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -302,7 +303,7 @@ def approver_2_reject_train_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2TrainBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+                    data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -321,6 +322,7 @@ def approver_2_reject_train_booking(request):
 
 
 ########################## hotel #################3
+
 
 def approver_2_hotel_bookings(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -410,7 +412,7 @@ def approver_2_reject_hotel_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2HotelBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+                    data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
@@ -517,7 +519,7 @@ def approver_2_reject_flight_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('rejectApprover_2FlightBookings', [user_id,user_type,booking_id])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+                    data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
                     return JsonResponse(data)
                 except Exception as e:
