@@ -4,6 +4,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 import requests
 import json
+from time import sleep
 from django_global_request.middleware import get_request
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -1100,7 +1101,7 @@ def add_flight_booking_self(request,id):
                     flight1 = flight['FLIGHT']
                     print("in trip 1")
 
-                return render(request, 'Company/Spoc/add_flight_booking_self.html', {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight1, 'flights2': flight2, 'airports':airports,'no_of_seats':no_of_seats})
+                return render(request, 'Company/Spoc/add_flight_booking_serarch_result.html', {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight1, 'flights2': flight2, 'airports':airports,'no_of_seats':no_of_seats})
             else:
                 url_access = settings.API_BASE_URL + "get_airports"
                 data11 = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -1287,10 +1288,22 @@ def add_flight_booking_self_final(request, id):
             #print(booking)
             if booking['success'] == 1:
                 last_booking_id = booking['last_booking_id']
-                url_save = settings.API_BASE_URL + "get_flight_pnr_details"
-                pnr_no = {'pnr':vendor_booking}
-                booking1 = getDataFromAPI(login_type, access_token, url_save, pnr_no)
-                print(booking1)
+
+                for i in range(3):
+                    url_save = settings.API_BASE_URL + "get_flight_pnr_details"
+                    pnr_no = {'pnr': vendor_booking}
+                    booking1 = getDataFromAPI(login_type, access_token, url_save, pnr_no)
+                    if UID2:
+                        if booking1['Data']['PAXOW'][0]['gpnr']:
+                            pass
+                        else:
+                            sleep(0.5)
+                    else:
+                        if booking1['Data']['PAX'][0]['gpnr']:
+                            pass
+                        else:
+                            sleep(0.5)
+
                 if not 'FLIGHT' in booking1['Data'] or 'FLIGHTOW' in booking1['Data'] :
                     messages.error(request, 'Normal Flight Booking Done And Status Under Process..!')
                     return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
@@ -1382,7 +1395,7 @@ def add_flight_booking_self_final(request, id):
                         if booking1['Data']['CON_FLIGHT']:
                             for flightt in booking1['Data']['CON_FLIGHT']:
                                 ticket_number.append(booking1['Data']['FLIGHT'][0]['PCC'])
-                                pnr_no.append(booking1['Data']['PAXOW'][0]['apnr'])
+                                pnr_no.append(booking1['Data']['PAX'][0]['apnr'])
                                 flight_no.append(flightt['FLIGHT_NO'])
                                 flight_name.append(flightt['FLIGHT_NAME'])
                                 arrival_time1 = datetime.strptime(flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME']+":00", "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y %H:%M:%S")

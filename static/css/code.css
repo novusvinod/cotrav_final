@@ -8685,7 +8685,7 @@ line-height:20px;
 .section_signup_width{
 
  width: 80%;
-    margin-top: -51px;
+    margin-top: -93px;
     margin-left: 30px;
   }
   .section_signup{
@@ -8716,4 +8716,7 @@ font-size: 42px;
   .sec_sty_2{
     color: white;
     font-size: 17px;
+  }
+  .select_font{
+  color:gray;
   }

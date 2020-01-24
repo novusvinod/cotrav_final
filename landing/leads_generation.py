@@ -155,7 +155,7 @@ def my_handler(sender, instance , created , **kwargs):
 @login_required(login_url='/agents/login')
 def leads(request):
 
-    leads = Leadgeneration.objects.raw('SELECT l.*,ca.user_name FROM cotrav_lead_generation_module l LEFT JOIN corporate_agents ca ON l.Assigned_Sales_Person = ca.id WHERE 1')
+    leads = Leadgeneration.objects.raw('SELECT l.*,ca.user_name FROM cotrav_lead_generation_module l LEFT JOIN corporate_agents ca ON l.Assigned_Sales_Person = ca.id WHERE 1 ORDER BY l.`created` DESC')
     agents = Corporate_Agent.objects.all()
     return render(request,'landing/leadgeneration_list.html',{'leads':leads,'agents':agents})
 

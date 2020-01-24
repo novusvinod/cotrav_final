@@ -56,9 +56,29 @@
     <link href="{% static 'assets/css/select2_custome.css' %}" rel="stylesheet" type="text/css" />
 
     <!-- Date Time item CSS -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.css' %}" />
 
 
+<style>
+  .datetimepicker{
+        background: #ffffff;
+
+  }
+  .datetimepicker.dropdown-menu{
+    padding: 10px;
+
+  }
+  .datetimepicker table th {
+    font-weight: 600 !important;
+    font-family: 'Poppins,sans-serif';
+    font-size: 12px;
+}
+  .datetimepicker thead tr:first-child th:hover, .datetimepicker tfoot th:hover {
+    background: #427BD1;
+}
+
+</style>
 
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
@@ -144,21 +164,54 @@
     <!-- data tables -->
     <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}" ></script>
  	<script src="{% static 'assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}" ></script>
-     <script src="{% static 'assets/js/pages/table/table_data.js' %}" ></script>
+<!--     -->
      
-    <!-- animation -->
+     <!-- animation -->
 	<script src="{% static 'assets/js/pages/ui/animations.js' %}" ></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/moment-with-locales.min.js' %}"></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/datetimepicker.js' %}"></script>
 
+    <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+
 
      <script>
         $(document).ready(function() {
-            $('#example1').DataTable();
+            $('#example1').DataTable({
+            'ordering': false
+            });
         } );
     
     </script>   
+<script>
+
+        $(function () {
+         $('.datetimepicker1').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           autoclose: true,
+           format: 'dd-mm-yyyy HH:ii:ss' /*remove this line if you want to use time as well */
+       });
+
+       $('.datepicker1').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+       });
+   });
+    </script>
+
 
 </body>
+
+
+
+
+
 </html>

@@ -772,7 +772,7 @@ $.post(var_url,{'month':month,'year':year},
 
      };
 
-        title_text = month + ' Sales Summery'
+        title_text = month + ' Salesss Summery'
 
          var ctxx = document.getElementById("chart-by-months").getContext("2d");
          window.myBar1 = new Chart(ctxx, {
@@ -783,6 +783,13 @@ $.post(var_url,{'month':month,'year':year},
              scaleStepWidth : 50,
              scaleStartValue : 0,
              options: {
+             scaleLabel: function(value){
+        var val = value.value;
+    	if (val >= 10000000) val = (val / 10000000).toFixed(2) + ' Cr';
+        else if (val >= 100000) val = (val / 100000).toFixed(2) + ' Lac';
+        else if (val >= 1000) val = (val / 1000).toFixed(2) + ' K';
+        return val;
+    },
                 scales: {
                             yAxes: [{
                         scaleLabel: {
@@ -940,7 +947,281 @@ $.post(var_url,{'service_types':1},
 
 }
 
-    function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y,hotel_x,hotel_y){
+function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y,hotel_x,hotel_y){
+
+    console.log('### city data ###');
+    console.log(taxi_x);
+    console.log(taxi_y);
+    console.log(bus_x);
+    console.log(bus_y);
+    console.log(train_x);
+    console.log(train_y);
+    console.log(flight_x);
+    console.log(flight_y);
+    console.log(hotel_x);
+    console.log(hotel_y);
+
+    console.log(flight_x[0]);
+    console.log(flight_y[0]);
+    console.log('### end city data ###');
+
+     if (typeof window.myBar22 != "undefined")
+        {
+        window.myBar22.destroy();
+
+        }else{
+
+        //alert("not exist");
+
+        }
+
+
+    var mnt = parseInt($("#month :selected").val());
+    var year = parseInt($("#year :selected").val());
+
+    var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+     var color = Chart.helpers.color;
+
+     month = MONTHS[mnt-1];
+
+     label1 = '';
+     label2 = '';
+     label3 = '';
+     label4 = '';
+     label5 = '';
+
+       var barChartData22 = {
+         labels: ['TAXI','BUS','TRAIN','FLIGHT','HOTEL'],
+        datasets: [
+         {
+             label: label1,
+             backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+             borderColor: window.chartColors.red,
+             borderWidth: 1,
+             data: [taxi_y[0],bus_y[0],train_y[0],flight_y[0],hotel_y[0]],
+             city_data: [taxi_x[0],taxi_x[1],taxi_x[2],taxi_x[3],taxi_x[4]]
+         }, {
+             label: label2,
+             backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+             borderColor: window.chartColors.blue,
+             borderWidth: 1,
+             data: [taxi_y[1],bus_y[1],train_y[1],flight_y[1],hotel_y[1]],
+             city_data: [bus_x[0],bus_x[1],bus_x[2],bus_x[3],bus_x[4]]
+         },{
+             label: label3,
+             backgroundColor: color(window.chartColors.orange).alpha(0.5).rgbString(),
+             borderColor: window.chartColors.blue,
+             borderWidth: 1,
+             data: [taxi_y[2],bus_y[2],train_y[2],flight_y[2],hotel_y[2]],
+             city_data: [train_x[0],train_x[1],train_x[2],train_x[3],train_x[4]]
+         },{
+             label: label4,
+             backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
+             borderColor: window.chartColors.pink,
+             borderWidth: 1,
+             data: [taxi_y[3],bus_y[3],train_y[3],flight_y[3],hotel_y[3]],
+             city_data: [flight_x[0],flight_x[1],flight_x[2],flight_x[3],flight_x[4]]
+         },{
+             label: label5,
+             backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
+             borderColor: window.chartColors.pink,
+             borderWidth: 1,
+             data: [taxi_y[4],bus_y[4],train_y[4],flight_y[4],hotel_y[4]],
+             city_data: [hotel_x[0],hotel_x[1],hotel_x[2],hotel_x[3],hotel_x[4]]
+         }
+
+         ]
+
+     };
+
+        title_text =' Sales Summary'
+
+          var ctx22 = document.getElementById("graph-by-city").getContext("2d");
+         window.myBar22 = new Chart(ctx22, {
+             type: 'bar',
+             data: barChartData22,
+             options: {
+                legend: {
+            display: false,
+
+        },
+                scales: {
+                            yAxes: [{
+                        scaleLabel: {
+                        display: true,
+                        labelString: 'Sales  In  Lacs'
+
+                                    }
+                                    }]
+                        },
+                 tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    var lbl = data.datasets[tooltipItem.index].city_data;
+                    var lbl_cityname = lbl[tooltipItem.datasetIndex];
+                    if (label) {
+                        label += ': ';
+                    }
+                    //label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    label += lbl_cityname;
+                    return label;
+                }
+            }
+        },
+                 responsive: true,
+                 legend: {
+                     position: 'top',
+                 },
+                 title: {
+                     display: true,
+                     text: title_text
+                 }
+             }
+         });
+
+    }
+
+$('#year2').change(callChartByCityForMonth);
+
+$('#month2').change(callChartByCityForMonth);
+
+function callChartByCityForMonth(){
+
+ var serveType = $("#serveType :selected").val();
+ var month = $("#month2 :selected").val();
+    var year = $("#year2 :selected").val();
+
+
+
+ var_url = '/api/'+'dashboard_sales_by_city_for_month'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+$.post(var_url,{'service_types':serveType,'year':year,'month':month},
+      function(data)
+      {
+
+        taxi_x = [];
+        taxi_y = [];
+
+        bus_x = [];
+        bus_y = [];
+
+        train_x = [];
+        train_y = [];
+
+        flight_x = [];
+        flight_y = [];
+
+        hotel_x = [];
+        hotel_y = [];
+
+        var v_x = 0;
+        var v_y = 0;
+
+
+       for (k=0;k<data['Sales'].length;k++)
+        {
+            switch(k){
+
+            case 0:
+
+            console.log(data['Sales'][k]);
+
+            for (i=0;i<data['Sales'][k].length;i++)
+            {
+            v_x = data['Sales'][k][i].cities;
+            v_y = parseInt(data['Sales'][k][i].taxi_total);
+            taxi_x.push(v_x);
+            taxi_y.push(v_y);
+            }
+
+                break;
+
+            case 1:
+            console.log(data['Sales'][k]);
+
+            for (i=0;i<data['Sales'][k].length;i++)
+            {
+                v_x = data['Sales'][k][i].cities;
+                v_y = parseInt(data['Sales'][k][i].bus_total);
+                bus_x.push(v_x);
+                bus_y.push(v_y);
+            }
+                break;
+
+            case 2:
+            console.log(data['Sales'][k]);
+
+            for (i=0;i<data['Sales'][k].length;i++)
+            {
+                    v_x = data['Sales'][k][i].cities;
+                    v_y = parseInt(data['Sales'][k][i].train_total);
+                    train_x.push(v_x);
+                    train_y.push(v_y);
+            }
+                break;
+
+            case 3:
+            console.log(data['Sales'][k]);
+
+            for (i=0;i<data['Sales'][k].length;i++)
+            {
+                    v_x = data['Sales'][k][i].city;
+                    v_y = parseInt(data['Sales'][k][i].flight_total);
+
+                    flight_x.push(v_x);
+                    flight_y.push(v_y);
+
+
+            }
+
+                break;
+
+            case 4:
+            console.log(data['Sales'][k]);
+            for (i=0;i<data['Sales'][k].length;i++)
+            {
+                    v_x = data['Sales'][k][i].city;
+                    v_y = parseInt(data['Sales'][k][i].hotel_total);
+                    hotel_x.push(v_x);
+                    hotel_y.push(v_y);
+            }
+
+                break;
+
+
+                        }
+
+         }
+
+         for ( i = 0 ; i < 5 ; i++ )
+         {
+            console.log('########');
+            console.log(taxi_x[i]);
+            console.log(taxi_y[i]);
+            console.log('############');
+
+
+         }
+
+         console.log(flight_x);
+         console.log(flight_y);
+
+       ChartByCityForMonth(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y,hotel_x,hotel_y);
+
+
+       });
+
+}
+
+function ChartByCityForMonth(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y,hotel_x,hotel_y){
 
     console.log('### city data ###');
     console.log(taxi_x);
@@ -992,35 +1273,35 @@ $.post(var_url,{'service_types':1},
              borderColor: window.chartColors.red,
              borderWidth: 1,
              data: [taxi_y[0],bus_y[0],train_y[0],flight_y[0],hotel_y[0]],
-             city_data: [taxi_x[0],bus_x[0],train_x[0],flight_x[0],hotel_x[0]]
+             city_data: [taxi_x[0],taxi_x[1],taxi_x[2],taxi_x[3],taxi_x[4]]
          }, {
              label: label2,
              backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
              borderColor: window.chartColors.blue,
              borderWidth: 1,
              data: [taxi_y[1],bus_y[1],train_y[1],flight_y[1],hotel_y[1]],
-             city_data: [taxi_x[1],bus_x[1],train_x[1],flight_x[1],hotel_x[1]]
+             city_data: [bus_x[0],bus_x[1],bus_x[2],bus_x[3],bus_x[4]]
          },{
              label: label3,
              backgroundColor: color(window.chartColors.orange).alpha(0.5).rgbString(),
              borderColor: window.chartColors.blue,
              borderWidth: 1,
              data: [taxi_y[2],bus_y[2],train_y[2],flight_y[2],hotel_y[2]],
-             city_data: [taxi_x[2],bus_x[2],train_x[2],flight_x[2],hotel_x[2]]
+             city_data: [train_x[0],train_x[1],train_x[2],train_x[3],train_x[4]]
          },{
              label: label4,
              backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
              borderColor: window.chartColors.pink,
              borderWidth: 1,
              data: [taxi_y[3],bus_y[3],train_y[3],flight_y[3],hotel_y[3]],
-             city_data: [taxi_x[3],bus_x[3],train_x[3],flight_x[3],hotel_x[3]]
+             city_data: [flight_x[0],flight_x[1],flight_x[2],flight_x[3],flight_x[4]]
          },{
              label: label5,
              backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
              borderColor: window.chartColors.pink,
              borderWidth: 1,
              data: [taxi_y[4],bus_y[4],train_y[4],flight_y[4],hotel_y[4]],
-             city_data: [taxi_x[4],bus_x[4],train_x[4],flight_x[4],hotel_x[4]]
+             city_data: [hotel_x[0],hotel_x[1],hotel_x[2],hotel_x[3],hotel_x[4]]
          }
 
          ]
@@ -1046,19 +1327,15 @@ $.post(var_url,{'service_types':1},
                  tooltips: {
             callbacks: {
                 label: function(tooltipItem, data) {
+
                     var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-                    var lbl = data.datasets[tooltipItem.datasetIndex].city_data;
-
-                    console.log(lbl[tooltipItem.datasetIndex]);
-
+                    var lbl = data.datasets[tooltipItem.index].city_data;
                     var lbl_cityname = lbl[tooltipItem.datasetIndex];
-
                     if (label) {
                         label += ': ';
                     }
                     //label += Math.round(tooltipItem.yLabel * 100) / 100;
-                    label += lbl[0];
+                    label += lbl_cityname;
                     return label;
                 }
             }
@@ -1075,6 +1352,14 @@ $.post(var_url,{'service_types':1},
          });
 
     }
+
+
+
+
+
+
+
+
 </script>
 
 
@@ -1139,7 +1424,8 @@ function prev(){
     callMonthWiseSummery(v_yr,v_month);
 }
 
-    function callMonthWiseSummery(yr,mnt)
+
+function callMonthWiseSummery(yr,mnt)
     {
 
         var_url = '/api/'+'dashboard_sales_for_six_months'
@@ -1162,6 +1448,12 @@ $.post(var_url,{'year':yr,'month':mnt},
         train_ar = [];
         flight_ar = [];
         hotel_ar = [];
+
+        taxi_yr_ar = [];
+        bus_yr_ar = [];
+        train_yr_ar = [];
+        flight_yr_ar = [];
+        hotel_yr_ar = [];
 
         var chk_ar = [];
         var chkk_ar = [];
@@ -1190,7 +1482,9 @@ $.post(var_url,{'year':yr,'month':mnt},
 
         }
 
+        console.log('## date array is ###')
         console.log(chk_ar);
+        console.log('## end ###')
         taxi_arr = [];
         bus_arr = [];
         train_arr = [];
@@ -1208,33 +1502,44 @@ $.post(var_url,{'year':yr,'month':mnt},
 
         for (k=0;k<data['Sales'].length;k++)
         {
-        for (i=0;i<data['Sales'][k].length;i++)
-        {
+
 
             switch(k){
 
             case 0:
-            var a = taxi_ar.indexOf(data['Sales'][k][i].m);
+            for (i=0;i<data['Sales'][k].length;i++)
+            {
+               var a = taxi_ar.indexOf(data['Sales'][k][i].m);
+
                 if ( a != -1 )
                 {
                 taxi_ar[a] = data['Sales'][k][i].taxi_total;
                 taxi_arr.push(a);
                 }
 
+            }
+
                 break;
 
             case 1:
+             for (i=0;i<data['Sales'][k].length;i++)
+            {
              console.log(data['Sales'][k][i].m);
-            var a = bus_ar.indexOf(data['Sales'][k][i].m);
+               var a = bus_ar.indexOf(data['Sales'][k][i].m);
                 if ( a != -1 )
                 {
                 bus_ar[a] = data['Sales'][k][i].bus_total;
                 bus_arr.push(a);
                 }
 
+             }
+
                 break;
 
             case 2:
+
+              for (i=0;i<data['Sales'][k].length;i++)
+            {
 
             var a = train_ar.indexOf(data['Sales'][k][i].m);
                 if ( a != -1 )
@@ -1243,9 +1548,14 @@ $.post(var_url,{'year':yr,'month':mnt},
                 train_arr.push(a);
                 }
 
+            }
+
                 break;
 
             case 3:
+
+              for (i=0;i<data['Sales'][k].length;i++)
+            {
 
             var a = flight_ar.indexOf(data['Sales'][k][i].m);
                 if ( a != -1 )
@@ -1254,9 +1564,14 @@ $.post(var_url,{'year':yr,'month':mnt},
                 flight_arr.push(a);
                 }
 
+            }
+
                 break;
 
             case 4:
+
+              for (i=0;i<data['Sales'][k].length;i++)
+            {
 
             var a = hotel_ar.indexOf(data['Sales'][k][i].m);
                 if ( a != -1 )
@@ -1265,11 +1580,13 @@ $.post(var_url,{'year':yr,'month':mnt},
                 hotel_arr.push(a);
                 }
 
+            }
+
                 break;
 
                     }
 
-        }
+
 
         }
 
@@ -1284,6 +1601,7 @@ $.post(var_url,{'year':yr,'month':mnt},
 
     for (j=0;j<taxi_ar.length;j++)
         {
+        //val = taxi_ar[j];
 
         b = taxi_arr.indexOf(j);
             if ( b == -1 )
@@ -1292,10 +1610,15 @@ $.post(var_url,{'year':yr,'month':mnt},
             }
 
         }
+
+
+
     break;
   case 2:
     for (j=0;j<bus_ar.length;j++)
         {
+
+        //val = bus_ar[j];
 
         b = bus_arr.indexOf(j);
             if ( b == -1 )
@@ -1309,6 +1632,8 @@ $.post(var_url,{'year':yr,'month':mnt},
     for (j=0;j<train_ar.length;j++)
         {
 
+        //val = train_ar[j];
+
         b = train_arr.indexOf(j);
             if ( b == -1 )
             {
@@ -1321,6 +1646,8 @@ $.post(var_url,{'year':yr,'month':mnt},
     for (j=0;j<flight_ar.length;j++)
         {
 
+       // val = flight_ar[j];
+
         b = flight_arr.indexOf(j);
             if ( b == -1 )
             {
@@ -1332,6 +1659,7 @@ $.post(var_url,{'year':yr,'month':mnt},
   case 5:
     for (j=0;j<hotel_ar.length;j++)
         {
+           // val = flight_ar[j];
 
         b = hotel_arr.indexOf(j);
             if ( b == -1 )
@@ -1341,6 +1669,7 @@ $.post(var_url,{'year':yr,'month':mnt},
 
         }
     break;
+
   default:
     // code block
 
@@ -1350,11 +1679,11 @@ $.post(var_url,{'year':yr,'month':mnt},
 
         }
 
-        taxi = taxi_ar;
-        bus = bus_ar;
-        train = train_ar;
-        flight = flight_ar;
-        hotel = hotel_ar;
+        taxi = taxi_ar.reverse();
+        bus = bus_ar.reverse();
+        train = train_ar.reverse();
+        flight = flight_ar.reverse();
+        hotel = hotel_ar.reverse();
 
 
         month_wise_summery(taxi,bus,train,flight,hotel,yr,mnt,chk_ar);
@@ -1362,17 +1691,14 @@ $.post(var_url,{'year':yr,'month':mnt},
 
        });
 
-
-
-
-
     }
 
 
-    function month_wise_summery(taxi,bus,train,flight,hotel,yr,mnt,chk_ar) {
+
+
+function month_wise_summery(taxi,bus,train,flight,hotel,yr,mnt,chk_ar) {
 
     var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 
 
 if(chk_ar[5] > 1)
@@ -1458,19 +1784,17 @@ ar = slice2(MONTHS,6,mnth);
          var ctx1 = document.getElementById("chart-by-months").getContext("2d");
          window.myBar1 = new Chart(ctx1, {
              type: 'bar',
+
              data: barChartData,
 
              options: {
+
+                suggestedMin:0,
+                suggestedMax:15,
+
                 scales: {
                             yAxes: [{
-                        ticks: {
-                    suggestedMin: 0,
-                    suggestedMax: 100
-                },
-                        scaleLabel: {
-                        display: true,
-                        labelString: 'Sales  In  Lacs'
-                                    }
+
                                     }]
                         },
                  responsive: true,
@@ -1486,87 +1810,6 @@ ar = slice2(MONTHS,6,mnth);
 
 
          }
-
-
- function city_wise_summery() {
-
-     var color = Chart.helpers.color;
-     var barChartData2 = {
-         labels: ["Mumbai", "Pune", "Delhi", "Bengaloru", "Kolkata"],
-         datasets: [{
-             label: 'Taxi',
-             backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.red,
-             borderWidth: 1,
-             data: [
-                 16,17,47,83,72
-             ]
-         }, {
-             label: 'Bus',
-             backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.blue,
-             borderWidth: 1,
-             data: [
-                34,52,23,68,28
-             ]
-         },{
-             label: 'Train',
-             backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.green,
-             borderWidth: 1,
-             data: [
-                 67,52,33,68,48
-             ]
-         },{
-             label: 'Flight',
-             backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.pink,
-             borderWidth: 1,
-             data: [
-                 77,32,56,62,71
-             ]
-         },{
-             label: 'Hotel',
-             backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.yellow,
-             borderWidth: 1,
-             data: [
-                 73,47,63,78,38
-             ]
-         }
-
-         ]
-
-     };
-
-        var ctx2 = document.getElementById("graph-by-city").getContext("2d");
-
-         window.myBar2 = new Chart(ctx2, {
-             type: 'bar',
-             data: barChartData2,
-             options: {
-             scales: {
-                            yAxes: [{
-                        scaleLabel: {
-                        display: true,
-                        labelString: 'Sales  In  Lacs'
-                                    }
-                                    }]
-                        },
-                 responsive: true,
-                 legend: {
-                     position: 'top',
-                 },
-                 title: {
-                     display: true,
-                     text: 'Top Five Cities Sales Summary'
-                 }
-             }
-         });
-
-
-         }
-
 
 
     $(document).ready(function() {
@@ -1590,6 +1833,10 @@ ar = slice2(MONTHS,6,mnth);
     //city_wise_summery();
 
     callChartByCity();
+
+    callTaxAmountTable();
+
+
 
 
 	});
@@ -1861,11 +2108,11 @@ $.post(var_url,{'year':yr,'month':mnt},
 
         }
 
-        taxi = taxi_ar;
-        bus = bus_ar;
-        train = train_ar;
-        flight = flight_ar;
-        hotel = hotel_ar;
+        taxi = taxi_ar.reverse();
+        bus = bus_ar.reverse();;
+        train = train_ar.reverse();;
+        flight = flight_ar.reverse();;
+        hotel = hotel_ar.reverse();;
 
 
         month_wise_bookings_summery(taxi,bus,train,flight,hotel,yr,mnt,chk_ar);
@@ -1952,9 +2199,6 @@ ar = slice2(MONTHS,6,mnth);
 
         if (typeof window.myBar3 != "undefined")
         {
-        // object exists
-
-        //alert("exist");
 
         window.myBar3.destroy();
 
@@ -2043,9 +2287,9 @@ $.post(var_url,{'month':month,'year':year},
 
     function BookingsChartByMonth(taxi_dt,bus_dt,train_dt,flight_dt,hotel_dt){
 
-     if (typeof window.myBar4 != "undefined")
+     if (typeof window.myBar3 != "undefined")
         {
-        window.myBar4.destroy();
+        window.myBar3.destroy();
 
         }else{
 
@@ -2112,24 +2356,61 @@ $.post(var_url,{'month':month,'year':year},
 
         title_text = month + ' Bookings Summery'
 
-         var ctx4 = document.getElementById("booking-chart-by-months").getContext("2d");
-         window.myBar4 = new Chart(ctx4, {
+         var ctx3 = document.getElementById("booking-chart-by-months").getContext("2d");
+         window.myBar3 = new Chart(ctx3, {
              type: 'bar',
              data: barChartData4,
-             scaleOverride : true,
-             scaleSteps : 10,
-             scaleStepWidth : 50,
-             scaleStartValue : 0,
              options: {
-                scales: {
-                            yAxes: [{
-                        scaleLabel: {
-                        display: true,
-                        labelString: 'No Of Bookings'
 
-                                    }
-                                    }]
+              "animation": {
+                            "duration": 1,
+                            "onComplete": function() {
+                                                        var chartInstance = this.chart,
+                                                        ctx = chartInstance.ctx;
+
+                                                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                                        ctx.textAlign = 'center';
+                                                        ctx.textBaseline = 'bottom';
+
+                            this.data.datasets.forEach(function(dataset, i) {
+                                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                                              meta.data.forEach(function(bar, index) {
+                                                                var data = dataset.data[index];
+                                                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                              });
+                                                            });
+                                                          }
+                                                        },
+                                                        legend: {
+                                                          "display": false
+                                                        },
+                                                        tooltips: {
+                                                          "enabled": true
+                                                        },
+
+
+                scales: {
+                          yAxes: [{
+                            display: true,
+                            gridLines: {
+                              display: true
+                            },
+                            ticks: {
+                              max: Math.max(...data.datasets[0].data) + 10,
+                              display: false,
+                              beginAtZero: true
+                            }
+                          }],
+                          xAxes: [{
+                            gridLines: {
+                              display: true
+                            },
+                            ticks: {
+                              beginAtZero: true
+                            }
+                          }]
                         },
+
                  responsive: true,
                  legend: {
                      position: 'top',
@@ -2145,6 +2426,127 @@ $.post(var_url,{'month':month,'year':year},
 
 
 </script>
+
+
+<script>
+
+    function callTaxAmountTable(){
+
+ //var month = $("#month3 :selected").val();
+ //var year = $("#year3 :selected").val();
+
+var from_date = "1/1/2019";
+var to_date = "1/2/2020";
+
+ var_url = '/api/'+'dashboard_taxable_amount_table'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+$.post(var_url,{'from_date':from_date,'to_date':to_date},
+      function(data)
+      {
+
+         for (k=0;k<data['Sales'].length;k++)
+        {
+
+
+            switch(k){
+
+            case 0:
+
+
+
+                break;
+
+            case 1:
+            for (i=0;i<data['Sales'][1].length;i++)
+            {
+
+            pre_tax_amount = data['Sales'][1][i].pre_tax_amount;
+            igst = data['Sales'][1][i].igst;
+            cgst = data['Sales'][1][i].cgst;
+            sgst = data['Sales'][1][i].sgst;
+
+
+            }
+            console.log("bus data");
+            console.log(pre_tax_amount);
+            console.log(igst);
+            console.log(cgst);
+            console.log(sgst);
+
+                break;
+
+            case 2:
+
+            for (i=0;i<data['Sales'][2].length;i++)
+            {
+
+            pre_tax_amount = data['Sales'][2][i].pre_tax_amount;
+            igst = data['Sales'][2][i].igst;
+            cgst = data['Sales'][2][i].cgst;
+            sgst = data['Sales'][2][i].sgst;
+
+
+            }
+
+
+
+
+                break;
+
+            case 3:
+
+            for (i=0;i<data['Sales'][3].length;i++)
+            {
+
+            pre_tax_amount = data['Sales'][3][i].pre_tax_amount;
+            igst = data['Sales'][3][i].igst;
+            cgst = data['Sales'][3][i].cgst;
+            sgst = data['Sales'][3][i].sgst;
+
+
+            }
+
+
+                break;
+
+            case 4:
+
+            for (i=0;i<data['Sales'][4].length;i++)
+            {
+
+            pre_tax_amount = data['Sales'][4][i].pre_tax_amount;
+            igst = data['Sales'][4][i].igst;
+            cgst = data['Sales'][4][i].cgst;
+            sgst = data['Sales'][4][i].sgst;
+
+
+            }
+
+
+                break;
+
+                    }
+
+        }
+
+        }
+
+
+       });
+
+}
+
+
+
+</script>
+
 
 
 

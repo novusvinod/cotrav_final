@@ -319,17 +319,17 @@
                                 {% for employee in employee %}
                                  {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
 
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth" value="{{employee.date_of_birth}}"
+                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth" value="{{employee.date_of_birth}}"
                                        placeholder="Assistant ID" required>
                                 {% else %}
 
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                                  {% endfor %}
 
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                             </div>

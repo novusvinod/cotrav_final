@@ -85,9 +85,7 @@ def agent_login_action(request):
             if user:
                 request.session.set_expiry(7200)  # sets the exp. value of the session
                 auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                messages.success(request, 'Login Successfully..!')
-                print("hjgjhfjfj")
-                print(user)
+                #messages.success(request, 'Login Successful..!')
                 return HttpResponseRedirect("/agents/agent_home")
         else:
             messages.error(request, 'Invalid Email Or Password..!')

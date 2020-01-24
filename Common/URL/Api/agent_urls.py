@@ -111,6 +111,8 @@ urlpatterns = [
     path('api/dashboard_sales_for_six_months', agent_api_view.dashboard_sales_for_six_months),
     path('api/dashboard_bookings_for_six_months', agent_api_view.dashboard_bookings_for_six_months),
     path('api/dashboard_sales_by_city', agent_api_view.dashboard_sales_by_city),
+    path('api/dashboard_sales_by_city_for_month', agent_api_view.dashboard_sales_by_city_for_month),
+    path('api/dashboard_taxable_amount_table', agent_api_view.dashboard_taxable_amount_table),
 
 
 ]

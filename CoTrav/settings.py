@@ -25,8 +25,6 @@ SECRET_KEY = 'g#gtui399&t+up!=938cgm507xh69!^2&#ofa+c!-mi1snqjyv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
-
 ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
@@ -56,7 +54,7 @@ REST_FRAMEWORK = {
 
 
 API_BASE_URL = "http://localhost:8000/api/"
-
+HOST_BASE_PATH = "http://cotrav.co/"
 
 ###########################################################
 
@@ -102,6 +100,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'Common.context_processors.global_settings',
                 'Common.context_processors.get_access_details_by_corporate_name',
+                'Common.context_processors.global_hostname',
             ],
         },
     },

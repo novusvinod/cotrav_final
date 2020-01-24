@@ -38,28 +38,34 @@
             <div class="page-content-wrapper">
                 <div class="page-content">
 
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="card-box">
-                                    <div class="card-head">
-                                        <header>Booking Flight Tickets</header>
-                                    </div>
- <form method="post" action="/Corporate/Spoc/add-flight-booking-self/{{user.id}}">
+                                     <!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
 
-                                        <input type="hidden" name="user_id" value="{{user.id}}">
-                                        <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
-                                        <input type="hidden" name="spoc_id" value="{{user.id}}">
-                                        <input type="hidden" name="group_id" value="{{user.group_id}}">
-                                        <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
-                                        <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-                                         <div class="card-body row">
-                                               <div class="col-sm-2 p-t-20">
+
+                    <div class="row">
+                       <div class="col-sm-5">
+                          <div class="card card-topline-aqua">
+                             <div class="card-head">
+                                    <header>Book Flight</header>
+                            </div>
+                            <form method="post" action="/Corporate/Spoc/add-flight-booking-self/{{user.id}}">
+                                <input type="hidden" name="user_id" value="{{user.id}}">
+                                <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
+                                <input type="hidden" name="spoc_id" value="{{user.id}}">
+                                <input type="hidden" name="group_id" value="{{user.group_id}}">
+                                <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
+                                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+
+                                        <div class="card-body row">
+                                               <div class="col-sm-3">
                                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
                                               <input type="radio" id="option-1" class="mdl-radio__button" name="trip_type" value="1" {% if booking_datas.trip_type == '1' %} checked {%endif%} checked >
                                               <span class="mdl-radio__label">One-Way</span>
                                             </label>
                                         </div>
-                                        <div class="col-sm-2 p-t-20">
+                                        <div class="col-sm-5 ">
                                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
                                               <input type="radio" id="option-2" class="mdl-radio__button" name="trip_type" value="2" {% if booking_datas.trip_type == '2' %} checked {%endif%}>
                                               <span class="mdl-radio__label">Round-Trip</span>
@@ -68,8 +74,8 @@
                                       </div>
 
 
-                                      <div class="card-body row">
-                                          <div class="col-lg-2 ">
+                                        <div class="card-body row">
+                                          <div class="col-lg-5">
                                              <p class="md_fli_fnt"> <i class="fa fa-map-marker" aria-hidden="true"></i> FROM</p>
 
                                           <select class="form-control mdl-textfield js-select2" name="from_city" >
@@ -79,9 +85,12 @@
                                                     {% endfor %}
                                            </select>
 
-                                          </div>
 
-                                           <div class="col-lg-2">
+                                          </div>
+                                            <div class="fa-item  col-sm-1" style="margin-top: 21px; color:#027bff; "><i class="fa fa-exchange" id="switch"></i> </div>
+
+
+                                           <div class="col-lg-6">
                                               <p  class="md_fli_fnt"> <i class="fa fa-map-marker" aria-hidden="true"></i> TO</p>
                                           <select class="form-control mdl-textfield js-select2" name="to_city" >
                                                     <option value="">Select To City</option>-->
@@ -91,23 +100,30 @@
                                            </select>
 
                                           </div>
-                                        <div class="col-lg-2 ">
-                                        <p class="md_fli_fnt"><i class="fa fa-calendar"></i> DEPARTURE DATE</p>
+                                      </div>
 
-                                            <input class = "floating-label mdl-textfield__input date" type="text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
+                                         <div class="card-body row">
+
+                                              <div class="col-lg-6 ">
+                                        <p class="md_fli_fnt"><i class="fa fa-calendar"></i> DEPARTURE DATE</p>
+                                          <input class = "floating-label mdl-textfield__input datepicker1" type="text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
                                                  <input type="hidden" value="{{ booking_datas.departure_datetime }}" id="d_date">
                                         </div>
 
-                                         <div class="col-lg-2 ">
+                                         <div class="col-lg-6 ">
                                         <p  class="md_fli_fnt"><i class="fa fa-calendar"></i> RETURN DATE</p>
-
-                                              <input class = "floating-label mdl-textfield__input date" type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
+                                          <input class = "floating-label mdl-textfield__input datepicker1" type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
                                                  <input type="hidden" value="{{ booking_datas.return_date }}" id="r_date">
                                         </div>
 
-                                           <div class="col-lg-2">
-                                              <p  class="md_fli_fnt"> <i class="fa fa-map-marker" aria-hidden="true"></i> Class</p>
-                                         <select class="form-control mdl-textfield js-select2" name="fl_class" >
+
+                                        </div>
+
+
+                                         <div class="card-body row">
+                                           <div class="col-lg-6">
+                                              <p  class="md_fli_fnt"><i class="fa fa-list-alt"></i> Class</p>
+                                           <select class="form-control mdl-textfield js-select2" name="fl_class" >
                                                     <option value="EC" {% if booking_datas.fl_class == 'EC' %} selected {%endif%}>Economy</option>
                                                     <option value="BU" {% if booking_datas.fl_class == 'BU' %} selected {%endif%}>Businesses</option>
 
@@ -115,11 +131,11 @@
 
                                           </div>
 
-                                        <div class="col-lg-1">
+                                             <div class="col-lg-6 ">
                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height select-width md-28_fli">
-                                              <p  class="md_fli_fnt fnt_mar"> <i class="fa fa-user" aria-hidden="true"></i> ADULT</p>
+                                              <p  class="md_fli_fnt fnt_mar"> <i class="fa fa-user" aria-hidden="true"></i> Passengers</p>
 
-                                                <select class="form-control mdl-textfield js-select2" name="no_of_seats" >
+                                                 <select class="form-control mdl-textfield js-select2" name="no_of_seats" >
                                                     <option value="1" {% if booking_datas.no_of_seats == '1' %} selected {%endif%}>1</option>
                                                     <option value="2" {% if booking_datas.no_of_seats == '2' %} selected {%endif%}>2</option>
                                                     <option value="3" {% if booking_datas.no_of_seats == '3' %} selected {%endif%}>3</option>
@@ -134,16 +150,74 @@
                                         </div>
 
 
+                                        </div>
 
-                                       <div class="col-lg-1">
-                                         <button type="submit" class="btn btn-lg btn-primary">Search</button>
+                                            <div class="card-body row">
+                                           <div class="col-lg-12" >
+                                         <button type="submit" class="btn btn-lg btn-primary" style="float: right; width: 100%;">Search</button>
+                                        </div>
+                                    </div>
+                            </form>
+                                    </div>
+                                    </div>
+
+                                     <div class="col-sm-7">
+                                   <div class="panel tab-border card card-topline-aqua">
+                                <header class="panel-heading panel-heading-gray custom-tab ">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item"><a href="#home" data-toggle="tab" class="active">Terms & Conditions</a>
+                                        </li>
+                                        <li class="nav-item"><a href="#about" data-toggle="tab">Privacy</a>
+                                        </li>
+
+                                    </ul>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="home">
+                                            <h4>Book Flight Tickets Online on CoTrav</h4>
+                                            <p style="font-size: 13px;">Online flight ticket bookings just got easier and quicker. On CoTrav, you can now book your flight tickets in minutes, from anywhere, at any time! Enjoy a hassle-free flight ticket booking experience by getting your tickets booked securely, in minutes.
+                                   Book domestic flight tickets to your favourite destinations including Goa, Delhi, Bengaluru, Hyderabad, Chennai and Kolkata from all leading domestic airline operators. We also offer international flight tickets at competitive rates. You no more have to rely on travel agents or middlemen for the booking of your flight tickets. Paytm is the complete solution for all your concerns related to online flight ticket bookings.
+                                 You can book your flight tickets from domestic and international operators including Indigo, SpiceJet , Jet Airways, Vistara Airlines, AirAsia, Air India, Qatar Airways, GoAir, Singapore Airlines and Gulf Air.
+                                  </p>
+                                      <div class="card-body ">
+                                    <div class="panel-group accordion" id="accordion3">
+                                          <div class="panel faq panel-default">
+                                              <div class="panel-heading faq-heading panel-heading-gray">
+                                                  <h5 class="panel-title">
+                                                      <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#collapse_3_1">Why Book Flight Tickets With CoTrav</a>
+                                                  </h5>
+                                              </div>
+                                              <div id="collapse_3_1" class="panel-collapse collapse">
+                                                  <div class="panel-body">
+                                                      <p>CoTrav is one of the most reliable online platforms for flight ticket bookings. We offer online booking facilities for both domestic and international flight ticket bookings. There are several reasons that make us among the best online flight ticket booking platforms in India.</p>
+
+                                                  </div>
+                                              </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                     </div>
+                                        <div class="tab-pane" id="about">
+                                            <p>We collect and generate various data points about you.
+Data by which you are identified is termed as “Personal Data”. Personal Data does not mean information that is freely available or accessible in public domain.
+Your Privacy is of utmost importance to us and protection of your Personal Data is a key commitment for us.
+We are governed by the provisions of applicable law in India including the Information Technology Act 2000 and the Information Technology (Reasonable security practices and procedures and sensitive personal data or information) Rules, 2011 to maintain the privacy of your Personal Data.</p>
+
+                                    <p>1. Please note that a “cookie” is a small piece of information stored by a web server on a web browser so it can be later read back from that browser.<br>
+2. We may use cookie and tracking technology depending on the features offered.<br>
+3. No Personal Data will be collected via cookies and other tracking technology; however, if you previously provided Personal Data, cookies may be tied to such information.</p>
                                         </div>
 
                                     </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
+
+                                  </div>
+                              </div>
+
+                          </div>
+
 
 
 
@@ -828,7 +902,7 @@ The above Fare Rules are just a guideline for your convenience and is subject to
 
               </div>
             </div>
-
+            </div>
 
 
 {% else %}

@@ -53,7 +53,9 @@ def login(request):
                 gen_access_token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
                 generate_otp = ''.join(random.choice(string.digits) for _ in range(6))
                 add_otp = SignIn_OTP()
-                resp1 = add_otp.send_email(user_name, generate_otp)
+                email_subject = "Cotrav - Verify Your Email"
+                email_body = "Dear User,<br><br>" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
+                resp1 = add_otp.send_email(user_name, email_subject, email_body)
 
                 if resp1:
                     if user_type == '1':
@@ -6840,7 +6842,7 @@ def add_flight_booking_with_invoice(request):
         for i in range(1, no_of_emp):
             employees.append(request.POST.get('employee_id_' + str(i), ''))
             employees_name.append(request.POST.get('employee_name_' + str(i), ''))
-            print(employees)
+            #print(employees)
 
         user = {}
         user_token = req_token.split()
@@ -6869,274 +6871,295 @@ def add_flight_booking_with_invoice(request):
                     r = requests.post(url, json=payload)
                     booking1 = r.json()
 
-                    print(booking1['FLIGHTOW'])
-                    if not ('FLIGHT' in booking1 or 'FLIGHTOW' in booking1):
-                        data = {'success': 0, 'error': "Pnr Not Generated"}
-                        return JsonResponse(data)
+                    print(booking1)
+                    if UID2:
+                        if not ('FLIGHTOW' in booking1):
+                            data = {'success': 0, 'error': "Pnr Not Generated"}
+                            return JsonResponse(data)
                     else:
-                        ticket_number = []
-                        pnr_no = []
-                        flight_no = []
-                        flight_name = []
-                        arrival_time = []
-                        departure_time = []
-                        flight_to = []
-                        flight_from = []
-                        is_return_flight = []
+                        if not ('FLIGHT' in booking1 or 'FLIGHTOW' in booking1):
+                            data = {'success': 0, 'error': "Pnr Not Generated"}
+                            return JsonResponse(data)
+
+                    ticket_number = []
+                    pnr_no = []
+                    flight_no = []
+                    flight_name = []
+                    arrival_time = []
+                    departure_time = []
+                    flight_to = []
+                    flight_from = []
+                    is_return_flight = []
+                    flight_type = flight_type
+                    journey_type = ""
+                    from_location =""
+                    to_location = ""
+
+                    departure_datetime =""
+                    preferred_flight =""
+                    booking_email = ""
+                    meal_is_include = ''
+                    last_booking_id = 0
+
+                    if UID2:
+                        print("in trip two")
+                        print(UID2)
+                        no_of_stops = booking1['FLIGHTOW'][0]['STOP']
                         flight_type = flight_type
-                        journey_type = ""
-                        from_location =""
-                        to_location = ""
-
-                        departure_datetime =""
-                        preferred_flight =""
-                        booking_email = ""
+                        fare_type = booking1['FLIGHTOW'][0]['FARE_TYPE']
                         meal_is_include = ''
-                        last_booking_id = 0
+                        no_of_passanger = booking1['PARAM'][0]['adt']
+                        employee_booking_id = employees
+                        ticket_price = booking1['FLIGHTOW'][0]['AMOUNT']
+                        journey_type = "Round Trip"
+                        from_location = booking1['FLIGHTOW'][0]['DES_NAME']
+                        to_location = booking1['FLIGHTOW'][0]['ORG_NAME']
+                        departure_datetime = datetime.strptime(booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
 
-                        if UID2:
-                            no_of_stops = booking1['FLIGHTOW'][0]['STOP']
-                            flight_type = flight_type
-                            fare_type = booking1['FLIGHTOW'][0]['FARE_TYPE']
-                            meal_is_include = ''
-                            no_of_passanger = booking1['PARAM'][0]['adt']
-                            employee_booking_id = employees
-                            ticket_price = booking1['FLIGHTOW'][0]['AMOUNT']
-                            journey_type = "Round Trip"
-                            from_location = booking1['FLIGHTOW'][0]['DES_NAME']
-                            to_location = booking1['FLIGHTOW'][0]['ORG_NAME']
-                            departure_datetime = datetime.strptime(booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
-
-                            if booking1['CON_FLIGHTOW']:
-                                for flightt in booking1['CON_FLIGHTOW']:
-                                    ticket_number.append(booking1['FLIGHTOW'][0]['PCC'])
-                                    pnr_no.append(booking1['PAXOW'][0]['apnr'])
-                                    flight_no.append(flightt['FLIGHT_NO'])
-                                    flight_name.append(flightt['FLIGHT_NAME'])
-                                    arrival_time1 = datetime.strptime(
-                                        flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
-                                        "%Y-%m-%d %H:%M:%S")
-                                    arrival_time.append(arrival_time1)
-                                    arrival_time2 = datetime.strptime(
-                                        flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
-                                        "%Y-%m-%d %H:%M:%S")
-                                    departure_time.append(arrival_time2)
-                                    flight_to.append(flightt['DES_NAME'])
-                                    flight_from.append(flightt['ORG_NAME'])
-                                    is_return_flight.append('0')
-                            else:
+                        if booking1['CON_FLIGHTOW']:
+                            for flightt in booking1['CON_FLIGHTOW']:
                                 ticket_number.append(booking1['FLIGHTOW'][0]['PCC'])
                                 pnr_no.append(booking1['PAXOW'][0]['apnr'])
-                                flight_no.append(booking1['FLIGHTOW'][0]['FLIGHT_NO'])
-                                flight_name.append(booking1['FLIGHTOW'][0]['FLIGHT_NAME'])
+                                flight_no.append(flightt['FLIGHT_NO'])
+                                flight_name.append(flightt['FLIGHT_NAME'])
                                 arrival_time1 = datetime.strptime(
-                                    booking1['FLIGHTOW'][0]['ARRV_DATE'] + " " +
-                                    booking1['FLIGHTOW'][0][
-                                        'ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                    flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
+                                    "%Y-%m-%d %H:%M:%S")
                                 arrival_time.append(arrival_time1)
                                 arrival_time2 = datetime.strptime(
-                                    booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0][
-                                        'DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                    flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
+                                    "%Y-%m-%d %H:%M:%S")
                                 departure_time.append(arrival_time2)
-                                flight_to.append(booking1['FLIGHTOW'][0]['DES_NAME'])
-                                flight_from.append(booking1['FLIGHTOW'][0]['ORG_NAME'])
+                                flight_to.append(flightt['DES_NAME'])
+                                flight_from.append(flightt['ORG_NAME'])
                                 is_return_flight.append('0')
+                        else:
+                            ticket_number.append(booking1['FLIGHTOW'][0]['PCC'])
+                            pnr_no.append(booking1['PAXOW'][0]['apnr'])
+                            flight_no.append(booking1['FLIGHTOW'][0]['FLIGHT_NO'])
+                            flight_name.append(booking1['FLIGHTOW'][0]['FLIGHT_NAME'])
+                            arrival_time1 = datetime.strptime(
+                                booking1['FLIGHTOW'][0]['ARRV_DATE'] + " " +
+                                booking1['FLIGHTOW'][0][
+                                    'ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            arrival_time.append(arrival_time1)
+                            arrival_time2 = datetime.strptime(
+                                booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0][
+                                    'DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            departure_time.append(arrival_time2)
+                            flight_to.append(booking1['FLIGHTOW'][0]['DES_NAME'])
+                            flight_from.append(booking1['FLIGHTOW'][0]['ORG_NAME'])
+                            is_return_flight.append('0')
 
-                            if booking1['CON_FLIGHTRT']:
-                                for flightt in booking1['CON_FLIGHTRT']:
-                                    ticket_number.append(booking1['FLIGHTRT'][0]['PCC'])
-                                    pnr_no.append(booking1['PAXRT'][0]['apnr'])
-                                    flight_no.append(flightt['FLIGHT_NO'])
-                                    flight_name.append(flightt['FLIGHT_NAME'])
-                                    arrival_time1 = datetime.strptime(
-                                        flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
-                                        "%Y-%m-%d %H:%M:%S")
-                                    arrival_time.append(arrival_time1)
-                                    arrival_time2 = datetime.strptime(
-                                        flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
-                                        "%Y-%m-%d %H:%M:%S")
-                                    departure_time.append(arrival_time2)
-                                    flight_to.append(flightt['DES_NAME'])
-                                    flight_from.append(flightt['ORG_NAME'])
-                                    is_return_flight.append('1')
-                            else:
+                        if booking1['CON_FLIGHTRT']:
+                            for flightt in booking1['CON_FLIGHTRT']:
                                 ticket_number.append(booking1['FLIGHTRT'][0]['PCC'])
                                 pnr_no.append(booking1['PAXRT'][0]['apnr'])
-                                flight_no.append(booking1['FLIGHTRT'][0]['FLIGHT_NO'])
-                                flight_name.append(booking1['FLIGHTRT'][0]['FLIGHT_NAME'])
+                                flight_no.append(flightt['FLIGHT_NO'])
+                                flight_name.append(flightt['FLIGHT_NAME'])
                                 arrival_time1 = datetime.strptime(
-                                    booking1['FLIGHTRT'][0]['ARRV_DATE'] + " " +
-                                    booking1['FLIGHTRT'][0][
-                                        'ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                    flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
+                                    "%Y-%m-%d %H:%M:%S")
                                 arrival_time.append(arrival_time1)
                                 arrival_time2 = datetime.strptime(
-                                    booking1['FLIGHTRT'][0]['DEP_DATE'] + " " + booking1['FLIGHTRT'][0][
-                                        'DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                    flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
+                                    "%Y-%m-%d %H:%M:%S")
                                 departure_time.append(arrival_time2)
-                                flight_to.append(booking1['FLIGHTRT'][0]['DES_NAME'])
-                                flight_from.append(booking1['FLIGHTRT'][0]['ORG_NAME'])
+                                flight_to.append(flightt['DES_NAME'])
+                                flight_from.append(flightt['ORG_NAME'])
                                 is_return_flight.append('1')
-
-                                print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
-
-
                         else:
-                            no_of_stops = booking1['FLIGHT'][0]['STOP']
-                            flight_type = flight_type
-                            fare_type = booking1['FLIGHT'][0]['FARE_TYPE']
-                            meal_is_include = ''
-                            no_of_passanger = booking1['FLIGHT'][0]['SEAT']
-                            employee_booking_id = employees
-                            ticket_price = booking1['FLIGHT'][0]['AMOUNT']
-                            journey_type = "One Way"
-                            from_location = booking1['FLIGHTOW'][0]['DES_NAME']
-                            to_location = booking1['FLIGHTOW'][0]['ORG_NAME']
-                            departure_datetime = datetime.strptime(booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            ticket_number.append(booking1['FLIGHTRT'][0]['PCC'])
+                            pnr_no.append(booking1['PAXRT'][0]['apnr'])
+                            flight_no.append(booking1['FLIGHTRT'][0]['FLIGHT_NO'])
+                            flight_name.append(booking1['FLIGHTRT'][0]['FLIGHT_NAME'])
+                            arrival_time1 = datetime.strptime(
+                                booking1['FLIGHTRT'][0]['ARRV_DATE'] + " " +
+                                booking1['FLIGHTRT'][0][
+                                    'ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            arrival_time.append(arrival_time1)
+                            arrival_time2 = datetime.strptime(
+                                booking1['FLIGHTRT'][0]['DEP_DATE'] + " " + booking1['FLIGHTRT'][0][
+                                    'DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            departure_time.append(arrival_time2)
+                            flight_to.append(booking1['FLIGHTRT'][0]['DES_NAME'])
+                            flight_from.append(booking1['FLIGHTRT'][0]['ORG_NAME'])
+                            is_return_flight.append('1')
 
-                            if booking1['CON_FLIGHT']:
-                                for flightt in booking1['CON_FLIGHT']:
-                                    ticket_number.append(booking1['FLIGHT'][0]['PCC'])
-                                    pnr_no.append(booking1['PAXOW'][0]['apnr'])
-                                    flight_no.append(flightt['FLIGHT_NO'])
-                                    flight_name.append(flightt['FLIGHT_NAME'])
-                                    arrival_time1 = datetime.strptime(
-                                        flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
-                                        "%Y-%m-%d %H:%M:%S")
-                                    arrival_time.append(arrival_time1)
-                                    arrival_time2 = datetime.strptime(
-                                        flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
-                                        "%Y-%m-%d %H:%M:%S")
-                                    departure_time.append(arrival_time2)
-                                    flight_to.append(flightt['DES_NAME'])
-                                    flight_from.append(flightt['ORG_NAME'])
-                                print("INNNNNNNNNNNN IFFFFFFFFFFFFF")
-                            else:
+                            print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
+
+
+                    else:
+                        print("in trip one")
+                        print(UID2)
+                        no_of_stops = booking1['FLIGHT'][0]['STOP']
+                        flight_type = flight_type
+                        fare_type = booking1['FLIGHT'][0]['FARE_TYPE']
+                        meal_is_include = ''
+                        no_of_passanger = booking1['FLIGHT'][0]['SEAT']
+                        employee_booking_id = employees
+                        ticket_price = booking1['FLIGHT'][0]['AMOUNT']
+                        journey_type = "One Way"
+                        from_location = booking1['FLIGHT'][0]['DES_NAME']
+                        to_location = booking1['FLIGHT'][0]['ORG_NAME']
+                        departure_datetime = datetime.strptime(booking1['FLIGHT'][0]['DEP_DATE'] + " " + booking1['FLIGHT'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+
+                        if booking1['CON_FLIGHT']:
+                            for flightt in booking1['CON_FLIGHT']:
                                 ticket_number.append(booking1['FLIGHT'][0]['PCC'])
                                 pnr_no.append(booking1['PAX'][0]['apnr'])
-                                flight_no.append(booking1['FLIGHT'][0]['FLIGHT_NO'])
-                                flight_name.append(booking1['FLIGHT'][0]['FLIGHT_NAME'])
-                                arrival_time1 = datetime.strptime(booking1['FLIGHT'][0]['ARRV_DATE'] + " " + booking1['FLIGHT'][0]['ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                flight_no.append(flightt['FLIGHT_NO'])
+                                flight_name.append(flightt['FLIGHT_NAME'])
+                                arrival_time1 = datetime.strptime(
+                                    flightt['ARRV_DATE'] + " " + flightt['ARRV_TIME'] + ":00",
+                                    "%Y-%m-%d %H:%M:%S")
                                 arrival_time.append(arrival_time1)
-                                arrival_time2 = datetime.strptime(booking1['FLIGHT'][0]['DEP_DATE'] + " " + booking1['FLIGHT'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                                arrival_time2 = datetime.strptime(
+                                    flightt['DEP_DATE'] + " " + flightt['DEP_TIME'] + ":00",
+                                    "%Y-%m-%d %H:%M:%S")
                                 departure_time.append(arrival_time2)
-                                flight_to.append(booking1['FLIGHT'][0]['DES_NAME'])
-                                flight_from.append(booking1['FLIGHT'][0]['ORG_NAME'])
-                                print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
+                                flight_to.append(flightt['DES_NAME'])
+                                flight_from.append(flightt['ORG_NAME'])
+                                is_return_flight.append('0')
+                            print("INNNNNNNNNNNN IFFFFFFFFFFFFF")
+                        else:
+                            ticket_number.append(booking1['FLIGHT'][0]['PCC'])
+                            pnr_no.append(booking1['PAX'][0]['apnr'])
+                            flight_no.append(booking1['FLIGHT'][0]['FLIGHT_NO'])
+                            flight_name.append(booking1['FLIGHT'][0]['FLIGHT_NAME'])
+                            arrival_time1 = datetime.strptime(booking1['FLIGHT'][0]['ARRV_DATE'] + " " + booking1['FLIGHT'][0]['ARRV_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            arrival_time.append(arrival_time1)
+                            arrival_time2 = datetime.strptime(booking1['FLIGHT'][0]['DEP_DATE'] + " " + booking1['FLIGHT'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
+                            departure_time.append(arrival_time2)
+                            flight_to.append(booking1['FLIGHT'][0]['DES_NAME'])
+                            flight_from.append(booking1['FLIGHT'][0]['ORG_NAME'])
+                            is_return_flight.append('0')
+                            print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
 
-                        cursor = connection.cursor()
-                        try:
-                            cursor.callproc('addFlightBooking',
-                                            ["Flight", journey_type, flight_type, from_location, to_location,
-                                             booking_datetime, departure_datetime,
-                                             preferred_flight, assessment_code, no_of_seats,
-                                             group_id, subgroup_id, spoc_id, corporate_id, billing_entity_id,
-                                             reason_booking, user_id, user_type, employees, booking_email,
-                                             assessment_city_id, '@last_booking_id'])
-                            booking_id = dictfetchall(cursor)
-                            print(booking_id)
-                            if booking_id:
-                                data = {'success': 0, 'message': booking_id}
-                            else:
-                                cursor.execute("SELECT @last_booking_id")
-                                last_booking_id = cursor.fetchone()[0]
-                                print(last_booking_id)
-                                cursor.close()
-                                cursor2 = connection.cursor()
-                                cursor2.callproc('viewFlightBooking', [last_booking_id])
-                                emp = dictfetchall(cursor2)
-                                cursor2.close()
+                    cursor = connection.cursor()
+                    print(employees)
+                    try:
+                        cursor.callproc('addFlightBooking',
+                                        ["Flight", journey_type, flight_type, from_location, to_location,
+                                         booking_datetime, departure_datetime,
+                                         preferred_flight, assessment_code, no_of_seats,
+                                         group_id, subgroup_id, spoc_id, corporate_id, billing_entity_id,
+                                         reason_booking, user_id, user_type, employees, booking_email,
+                                         assessment_city_id, '@last_booking_id'])
+                        booking_id = dictfetchall(cursor)
 
-                                cursor1 = connection.cursor()
-                                cursor1.callproc('getAllFlightBookingPassangers', [last_booking_id])
-                                passanger = dictfetchall(cursor1)
-                                emp[0]['Passangers'] = passanger
-                                cursor1.close()
-
-                                cursor3 = connection.cursor()
-                                cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
-                                approvers = dictfetchall(cursor3)
-                                cursor3.close()
-
-                                cursor4 = connection.cursor()
-                                cursor4.callproc('assignFlightBooking',
-                                                [flight_type, flight_type, journey_type, no_of_stops, last_booking_id,
-                                                 meal_is_include, fare_type, user_id, user_type, ticket_price,100, 18,
-                                                 18, 118, 1,18, 0, 0, 18, 0,0, 18,0, 0, 0,ticket_price, 0, 1,1, 18, 9, 9,"", "", 0, 0,0, 1, 1])
-                                result = dictfetchall(cursor4)
-
-                                cursor4.close()
-                                no_of_stops = int(no_of_stops)
-                                final_stop = no_of_stops+2
-                                for x in range(final_stop):
-                                    cursor5 = connection.cursor()
-                                    cursor5.callproc('addFlightBookingFlights',
-                                                     [flight_name[x], flight_no[x], pnr_no[x], flight_from[x],
-                                                      flight_to[x], departure_time[x], arrival_time[x], last_booking_id,
-                                                      user_id, user_type, is_return_flight[x]])
-                                    result = dictfetchall(cursor5)
-                                    cursor5.close()
-
-                                for xx in range(int(no_of_passanger)):
-                                    cursor26 = connection.cursor()
-                                    cursor26.callproc('updateFlightPassangerTickectNo',
-                                                     [ticket_number[xx], employee_booking_id[xx], last_booking_id])
-                                    result = dictfetchall(cursor26)
-
-                                    cursor26.close()
-
-                                company = dictfetchall(cursor)
-                                print(company)
-                                if company:
-                                    data = {'success': 0, 'message': company}
-                                else:
-                                    print("Last Booking ID")
-                                    cursor27 = connection.cursor()
-                                    cursor27.callproc('viewFlightBooking', [last_booking_id])
-                                    emp = dictfetchall(cursor27)
-                                    cursor27.close()
-
-                                    cursor11 = connection.cursor()
-                                    cursor11.callproc('getAllFlightBookingPassangers', [last_booking_id])
-                                    passanger = dictfetchall(cursor11)
-                                    emp[0]['Passangers'] = passanger
-                                    cursor11.close()
-
-                                    cursor22 = connection.cursor()
-                                    cursor22.callproc('getAllFlightBookingFlights', [last_booking_id])
-                                    flights = dictfetchall(cursor22)
-                                    cursor22.close()
-
-                                    emp[0]['Flights'] = flights
-
-                                    get_voucher_path = ''
-                                    if client_ticket:
-                                        voucher = emp[0]
-                                        bus_pdf = Flight(voucher)
-                                        get_vou = bus_pdf.get(request)
-                                        get_voucher_path = get_vou[1]
-                                    else:
-                                        get_voucher_path = ""
-
-                                    add_booking_email = AddBooking_Email()
-                                    if is_email == '1':
-                                        resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
-                                    if is_sms == '1':
-                                        resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
-
-                                    add_booking_email = Assign_Booking_Email()
-                                    if is_sms:
-                                        resp1 = add_booking_email.send_client_sms(emp, "Flight")
-                                    if is_email:
-                                        resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
-
+                        if booking_id:
+                            data = {'success': 0, 'message': booking_id}
+                        else:
+                            cursor.execute("SELECT @last_booking_id")
+                            last_booking_id = cursor.fetchone()[0]
+                            print("booking id")
+                            print(last_booking_id)
                             cursor.close()
-                            data = {'success': 1, 'message': "Insert Success", 'last_booking_id': last_booking_id}
-                            return JsonResponse(data)
+                            cursor2 = connection.cursor()
+                            cursor2.callproc('viewFlightBooking', [last_booking_id])
+                            emp = dictfetchall(cursor2)
+                            cursor2.close()
 
-                        except Exception as e:
-                            print(e)
-                            data = {'success': 0, 'message': "Error in Data Insert"}
-                            return JsonResponse(data)
+                            cursor1 = connection.cursor()
+                            cursor1.callproc('getAllFlightBookingPassangers', [last_booking_id])
+                            passanger = dictfetchall(cursor1)
+                            emp[0]['Passangers'] = passanger
+                            cursor1.close()
+
+                            cursor3 = connection.cursor()
+                            cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                            approvers = dictfetchall(cursor3)
+                            cursor3.close()
+
+                            cursor4 = connection.cursor()
+                            cursor4.callproc('assignFlightBooking',
+                                            [flight_type, flight_type, journey_type, no_of_stops, last_booking_id,
+                                             meal_is_include, fare_type, user_id, user_type, ticket_price,100, 18,
+                                             18, 118, 1,18, 0, 0, 18, 0,0, 18,0, 0, 0,ticket_price, 0, 1,1, 18, 9, 9,"", "", 0, 0,0, 1, 1])
+                            result = dictfetchall(cursor4)
+
+                            cursor4.close()
+                            no_of_stops = int(no_of_stops)
+                            print("no of stops")
+                            print(no_of_stops)
+                            if UID2:
+                                final_stop = no_of_stops + 2
+                            else:
+                                final_stop = no_of_stops+1
+                            for x in range(final_stop):
+                                cursor5 = connection.cursor()
+                                cursor5.callproc('addFlightBookingFlights',
+                                                 [flight_name[x], flight_no[x], pnr_no[x], flight_from[x],
+                                                  flight_to[x], departure_time[x], arrival_time[x], last_booking_id,
+                                                  user_id, user_type, is_return_flight[x]])
+                                result = dictfetchall(cursor5)
+                                print("addFlightBookingFloght")
+                                print(result)
+                                cursor5.close()
+
+                            for xx in range(int(no_of_seats)):
+                                cursor26 = connection.cursor()
+                                cursor26.callproc('updateFlightPassangerTickectNo',
+                                                 [ticket_number[xx], employee_booking_id[xx], last_booking_id])
+                                result = dictfetchall(cursor26)
+                                print("addFlightBookingticket")
+                                print(result)
+                                cursor26.close()
+
+                            company = dictfetchall(cursor)
+                            print(company)
+                            if company:
+                                data = {'success': 0, 'message': company}
+                            else:
+                                print("Last Booking ID")
+                                cursor27 = connection.cursor()
+                                cursor27.callproc('viewFlightBooking', [last_booking_id])
+                                emp = dictfetchall(cursor27)
+                                cursor27.close()
+
+                                cursor11 = connection.cursor()
+                                cursor11.callproc('getAllFlightBookingPassangers', [last_booking_id])
+                                passanger = dictfetchall(cursor11)
+                                emp[0]['Passangers'] = passanger
+                                cursor11.close()
+
+                                cursor22 = connection.cursor()
+                                cursor22.callproc('getAllFlightBookingFlights', [last_booking_id])
+                                flights = dictfetchall(cursor22)
+                                cursor22.close()
+
+                                emp[0]['Flights'] = flights
+
+                                get_voucher_path = ''
+                                if client_ticket:
+                                    voucher = emp[0]
+                                    bus_pdf = Flight(voucher)
+                                    get_vou = bus_pdf.get(request)
+                                    get_voucher_path = get_vou[1]
+                                else:
+                                    get_voucher_path = ""
+
+                                add_booking_email = AddBooking_Email()
+                                if is_email == '1':
+                                    resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
+                                if is_sms == '1':
+                                    resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
+
+                                add_booking_email = Assign_Booking_Email()
+                                if is_sms:
+                                    resp1 = add_booking_email.send_client_sms(emp, "Flight")
+                                if is_email:
+                                    resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
+
+                        cursor.close()
+                        data = {'success': 1, 'message': "Insert Success", 'last_booking_id': last_booking_id}
+                        return JsonResponse(data)
+
+                    except Exception as e:
+                        print(e)
+                        data = {'success': 0, 'message': "Error in Data Insert"}
+                        return JsonResponse(data)
 
                 except Exception as e:
                     print("EXCEPTIONSNSNSNSN")

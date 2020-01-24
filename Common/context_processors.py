@@ -9,6 +9,12 @@ def global_settings(request):
         'API_BASE_URL': settings.API_BASE_URL
     }
 
+def global_hostname(request):
+    # return any necessary values
+    return {
+        'HOST_BASE_PATH': settings.HOST_BASE_PATH
+    }
+
 
 def get_access_details_by_corporate_name(request):
     if 'login_type' in request.session:

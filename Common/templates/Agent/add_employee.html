@@ -236,16 +236,16 @@
                                 {% for employee in employee %}
                                 {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
 
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth" value="{{employee.date_of_birth}}"
+                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth" value="{{employee.date_of_birth}}"
                                        placeholder="Assistant ID" required>
                                 {% else %}
 
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                                 {% endfor %}
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control date" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                             </div>
@@ -342,17 +342,17 @@
                                 <label class="col-sm-4" >Reporting Manager</label>
                                 <select name="reporting_manager" id="reporting_manager" class="form-control col-sm-8 myselect">
                                     <option value=" " >Select Reporting Manager</option>
-                                {% if employee %}
-                                {% for employe in employee %}
-                                {% for employee in employeess %}
-                                        <option value="{{employee.id}}" {% if employe.reporting_manager == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
-                                        {% endfor %}
-                                {% endfor %}
-                                {% else %}
-                                {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}</option>
-                                        {% endfor %}
-                                 {% endif %}
+                                    {% if employee %}
+                                    {% for employe in employee %}
+                                    {% for employee in employeess %}
+                                            <option value="{{employee.id}}" {% if employe.reporting_manager == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
+                                            {% endfor %}
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for employee in employees %}
+                                            <option value="{{employee.id}}">{{employee.employee_name}}</option>
+                                            {% endfor %}
+                                     {% endif %}
                                 </select>
                             </div>
 
@@ -556,9 +556,10 @@ var_url = '/api/'+'billing_entities'
        //alert(data['Employees']);
        if(data['Employees'].length != 0){
         spocs = data['Employees']
-        $('#assistant_id').append($("<option value=''>Select Employee</option>"));
+        //$('#assistant_id').append($("<option value=''>Select Employee</option>"));
          for (var i=0;i<spocs.length;i++) {
             $('#assistant_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].employee_name+"</option>"));
+            $('#reporting_manager').append($("<option value='"+spocs[i].id+"'>"+spocs[i].employee_name+"</option>"));
 
          }
        }else{
