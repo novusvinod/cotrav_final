@@ -513,7 +513,7 @@ $("#spoc_id").change(function(){
     $.ajaxSetup({
             headers:{
                 'Authorization': "Token {{request.session.agent_access_token}}",
-                'usertype': {{request.session.login_type}}
+                'usertype': 10
             }
 
         });

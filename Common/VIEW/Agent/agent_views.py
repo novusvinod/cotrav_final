@@ -340,7 +340,7 @@ def add_company(request):
             if corporate_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 corporate_id = 0
 
             payload = {'corporate_name':corporate_name,'corporate_code':corporate_code,'contact_person_name':contact_person_name,'contact_person_no':contact_person_no,
@@ -1155,7 +1155,7 @@ def add_company_group(request, id):
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
-            password = make_password("taxi123")
+            password = "taxi123"
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'group_name': group_name, 'zone_name': zone_name,'access_token_auth':access_token_auth,'name':name,
@@ -1205,7 +1205,7 @@ def add_company_subgroup(request, id):
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
-            password = make_password("taxi123")
+            password = "taxi123"
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'subgroup_name': subgroup_name, 'group_id': group_id,'name':name,
@@ -1375,7 +1375,7 @@ def add_company_group_auth(request, id):
 
             if group_id:
                 group_auth_id = group_auth_id
-                password = make_password("taxi123")
+                password = "taxi123"
 
             if group_auth_id:
                 group_auth_id = group_auth_id
@@ -1449,7 +1449,7 @@ def add_company_subgroup_auth(request, id):
 
             if subgroup_id:
                 subgroup_auth_id = subgroup_auth_id
-                password = make_password("taxi123")
+                password = "taxi123"
 
             if subgroup_auth_id:
                 subgroup_auth_id = subgroup_auth_id
@@ -1524,7 +1524,7 @@ def add_company_admins(request, id):
             if admin_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'name': name, 'email': email, 'cid': cid, 'contact_no': contact_no,
@@ -1599,7 +1599,7 @@ def add_spocs(request, id):
             if spoc_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 spoc_id =0
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
@@ -1730,7 +1730,7 @@ def add_employee(request, id):
             if employee_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 employee_id =0
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,'spoc_id':spoc_id,'core_employee_id':core_employee_id,
@@ -1845,7 +1845,7 @@ def add_agent(request,id):
             if agent_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 agent_id =0
 
             payload = {'emp_id': emp_id,'username': username,'contact_no': contact_no,'email': email,'is_radio': is_radio,'is_local': is_local,
@@ -2477,7 +2477,7 @@ def add_operator(request,id):
             if operator_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 operator_id = 0
 
             payload = {'type':type,'username':username,'password':password,'operator_name':operator_name,'operator_email':operator_email,'operator_contact':operator_contact,
@@ -2730,7 +2730,7 @@ def add_operator_driver(request,id):
             if driver_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 driver_id = 0
 
             payload = {'operator_id':operator_id,'driver_name':driver_name,'driver_contact':driver_contact,'driver_email':driver_email,'licence_no':licence_no,
@@ -3079,7 +3079,7 @@ def assign_taxi_booking(request,id):
                 taxi_act_id = conty_id['id']
 
             taxi_model_data = {'operator_name':operator_id, 'operator_email':"NA",'operator_contact':"NA",'type':tour_type, 'user_type': login_type,
-                               'user_id': user_id,'username':"NA", 'password':"NA",'is_service_tax_applicable':0}
+                               'user_id': user_id,'username':"NA", 'password':"taxi123",'is_service_tax_applicable':0}
 
             url_add_model = settings.API_BASE_URL + "add_operator"
             country_id = getDataFromAPI(login_type, access_token, url_add_model, taxi_model_data)
@@ -3772,6 +3772,7 @@ def assign_train_booking(request,id):
             assign_bus_type_id = request.POST.get('assign_bus_type_id', '')
             seat_no= request.POST.get('seat_no', '')
             portal_used = request.POST.get('portal_used', '')
+            quota_used = request.POST.get('quota_used', '')
             operator_name = request.POST.get('operator_name', '')
             operator_contact = request.POST.get('operator_contact', '')
             boarding_point = request.POST.get('boarding_point', '')
@@ -3817,7 +3818,7 @@ def assign_train_booking(request,id):
             payload = {'ticket_no':ticket_no,'pnr_no':pnr_no,'assign_bus_type_id':assign_bus_type_id,'seat_no':seat_no,'portal_used':portal_used
                 ,'operator_name':operator_name,'operator_contact':operator_contact,'boarding_point':boarding_point,'boarding_datetime':boarding_datetime,
                        'booking_id': booking_id,'user_id':user_id,'user_type':login_type,'train_name':train_name , 'ticket_price': ticket_price, 'management_fee': management_fee, 'tax_mng_amt': tax_mng_amt
-                , 'tax_on_management_fee': tax_on_management_fee,
+                , 'tax_on_management_fee': tax_on_management_fee,'quota_used':quota_used,
                        'tax_on_management_fee_percentage': tax_on_management_fee_percentage, 'sub_total': sub_total,
                        'management_fee_igst': management_fee_igst, 'management_fee_cgst': management_fee_cgst,
                        'management_fee_sgst': management_fee_sgst, 'management_fee_igst_rate': management_fee_igst_rate,
@@ -3854,6 +3855,10 @@ def assign_train_booking(request,id):
             trains = getDataFromAPI(login_type, access_token, url_train, payload)
             types = trains['Types']
 
+            url_train1 = settings.API_BASE_URL + "irctc_accounts"
+            trains1 = getDataFromAPI(login_type, access_token, url_train1, payload)
+            accounts = trains1['Accounts']
+
             payload = {}
             url = settings.API_BASE_URL + "get_cotrav_billing_entities"
             c_entity = getDataFromAPI(login_type, access_token, url, payload)
@@ -3871,7 +3876,7 @@ def assign_train_booking(request,id):
                 be_name = ""
                 be_gst = ""
 
-            return render(request, 'Agent/assign_train_booking.html',{'bookings': booking,'types':types,'c_entitys':c_entity,'be_gst':be_gst,'be_name':be_name})
+            return render(request, 'Agent/assign_train_booking.html',{'bookings': booking, 'accounts':accounts,'types':types,'c_entitys':c_entity,'be_gst':be_gst,'be_name':be_name})
 
     else:
         return HttpResponseRedirect("/agents/login")
@@ -7546,6 +7551,25 @@ def add_cotrav_billing_entities(request,id):
                 return HttpResponseRedirect("/agents/cotrav-billing-entities", {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/agents/login")
+
+
+def bill_create(request):
+    if 'agent_login_type' in request.session:
+        if id:
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            payload = {'': id}
+            url = settings.API_BASE_URL + "get_all_bills"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            operator = operator['Bill']
+
+            return render(request, 'Agent/bills.html', {'bills': operator})
+        else:
+            return render(request, 'Agent/bills.html', {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
 
 
 def getDataFromAPI(login_type, access_token, url, payload):

@@ -303,25 +303,25 @@ def add_taxi(request):
         print(last_booking_id)
         cursor.close()
 
-        cursor1 = connection.cursor()
-        cursor1.callproc('acceptTaxiBooking',[last_booking_id, user_id,user_type])
-        data = dictfetchall(cursor1)
-        cursor1.close()
-
-        cursor2 = connection.cursor()
-        cursor2.callproc('assignTaxiBooking', [vendor_booking_id, operator_id, driver_id, taxi_id, last_booking_id, user_id, user_type])
-        company = dictfetchall(cursor2)
-
-        cursor3 = connection.cursor()
-        cursor3.callproc('addTaxiInvoice',
-                        [tax_on_management_fee, tax_on_management_fee_percentage, management_fee_igst, management_fee_cgst,
-                         management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate, management_fee_sgst_rate,
-                         igst_amount, cgst_amount, sgst_amount,
-                         hours_done, allowed_hours, extra_hours, charge_hour, days, start_km, end_km, kms_done, allowed_kms,
-                         extra_kms, extra_km_rate, base_rate, extra_hr_charges,
-                         extra_km_charges, driver_allowance, total_excluding_tax, other_charges, total, sub_total,
-                         radio_rate, bb_entity, cotrav_billing_entity, last_booking_id, user_id, user_type])
-        company = dictfetchall(cursor3)
+        # cursor1 = connection.cursor()
+        # cursor1.callproc('acceptTaxiBooking',[last_booking_id, user_id,user_type])
+        # data = dictfetchall(cursor1)
+        # cursor1.close()
+        #
+        # cursor2 = connection.cursor()
+        # cursor2.callproc('assignTaxiBooking', [vendor_booking_id, operator_id, driver_id, taxi_id, last_booking_id, user_id, user_type])
+        # company = dictfetchall(cursor2)
+        #
+        # cursor3 = connection.cursor()
+        # cursor3.callproc('addTaxiInvoice',
+        #                 [tax_on_management_fee, tax_on_management_fee_percentage, management_fee_igst, management_fee_cgst,
+        #                  management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate, management_fee_sgst_rate,
+        #                  igst_amount, cgst_amount, sgst_amount,
+        #                  hours_done, allowed_hours, extra_hours, charge_hour, days, start_km, end_km, kms_done, allowed_kms,
+        #                  extra_kms, extra_km_rate, base_rate, extra_hr_charges,
+        #                  extra_km_charges, driver_allowance, total_excluding_tax, other_charges, total, sub_total,
+        #                  radio_rate, bb_entity, cotrav_billing_entity, last_booking_id, user_id, user_type])
+        # company = dictfetchall(cursor3)
     data = {'success':1, 'message':'data insert Successfully..!'}
     return JsonResponse(data)
 

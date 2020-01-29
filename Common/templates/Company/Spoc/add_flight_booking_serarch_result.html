@@ -61,15 +61,15 @@
                               <div class="col-sm-6">
                                  <div class="row">
                                   <div class="col-sm-3 ">
-                                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-                                              <input type="radio" id="option-1" class="mdl-radio__button" name="trip_type" value="1" {% if booking_datas.trip_type == '1' %} checked {%endif%} checked >
+                                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option_1">
+                                              <input type="radio" id="option_1" class="mdl-radio__button" name="trip_type" value="1" {% if booking_datas.trip_type == '1' %} checked {%endif%} checked >
                                               <span class="mdl-radio__label">One-Way</span>
                                             </label>
                                  </div>
 
                                    <div class="col-sm-3 ">
-                                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-                                              <input type="radio" id="option-2" class="mdl-radio__button" name="trip_type" value="2" {% if booking_datas.trip_type == '2' %} checked {%endif%}>
+                                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option_2">
+                                              <input type="radio" id="option_2" class="mdl-radio__button" name="trip_type" value="2" {% if booking_datas.trip_type == '2' %} checked {%endif%}>
                                               <span class="mdl-radio__label">Round-Trip</span>
                                             </label>
                                         </div>
@@ -217,7 +217,7 @@
                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  {{flight.A_TIME}} <br>
                                                         <p class="font_txt1">{{flight.F_CLASS}}</p></td>
 
-                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.NET_FARE}} <br>
+                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.AMT}} <br>
                                                         <p class="font_txt1">{{flight.OI}}</p></td>
 
 
@@ -283,7 +283,7 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.NET_FARE}} <br><p class="font_txt1">Partially Refundable</p></td>
+                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
                                                     <td></td> <td></td> <td></td> <td></td><td></td><td></td>
 
                                                     </tr>
@@ -534,6 +534,12 @@
 
                   <div class="col-sm-12">
     {% if flights %}
+
+
+
+
+
+
                       <div class="profile-sidebar">
                                    <div class="card card-topline-aqua">
                                     <div class="card-body height-9">
@@ -543,48 +549,22 @@
 
                                         </div>
                                         <ul class="list-group list-group-unbordered">
+
+                                            {% for name,code,image in uniq_flights %}
+
                                             <li class="list-group-item">
+                                                    <img style='background-position: {{image}}' class="fltLogo"> <b> {{name}}</b> <a class="pull-right"> <div class="col-lg-12">
+                                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+                                                      <input type="checkbox" name="sport1" value="{{code}}" class="mdl-switch__input flight_filter_class">
 
-<b>Spice Jet</b> <a class="pull-right"> <div class="col-lg-12">
-                                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
-                                              <input type="checkbox" id="spice_jet_id" class="mdl-switch__input">
-
-                                            </label>
-                                        </div></a>
-                                            </li>
-                                             <li class="list-group-item">
-<b>GoAir</b> <a class="pull-right">   <div class="col-lg-12">
-                                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="go_air_id">
-                                              <input type="checkbox" id="go_air_id" class="mdl-switch__input">
-
-                                            </label>
-                                        </div></a>
-                                            </li>
-                                             <li class="list-group-item">
-<b>IndiGo</b> <a class="pull-right">   <div class="col-lg-12">
-                                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="indigo_id">
-                                              <input type="checkbox" id="indigo_id" class="mdl-switch__input">
-
-                                            </label>
-                                        </div></a>
-                                            </li>
-                                             <li class="list-group-item">
-<b>Air India</b> <a class="pull-right"> <div class="col-lg-12">
-                                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="air_india_id">
-                                              <input type="checkbox" id="air_india_id" class="mdl-switch__input">
-
-                                            </label>
-                                        </div></a>
+                                                    </label>
+                                                </div></a>
                                             </li>
 
-<li class="list-group-item">
-<b>Vistara</b> <a class="pull-right"> <div class="col-lg-12">
-                                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="vistara_id">
-                                              <input type="checkbox" id="vistara_id" class="mdl-switch__input">
+                                             {% endfor %}
 
-                                            </label>
-                                        </div></a>
-                                            </li>
+
+
                                         </ul>
                                         <!-- END SIDEBAR USER TITLE -->
 
@@ -685,7 +665,7 @@
 
         {% for flight in flights %}
 
-              <div class="row" id="flight_filter">
+              <div class="row {{flight.F_CODE}}" id="flight_filter">
                        <div class="col-sm-12" id="hide_all_details">
                                  <div class="card card-topline-aqua ">
 
@@ -697,6 +677,12 @@
                                            <div class="table-responsive">
                                         <form method="post" action="/Corporate/Spoc/add-flight-booking-self-conformation/{{user.id}}">
                                             <input type="hidden" name="no_of_seats" value="{{no_of_seats}}">
+{{flights}}
+                                            {% for deal in flights.Deal %}
+                                            {% if deal.TRIP == 'I' %}
+                                                <input type="hidden" name="flight_class_is_international" value="{{deal.TRIP}}">
+                                            {% endif %}
+                                            {% endfor %}
                                         <table class="table display product-overview mb-30 table_txt_align" >
                                              <thead>
                                                     {% if forloop.counter == 1 %}
@@ -845,6 +831,7 @@ The above Fare Rules are just a guideline for your convenience and is subject to
               </div>
             </div>
             </div>
+            </div>
 
 
 {% else %}
@@ -879,6 +866,34 @@ document.getElementById("return_date").value = '';
 
 
 $(document).ready(function(){
+$("#return_date").hide();
+$('#option_2').change(function() {
+        if(this.checked) {
+            $("#return_date").show();
+        }
+    });
+
+    $('#option_1').change(function() {
+        if(this.checked) {
+            $("#return_date").hide();
+        }
+
+    });
+
+$(".flight_filter_class").click(function(){
+
+$.each($("input[name='sport1']:checked"), function(){
+    var row_show = $(this).val();
+    $('.'+row_show).show();
+});
+$.each($("input[name='sport1']:not(:checked)"), function(){
+    var row_show = $(this).val();
+    $('.'+row_show).hide();
+});
+
+
+});
+
         $('input[type=radio][name=onword]').change(function(){
 
             selected_radio = $('input[name="onword"]:checked');
@@ -991,74 +1006,6 @@ $(document).ready(function(){
 
             bt.disabled = false;
 
-
-        });
-
-        $('#spice_jet_id').click(function(){
-
-            if($("#spice_jet_id").prop("checked") == true){
-                var abc = "Spice Jet"
-                var data = abc.toLowerCase();
-
-                 $("#flight_filter #hide_all_details").filter(function() {
-                      $(this).toggle($(this).text().toLowerCase().indexOf(data) > -1)
-                    });
-            }else{
-                $("#flight_filter #hide_all_details").show();
-            }
-
-            });
-
-$('#go_air_id').click(function(){
-            if($("#go_air_id").prop("checked") == true){
-                var abc = "GoAir"
-                var data = abc.toLowerCase();
-
-                 $("#flight_filter #hide_all_details").filter(function() {
-                      $(this).toggle($(this).text().toLowerCase().indexOf(data) > -1)
-                    });
-            }else{
-                $("#flight_filter #hide_all_details").show();
-            }
- });
-
-$('#indigo_id').click(function(){
-            if($("#indigo_id").prop("checked") == true){
-                var abc = "IndiGo"
-                var data = abc.toLowerCase();
-
-                 $("#flight_filter #hide_all_details").filter(function() {
-                      $(this).toggle($(this).text().toLowerCase().indexOf(data) > -1)
-                    });
-            }else{
-                $("#flight_filter #hide_all_details").show();
-            }
- });
-
-$('#air_india_id').click(function(){
-            if($("#air_india_id").prop("checked") == true){
-                var abc = "Air India"
-                var data = abc.toLowerCase();
-
-                 $("#flight_filter #hide_all_details").filter(function() {
-                      $(this).toggle($(this).text().toLowerCase().indexOf(data) > -1)
-                    });
-            }else{
-                $("#flight_filter #hide_all_details").show();
-            }
- });
-
-$('#vistara_id').click(function(){
-            if($("#vistara_id").prop("checked") == true){
-                var abc = "Vistara"
-                var data = abc.toLowerCase();
-
-                 $("#flight_filter #hide_all_details").filter(function() {
-                      $(this).toggle($(this).text().toLowerCase().indexOf(data) > -1)
-                    });
-            }else{
-                $("#flight_filter #hide_all_details").show();
-            }
 
         });
 

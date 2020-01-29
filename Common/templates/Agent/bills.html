@@ -1,0 +1,130 @@
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
+
+
+{% if user %}
+<!-- start page content -->
+
+{% include 'cotrav_alert_message.html' %}
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ALL BILL'S</header>
+                          <div class="row p-b-20">
+                            <div class="col-md-6 col-sm-6 col-6">
+                                <div class="btn-group">
+                                    <a class="btn btn-info" href="#" data-toggle="modal"
+                                       data-target="#model_add_new_entities"> Add New Offline Bill  <i class="fa fa-plus"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+                    <form action="/agents/billing/generate" id="taxiBilling" method="post" >
+                    <input type="hidden" name="current_url" id="current_url" value="{{ request.get_full_path }}">
+                    <div class="card-body ">
+
+                        <div class="col-sm-5">
+                                        <div class="btn-group">
+
+                                            <input type="submit" class="btn btn-success pull-right" name="generate" value="Generate Bill" />
+                                        </div>
+                        </div>
+
+
+                        <div class="table-scrollable table-bordered">
+                            <table id="example1" class="display full-width table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Booking ID</th>
+                                    <th>Service Type</th>
+                                    <th>Company Name</th>
+                                    <th>Spoc Name</th>
+                                    <th>Booking Entity</th>
+                                    <th>Cotrav Entity</th>
+                                    <th>Pickup Location</th>
+                                    <th>Drop Location</th>
+                                    <th>Booking Date/Time</th>
+                                    <th>Management Fee</th>
+                                    <th>IGS</th>
+                                    <th>CGS</th>
+                                    <th>SGS</th>
+                                    <th>Total</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for be in bills %}
+                                <tr>
+                                    <td><input class="bill_checkbox" class="bill_checkbox" type="checkbox" name="booking_ids" value="{{ booking.id }}" data-id1 = "{{ booking.corporate_id}}" data-id2 = "{{ booking.invoice_id}}" data-id3 = "{{ booking.reference_no}}"  ></td>
+                                    <td>{{ be.reference_no }}</td>
+                                    <td>{{ be.service_types }}</td>
+                                    <td>{{ be.corporate_name }}</td>
+                                    <td>{{ be.spoc_name }}</td>
+                                    <td>{{ be.billing_entity|default:'' }}</td>
+                                    <td>{{ be.cotrav_entity|default:'' }}</td>
+                                    <td>{{ be.pickup_location|default:'' }}</td>
+                                    <td>{{ be.drop_location|default:'' }}</td>
+                                    <td>{{ be.booking_datetime|default:'' }}</td>
+                                    <td>{{ be.management_fee|default:'' }}</td>
+                                    <td>{{ be.management_fee_igst|default:'' }}</td>
+                                    <td>{{ be.management_fee_cgst|default:'' }}</td>
+                                    <td>{{ be.management_fee_sgst|default:'' }}</td>
+                                    <td>{{ be.sub_total|default:'' }}</td>
+
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+<script type="text/javascript">
+$("input:checkbox.bill_checkbox").click(function() {
+if(!$(this).is(":checked"))
+{
+    current_id  = $(this).val();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+}
+
+if($(this).is(":checked"))
+{
+    val_corporate_ids = parseInt($(this).attr("data-id1") );
+    val_invoice_ids = parseInt($(this).attr("data-id2") );
+    $('#taxiBilling').prepend('<input type="hidden" name="corporate_ids" id="'+$(this).val()+'" value="'+ val_corporate_ids +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="invoice_ids" id="'+$(this).val()+'" value="'+ val_invoice_ids +'" />');
+}
+
+
+    });
+
+</script>
+
+{% endblock %}
+
+

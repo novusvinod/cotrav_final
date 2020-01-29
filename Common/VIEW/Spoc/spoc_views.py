@@ -1091,17 +1091,49 @@ def add_flight_booking_self(request,id):
                 airports = data11['Airports']
                 flight1 = ""
                 flight2 = ""
+                unique_flights1 = ""
+                unique_flights2 = ""
                 print("trip type")
                 print(trip_type)
                 if trip_type == '2':
                     flight1 = flight['FLIGHTOW']
                     flight2 = flight['FLIGHTRT']
-                    print("in trip round")
+                    uniq_flights = ''
+                    uniq_fl = []
+                    uniq_code = []
+                    uniq_img = []
+                    uniq_flights2 = ''
+                    uniq_fl2 = []
+                    uniq_code2 = []
+                    uniq_img2 = []
+                    for fl_name in flight1:
+                        if fl_name['F_NAME'] not in uniq_flights:
+                            uniq_fl.append(fl_name['F_NAME'])
+                            uniq_code.append(fl_name['F_CODE'])
+                            uniq_img.append(fl_name['F_LOGO'])
+                    for fl_name2 in flight2:
+                        if fl_name2['F_NAME'] not in uniq_flights2:
+                            uniq_fl2.append(fl_name2['F_NAME'])
+                            uniq_code2.append(fl_name2['F_CODE'])
+                            uniq_img2.append(fl_name2['F_LOGO'])
+
                 else:
                     flight1 = flight['FLIGHT']
+                    uniq_fl = []
+                    uniq_code = []
+                    uniq_img = []
+                    uniq_flights = ''
+                    for fl_name in flight1:
+                        if fl_name['F_NAME'] not in uniq_flights:
+                            uniq_fl.append(fl_name['F_NAME'])
+                            uniq_code.append(fl_name['F_CODE'])
+                            uniq_img.append(fl_name['F_LOGO'])
+
+                    uniq_flights = set(zip(uniq_fl,uniq_code,uniq_img))
                     print("in trip 1")
 
-                return render(request, 'Company/Spoc/add_flight_booking_serarch_result.html', {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight1, 'flights2': flight2, 'airports':airports,'no_of_seats':no_of_seats})
+                return render(request, 'Company/Spoc/add_flight_booking_serarch_result.html', {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight1, 'flights2': flight2,
+                'airports':airports,'no_of_seats':no_of_seats, 'uniq_flights':uniq_flights,'unique_flights2':unique_flights2})
             else:
                 url_access = settings.API_BASE_URL + "get_airports"
                 data11 = getDataFromAPI(login_type, access_token, url_access, payload)

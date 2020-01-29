@@ -5,7 +5,6 @@
 {% for Dashboard in dataDashboard %}
 
 
-
 {% if user %}
 <!-- start page content -->
  {% include 'cotrav_alert_message.html' %}
@@ -335,6 +334,16 @@
                                 <div class="card-body " >
                                     <div class="row">
 
+                                          <div class="tools" id="result-graph-container-4">
+
+                                              <b>From Date: </b> <input type = "date" id="from_date" name="from_datetime" >
+
+                                              <b>To Date: </b><input   type = "date" id="to_date" name="to_datetime" >
+
+
+
+                                        </div>
+
 
                                         <div id="table-data" >
 
@@ -370,7 +379,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr id="row_hotel">
 
       <th scope="row">Hotel</th>
       <td></td>
@@ -385,8 +394,9 @@
         <td></td>
         <td></td>
       </td>
+
     </tr>
-    <tr>
+    <tr id="row_bus">
 
       <th scope="row">Bus</th>
       <td></td>
@@ -402,7 +412,7 @@
         <td></td>
       </td>
     </tr>
-    <tr>
+    <tr id="row_train">
 
       <th scope="row">Train</th>
       <td></td>
@@ -418,7 +428,7 @@
         <td></td>
       </td>
     </tr>
-  <tr>
+  <tr id="row_flight">
 
       <th scope="row">Flight</th>
       <td></td>
@@ -434,7 +444,7 @@
         <td></td>
       </td>
     </tr>
-  <tr>
+  <tr id="row_taxi">
 
       <th scope="row">Taxi</th>
       <td></td>
@@ -815,6 +825,18 @@ $.post(var_url,{'month':month,'year':year},
 
 <script>
 
+function getDate(){
+
+alert();
+    var today = new Date();
+
+document.getElementById("to_date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
+
+}
+
+
+
 function callChartByCity(){
 
  var serveType = $("#serveType :selected").val();
@@ -1034,25 +1056,80 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
 
      };
 
-        title_text =' Sales Summary'
+       // title_text =' Sales Summary For '+ MONTHS[mnt] + '-' + year + '' ;
 
-          var ctx22 = document.getElementById("graph-by-city").getContext("2d");
+       title_text ='Top Four City By Sales';
+
+         var ctx22 = document.getElementById("graph-by-city").getContext("2d");
+
          window.myBar22 = new Chart(ctx22, {
-             type: 'bar',
+            type: 'bar',
+
              data: barChartData22,
              options: {
+
+             maintainAspectRatio: true,
+
+             "animation": {
+                            "duration": 1,
+                            "onComplete": function() {
+
+
+                                                        var chartInstance = this.chart,
+                                                        ctx = chartInstance.ctx;
+
+                                                        var height = chartInstance.controller.boxes[0].bottom;
+
+                                                        //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                                        ctx.font = "10px Georgia";
+                                                        ctx.textAlign = 'center';
+                                                        ctx.textBaseline = 'bottom';
+                                                        //ctx.rotate(Math.PI*2/(i*6));
+
+                            this.data.datasets.forEach(function(dataset, i) {
+                                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                                              city_index = 0;
+
+                                                              meta.data.forEach(function(bar, index) {
+                                                                var data = dataset.data[index];
+
+                                                                //var lbl = data.datasets[tooltipItem.index].city_data;
+                                                                var lbl = dataset.city_data;
+                                                                console.log("city dataset issss");
+                                                                console.log(lbl);
+                                                                var lbl_cityname = lbl[city_index];
+                                                                console.log("city name isss");
+                                                                console.log(lbl_cityname);
+
+                                                                //ctx.fillText( lbl_cityname , bar._model.x, height - ((height - bar._model.y) / 2));
+                                                               //ctx.fillText(lbl_cityname, bar._model.x + 15, bar._model.y);
+
+
+
+                                                              });
+                                                            });
+                                                          }
+                                                        },
+                                                        legend: {
+                                                           position: 'top',
+                                                          "display": false
+                                                        },
+                                                        tooltips: {
+                                                          "enabled": true
+                                                        },
+
                 legend: {
             display: false,
-
         },
                 scales: {
-                            yAxes: [{
-                        scaleLabel: {
+                           yAxes: [{
+             scaleLabel: {
                         display: true,
-                        labelString: 'Sales  In  Lacs'
+                        labelString: 'Total Sales In Lacs'
+                                    },
 
-                                    }
-                                    }]
+
+		}]
                         },
                  tooltips: {
             callbacks: {
@@ -1315,6 +1392,41 @@ function ChartByCityForMonth(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,
              type: 'bar',
              data: barChartData22,
              options: {
+
+              "animation": {
+                            "duration": 1,
+                            "onComplete": function() {
+                                                        var chartInstance = this.chart,
+                                                        ctx = chartInstance.ctx;
+
+                                                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                                        ctx.textAlign = 'center';
+                                                        ctx.textBaseline = 'bottom';
+
+                            this.data.datasets.forEach(function(dataset, i) {
+                                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                                              meta.data.forEach(function(bar, index) {
+                                                                var data = dataset.data[index];
+                                                                Math.round(Number(data)) == 0 ?
+
+                                                                ctx.fillText('', bar._model.x, bar._model.y - 10) :
+
+                                                                ctx.fillText(data, bar._model.x, bar._model.y - 10);
+
+                                                              });
+                                                            });
+                                                          }
+                                                        },
+                                                        legend: {
+                                                           position: 'top',
+                                                          "display": false
+                                                        },
+                                                        tooltips: {
+                                                          "enabled": true
+                                                        },
+
+
+
                 scales: {
                             yAxes: [{
                         scaleLabel: {
@@ -1789,18 +1901,53 @@ ar = slice2(MONTHS,6,mnth);
 
              options: {
 
-                suggestedMin:0,
-                suggestedMax:15,
+             suggestedMin:0,
+             suggestedMax:15,
+
+              "animation": {
+                            "duration": 1,
+                            "onComplete": function() {
+                                                        var chartInstance = this.chart,
+                                                        ctx = chartInstance.ctx;
+
+                                                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                                        ctx.textAlign = 'center';
+                                                        ctx.textBaseline = 'bottom';
+
+                            this.data.datasets.forEach(function(dataset, i) {
+                                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                                              meta.data.forEach(function(bar, index) {
+                                                                var data = dataset.data[index];
+                                                                Math.round(Number(data)) == 0 ?
+
+                                                                ctx.fillText('', bar._model.x, bar._model.y - 10) :
+
+                                                                ctx.fillText(data, bar._model.x, bar._model.y - 10);
+
+                                                              });
+                                                            });
+                                                          }
+                                                        },
+                                                        legend: {
+                                                           position: 'top',
+                                                          "display": false
+                                                        },
+                                                        tooltips: {
+                                                          "enabled": true
+                                                        },
 
                 scales: {
                             yAxes: [{
 
+                        scaleLabel: {
+                        display: true,
+                        labelString: 'Total Sales In Lacs'
+                                    }
+
                                     }]
                         },
                  responsive: true,
-                 legend: {
-                     position: 'top',
-                 },
+
                  title: {
                      display: true,
                      text: 'Six Months Sales Summary'
@@ -1834,7 +1981,24 @@ ar = slice2(MONTHS,6,mnth);
 
     callChartByCity();
 
-    callTaxAmountTable();
+     var today_date = new Date();
+
+ var six_month_back = moment().subtract(180, 'days').calendar();
+
+ var date2 = new Date(six_month_back);
+
+today_date_value =    today_date.getFullYear()  + '-' + ('0' + (today_date.getMonth() + 1)).slice(-2) + '-' + ('0' + today_date.getDate()).slice(-2) ;
+
+date3 = date2.getFullYear()  + '-' + ('0' + (date2.getMonth() + 1)).slice(-2) + '-' + ('0' + date2.getDate()).slice(-2) ;
+
+ var from_date = date3;
+
+ var to_date = today_date_value;
+
+document.getElementById("to_date").defaultValue = to_date;
+document.getElementById("from_date").defaultValue = from_date;
+
+    callTaxAmountTable(from_date,to_date);
 
 
 
@@ -2214,8 +2378,40 @@ ar = slice2(MONTHS,6,mnth);
          window.myBar3 = new Chart(ctx3, {
              type: 'bar',
              data: barChartData3,
-
              options: {
+              "animation": {
+                            "duration": 1,
+                            "onComplete": function() {
+                                                        var chartInstance = this.chart,
+                                                        ctx = chartInstance.ctx;
+
+                                                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                                        ctx.textAlign = 'center';
+                                                        ctx.textBaseline = 'bottom';
+
+                            this.data.datasets.forEach(function(dataset, i) {
+                                                              var meta = chartInstance.controller.getDatasetMeta(i);
+                                                              meta.data.forEach(function(bar, index) {
+                                                                var data = dataset.data[index];
+                                                                Math.round(Number(data)) == 0 ?
+
+                                                                ctx.fillText('', bar._model.x, bar._model.y - 10) :
+
+                                                                ctx.fillText(data, bar._model.x, bar._model.y - 10);
+
+                                                              });
+                                                            });
+                                                          }
+                                                        },
+                                                        legend: {
+                                                          "display": false
+                                                        },
+                                                        tooltips: {
+                                                          "enabled": true
+                                                        },
+
+
+
                 scales: {
                             yAxes: [{
                         scaleLabel: {
@@ -2376,7 +2572,13 @@ $.post(var_url,{'month':month,'year':year},
                                                               var meta = chartInstance.controller.getDatasetMeta(i);
                                                               meta.data.forEach(function(bar, index) {
                                                                 var data = dataset.data[index];
-                                                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+
+                                                                Math.round(Number(data)) == 0 ?
+
+                                                                ctx.fillText('', bar._model.x, bar._model.y - 10) :
+
+                                                                ctx.fillText(data, bar._model.x, bar._model.y - 10);
+
                                                               });
                                                             });
                                                           }
@@ -2391,15 +2593,15 @@ $.post(var_url,{'month':month,'year':year},
 
                 scales: {
                           yAxes: [{
+                           scaleLabel: {
+                        display: true,
+                        labelString: 'Total Sales In Lacs'
+                                    },
                             display: true,
                             gridLines: {
                               display: true
                             },
-                            ticks: {
-                              max: Math.max(...data.datasets[0].data) + 10,
-                              display: false,
-                              beginAtZero: true
-                            }
+
                           }],
                           xAxes: [{
                             gridLines: {
@@ -2430,13 +2632,68 @@ $.post(var_url,{'month':month,'year':year},
 
 <script>
 
-    function callTaxAmountTable(){
+$('#from_date').change(TaxAmountTable);
 
- //var month = $("#month3 :selected").val();
- //var year = $("#year3 :selected").val();
+$('#to_date').change(TaxAmountTable);
 
-var from_date = "1/1/2019";
-var to_date = "1/2/2020";
+function nullCheck(val)
+{
+     if(typeof val === 'undefined') {
+                    val = 0;
+                    } else if(val === null){
+                    val = 0;
+                    }
+     return val;
+
+}
+
+function TaxAmountTable()
+{
+
+var x = document.getElementById("from_date");
+var xx = document.getElementById("to_date");
+
+var from_date = x.value;
+var to_date = xx.value;
+
+// var from_date = $("#from_date :selected").val();
+// var to_date = $("#to_date :selected").val();
+
+var today_date = new Date();
+
+ var six_month_back = from_date;
+
+today_date_value = ('0' + (today_date.getMonth() + 1)).slice(-2) + '/' + ('0' + today_date.getDate()).slice(-2) + '/' + today_date.getFullYear()  ;
+
+ var f_date = from_date;
+
+ var t_date = to_date;
+
+ console.log("call datesssssssssss");
+ console.log(f_date);
+ console.log(today_date_value);
+
+
+callTaxAmountTable(f_date,t_date);
+
+}
+
+function callTaxAmountTable(frm_date,too_date){
+
+
+ var today_date = new Date();
+
+ var six_month_back = moment().subtract(180, 'days').calendar();
+
+today_date_value = today_date.getFullYear() + '/' + ('0' + (today_date.getMonth() + 1)).slice(-2) + '/' + ('0' + today_date.getDate()).slice(-2);
+
+console.log('date isss');
+console.log(today_date_value);
+console.log(six_month_back);
+
+ var from_date = frm_date;
+
+ var to_date = too_date;
 
  var_url = '/api/'+'dashboard_taxable_amount_table'
     $.ajaxSetup({
@@ -2451,92 +2708,128 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
       function(data)
       {
 
-         for (k=0;k<data['Sales'].length;k++)
+        for (k=0;k<data['Tax'].length;k++)
         {
+            console.log("tax amount print");
+            console.log(k);
+            console.log(data['Tax'][k][0].igst);
+            console.log(data['Tax'][k][0].cgst);
+            console.log(data['Tax'][k][0].sgst);
+
+            var pre_tax_amt = 0;
+            var igst_amt = 0;
+            var cgst_amt = 0;
+            var sgst_amt = 0;
+            var others_amt = 0;
+            var total_amt = 0;
+            var paid_amt = 0;
+            var pending_amt = 0;
+            var partial_paid_amt = 0;
+
 
 
             switch(k){
 
             case 0:
 
+                pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
+                igst_amt = nullCheck(data['Tax'][k][0].igst);
+                cgst_amt = nullCheck(data['Tax'][k][0].cgst);
+                sgst_amt = nullCheck(data['Tax'][k][0].sgst);
+                others_amt = nullCheck(data['Tax'][k][0].other_charge);
+                total_amt = nullCheck(data['Tax'][k][0].total);
 
+
+               table_row_str = '<th scope="row">Taxi</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
+                '<td>' + others_amt + '</td><td>' + total_amt + '</td><td><td>' + paid_amt + '</td><td>' + pending_amt + '</td><td>' + partial_paid_amt + '</td></td>';
+
+
+                $('#row_taxi').html(table_row_str);
 
                 break;
 
             case 1:
-            for (i=0;i<data['Sales'][1].length;i++)
-            {
 
-            pre_tax_amount = data['Sales'][1][i].pre_tax_amount;
-            igst = data['Sales'][1][i].igst;
-            cgst = data['Sales'][1][i].cgst;
-            sgst = data['Sales'][1][i].sgst;
+                pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
+                igst_amt = nullCheck(data['Tax'][k][0].igst);
+                cgst_amt = nullCheck(data['Tax'][k][0].cgst);
+                sgst_amt = nullCheck(data['Tax'][k][0].sgst);
+                others_amt = nullCheck(data['Tax'][k][0].other_charge);
+                total_amt = nullCheck(data['Tax'][k][0].total);
 
 
-            }
-            console.log("bus data");
-            console.log(pre_tax_amount);
-            console.log(igst);
-            console.log(cgst);
-            console.log(sgst);
+
+                table_row_str = '<th scope="row">Bus</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
+                '<td>' + others_amt + '</td><td>' + total_amt + '</td><td><td>' + paid_amt + '</td><td>' + pending_amt + '</td><td>' + partial_paid_amt + '</td></td>';
+
+                $('#row_bus').html(table_row_str);
 
                 break;
 
             case 2:
 
-            for (i=0;i<data['Sales'][2].length;i++)
-            {
-
-            pre_tax_amount = data['Sales'][2][i].pre_tax_amount;
-            igst = data['Sales'][2][i].igst;
-            cgst = data['Sales'][2][i].cgst;
-            sgst = data['Sales'][2][i].sgst;
-
-
-            }
+                pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
+                igst_amt = nullCheck(data['Tax'][k][0].igst);
+                cgst_amt = nullCheck(data['Tax'][k][0].cgst);
+                sgst_amt = nullCheck(data['Tax'][k][0].sgst);
+                others_amt = nullCheck(data['Tax'][k][0].other_charge);
+                total_amt = nullCheck(data['Tax'][k][0].total);
 
 
+
+               table_row_str = '<th scope="row">Train</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
+                '<td>' + others_amt + '</td><td>' + total_amt + '</td><td><td>' + paid_amt + '</td><td>' + pending_amt + '</td><td>' + partial_paid_amt + '</td></td>';
+
+                $('#row_train').html(table_row_str);
 
 
                 break;
 
             case 3:
 
-            for (i=0;i<data['Sales'][3].length;i++)
-            {
+                pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
+                igst_amt = nullCheck(data['Tax'][k][0].igst);
+                cgst_amt = nullCheck(data['Tax'][k][0].cgst);
+                sgst_amt = nullCheck(data['Tax'][k][0].sgst);
+                others_amt = nullCheck(data['Tax'][k][0].other_charge);
+                total_amt = nullCheck(data['Tax'][k][0].total);
 
-            pre_tax_amount = data['Sales'][3][i].pre_tax_amount;
-            igst = data['Sales'][3][i].igst;
-            cgst = data['Sales'][3][i].cgst;
-            sgst = data['Sales'][3][i].sgst;
 
 
-            }
+               table_row_str = '<th scope="row">Flight</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
+                '<td>' + others_amt + '</td><td>' + total_amt + '</td><td><td>' + paid_amt + '</td><td>' + pending_amt + '</td><td>' + partial_paid_amt + '</td></td>';
+
+                $('#row_flight').html(table_row_str);
 
 
                 break;
 
             case 4:
 
-            for (i=0;i<data['Sales'][4].length;i++)
-            {
+                pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
+                igst_amt = nullCheck(data['Tax'][k][0].igst);
+                cgst_amt = nullCheck(data['Tax'][k][0].cgst);
+                sgst_amt = nullCheck(data['Tax'][k][0].sgst);
+                others_amt = nullCheck(data['Tax'][k][0].other_charge);
+                total_amt = nullCheck(data['Tax'][k][0].total);
 
-            pre_tax_amount = data['Sales'][4][i].pre_tax_amount;
-            igst = data['Sales'][4][i].igst;
-            cgst = data['Sales'][4][i].cgst;
-            sgst = data['Sales'][4][i].sgst;
 
 
-            }
+
+               table_row_str = '<th scope="row">Hotel</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
+                '<td>' + others_amt + '</td><td>' + total_amt + '</td><td><td>' + paid_amt + '</td><td>' + pending_amt + '</td><td>' + partial_paid_amt + '</td></td>';
+
+                $('#row_hotel').html(table_row_str);
 
 
                 break;
 
                     }
 
-        }
+
 
         }
+
 
 
        });

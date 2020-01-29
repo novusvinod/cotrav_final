@@ -10,14 +10,23 @@ def approver_2_taxi_bookings(request):
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
         booking_type = request.POST.get('booking_type', '')
-
+        page_no = request.POST.get('page_no', '')
+        limit_from = 0
+        limit_to = 0
+        print(page_no)
+        if page_no:
+            limit_from = (int(page_no) - 1) * 10
+            limit_to = 10
+        else:
+            limit_from = 0
+            limit_to = 2147483647
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllApprover_2TaxiBookings', [approver_2_id,booking_type])
+                    cursor.callproc('getAllApprover_2TaxiBookings', [approver_2_id,booking_type,limit_from,limit_to])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
@@ -116,14 +125,23 @@ def approver_2_bus_bookings(request):
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
         booking_type = request.POST.get('booking_type', '')
-
+        page_no = request.POST.get('page_no', '')
+        limit_from = 0
+        limit_to = 0
+        print(page_no)
+        if page_no:
+            limit_from = (int(page_no) - 1) * 10
+            limit_to = 10
+        else:
+            limit_from = 0
+            limit_to = 2147483647
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllApprover_2BusBookings', [approver_2_id,booking_type])
+                    cursor.callproc('getAllApprover_2BusBookings', [approver_2_id,booking_type,limit_from,limit_to])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
@@ -222,14 +240,23 @@ def approver_2_train_bookings(request):
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
         booking_type = request.POST.get('booking_type', '')
-
+        page_no = request.POST.get('page_no', '')
+        limit_from = 0
+        limit_to = 0
+        print(page_no)
+        if page_no:
+            limit_from = (int(page_no) - 1) * 10
+            limit_to = 10
+        else:
+            limit_from = 0
+            limit_to = 2147483647
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllApprover_2TrainBookings', [approver_2_id,booking_type])
+                    cursor.callproc('getAllApprover_2TrainBookings', [approver_2_id,booking_type,limit_from,limit_to])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
@@ -331,14 +358,23 @@ def approver_2_hotel_bookings(request):
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
         booking_type = request.POST.get('booking_type', '')
-
+        page_no = request.POST.get('page_no', '')
+        limit_from = 0
+        limit_to = 0
+        print(page_no)
+        if page_no:
+            limit_from = (int(page_no) - 1) * 10
+            limit_to = 10
+        else:
+            limit_from = 0
+            limit_to = 2147483647
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllApprover_2HotelBookings', [approver_2_id,booking_type])
+                    cursor.callproc('getAllApprover_2HotelBookings', [approver_2_id,booking_type,limit_from,limit_to])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:
@@ -438,14 +474,23 @@ def approver_2_flight_bookings(request):
         approver_2_id = request.POST.get('approver_2_id', '')
         user = {}
         booking_type = request.POST.get('booking_type', '')
-
+        page_no = request.POST.get('page_no', '')
+        limit_from = 0
+        limit_to = 0
+        print(page_no)
+        if page_no:
+            limit_from = (int(page_no) - 1) * 10
+            limit_to = 10
+        else:
+            limit_from = 0
+            limit_to = 2147483647
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = getUserinfoFromAccessToken(user_token[1], user_type)
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllApprover_2FlightBookings', [approver_2_id,booking_type])
+                    cursor.callproc('getAllApprover_2FlightBookings', [approver_2_id,booking_type,limit_from,limit_to])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     for e in emp:

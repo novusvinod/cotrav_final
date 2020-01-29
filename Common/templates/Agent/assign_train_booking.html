@@ -162,6 +162,33 @@
 					                  </div>
 						            </div>
 
+						  <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                <select name="portal_used" class="mdl-textfield__input js-select2" required>
+                                           {% for account in accounts %}
+                                         <option value="{{account.id}}">{{account.username}}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Account Used*</label>
+
+					                  </div>
+						 </div>
+
+						 <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
+					                <select name="quota_used" class="mdl-textfield__input js-select2" required>
+                                         <option value="General">General</option>
+                                         <option value="Tatkal">Tatkal</option>
+                                         <option value="Premium Tatkal">Premium Tatkal</option>
+                                         <option value="Ladies">Ladies</option>
+                                         <option value="Handicap">Handicap</option>
+                                    </select>
+
+                                      <label class = "mdl-textfield__label">Quota</label>
+
+					                  </div>
+						 </div>
 
                          <div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
@@ -201,17 +228,12 @@
 						            </div>
 
 
-                         <div class="col-lg-2 p-t-20" >
-						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type="text" name="portal_used"  >
-					                     <label class = "mdl-textfield__label">Portal Used</label>
-					                  </div>
-						            </div>
+
 
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" name="boarding_point" type="text" value="{{ booking.boarding_point }}" >
+					                     <input class = "mdl-textfield__input" name="boarding_point" type="text" value="{{ booking.boarding_point|default:'' }}" >
 					                     <label class = "mdl-textfield__label">Boarding Point</label>
 					                  </div>
 						            </div>

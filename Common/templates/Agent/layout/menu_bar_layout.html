@@ -224,6 +224,33 @@
                         </li>
 						{% endif %}
 
+						{% if user.is_super_admin == 1 %}
+						<li class="mega-menu-dropdown ">
+                            <a href="#" class="dropdown-toggle"> <i class="material-icons">description</i> Billing
+ 								<i class="fa fa-angle-down"></i>
+                                <span class="arrow "></span>
+                            </a>
+								<ul class="dropdown-menu" style="min-width: 200px;">
+									<li>
+										<div class="mega-menu-content">
+											<div class="row">
+												<div class="col-md-12">
+													<ul class="mega-menu-submenu">
+														<li><a href="/agents/bill-create"><i class="fa fa-list" aria-hidden="true"></i> Create/Generate Bills</a></li>
+														<li><a href="/agents/bill-nontax-invoice"><i class="fa fa-hotel" aria-hidden="true"></i> Non-Taxable Invoice Status</a></li>
+														<li><a href="/agents/bill-tax-invoice"><i class="fa fa-drivers-license-o " aria-hidden="true"></i> Payment Status</a></li>
+														<li><a href="/agents/bill-offline"><i class="fa fa-drivers-license-o " aria-hidden="true"></i> Offline Bills</a></li>
+														<li><a href="/agents/bill-report"><i class="fa fa-drivers-license-o " aria-hidden="true"></i> Reports</a></li>
+
+													</ul>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+                        </li>
+						{% endif %}
+
 
                     </ul>
                 </div>

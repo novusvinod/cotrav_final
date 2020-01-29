@@ -7,7 +7,7 @@ from django.utils import timezone
 import pytz
 from django.contrib import messages
 from django.shortcuts import render , redirect
-
+from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.db import connection
 from Common.models import Corporate_Login
@@ -41,7 +41,12 @@ def login(request):
     user_name = request.POST.get('user_name', '')
     user_password = request.POST.get('user_password', '')
     user_type = request.POST.get('user_type', '')
-    user_info = request.META['HTTP_USER_AGENT']
+
+    is_mobile = request.POST.get('is_mobile', '')
+    if is_mobile == '1':
+        user_info = request.POST.get('user_info', '')
+    else:
+        user_info = request.META['HTTP_USER_AGENT']
 
     if user_name and user_password and user_type:
         cursor = connection.cursor()
@@ -307,7 +312,7 @@ def add_companies(request):
 
         cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
         user_type = request.POST.get('user_type', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
@@ -2443,7 +2448,7 @@ def add_group(request):
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
         access_token = request.POST.get('access_token_auth', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -2595,7 +2600,7 @@ def add_subgroup(request):
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
         access_token = request.POST.get('access_token_auth', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         print(password)
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -2752,7 +2757,7 @@ def add_group_auth(request):
 
         is_delete = request.POST.get('delete_id')
         access_token = request.POST.get('access_token_auth', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         group_auth_id = request.POST.get('group_auth_id', '')
 
         if corporate_id:
@@ -2928,7 +2933,7 @@ def add_subgroup_auth(request):
 
         is_delete = request.POST.get('delete_id')
         access_token = request.POST.get('access_token_auth', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         subgroup_auth_id = request.POST.get('subgroup_auth_id', '')
 
         if corporate_id:
@@ -3100,7 +3105,7 @@ def add_admin(request):
 
         is_delete = request.POST.get('delete_id')
         access_token = request.POST.get('access_token_auth', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         admin_id = request.POST.get('admin_id', '')
 
         if corporate_id:
@@ -3281,7 +3286,7 @@ def add_spoc(request):
 
         is_delete = request.POST.get('delete_id')
         access_token = request.POST.get('access_token_auth', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         spoc_id = request.POST.get('spoc_id')
 
         if corporate_id:
@@ -3524,7 +3529,7 @@ def add_employee(request):
             date_of_birth = None
 
         is_delete = request.POST.get('delete_id')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         employee_id = request.POST.get('employee_id')
         username = request.POST.get('username')
 
@@ -3729,7 +3734,7 @@ def add_agent(request):
         has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
         is_super_admin = request.POST.get('is_super_admin', '')
 
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -6435,9 +6440,22 @@ def get_flight_search(request):
                         print(payload)
                         r = requests.post(url, json=payload)
                         api_response = r.json()
+                        print(trip_type)
+                        print("trip type")
+                        if trip_type == '1':
+                            print(trip_type)
+                            print("trip type")
+                            sorted_obj = dict(api_response)
+                            sorted_obj['FLIGHT'] = sorted(api_response['FLIGHT'], key=lambda x: x['NET_FARE'], reverse=True)
+                            print(sorted_obj)
+                        else:
+                            sorted_obj = dict(api_response)
+                            sorted_obj['FLIGHTOW'] = sorted(api_response['FLIGHTOW'], key=lambda x: x['NET_FARE'], reverse=True)
+                            sorted_obj['FLIGHTRT'] = sorted(api_response['FLIGHTRT'], key=lambda x: x['NET_FARE'], reverse=True)
                         data = {'success': 1, 'Data': api_response}
                         return JsonResponse(data)
                     except Exception as e:
+                        print(e)
                         data = {'success': 0, 'Data': e}
                         return JsonResponse(data)
                 else:
@@ -6801,14 +6819,6 @@ def add_flight_booking_with_invoice(request):
         no_of_seats = request.POST.get('no_of_seats', '')
         flight_type = request.POST.get('flight_class', '')
 
-
-        employee_name_1 = request.POST.get('employee_name_1', '')
-        employee_name_2 = request.POST.get('employee_name_2', '')
-        employee_name_3 = request.POST.get('employee_name_3', '')
-        employee_name_4 = request.POST.get('employee_name_4', '')
-        employee_name_5 = request.POST.get('employee_name_5', '')
-        employee_name_6 = request.POST.get('employee_name_6', '')
-
         kafila_booking_id = request.POST.get('kafila_booking_id', '')
         timezone.activate(pytz.timezone("Asia/Kolkata"))
         booking_datetime = timezone.localtime(timezone.now())
@@ -6828,7 +6838,10 @@ def add_flight_booking_with_invoice(request):
         for i in range(1, no_of_emp):
             employees.append(request.POST.get('employee_id_' + str(i), ''))
             employees_name.append(request.POST.get('employee_name_' + str(i), ''))
-            #print(employees)
+            print(employees)
+        print("employee ...")
+        print(employees)
+        print(employees_name)
 
         user = {}
         user_token = req_token.split()
@@ -7025,6 +7038,7 @@ def add_flight_booking_with_invoice(request):
                     cursor = connection.cursor()
                     print(employees)
                     try:
+                        employees = ",".join(employees)
                         cursor.callproc('addFlightBooking',
                                         ["Flight", journey_type, flight_type, from_location, to_location,
                                          booking_datetime, departure_datetime,

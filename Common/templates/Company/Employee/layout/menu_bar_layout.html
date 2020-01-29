@@ -80,8 +80,8 @@
                          </li>
 
                         </li>
-
-						{% if user.is_bus == 1 %}
+						{% for corp_acces in corp_access %}
+						{% if corp_acces.is_bus == 1 %}
                          <li class="mega-menu-dropdown" id="bus_li_menu">
                             <a href="/Corporate/Employee/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
                             </a>
@@ -89,7 +89,7 @@
 
                         </li>
 						{% endif %}
-						{% if user.is_train == 1 %}
+						{% if corp_acces.is_train == 1 %}
                         <li class="mega-menu-dropdown" id="train_li_menu">
                             <a href="/Corporate/Employee/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
 
@@ -97,21 +97,21 @@
 
                         </li>
 						{% endif %}
-						{% if user.is_hotel == 1 %}
+						{% if corp_acces.is_hotel == 1 %}
                         <li class="mega-menu-dropdown" id="hotel_li_menu">
                             <a href="/Corporate/Employee/hotel-bookings/1" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
                             </a>
 
                         </li>
 						{% endif %}
-						{% if user.is_flight == 1 %}
+						{% if corp_acces.is_flight == 1 %}
                         <li class="mega-menu-dropdown" id="flight_li_menu">
                             <a href="/Corporate/Employee/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
                             </a>
 
                         </li>
 						{% endif %}
-
+						{% endfor %}
                     </ul>
                 </div>                			
 			</div>
@@ -150,7 +150,8 @@
 
                         </li>
 
-						{% if user.is_bus == 1 %}
+						{% for corp_acces in corp_access %}
+						{% if corp_acces.is_bus == 1 %}
                          <li class="mega-menu-dropdown" id="bus_li_menu">
                             <a href="/Corporate/Employee/bus-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_bus</i>Bus
                             </a>
@@ -158,7 +159,7 @@
 
                         </li>
 						{% endif %}
-						{% if user.is_train == 1 %}
+						{% if corp_acces.is_train == 1 %}
                         <li class="mega-menu-dropdown" id="train_li_menu">
                             <a href="/Corporate/Employee/train-bookings/1" class="dropdown-toggle"> <i class="material-icons">directions_transit</i>Train
 
@@ -166,20 +167,21 @@
 
                         </li>
 						{% endif %}
-						{% if user.is_hotel == 1 %}
+						{% if corp_acces.is_hotel == 1 %}
                         <li class="mega-menu-dropdown" id="hotel_li_menu">
                             <a href="/Corporate/Employee/hotel-bookings/1" class="dropdown-toggle"> <i class="material-icons">hotel</i>Hotel
                             </a>
 
                         </li>
 						{% endif %}
-						{% if user.is_flight == 1 %}
+						{% if corp_acces.is_flight == 1 %}
                         <li class="mega-menu-dropdown" id="flight_li_menu">
                             <a href="/Corporate/Employee/flight-bookings/1" class="dropdown-toggle"> <i class="material-icons">flight_takeoff</i>Flight
                             </a>
 
                         </li>
 						{% endif %}
+							{% endfor %}
 
 	                            </ul>
 	                        </li>

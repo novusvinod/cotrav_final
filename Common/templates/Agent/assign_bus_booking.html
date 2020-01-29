@@ -65,7 +65,7 @@
 						            </div>
 									<div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "booking_datetime" name="booking_datetime" value="{{ booking.booking_datetime }}" readonly>
+					                     <input class = "mdl-textfield__input " type = "text" id = "booking_datetime" name="booking_datetime" value="{{ booking.booking_datetime }}" readonly>
 					                     <label class = "mdl-textfield__label">Booking Date</label>
 					                  </div>
 						            </div>
@@ -155,6 +155,14 @@
 					                     <label class = "mdl-textfield__label">PNR No</label>
 					                  </div>
 						            </div>
+
+									 <div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" name="seat_no" >
+					                     <label class = "mdl-textfield__label">Seat No</label>
+					                  </div>
+						            </div>
+
                                     <div class="col-lg-2 p-t-20">
 										  <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty">
 											 <select name="assign_bus_type_id" class="mdl-textfield__input js-select2" required>
@@ -202,7 +210,7 @@
 
 									<div class="col-lg-2 p-t-20">
 						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="boarding_datetime">
+					                     <input class = "mdl-textfield__input datetimepicker1" type = "text" name="boarding_datetime">
 					                     <label class = "mdl-textfield__label">Boarding Time</label>
 					                  </div>
 						            </div>
@@ -877,7 +885,12 @@ var igst = 0.0;
 
     match = val1.localeCompare(val2);
     var v1 = val1.substring(0, 2);
-    var v2 = val2.substring(0, 2);
+    if(val2 == null){
+    	var v2 = 0;
+    }else{
+    	var v2 = val2.substring(0, 2);
+    }
+
 
      var oper_ticket_price = parseFloat($('#oper_ticket_price').val());
      var amount = parseFloat(oper_ticket_price) * 0.18;

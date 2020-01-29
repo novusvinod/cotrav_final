@@ -420,6 +420,18 @@
                                    <input type="text" name="employee_name_1" id="employee_name_1" class="form-control col-sm-2" placeholder="Name">
                                     <input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control col-sm-2" placeholder="Contact No">
                                     <input type="text" name="employee_email_1" id="employee_email_1" class="form-control col-sm-2" placeholder="Email">
+
+                                   {% for deal in flights.Deal %}
+                                   {% if deal.TRIP == 'I' %}
+                                    <input type="text" name="employee_title_1" id="employee_title_1" class="form-control col-sm-2" placeholder="Titel">
+                                    <input type="text" name="employee_fname_1" id="employee_fname_1" class="form-control col-sm-2" placeholder="First name">
+                                    <input type="text" name="employee_lname_1" id="employee_lname_1" class="form-control col-sm-2" placeholder="Last Name">
+                                    <input type="text" name="employee_dob_1" id="employee_dob_1" class="form-control col-sm-2" placeholder="Date Of Birth">
+                                    <input type="text" name="employee_passport_1" id="employee_passport_1" class="form-control col-sm-2" placeholder="Passport No">
+                                    <input type="text" name="employee_pass_exp_1" id="employee_pass_exp_1" class="form-control col-sm-2" placeholder="Expiry Date">
+                                    <input type="text" name="employee_nationality_1" id="employee_nationality_1" class="form-control col-sm-2" placeholder="Nationality">
+                                   {% endif %}
+                                   {% endfor %}
                                 </div>
 
                               <div class="form-group row" id="emp_row_2" >

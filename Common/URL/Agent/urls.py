@@ -157,5 +157,11 @@ urlpatterns = [
     path('agents/hotel-billing/verify', agent_views.hotel_billing_verify, name='agent-hotel-billing-verify'),
 
     path('agents/lead-doc-delete/<int:pk>', lead_doc_delete, name='lead-doc-delete'),
+    
+    path('agents/bill-create', agent_views.bill_create),
+    path('agents/bill-nontax-invoice', agent_views.hotel_billing),
+    path('agents/bill-tax-invoice', agent_views.hotel_billing),
+    path('agents/bill-offline', agent_views.hotel_billing),
+    path('agents/bill-report', agent_views.hotel_billing),
 
 ]

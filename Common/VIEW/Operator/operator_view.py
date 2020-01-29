@@ -36,7 +36,7 @@ def operator_login_action(request):
     context = {}
     if request.method == 'POST':
         username = request.POST.get('email', '')
-        password = request.POST.get('password', '')
+        password = make_password(request.POST.get('password', ''))
         user = authenticate(username=username, post_password=password, login_type="7")
         print(user)
         if user is not None:
@@ -246,7 +246,7 @@ def add_operator_driver(request,id):
             if driver_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 driver_id = 0
 
             payload = {'operator_id':operator_id,'driver_name':driver_name,'driver_contact':driver_contact,'driver_email':driver_email,'licence_no':licence_no,

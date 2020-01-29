@@ -458,7 +458,7 @@ def add_company_group(request, id):
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
-            password = make_password("taxi123")
+            password = "taxi123"
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'group_name': group_name, 'zone_name': zone_name,'access_token_auth':access_token_auth,'name':name,
@@ -508,7 +508,7 @@ def add_company_subgroup(request, id):
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
-            password = make_password("taxi123")
+            password = "taxi123"
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'subgroup_name': subgroup_name, 'group_id': group_id,'name':name,
@@ -680,7 +680,7 @@ def add_company_group_auth(request, id):
 
             if group_id:
                 group_auth_id = group_auth_id
-                password = make_password("taxi123")
+                password = "taxi123"
 
             if group_auth_id:
                 group_auth_id = group_auth_id
@@ -753,7 +753,7 @@ def add_company_subgroup_auth(request, id):
 
             if subgroup_id:
                 subgroup_auth_id = subgroup_auth_id
-                password = make_password("taxi123")
+                password = "taxi123"
 
             if subgroup_auth_id:
                 subgroup_auth_id = subgroup_auth_id
@@ -827,7 +827,7 @@ def add_company_admins(request, id):
             if admin_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
                        'access_token': access_token, 'name': name, 'email': email, 'cid': cid, 'contact_no': contact_no,
@@ -902,7 +902,7 @@ def add_spocs(request, id):
             if spoc_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 spoc_id =0
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
@@ -1026,7 +1026,7 @@ def add_employee(request, id):
             if employee_id:
                 password = ''
             else:
-                password = make_password("taxi123")
+                password = "taxi123"
                 employee_id =0
 
             payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,'spoc_id':spoc_id,'core_employee_id':core_employee_id,
