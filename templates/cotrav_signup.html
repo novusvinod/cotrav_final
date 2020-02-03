@@ -5,27 +5,22 @@
 {% load static %}
 {% include 'cotrav_alert_signup.html' %}
 
- <!-- start main-wrapper section -->
+<!-- start main-wrapper section -->
     <div class="main-wrapper">
              <!-- start registration form -->
-        <section class="parallax position-relative box-hover" data-overlay-dark="6" data-background="{% static 'img/bg/bg-login.jpg' %}">
+        <section class="parallax_1 position-relative box-hover" >
             <div class="container">
-                <div class="row">
-                     <div class="col-lg-6" style="margin: auto;">
-                   <h1 class="sec_sty">Welcome to Cotrav</h1>
-                         <h2  class="sec_sty_1">We offer you all your company's  <br>travelsolutions at one place.</h2>
-                          <p  class="sec_sty_2">Create your account and get moving with cotrav</p>
-                     </div>
 
-                    <div class="col-lg-6">
-                        <<div class="bg-white padding-30px-all sm-padding-20px-all border border-width-5 section_signup_width">
-                            <div class="section-heading section-heading2 section_margin">
-                                <h3 class="section_res_signup">Sign-Up</h3>
 
-                            </div>
-                            <form action="signup" method="POST" class="registration-form section_signup">
+                    <div class="row" style="margin-top: -6%;">
+                         <div class="col-sm-7  text-center" style="background-image: url({% static 'img/bg/bg-sign.jpg' %}); background-repeat: no-repeat; "> <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+                         <h2 class="account-text">Create Your Account</h2>
+                            <h4 class="account-description">Signup to create, discover and connect with Cotrav</h4>
+                         </div>
+                      <div class="col-sm-5 text-center abc">
+                        <form action="signup" method="POST" class="registration-form section_signup">
                                 <div class="row">
-                                     
+
                                     <div class="col-11">
                                          <img src="{% static 'img/logos/6.png' %}" id="contact_icon1">
                                         <input type="text" name="corporate_name" id="company_Name" required="required" placeholder="Name Of Your Company *" maxlength="70" class="medium-input input_signupform input_signup">
@@ -51,7 +46,7 @@
 
                                     <div class="col-11">
                                         <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
-                                        <select name="Hear_About_Us" class="medium-input input_signupform input_signup select_font" id="Hear_About_Us" required style="color:gray;">
+                                        <select name="Hear_About_Us" class="medium-input input_signupform input_signup select_font" id="Hear_About_Us" required style="color:gray;padding-top: 4px;">
                                             <option value="">How Did You Hear About Us?</option>
                                             <option value="Website">Website</option>
                                             <option value="news paper">News Paper</option>
@@ -70,18 +65,20 @@
                                        <img src="{% static 'img/logos/8.png' %}" id="contact_icon1">
                                         <textarea name="message" rows="3" placeholder="Tell us more about your requirments.." data-constraints="@NotEmpty" value="{{message}}" class="medium-input input_signupform"></textarea>
                                     </div>
-                                 
+
+
                                     <div class="col-12">
-                                        <button class="butn theme medium" type="submit"><span>Sign-Up</span></button>
-                
+                                        <button class="butn theme medium bt_par" type="submit"><span>Sign-Up</span></button>
+                                        <p class="no-margin float-right" ><a href="/login" id="signup-txt-color" class="bt_par_a" >Already Register?</a></p>
                                     </div>
                                 </div>
                             </form>
-                        
                         </div>
-                        
-                    </div>
-                </div>
+
+                     </div>
+
+
+
 
             </div>
         </section>
@@ -89,6 +86,7 @@
 
     </div>
     <!-- end main-wrapper section -->
+
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
     {% load static %}

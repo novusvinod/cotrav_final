@@ -248,7 +248,7 @@ def add_train(request):
 
 
 def add_bus(request):
-    for x in range(1, 100):
+    for x in range(1, 5):
         cursor = connection.cursor()
         cursor.callproc('addBusBooking',
                         [user_type, user_id, corporate_id, spoc_id, group_id, subgroup_id, pickup_location,
@@ -265,17 +265,18 @@ def add_bus(request):
         data = dictfetchall(cursor1)
         cursor1.close()
 
-        cursor2 = connection.cursor()
-        cursor2.callproc('assignBusBooking',
-                        [ticket_no, pnr_no, assign_bus_type_id, seat_no, portal_used, operator_name, operator_contact,
-                         boarding_point, boarding_datetime, last_booking_id, user_id, user_type, base_rate,
-                         management_fee, tax_on_management_fee, tax_on_management_fee_percentage, sub_total,
-                         cotrav_billing_entity, igst, cgst, sgst, management_fee_igst, management_fee_cgst,
-                         management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate,
-                         management_fee_sgst_rate, tax_mng_amt, oper_ticket_price, oper_commission,
-                         oper_commission_type, oper_cotrav_billing_entity, oper_igst, oper_cgst, oper_sgst,
-                         client_ticket_path, vender_ticket_path, igst_amount, cgst_amount, sgst_amount])
-        company = dictfetchall(cursor2)
+        # cursor2 = connection.cursor()
+        # cursor2.callproc('assignBusBooking',
+        #                 [ticket_no, pnr_no, assign_bus_type_id, seat_no, portal_used, operator_name, operator_contact,
+        #                  boarding_point, boarding_datetime, last_booking_id, user_id, user_type, base_rate,
+        #                  management_fee, tax_on_management_fee, tax_on_management_fee_percentage, sub_total,
+        #                  cotrav_billing_entity, igst, cgst, sgst, management_fee_igst, management_fee_cgst,
+        #                  management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate,
+        #                  management_fee_sgst_rate, tax_mng_amt, oper_ticket_price, oper_commission,
+        #                  oper_commission_type, oper_cotrav_billing_entity, oper_igst, oper_cgst, oper_sgst,
+        #                  client_ticket_path, vender_ticket_path, igst_amount, cgst_amount, sgst_amount])
+        # company = dictfetchall(cursor2)
+        # cursor2.close()
 
     data = {'success':1, 'message':'data insert Successfully..!'}
     return JsonResponse(data)

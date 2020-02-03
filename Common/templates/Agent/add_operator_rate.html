@@ -173,7 +173,7 @@ left:50%;
                                             {% for rate in operator_rates %}
 	                                                 <select class="col-sm-8 form-control myselect" name="tour_type" required>
                                                          <option value="">Select Tour Type</option>
-                                                     <option value="2" {%if rate.tour_type == 1 %} selected {%endif%}>Local</option>
+                                                     <option value="2" {%if rate.tour_type == 2 %} selected {%endif%}>Local</option>
                                                      <option value="3" {%if rate.tour_type == 3 %} selected {%endif%}>Outstation</option>
 	                                            </select>
                                             {% endfor %}

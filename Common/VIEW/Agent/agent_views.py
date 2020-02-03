@@ -2682,6 +2682,7 @@ def delete_operator_rate(request,id):
 
         url = settings.API_BASE_URL+"delete_operator_rate"
         payload = {'rate_id': rate_id,'user_id':user_id,'user_type':login_type}
+        print(payload)
         operators = getDataFromAPI(login_type, access_token, url, payload)
         if operators['success'] == 1:
             messages.success(request, 'Operator Rate Deleted Successfully..!')

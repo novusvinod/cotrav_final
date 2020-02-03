@@ -17,6 +17,7 @@ import razorpay
 razorpay_client = razorpay.Client(auth=("rzp_test_eipQBGxGd1SmmJ", "r82J3rVV4NEAZKMGxIJVPyGY"))
 
 def logout_action(request):
+
     if 'spoc_login_type' in request.session:
         request = get_request()
         login_type = request.session['spoc_login_type']
@@ -34,6 +35,10 @@ def logout_action(request):
         return redirect("/login")
 
 def homepage(request):
+    print("i ma session Data")
+    for key, value in request.session.items():
+        print('{} => {}'.format(key, value))
+    print("i ma session Data")
     if 'spoc_login_type' in request.session:
         user_type = request.session['spoc_login_type']
         access_token = request.session['spoc_access_token']
@@ -1133,7 +1138,7 @@ def add_flight_booking_self(request,id):
                     print("in trip 1")
 
                 return render(request, 'Company/Spoc/add_flight_booking_serarch_result.html', {'booking_datas': booking_data,'params':flight['PARAM'], 'flights': flight1, 'flights2': flight2,
-                'airports':airports,'no_of_seats':no_of_seats, 'uniq_flights':uniq_flights,'unique_flights2':unique_flights2})
+                'airports':airports,'no_of_seats':no_of_seats, 'uniq_flights':uniq_flights,'unique_flights2':unique_flights2, 'Deals':flight['Deal']})
             else:
                 url_access = settings.API_BASE_URL + "get_airports"
                 data11 = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -1191,9 +1196,11 @@ def add_flight_booking_self_conformation(request,id):
         trip_string = request.POST.get('trip_string', '')
         booking_datass = request.POST.get('booking_data', '')
         no_of_seats = request.POST.get('no_of_seats', '')
+        flight_class_is_international = request.POST.get('flight_class_is_international', '')
         flight1 = ""
         flight2 = ""
-        booking_data = {'UID':UID,'ID':ID,'TID':TID,'UID2':UID2,'ID2':ID2,'TID2':TID2,'src':src,'des':des,'dep_date':dep_date,'ret_date':ret_date,'adt':adt,'chd':chd,'inf':inf,'L_OW':L_OW,'H_OW':H_OW,'T_TIME':T_TIME,'trip_string':trip_string}
+        booking_data = {'UID':UID,'ID':ID,'TID':TID,'UID2':UID2,'ID2':ID2,'TID2':TID2,'src':src,'des':des,'dep_date':dep_date,'ret_date':ret_date,
+            'adt':adt,'chd':chd,'inf':inf,'L_OW':L_OW,'H_OW':H_OW,'T_TIME':T_TIME,'trip_string':trip_string,'flight_class_is_international':flight_class_is_international}
 
         url_tokn = settings.API_BASE_URL + "get_flight_fare_search"
         data = getDataFromAPI(login_type, access_token, url_tokn, booking_data)
@@ -1202,15 +1209,6 @@ def add_flight_booking_self_conformation(request,id):
         if data['success'] == 1:
             api_response = data['Data']
             print("SEARCH PAI RESPONSE")
-            print(api_response)
-            #
-            # if UID2:
-            #     flight1 = api_response['FLIGHTOW']
-            #     flight2 = api_response['FLIGHTRT']
-            #     print("in trip round")
-            # else:
-            #     flight1 = api_response['FLIGHT']
-            #     print("in trip 1")
 
             payload = {'corporate_id': request.user.corporate_id, 'spoc_id': request.user.id}
             url_enty = settings.API_BASE_URL + "billing_entities"
@@ -1226,11 +1224,11 @@ def add_flight_booking_self_conformation(request,id):
             cities = cities_ass['AssCity']
 
             url_emp = settings.API_BASE_URL + "spoc_employee"
-            company_emp = cities_ass = getDataFromAPI(login_type, access_token, url_emp, payload)
+            company_emp = getDataFromAPI(login_type, access_token, url_emp, payload)
             employees = company_emp['Employees']
 
-            return render(request, 'Company/Spoc/add_flight_booking_conformation.html',
-                          {'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees, 'cities_ass': cities, 'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats})
+            return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees, 'cities_ass': cities,
+                'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats, 'flight_class_is_international':flight_class_is_international})
         else:
             return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': ''})
 
@@ -1266,13 +1264,29 @@ def add_flight_booking_self_final(request, id):
         entity_id = request.POST.get('entity_id', '')
         reason_booking = request.POST.get('reason_booking', '')
         no_of_seats = request.POST.get('no_of_seats', '')
-
+        no_of_emp = int(no_of_seats) + 1
         employee_name_1 = request.POST.get('employee_name_1', '')
-        employee_name_2 = request.POST.get('employee_name_2', '')
-        employee_name_3 = request.POST.get('employee_name_3', '')
-        employee_name_4 = request.POST.get('employee_name_4', '')
-        employee_name_5 = request.POST.get('employee_name_5', '')
-        employee_name_6 = request.POST.get('employee_name_6', '')
+        flight_class_is_international = request.POST.get('flight_class_is_international', '')
+        emp_info_international = []
+        emp_data = {}
+        if flight_class_is_international:
+            for i in range(1, no_of_emp):
+                emp_data['emp_id'] =  request.POST.get('employee_id_pass_' + str(i), '')
+                emp_data['emp_title'] =  request.POST.get('employee_title_' + str(i), '')
+                emp_data['emp_fname'] =  request.POST.get('employee_fname_' + str(i), '')
+                emp_data['emp_lname'] =  request.POST.get('employee_lname_' + str(i), '')
+                emp_data['emp_dob'] =  request.POST.get('employee_dob_' + str(i), '')
+                emp_data['emp_passport_no'] =  request.POST.get('employee_passport_' + str(i), '')
+                emp_data['emp_passport_exp'] =  request.POST.get('employee_pass_exp_' + str(i), '')
+                emp_data['emp_nationality'] =  request.POST.get('employee_nationality_' + str(i), '')
+                emp_info_international.append(emp_data)
+        else:
+            for i in range(1, no_of_emp):
+                emp_data['emp_title'] =  request.POST.get('employee_ttl_' + str(i), '')
+                emp_data['emp_fname'] =  request.POST.get('employee_ffname_' + str(i), '')
+                emp_data['emp_lname'] =  request.POST.get('employee_llname_' + str(i), '')
+                emp_data['emp_dob'] =  request.POST.get('employee_edob_' + str(i), '')
+                emp_info_international.append(emp_data)
 
         if entity_id:
             pass
@@ -1281,19 +1295,20 @@ def add_flight_booking_self_final(request, id):
 
         employees = []
         employees_name = []
-        no_of_emp = int(no_of_seats) + 1
+
         for i in range(1, no_of_emp):
             employees.append(request.POST.get('employee_id_' + str(i), ''))
             employees_name.append(request.POST.get('employee_name_' + str(i), ''))
             print(employees)
 
-        payload11 = {'flightdata': flightdata, 'employee_name_1': employees_name,'UID2':UID2,}
-        #print(payload11)
+        payload11 = {'flightdata': flightdata, 'employee_name_1': employees_name,'UID2':UID2,'flight_class_is_international':flight_class_is_international,'emp_info_international':str(emp_info_international)}
         print("adsad")
+        print(payload11)
         url_save = settings.API_BASE_URL + "save_flight_booking"
         booking1 = getDataFromAPI(login_type, access_token, url_save, payload11)
         print("API BOOK")
         print(booking1)
+
 
         vendor_booking = ""
         print(booking1['Data']['RESULT'][0]['BOOKINGID'])
@@ -1311,7 +1326,7 @@ def add_flight_booking_self_final(request, id):
                    'billing_entity_id': entity_id,
                    'is_sms': 1, 'is_email': 1, 'assessment_city_id': assessment_city_id, 'flightdata': flightdata,'UID2':UID2,
                    'employee_name_1': employee_name_1,'vendor_booking':vendor_booking}
-        # print(payload)
+        #print(payload)
         if vendor_booking:
             url_taxi_booking = settings.API_BASE_URL + "add_flight_booking"
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
@@ -1436,6 +1451,7 @@ def add_flight_booking_self_final(request, id):
                                 departure_time.append(arrival_time2)
                                 flight_to.append(flightt['DES_NAME'])
                                 flight_from.append(flightt['ORG_NAME'])
+                                is_return_flight.append('0')
                             print("INNNNNNNNNNNN IFFFFFFFFFFFFF")
                         else:
                             ticket_number.append(booking1['Data']['FLIGHT'][0]['PCC'])
@@ -1448,6 +1464,7 @@ def add_flight_booking_self_final(request, id):
                             departure_time.append(arrival_time2)
                             flight_to.append(booking1['Data']['FLIGHT'][0]['DES_NAME'])
                             flight_from.append(booking1['Data']['FLIGHT'][0]['ORG_NAME'])
+                            is_return_flight.append('0')
                             print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
 
                     sub_total = 118+int(ticket_price)

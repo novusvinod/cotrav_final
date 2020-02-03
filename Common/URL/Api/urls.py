@@ -191,4 +191,8 @@ urlpatterns = [
     path('api/add_flight_booking_with_invoice', api_views.add_flight_booking_with_invoice),
 
 
+    path('api/get_emp_passport_details', api_views.get_emp_passport_details),
+    path('api/get_phr_detail_assign_booking', api_views.get_phr_detail_assign_booking),
+
+
 ]

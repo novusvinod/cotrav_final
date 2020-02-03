@@ -57,6 +57,7 @@
                 <option value="4" {% if booking_type == 4 %} selected {% endif %} >Archived Bookings(Unassigned)</option>
                 <option value="5" {% if booking_type == 5 %} selected {% endif %} >Archived Bookings(Assigned)</option>
                 <option value="6" {% if booking_type == 6 %} selected {% endif %} >Cancelled/Rejected Bookings</option>
+                <option value="30" {% if booking_type == 30 %} selected {% endif %} >Pending for PNR Generation</option>
 
               </select>
             </td>
@@ -187,6 +188,8 @@
                               <a href = "/Corporate/Spoc/flight-bookings/4" class = "mdl-tabs__tab {% if booking_type == 4 %} is-active {% endif %}">Archived Bookings(Unassigned) </a>
                               <a href = "/Corporate/Spoc/flight-bookings/5" class = "mdl-tabs__tab {% if booking_type == 5 %} is-active {% endif %}">Archived Bookings(Assigned)</a>
                               <a href = "/Corporate/Spoc/flight-bookings/6" class = "mdl-tabs__tab {% if booking_type == 6 %} is-active {% endif %}">Cancelled/Rejected Bookings</a>
+                              <a href = "/Corporate/Spoc/flight-bookings/30" class = "mdl-tabs__tab {% if booking_type == 30 %} is-active {% endif %}">Pending for PNR Generation</a>
+
                            </div>
 
                         </div>
@@ -275,6 +278,9 @@
                                     <td>
 
                                         <a href="/Corporate/Spoc/view-flight-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
+                                        {% if booking_type == 30 and booking.status_cotrav == 1 %}
+                                        <a href="#" id="option1" data-booking_id="{{booking.id}}" data-api_bookigid="{{ booking.vendor_booking_id }}" data-journey_type="{{booking.journey_type}}" onclick="goDoSomething(this);" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;" > <i class="fa fa-plus"></i> </a>
+                                        {% endif %}
 
                                     </td>
                                 </tr>
@@ -308,6 +314,30 @@ $(function() {
     });
 
 });
+function goDoSomething(d){
+var booking_id  = d.getAttribute("data-booking_id")
+var api_bookigid  = d.getAttribute("data-api_bookigid")
+var journey_type  = d.getAttribute("data-journey_type")
+var user_id = {{request.user.id}}
+ var_url = '/api/'+'get_phr_detail_assign_booking'
+
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.spoc_access_token}}",
+                'usertype': 4
+            }
+
+        });
+<!--   For Entity  -->
+     $.post(var_url,{ booking_id: booking_id, api_bookigid:api_bookigid, journey_type:journey_type, user_id:user_id },
+      function(data)
+      {
+       alert(data['message']);
+       });
+
+
+}
+
 
 </script>
 

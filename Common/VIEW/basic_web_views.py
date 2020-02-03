@@ -35,6 +35,8 @@ def login_action(request):
         password = request.POST.get('password', '')
         corporate_login_type = request.POST.get('corporate_login_type', '')
         user_type = corporate_login_type
+        print("user Login From Page Type ")
+        print(user_type)
         user = authenticate(username=username, post_password=password, login_type=corporate_login_type)
         print(user)
         if user:
@@ -47,6 +49,10 @@ def login_action(request):
                 cursor = connection.cursor()
 
                 if user_type == '1':
+                    print("i ma session Data11")
+                    for key, value in request.session.items():
+                        print('{} => {}'.format(key, value))
+                    print("i ma session Data11")
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
                     return HttpResponseRedirect("Corporate/Admin/home")
                 else:
@@ -59,6 +65,10 @@ def login_action(request):
                     print("User Info Not Found")
 
                 if user_type == '3':
+                    print("i ma session Data22")
+                    for key, value in request.session.items():
+                        print('{} => {}'.format(key, value))
+                    print("i ma session Data22")
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
                     return HttpResponseRedirect("Corporate/Approver_2/home")
                 else:

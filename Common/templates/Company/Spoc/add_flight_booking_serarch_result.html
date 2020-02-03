@@ -122,7 +122,7 @@
                                          <p  class="md_fli_fnt"><i class="fa fa-list-alt"></i> Class</p>
                                           <select class="form-control mdl-textfield js-select2" name="fl_class" >
                                                     <option value="EC" {% if booking_datas.fl_class == 'EC' %} selected {%endif%}>Economy</option>
-                                                    <option value="BU" {% if booking_datas.fl_class == 'BU' %} selected {%endif%}>Businesses</option>
+                                                    <option value="BU" {% if booking_datas.fl_class == 'BU' %} selected {%endif%}>Business</option>
 
                                            </select>
                                       </div>
@@ -255,16 +255,16 @@
 
 
                                         <ul class="nav nav-tabs nav-tabs1">
-                                        <li class="nav-item"><a href="#home" data-toggle="tab" class="active">Flight Details</a>
+                                        <li class="nav-item"><a href="#home1_{{forloop.counter}}" data-toggle="tab" class="active">Flight Details</a>
                                         </li>
-                                        <li class="nav-item"><a href="#about" data-toggle="tab">Cancellation Policy</a>
+                                        <li class="nav-item"><a href="#about1_{{forloop.counter}}" data-toggle="tab">Cancellation Policy</a>
                                         </li>
 
                                     </ul>
                                 </header>
                                 <div class="panel-body">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="home">
+                                        <div class="tab-pane active" id="home1_{{forloop.counter}}">
 
                                             <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
 
@@ -283,7 +283,7 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
+                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.NET_FARE}} <br><p class="font_txt1">Partially Refundable</p></td>
                                                     <td></td> <td></td> <td></td> <td></td><td></td><td></td>
 
                                                     </tr>
@@ -294,7 +294,7 @@
                                                        </tbody>
                                                      </table>
                                                  </div>
-                                            <div class="tab-pane" id="about">
+                                            <div class="tab-pane" id="about1_{{forloop.counter}}">
                                                 <p> {{flight_fl.FLIGHT_INFO}}</p>
                                         </div> <div class="tab-pane" id="profile">
                                              <p> {{flight_fl.LAYOVER_INFO}}</p>
@@ -369,7 +369,7 @@
                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  {{flight.A_TIME}} <br>
                                                         <p class="font_txt1">{{flight.F_CLASS}}</p></td>
 
-                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.NET_FARE}} <br>
+                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.AMT}} <br>
                                                         <p class="font_txt1">{{flight.OI}}</p></td>
 
 
@@ -395,16 +395,16 @@
 
 
                                         <ul class="nav nav-tabs nav-tabs1">
-                                        <li class="nav-item"><a href="#home" data-toggle="tab" class="active">Flight Details</a>
+                                        <li class="nav-item"><a href="#home_{{forloop.counter}}" data-toggle="tab" class="active">Flight Details</a>
                                         </li>
-                                        <li class="nav-item"><a href="#about" data-toggle="tab">Cancellation Policy</a>
+                                        <li class="nav-item"><a href="#about_{{forloop.counter}}" data-toggle="tab">Cancellation Policy</a>
                                         </li>
 
                                     </ul>
                                 </header>
                                 <div class="panel-body">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="home">
+                                        <div class="tab-pane active" id="home_{{forloop.counter}}">
 
                                             <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
 
@@ -677,8 +677,8 @@
                                            <div class="table-responsive">
                                         <form method="post" action="/Corporate/Spoc/add-flight-booking-self-conformation/{{user.id}}">
                                             <input type="hidden" name="no_of_seats" value="{{no_of_seats}}">
-{{flights}}
-                                            {% for deal in flights.Deal %}
+
+                                            {% for deal in Deals %}
                                             {% if deal.TRIP == 'I' %}
                                                 <input type="hidden" name="flight_class_is_international" value="{{deal.TRIP}}">
                                             {% endif %}
@@ -713,7 +713,7 @@
                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  {{flight.A_TIME}} <br>
                                                         <p class="font_txt1">{{flight.F_CLASS}}</p></td>
 
-                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.NET_FARE}} <br>
+                                                      <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.AMT}} <br>
                                                         <p class="font_txt1">{{flight.OI}}</p></td>
 
 
@@ -751,9 +751,9 @@
 
 
                                         <ul class="nav nav-tabs nav-tabs1">
-                                        <li class="nav-item"><a href="#home" data-toggle="tab" class="active">Flight Details</a>
+                                        <li class="nav-item"><a href="#home_{{forloop.counter}}" data-toggle="tab" class="active">Flight Details</a>
                                         </li>
-                                        <li class="nav-item"><a href="#about" data-toggle="tab">Cancellation Policy</a>
+                                        <li class="nav-item"><a href="#about_{{forloop.counter}}" data-toggle="tab">Cancellation Policy</a>
 
                                         </li>
 
@@ -761,15 +761,16 @@
                                 </header>
                                 <div class="panel-body">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="home">
+                                        <div class="tab-pane active" id="home_{{forloop.counter}}">
 
                                             <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
 
                                                 <tbody>
+                                                <p class="fli_bac">  Connected Flights </p>
                                             {% for flight_fl in flight.CON_DETAILS %}
                                              <tr>
 
-                                               <p class="fli_bac">  Connected Flights </p>
+
                                                 <td >  <img alt="" src="../../assets/img/blog/flight_indigo.png" class="img_alig "/>{{flight_fl.FLIGHT_NAME}} <br>
                                                    <p class="font_txt">{{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}}</p></td>
 
@@ -791,7 +792,7 @@
                                                        </tbody>
                                                      </table>
                                                  </div>
-                                            <div class="tab-pane" id="about">
+                                            <div class="tab-pane" id="about_{{forloop.counter}}">
                                                 <p> {{flight_fl.FLIGHT_INFO}}</p>
                                                 <p>
 Important Rules:
@@ -880,6 +881,7 @@ $('#option_2').change(function() {
 
     });
 
+
 $(".flight_filter_class").click(function(){
 
 $.each($("input[name='sport1']:checked"), function(){
@@ -891,6 +893,9 @@ $.each($("input[name='sport1']:not(:checked)"), function(){
     $('.'+row_show).hide();
 });
 
+if($(".flight_filter_class:checked").length == 0) {
+    $(".row").show();
+  }
 
 });
 

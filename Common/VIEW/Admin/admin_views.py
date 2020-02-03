@@ -19,8 +19,8 @@ def logout_action(request):
     if 'admin_login_type' in request.session:
         request = get_request()
         login_type = request.session['admin_login_type']
-
         access_token = request.session['admin_access_token']
+
         user = Corporate_Login_Access_Token.objects.get(access_token=access_token)
         del request.session['admin_login_type']
         del request.session['admin_access_token']
@@ -33,10 +33,17 @@ def logout_action(request):
         return redirect("/login")
 
 def homepage(request):
+    print("i ma session Data")
+    for key, value in request.session.items():
+        print('{} => {}'.format(key, value))
+    print("i ma session Data")
     if 'admin_login_type' in request.session:
         user_type = request.session['admin_login_type']
         access_token = request.session['admin_access_token']
         print(request.user)
+        print("Admin Home Page ")
+        print(user_type)
+        print(access_token)
         payload = {'admin_id':request.user.id, 'corporate_id':request.user.id}
         url = settings.API_BASE_URL + "admin_dashboard"
         print(access_token)
@@ -46,6 +53,7 @@ def homepage(request):
         print(dataDashboard)
         return render(request, 'Company/Admin/home_page.html', {'user': request.user,'dataDashboard':dataDashboard})
     else:
+        print("i m from home els part")
         return HttpResponseRedirect("/login")
 
 def user_profile(request):

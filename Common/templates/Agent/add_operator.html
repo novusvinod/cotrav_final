@@ -133,12 +133,10 @@
                                         </div>
 
                                     <div class="form-group row">
-                                            <label class="col-sm-4" for="simpleFormEmail">Operator Address</label>
                                         {% if operators %}
-                                            {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control" name="operator_address" value="{{operator.operator_address}}">
-                                            {% endfor %}
+
                                               {% else %}
+                                        <label class="col-sm-4" for="simpleFormEmail">Operator Address</label>
                                             <input type="text" class="col-sm-8 form-control" name="operator_address" placeholder="Operator Address">
                                         {% endif %}
                                         </div>
