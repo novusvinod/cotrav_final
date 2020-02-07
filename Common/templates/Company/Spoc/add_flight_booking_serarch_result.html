@@ -200,7 +200,7 @@
                                                 <tbody>
                                                  <tr>
                                                         <td>
-                                                            <input type="radio" class="flight_radio" name="onword" value="onword" data-onword_UID="{{flight.UID}}" data-onword_ID="{{flight.ID}}" data-onword_TID="{{flight.TID}}" data-onword_CN_CODE="{{flight.CN_CODE}}" data-onword_F_NAME = "{{flight.F_NAME}}" data-onword_D_NAME="{{flight.D_NAME}}" data-onword_D_CODE="{{flight.D_CODE}}" data-onword_D_DATE = "{{flight.D_DATE}}" data-onword_D_TIME = "{{flight.D_TIME}}" data-onword_DUR = "{{flight.DUR}}" data-onword_STOP = "{{ flight.STOP|default:'Non' }}" data-onword_A_NAME = "{{flight.A_NAME}}" data-onword_A_CODE = "{{flight.A_CODE}}" data-onword_A_DATE = "{{flight.A_DATE}}" data-onword_A_TIME = "{{flight.A_TIME}}" data-onword_F_CLAS = "{{flight.F_CLASS}}" data-onword_OI = "{{flight.OI}}" data-onword_NET_FARE = "{{flight.NET_FARE}}"  >
+                                                            <input type="radio" class="flight_radio" name="onword" value="onword" data-onword_UID="{{flight.UID}}" data-onword_ID="{{flight.ID}}" data-onword_TID="{{flight.TID}}" data-onword_CN_CODE="{{flight.CN_CODE}}" data-onword_F_NAME = "{{flight.F_NAME}}" data-onword_D_NAME="{{flight.D_NAME}}" data-onword_D_CODE="{{flight.D_CODE}}" data-onword_D_DATE = "{{flight.D_DATE}}" data-onword_D_TIME = "{{flight.D_TIME}}" data-onword_DUR = "{{flight.DUR}}" data-onword_STOP = "{{ flight.STOP|default:'Non' }}" data-onword_A_NAME = "{{flight.A_NAME}}" data-onword_A_CODE = "{{flight.A_CODE}}" data-onword_A_DATE = "{{flight.A_DATE}}" data-onword_A_TIME = "{{flight.A_TIME}}" data-onword_F_CLAS = "{{flight.F_CLASS}}" data-onword_OI = "{{flight.OI}}" data-onword_NET_FARE = "{{flight.AMT}}"  >
                                                         </td>
 
                                                         <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <img style='background-position: {{flight.F_LOGO}}' class="fltLogo">{{flight.F_NAME}}  <br>
@@ -269,10 +269,11 @@
                                             <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
 
                                                 <tbody>
+                                                <p class="fli_bac">  Connected Flights </p>
                                             {% for flight_fl in flight.CON_DETAILS %}
                                              <tr>
 
-                                               <p class="fli_bac">  Connected Flights </p>
+
                                                 <td >  <img alt="" src="../../assets/img/blog/flight_indigo.png" class="img_alig "/>{{flight_fl.FLIGHT_NAME}} <br>
                                                    <p class="font_txt">{{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}}</p></td>
 
@@ -283,7 +284,7 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.NET_FARE}} <br><p class="font_txt1">Partially Refundable</p></td>
+                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
                                                     <td></td> <td></td> <td></td> <td></td><td></td><td></td>
 
                                                     </tr>
@@ -351,7 +352,7 @@
                                                  <tr>
 
                                                          <td>
-                                                            <input type="radio" class="flight_radio" name="return" value="return" data-return_UID="{{flight.UID}}" data-return_ID="{{flight.ID}}" data-return_TID="{{flight.TID}}" data-return_CN_CODE="{{flight.CN_CODE}}" data-return_F_NAME = "{{flight.F_NAME}}" data-return_D_NAME="{{flight.D_NAME}}" data-return_D_CODE="{{flight.D_CODE}}" data-return_D_DATE = "{{flight.D_DATE}}" data-return_D_TIME = "{{flight.D_TIME}}" data-return_DUR = "{{flight.DUR}}" data-return_STOP = "{{ flight.STOP|default:'Non' }}" data-return_A_NAME = "{{flight.A_NAME}}" data-return_A_CODE = "{{flight.A_CODE}}" data-return_A_DATE = "{{flight.A_DATE}}" data-return_A_TIME = "{{flight.A_TIME}}" data-return_F_CLAS = "{{flight.F_CLASS}}" data-return_OI = "{{flight.OI}}" data-return_NET_FARE = "{{flight.NET_FARE}}"  >
+                                                            <input type="radio" class="flight_radio" name="return" value="return" data-return_UID="{{flight.UID}}" data-return_ID="{{flight.ID}}" data-return_TID="{{flight.TID}}" data-return_CN_CODE="{{flight.CN_CODE}}" data-return_F_NAME = "{{flight.F_NAME}}" data-return_D_NAME="{{flight.D_NAME}}" data-return_D_CODE="{{flight.D_CODE}}" data-return_D_DATE = "{{flight.D_DATE}}" data-return_D_TIME = "{{flight.D_TIME}}" data-return_DUR = "{{flight.DUR}}" data-return_STOP = "{{ flight.STOP|default:'Non' }}" data-return_A_NAME = "{{flight.A_NAME}}" data-return_A_CODE = "{{flight.A_CODE}}" data-return_A_DATE = "{{flight.A_DATE}}" data-return_A_TIME = "{{flight.A_TIME}}" data-return_F_CLAS = "{{flight.F_CLASS}}" data-return_OI = "{{flight.OI}}" data-return_NET_FARE = "{{flight.AMT}}"  >
                                                         </td>
 
 
@@ -409,10 +410,11 @@
                                             <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
 
                                                 <tbody>
+                                                <p class="fli_bac">  Connected Flights </p>
                                             {% for flight_fl in flight.CON_DETAILS %}
                                              <tr>
 
-                                               <p class="fli_bac">  Connected Flights </p>
+
                                                 <td >  <img alt="" src="../../assets/img/blog/flight_indigo.png" class="img_alig "/>{{flight_fl.FLIGHT_NAME}} <br>
                                                    <p class="font_txt">{{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}}</p></td>
 
@@ -423,7 +425,7 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.NET_FARE}} <br><p class="font_txt1">Partially Refundable</p></td>
+                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
                                                     <td></td> <td></td> <td></td> <td></td><td></td><td></td>
 
                                                     </tr>
@@ -458,7 +460,6 @@
 {% endfor %}
 
  </div>
-
                         <div id="footer" class="flight_details_row">
                             <div class="row">
                                 <div class="col-md-10" data-height="50%">
@@ -494,6 +495,14 @@
                                             <input type="hidden" name="no_of_seats" value="{{no_of_seats}}">
                                         <div id="form_data_to_save"></div>
                                         <div id="form_data_to_save2"></div>
+
+                                            {% for deal in Deals %}
+                                        {% if forloop.counter == 1 %}
+                                            {% if deal.TRIP == 'I' %}
+                                                <input type="hidden" name="flight_class_is_international" value="{{deal.TRIP}}">
+                                            {% endif %}
+                                         {% endif %}
+                                            {% endfor %}
 
                                         {% for param in params %}
                                         <input type="hidden" name="src" value="{{param.src}}">
@@ -781,7 +790,7 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.NET_FARE}} <br><p class="font_txt1">Partially Refundable</p></td>
+                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
                                                     <td></td> <td></td> <td></td> <td></td><td></td><td></td>
 
                                                     </tr>

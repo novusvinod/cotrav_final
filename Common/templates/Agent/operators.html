@@ -73,6 +73,7 @@
                                                 <th>Email</th>
                                                 <th>Contact No</th>
                                                 <th>Website</th>
+                                                <th>Address</th>
 
                                                 <th>Is TAX Applicable</th>
 
@@ -93,13 +94,14 @@
                                                 <td>{{ operator.operator_name }}</td>
                                                 <td>{{ operator.operator_email }}</td>
                                                 <td>{{ operator.operator_contact }}</td>
-                                                <td>{{ operator.website }}</td>
+                                                <td>{{ operator.website|default:'' }}</td>
+                                                <td>{{ operator.operator_address|default:'' }}</td>
 
                                                 <td>{{ operator.is_service_tax_applicable }}</td>
 
-                                                <td>{{ operator.tds_rate }}</td>
-                                                <td>{{ operator.gst_id }}</td>
-                                                <td>{{ operator.pan_no }}</td>
+                                                <td>{{ operator.tds_rate|default:'' }}</td>
+                                                <td>{{ operator.gst_id|default:'' }}</td>
+                                                <td>{{ operator.pan_no|default:'' }}</td>
                                                 <td><a href="/agents/operator_contacts/{{ operator.id }}" class="btn btn-tbl-edit btn-xs">
                                                         <i class="fa fa-users"></i>
                                                     </a></td>

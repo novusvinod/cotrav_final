@@ -167,10 +167,10 @@
 <!--     -->
      
      <!-- animation -->
-	<script src="{% static 'assets/js/pages/ui/animations.js' %}" ></script>
+<!--	<script src="{% static 'assets/js/pages/ui/animations.js' %}" ></script>-->
 	<script src="{% static 'assets/plugins/material-datetimepicker/moment-with-locales.min.js' %}"></script>
-	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>
-	<script src="{% static 'assets/plugins/material-datetimepicker/datetimepicker.js' %}"></script>
+<!--	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>-->
+<!--	<script src="{% static 'assets/plugins/material-datetimepicker/datetimepicker.js' %}"></script>-->
 
     <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
 
@@ -192,7 +192,8 @@
            sideBySide: true,
            showMeridian: true,
            autoclose: true,
-           format: 'dd-mm-yyyy HH:ii:ss' /*remove this line if you want to use time as well */
+           format: 'dd-mm-yyyy HH:ii:ss', /*remove this line if you want to use time as well */
+           orientation: 'bottom left',
        });
 
        $('.datepicker1').datetimepicker(
@@ -203,6 +204,59 @@
            minView: 2,
            autoclose: true,
            format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+       });
+
+        $('#datepicker1').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+       });
+
+        $('#datepicker2').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+       });
+
+        $('#datepicker3').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+       });
+
+        $('#datepicker4').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+       });
+
+       $('.timepicker1').datetimepicker(
+         {
+            pickDate: false,
+            minuteStep: 15,
+            pickerPosition: 'bottom-right',
+            format: 'HH:ii',
+            autoclose: true,
+            showMeridian: true,
+            startView: 1,
+            maxView: 1,
+            orientation: "bottom left",
        });
 
    });

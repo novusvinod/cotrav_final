@@ -184,6 +184,12 @@ $(function() {
     modal.find('#contact_no1').hide();
     modal.find('#contact_email1').hide();
     modal.find('#operator_address1').hide();
+
+    $('#contact_name').removeAttr('required');
+    $('#contact_no').removeAttr('required');
+    $('#contact_email').removeAttr('required');
+    $('#operator_address').removeAttr('required');
+
     }else{
     modal.find('#delete_id').val('');
     modal.find('#contact_id').val(id);

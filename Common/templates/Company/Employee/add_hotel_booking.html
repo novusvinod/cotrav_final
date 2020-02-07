@@ -58,24 +58,18 @@
 
                                             <div class="form-group row">
                                                     <label class="col-sm-4" >City Area</label>
-                                                <input type="text" class="col-sm-8 form-control" name="preferred_hotel_area" id="preferred_hotel_area">
-<!--                                                    <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>-->
-<!--                                                       <option value="">Select Area</option>-->
-<!--                                                       {% for city in cities %}-->
-<!--                                                            <option value="{{city.id}}">{{city.city_name}}</option>-->
-<!--                                                        {% endfor %}-->
-<!--                                                    </select>-->
+                                                    <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>
+                                                       <option value="">Select Area</option>
+                                                       {% for city in cities %}
+                                                            <option value="{{city.id}}">{{city.city_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
 
                                             </div>
 
                                             <div class="form-group row">
                                                     <label class="col-sm-4">Preferred Hotel Area</label>
-                                                    <select class="col-sm-8 form-control myselect" name="preferred_hotel_area"  required>
-                                                         <option value="">Select Hotel Area</option>
-                                                        {% for city in cities %}
-                                                            <option value="{{city.id}}">{{city.city_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
+                                                    <input type="text" class="col-sm-8 form-control" name="preferred_hotel_area" id="preferred_hotel_area">
 
                                             </div>
 

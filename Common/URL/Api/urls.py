@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/irctc_accounts', api_views.irctc_accounts),
     path('api/hotel_types', api_views.hotel_types),
     path('api/get_airports', api_views.get_airports),
+    path('api/get_nationality', api_views.get_nationality),
 
     path('api/hotel_booking_portals', api_views.hotel_booking_portals),
     path('api/view_hotel_portal', api_views.view_hotel_portal),

@@ -222,6 +222,9 @@
                                     <th>Action</th>
                                     <th>Passanger</th>
                                     <th>Details</th>
+                                     {% if booking_type == 30 %}
+                                        <th>Self Booking Flight Status</th>
+                                        {% endif %}
 
 
 
@@ -278,11 +281,12 @@
                                     <td>
 
                                         <a href="/Corporate/Spoc/view-flight-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>
-                                        {% if booking_type == 30 and booking.status_cotrav == 1 %}
-                                        <a href="#" id="option1" data-booking_id="{{booking.id}}" data-api_bookigid="{{ booking.vendor_booking_id }}" data-journey_type="{{booking.journey_type}}" onclick="goDoSomething(this);" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;" > <i class="fa fa-plus"></i> </a>
-                                        {% endif %}
+
 
                                     </td>
+                                    {% if booking_type == 30 and booking.status_cotrav == 1 %}
+                                        <td><a href="#" id="option1" data-booking_id="{{booking.id}}" data-api_bookigid="{{ booking.vendor_booking_id }}" data-journey_type="{{booking.journey_type}}" onclick="goDoSomething(this);" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;" > <i class="fa fa-plane"></i> </a></td>
+                                        {% endif %}
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -333,6 +337,7 @@ var user_id = {{request.user.id}}
       function(data)
       {
        alert(data['message']);
+       location.reload();
        });
 
 

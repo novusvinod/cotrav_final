@@ -1,0 +1,269 @@
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
+
+
+{% if user %}
+<!-- start page content -->
+
+{% include 'cotrav_alert_message.html' %}
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>ALL BILL'S</header>
+                          <div class="row p-b-20">
+                            <div class="col-md-6 col-sm-6 col-6">
+                                <div class="btn-group">
+                                    <a class="btn btn-info" href="#" data-toggle="modal"
+                                       data-target="#model_add_new_entities"> Add New Offline Bill  <i class="fa fa-plus"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+
+
+
+                    </div>
+
+<form action="bill-create" method="post" >
+
+                           <div class="row">
+
+                               <div class="col-sm-1">
+                                    <label class="form-control">Select Filter</label>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <select name="corporate_id" class="form-control myselect">
+                                         <option value="">Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{company.id}}" {% if data.corporate_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                               <div class="col-sm-2">
+                                    <select name="service_type" class="form-control myselect">
+                                         <option value="">Select Service Type</option>
+                                         <option value="2" {% if data.service_type == '2' %} selected {%endif%}>Taxi</option>
+                                         <option value="3" {% if data.service_type == '3' %} selected {%endif%}>Travel(Bus,Train,Flight)</option>
+                                         <option value="4" {% if data.service_type == '4' %} selected {%endif%}>Hotel</option>
+                                    </select>
+                                </div>
+
+                               <div class="col-sm-2">
+                                    <select name="billing_type" class="form-control myselect">
+                                         <option value="">Select Billing Type</option>
+                                         <option value="1" {% if data.billing_type == '1' %} selected {%endif%}>All</option>
+                                         <option value="2" {% if data.billing_type == '2' %} selected {%endif%}>NonTaxable Voucher</option>
+                                         <option value="3" {% if data.billing_type == '3' %} selected {%endif%}>Tax Invoice</option>
+                                         <option value="4" {% if data.billing_type == '4' %} selected {%endif%}>Rembusment Voucher</option>
+                                    </select>
+                                </div>
+
+                               <div class="col-sm-2">
+                                    <select name="date_type" class="form-control myselect">
+                                         <option value="">Select Date Type</option>
+                                         <option value="1" {% if data.date_type == '1' %} selected {%endif%}>All</option>
+                                         <option value="2" {% if data.date_type == '2' %} selected {%endif%}>Booking Date</option>
+                                         <option value="3" {% if data.date_type == '3' %} selected {%endif%}>Service Date</option>
+                                    </select>
+                                </div>
+
+                               <div class="col-sm-1">
+                                    <input type="text" class="form-control datepicker1" name="from_date" value="{{data.from_date}}" placeholder="From Date">
+                                </div>
+
+                               <div class="col-sm-1">
+                                    <input type="text" class="form-control datepicker1" value="{{data.to_date}}" name="to_date" placeholder="To Date">
+                                </div>
+
+                               <div class="col-sm-1">
+                                    <input type="submit" class="btn btn-info" value="Search">
+                                </div>
+
+
+
+
+                        </div>
+
+</form>
+                    <form action="/agents/bill-nontax-invoice" id="taxiBilling" method="post" >
+                    <input type="hidden" name="current_url" id="current_url" value="{{ request.get_full_path }}">
+                    <div class="card-body ">
+{% include 'cotrav_alert_message.html' %}
+
+
+                        <div class="col-sm-5">
+                                        <div class="btn-group">
+
+                                            <input type="submit" class="btn btn-success pull-right" name="generate" value="Generate Bill" />
+                                        </div>
+                        </div>
+
+
+                        <div class="table-scrollable table-bordered">
+                            <table id="example1" class="display full-width table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Booking ID</th>
+                                    <th>Service Type</th>
+                                    <th>Company Name</th>
+                                    <th>Spoc Name</th>
+                                    <th>Passanger Details</th>
+                                    <th>Booking Entity</th>
+                                    <th>Cotrav Entity</th>
+                                    <th>Pickup Location</th>
+                                    <th>Drop Location</th>
+                                    <th>Booking Date/Time</th>
+
+                                    {% if data.service_type == '2' %}
+                                        <th>Tour Type</th>
+                                        <th>Operator Details</th>
+                                        <th>Taxi/Driver Details</th>
+                                    {% endif %}
+
+                                    {% if data.service_type == '3' %}
+                                        <th>Boarding Point</th>
+                                        <th>Boarding Time</th>
+                                        <th>Departure Date</th>
+                                        <th>Seat Type</th>
+                                    {% endif %}
+
+                                    {% if data.service_type == '4' %}
+                                        <th>Hotel Assign</th>
+                                        <th>Bucket Assign</th>
+                                        <th>No Of Nights</th>
+                                    {% endif %}
+
+
+                                    <th>Management Fee</th>
+                                    <th>IGS</th>
+                                    <th>CGS</th>
+                                    <th>SGS</th>
+                                    <th>Total</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for be in bills %}
+                                <tr>
+                                    <td><input class="bill_checkbox"  type="checkbox" name="booking_ids" value="{{ booking.id }}"
+                                               data-id2 = "{{ be.invoice_id}}" data-id3 = "{{ be.reference_no}}" data-service_types="{{be.service_types}}"
+                                    data-management_fee="{{be.management_fee}}" data-management_fee_igst="{{be.management_fee_igst}}" data-management_fee_cgst="{{be.management_fee_cgst}}"
+                                               data-management_fee_sgst="{{be.management_fee_sgst}}" data-sub_total="{{be.sub_total}}"></td>
+                                    <td>{{ be.reference_no }}</td>
+                                    <td>{{ be.service_types }}</td>
+                                    <td>{{ be.corporate_name }}</td>
+                                    <td>{{ be.spoc_name }}</td>
+                                    <td>{{ be.spoc_name }}</td>
+                                    <td>{{ be.billing_entity|default:'' }}</td>
+                                    <td>{{ be.cotrav_entity|default:'' }}</td>
+                                    <td>{{ be.pickup_location|default:'' }}</td>
+                                    <td>{{ be.drop_location|default:'' }}</td>
+                                    <td>{{ be.booking_datetime|default:'' }}</td>
+
+                                    {% if data.service_type == '2' %}
+                                        {% if be.tour_type == 1 %}
+                                    <td>Radio</td>
+                                    {% elif be.tour_type == 2 %}
+                                    <td>Local</td>
+                                    {% else %}
+                                    <td>Outstation</td>
+                                    {% endif %}
+
+                                        <td>{{ be.operator_name|default:'' }}<br/>({{ be.operator_contact|default:'' }})</td>
+                                        <td>{{ be.driver_name|default:'' }}<br/>({{ be.driver_contact|default:'' }})</td>
+                                    {% endif %}
+
+                                    {% if data.service_type == '3' %}
+                                        <td>{{ be.boarding_point|default:'' }}</td>
+                                        <td>{{ be.boarding_datetime|default:'' }}</td>
+                                        <td>{{ be.departure_datetime|default:'' }}</td>
+                                        <td>{{ be.seat_type }}</td>
+                                    {% endif %}
+
+                                    {% if data.service_type == '4' %}
+                                        <td>{{ be.operator_name|default:'' }}<br/>({{ be.operator_contact|default:'' }})</td>
+                                        <td>{{ be.room_type_name }}</td>
+                                        <td>No Of Nights</td>
+                                    {% endif %}
+
+                                    <td>{{ be.management_fee }}</td>
+                                    <td>{{ be.management_fee_igst }}</td>
+                                    <td>{{ be.management_fee_cgst }}</td>
+                                    <td>{{ be.management_fee_sgst }}</td>
+                                    <td>{{ be.sub_total }}</td>
+
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+<script type="text/javascript">
+$("input:checkbox.bill_checkbox").click(function() {
+if(!$(this).is(":checked"))
+{
+    current_id  = $(this).val();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+    $('#'+current_id).remove();
+}
+
+if($(this).is(":checked"))
+{
+    val_invoice_ids = parseInt($(this).attr("data-id2") );
+    val_service_types = parseInt($(this).attr("data-service_types") );
+    val_management_fees = parseInt($(this).attr("data-management_fee") );
+    val_management_fee_igsts = parseInt($(this).attr("data-management_fee_igst") );
+    val_management_fee_cgsts = parseInt($(this).attr("data-management_fee_cgst") );
+    val_management_fee_sgsts = parseInt($(this).attr("data-management_fee_sgst") );
+    val_sub_totals = parseInt($(this).attr("data-sub_total") );
+
+    $('#taxiBilling').prepend('<input type="hidden" name="invoice_ids" id="'+$(this).val()+'" value="'+ val_invoice_ids +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="service_types" id="'+$(this).val()+'" value="'+ val_service_types +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="management_fees" id="'+$(this).val()+'" value="'+ val_management_fees +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="management_fee_igsts" id="'+$(this).val()+'" value="'+ val_management_fee_igsts +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="management_fee_cgsts" id="'+$(this).val()+'" value="'+ val_management_fee_cgsts +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="management_fee_sgsts" id="'+$(this).val()+'" value="'+ val_management_fee_sgsts +'" />');
+    $('#taxiBilling').prepend('<input type="hidden" name="sub_totals" id="'+$(this).val()+'" value="'+ val_sub_totals +'" />');
+}
+
+
+    });
+
+</script>
+
+{% endblock %}
+
+

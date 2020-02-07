@@ -1223,12 +1223,16 @@ def add_flight_booking_self_conformation(request,id):
             cities_ass = getDataFromAPI(login_type, access_token, url_cities_ass, payload)
             cities = cities_ass['AssCity']
 
-            url_emp = settings.API_BASE_URL + "spoc_employee"
+            url_emp = settings.API_BASE_URL + "employees"
             company_emp = getDataFromAPI(login_type, access_token, url_emp, payload)
             employees = company_emp['Employees']
 
+            url_nat = settings.API_BASE_URL + "get_nationality"
+            nationality = getDataFromAPI(login_type, access_token, url_nat, payload)
+            nationalities = nationality['Nationality']
+
             return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees, 'cities_ass': cities,
-                'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats, 'flight_class_is_international':flight_class_is_international})
+                'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats, 'flight_class_is_international':flight_class_is_international,'nationalities':nationalities})
         else:
             return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': ''})
 
@@ -1308,10 +1312,10 @@ def add_flight_booking_self_final(request, id):
         booking1 = getDataFromAPI(login_type, access_token, url_save, payload11)
         print("API BOOK")
         print(booking1)
+        if not 'RESULT' in booking1['Data']:
+            messages.error(request, 'FLIGHT/FARE NOT AVAILABLE')
+            return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/30", {'message': "Operation Successfully"})
 
-
-        vendor_booking = ""
-        print(booking1['Data']['RESULT'][0]['BOOKINGID'])
         if 'BOOKINGID' in booking1['Data']['RESULT'][0]:
             vendor_booking = booking1['Data']['RESULT'][0]['BOOKINGID']
         else:
@@ -1340,21 +1344,44 @@ def add_flight_booking_self_final(request, id):
                     url_save = settings.API_BASE_URL + "get_flight_pnr_details"
                     pnr_no = {'pnr': vendor_booking}
                     booking1 = getDataFromAPI(login_type, access_token, url_save, pnr_no)
-                    if UID2:
-                        if booking1['Data']['PAXOW'][0]['gpnr']:
-                            pass
-                        else:
-                            sleep(0.5)
+                    print(booking1)
+                    if 'ERROR' in booking1['Data']:
+                        sleep(5)
                     else:
-                        if booking1['Data']['PAX'][0]['gpnr']:
-                            pass
+                        if UID2:
+                            if booking1['Data']['PAXOW'][0]['apnr']:
+                                print("GENP PNPRPPRPRPRPPRPRR ......................")
+                                print(booking1['Data']['PAXOW'][0]['apnr'])
+                                print("GENP PNPRPPRPRPRPPRPRR ......................")
+                                pass
+                            else:
+                                sleep(5)
                         else:
-                            sleep(0.5)
+                            print("GENP PNPRPPRPRPRPPRPRR ......................")
+                            print(booking1['Data']['PAX'][0]['apnr'])
+                            print("GENP PNPRPPRPRPRPPRPRR ......................")
+                            if booking1['Data']['PAX'][0]['apnr']:
+                                pass
+                            else:
+                                sleep(5)
 
                 if not 'FLIGHT' in booking1['Data'] or 'FLIGHTOW' in booking1['Data'] :
-                    messages.error(request, 'Normal Flight Booking Done And Status Under Process..!')
-                    return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
+                    messages.error(request, 'Booking successful, your CoTrav booking id is - ' +str(last_booking_id)+ ', but pending for PNR status, please check the status under Pending for PNR tab')
+                    return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/30", {'message': "Operation Successfully"})
                 else:
+                    if UID2:
+                        if not 'apnr' in booking1['Data']['PAXOW'][0] or len(booking1['Data']['PAXOW'][0]['apnr']) == 0:
+                            messages.error(request, 'Booking successful, your CoTrav booking id is - ' + str(last_booking_id) + ', but pending for PNR status, please check the status under Pending for PNR tab')
+                            return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/30",{'message': "Operation Successfully"})
+                        else:
+                            pass
+                    else:
+                        if not 'apnr' in booking1['Data']['PAX'][0] or len(booking1['Data']['PAX'][0]['apnr']) == 0:
+                            messages.error(request, 'Booking successful, your CoTrav booking id is - ' +str(last_booking_id)+ ', but pending for PNR status, please check the status under Pending for PNR tab')
+                            return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2",{'message': "Operation Successfully"})
+                        else:
+                            pass
+
                     ticket_number =[]
                     pnr_no =[]
                     flight_no =[]

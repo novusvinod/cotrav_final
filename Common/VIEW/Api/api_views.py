@@ -1,5 +1,7 @@
 from datetime import datetime
 import socket
+from threading import Thread
+
 from dateutil.parser import parse
 import json
 import requests
@@ -60,7 +62,9 @@ def login(request):
                 add_otp = SignIn_OTP()
                 email_subject = "Cotrav - Verify Your Email"
                 email_body = "Dear User,<br><br>" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
-                resp1 = add_otp.send_email(user_name, email_subject, email_body)
+                thread = Thread(target=add_otp.send_email, args=(user_name, email_subject, email_body))
+                thread.start()
+                resp1 = 1
 
                 if resp1:
                     if user_type == '1':
@@ -332,10 +336,16 @@ def add_companies(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(contact_person_name, contact_person_email, "taxi123", "Admin")
+                        thread = Thread(target=add_user.new_user_send_email, args=(contact_person_name, contact_person_email, "taxi123", "Admin"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(contact_person_name, contact_person_email, "taxi123", "Admin")
                         if is_spoc:
-                            resp1 = add_user.new_user_send_email(contact_person_name, contact_person_email, "taxi123", "Spoc")
-                            resp1 = add_user.new_user_send_email(contact_person_name, contact_person_email, "taxi123", "Employee")
+                            thread = Thread(target=add_user.new_user_send_email, args=(contact_person_name, contact_person_email, "taxi123", "Spoc"))
+                            thread.start()
+                            thread = Thread(target=add_user.new_user_send_email, args=(contact_person_name, contact_person_email, "taxi123", "Employee"))
+                            thread.start()
+                            #resp1 = add_user.new_user_send_email(contact_person_name, contact_person_email, "taxi123", "Spoc")
+                            #resp1 = add_user.new_user_send_email(contact_person_name, contact_person_email, "taxi123", "Employee")
 
                         data = {'success': 1, 'message': "Corporate Added Successfully"}
                     return JsonResponse(data)
@@ -2641,7 +2651,9 @@ def add_subgroup(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 1")
+                        thread = Thread(target=add_user.new_user_send_email, args=(name, email, "taxi123", "Approver 1"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 1")
                         data = {'success': 1, 'message': "Subgroup Insert Successfully"}
                     cursor.close()
                     return JsonResponse(data)
@@ -2813,7 +2825,9 @@ def add_group_auth(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 2")
+                        thread = Thread(target=add_user.new_user_send_email, args=(name, email, "taxi123", "Approver 2"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 2")
                         data = {'success': 1, 'message': "Company Group Authenticator Added Successfully"}
                     cursor.close()
                     return JsonResponse(data)
@@ -2988,7 +3002,9 @@ def add_subgroup_auth(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 1")
+                        thread = Thread(target=add_user.new_user_send_email, args=(name, email, "taxi123", "Approver 1"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 1")
                         data = {'success': 1, 'message': "Company SubGroup Authenticator Added Successfully"}
                     cursor.close()
                     return JsonResponse(data)
@@ -3160,7 +3176,9 @@ def add_admin(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(name, email, "taxi123", "Admin")
+                        thread = Thread(target=add_user.new_user_send_email(name, email, "taxi123", "Admin"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(name, email, "taxi123", "Admin")
 
                         data = {'success': 1, 'message': "Corporate Admin Added Successfully"}
                     cursor.close()
@@ -3347,7 +3365,9 @@ def add_spoc(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(user_name, email, "taxi123", "Spoc")
+                        thread = Thread(target=add_user.new_user_send_email, args=(user_name, email, "taxi123", "Spoc"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(user_name, email, "taxi123", "Spoc")
                         data = {'success': 1, 'message': "Corporate Spoc Added Successfully"}
                     cursor.close()
 
@@ -3443,6 +3463,7 @@ def delete_spoc(request):
 
         spoc_id = request.POST.get('spoc_id', '')
         delete_id = request.POST.get('delete_id', '')
+        print(spoc_id)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3597,7 +3618,9 @@ def add_employee(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(employee_name, employee_email, "taxi123", "Employee")
+                        thread = Thread(target=add_user.new_user_send_email, args=(employee_name, employee_email, "taxi123", "Employee"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(employee_name, employee_email, "taxi123", "Employee")
                         data = {'success': 1, 'message': "Corporate Employee Added Successfully"}
                     cursor.close()
                     return JsonResponse(data)
@@ -3775,7 +3798,9 @@ def add_agent(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(username, email, "taxi123", "Agent")
+                        thread = Thread(target=add_user.new_user_send_email, args=(username, email, "taxi123", "Agent"))
+                        thread.start()
+                        #resp1 = add_user.new_user_send_email(username, email, "taxi123", "Agent")
                         data = {'success': 1, 'message': "Agent Added Successfully"}
                     cursor.close()
                     return JsonResponse(data)
@@ -4280,13 +4305,18 @@ def add_assessment_codes(request):
         assessment_code = request.POST.get('assessment_code', '')
         code_desc = request.POST.get('code_desc', '')
         from_date = request.POST.get('from_date', '')
-        #from_date = datetime.strptime(from_date, '%d-%m-%Y')
+        from_date = datetime.strptime(from_date, '%d-%m-%Y')
         to_date = request.POST.get('to_date', '')
-        #to_date = datetime.strptime(to_date, '%d-%m-%Y')
+        to_date = datetime.strptime(to_date, '%d-%m-%Y')
         service_from = request.POST.get('service_from', '')
-        #service_from = datetime.strptime(service_from, '%d-%m-%Y')
+        service_from = datetime.strptime(service_from, '%d-%m-%Y')
         service_to = request.POST.get('service_to', '')
-        #service_to = datetime.strptime(service_to, '%d-%m-%Y')
+        service_to = datetime.strptime(service_to, '%d-%m-%Y')
+
+        print(from_date)
+        print(to_date)
+        print(service_from)
+        print(service_to)
 
         if from_date:
             pass
@@ -4356,6 +4386,11 @@ def update_assessment_codes(request):
         service_from = datetime.strptime(service_from, '%d-%m-%Y')
         service_to = request.POST.get('service_to', '')
         service_to = datetime.strptime(service_to, '%d-%m-%Y')
+
+        print(from_date)
+        print(to_date)
+        print(service_from)
+        print(service_to)
 
         if from_date:
             pass
@@ -5141,9 +5176,13 @@ def add_taxi_booking(request):
 
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
-                            resp6 = add_booking_email.send_taxi_email(emp, approvers, "Taxi")
+                            thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Taxi"))
+                            thread.start()
+                            #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Taxi")
                         if is_sms == '1':
-                            resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Taxi")
+                            thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Taxi"))
+                            thread.start()
+                            #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Taxi")
 
                         data = {'success': 1, 'message': "Taxi Booking Added Successfully"}
                         return JsonResponse(data)
@@ -5256,9 +5295,13 @@ def add_bus_booking(request):
 
                         add_booking_email = AddBooking_Email()
                         if is_email  == '1':
-                            resp6 = add_booking_email.send_taxi_email(emp, approvers, "Bus")
+                            thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Bus"))
+                            thread.start()
+                            #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Bus")
                         if is_sms == '1':
-                            resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Bus")
+                            thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Bus"))
+                            thread.start()
+                            #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Bus")
 
                     cursor.close()
                     data = {'success': 1, 'message': "Bus Booking Added Success"}
@@ -5373,9 +5416,13 @@ def add_train_booking(request):
 
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
-                            resp6 = add_booking_email.send_taxi_email(emp, approvers, "Train")
+                            thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Train"))
+                            thread.start()
+                            #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Train")
                         if is_sms == '1':
-                            resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Train")
+                            thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Train"))
+                            thread.start()
+                            #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Train")
 
 
                     cursor.close()
@@ -5509,9 +5556,13 @@ def add_hotel_booking(request):
 
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
-                            resp6 = add_booking_email.send_taxi_email(emp, approvers, "Hotel")
+                            thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Hotel"))
+                            thread.start()
+                            #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Hotel")
                         if is_sms == '1':
-                            resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Hotel")
+                            thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Hotel"))
+                            thread.start()
+                            #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Hotel")
 
                     data = {'success': 1, 'message': "Hotel Booking Added Success"}
                     return JsonResponse(data)
@@ -5539,6 +5590,7 @@ def add_flight_booking(request):
         user_type = request.META['HTTP_USERTYPE']
 
         user_id = request.POST.get('user_id', '')
+        vendor_booking = request.POST.get('vendor_booking', '')
 
         corporate_id = request.POST.get('corporate_id', '')
         booking_email = request.POST.get('booking_email', '')
@@ -5601,7 +5653,7 @@ def add_flight_booking(request):
 
                     cursor.callproc('addFlightBooking', [usage_type,journey_type,flight_class,from_location,to_location,booking_datetime,departure_datetime,
                                                       preferred_flight,assessment_code,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,assessment_city_id,'@last_booking_id'])
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     if booking_id:
@@ -5629,12 +5681,16 @@ def add_flight_booking(request):
 
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
-                            resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
+                            thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Flight"))
+                            thread.start()
+                            #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
                         if is_sms == '1':
-                            resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
+                            thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Flight"))
+                            thread.start()
+                            #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
 
                     cursor.close()
-                    data = {'success': 1, 'message': "Hotel Booking Added Success",'last_booking_id':last_booking_id}
+                    data = {'success': 1, 'message': "Flight Booking Added Success",'last_booking_id':last_booking_id}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -6514,7 +6570,9 @@ def get_flight_search(request):
                             sorted_obj['FLIGHT'] = sorted(sorted_obj['FLIGHT'], key=lambda x: int(x['AMT']), reverse=False)
                             print(sorted_obj['FLIGHT'])
                         else:
+                            print(trip_type)
                             sorted_obj = dict(api_response)
+                            print(sorted_obj)
                             sorted_obj['FLIGHTOW'] = sorted(sorted_obj['FLIGHTOW'], key=lambda x: int(x['AMT']), reverse=False)
                             sorted_obj['FLIGHTRT'] = sorted(sorted_obj['FLIGHTRT'], key=lambda x: int(x['AMT']), reverse=False)
                         data = {'success': 1, 'Data': sorted_obj}
@@ -6706,21 +6764,50 @@ def save_flight_booking(request):
         if is_mobile:
             print("type of ini_object", type(emp_info_international))
             emp_info_international = json.loads(emp_info_international, strict=False)
-            for emp_data in emp_info_international:
-                cursor = connection.cursor()
-                d_date = parse(emp_data['emp_dob']).strftime("%Y-%m-%d")
-                cursor.callproc('updateAddEmployeePassportDetails', [emp_data['emp_id'], emp_data['emp_title'], emp_data['emp_fname'], emp_data['emp_lname'],
-                    d_date, emp_data['emp_passport_no'], emp_data['emp_passport_exp'], emp_data['emp_nationality']])
-                emp = dictfetchall(cursor)
-                print(emp)
-                cursor.close()
+            if flight_class_is_international == 'I':
+                p_date = ''
+                d_date = ''
+                for emp_data in emp_info_international:
+                    if emp_data['emp_dob']:
+                        d_date = parse(emp_data['emp_dob']).strftime("%d-%m-%Y")
+                    else:
+                        d_date = ''
+                    if emp_data['emp_passport_exp']:
+                        p_date = parse(emp_data['emp_passport_exp']).strftime("%d-%m-%Y")
+                    else:
+                        p_date = ''
+                    cursor = connection.cursor()
+                    d_date = parse(emp_data['emp_dob']).strftime("%d-%m-%Y")
+                    cursor.callproc('updateAddEmployeePassportDetails', [emp_data['emp_id'], emp_data['emp_title'], emp_data['emp_fname'], emp_data['emp_lname'],
+                        d_date, emp_data['emp_passport_no'], emp_data['emp_passport_exp'], emp_data['emp_nationality']])
+                    emp = dictfetchall(cursor)
+                    print(emp)
+                    cursor.close()
 
         else:
             emp_info_international = eval(emp_info_international)
+            if flight_class_is_international == 'I':
+                p_date= ''
+                d_date= ''
+                for emp_data in emp_info_international:
+                    cursor = connection.cursor()
+                    if emp_data['emp_dob']:
+                        d_date = parse(emp_data['emp_dob']).strftime("%d-%m-%Y")
+                    else:
+                        d_date = ''
+                    if emp_data['emp_passport_exp']:
+                        p_date = parse(emp_data['emp_passport_exp']).strftime("%d-%m-%Y")
+                    else:
+                        p_date = ''
+                    cursor.callproc('updateAddEmployeePassportDetails', [emp_data['emp_id'], emp_data['emp_title'], emp_data['emp_fname'], emp_data['emp_lname'],
+                        d_date, emp_data['emp_passport_no'], p_date, emp_data['emp_nationality']])
+                    emp = dictfetchall(cursor)
+                    print(emp)
+                    cursor.close()
         print("SAVER DATAF TYpe")
         print(type(emp_info_international))
         dict = []  # create an empty array
-        if flight_class_is_international:
+        if flight_class_is_international == 'I':
             for emp_data in emp_info_international:
                 dict.append({
                     "apnr": "",
@@ -6791,31 +6878,54 @@ def save_flight_booking(request):
                     url = "http://mdt.ksofttechnology.com/API/flight"
 
                     if UID2:
-                        payload2 = {
-                            "PARAM": va['PARAM'],
-                            "STATUSOW": va['STATUSOW'],
-                            "FLIGHTOW": va['FLIGHTOW'],
-                            "CON_FLIGHTOW": va['CON_FLIGHTOW'],
-                            "FAREOW": va['FAREOW'],
-                            "PARAMOW": va['PARAMOW'],
-                            "STATUSRT": va['STATUSRT'],
-                            "FLIGHTRT": va['FLIGHTRT'],
-                            "CON_FLIGHTRT": va['CON_FLIGHTRT'],
-                            "FARERT": va['FARERT'],
-                            "PARAMRT": va['PARAMRT'],
-                            "Deal": va['Deal'],
-                            "FARE_RULE": va['FARE_RULE'],
-                            "PAX": dict,
-                            "TYPE": "DC",
-                            "NAME": "PNR_CREATION",
-                            "Others": [
-                                {
-                                    "REMARK": "79394396",
-                                    "CUSTOMER_EMAIL": "balwant@taxivaxi.in",
-                                    "CUSTOMER_MOBILE": "8669152900"
-                                }
-                            ]
-                        }
+                        if flight_class_is_international == 'I':
+                            payload2 = {
+                                "PARAM": va['PARAM'],
+                                "STATUS": va['STATUS'],
+                                "FLIGHTOW": va['FLIGHTOW'],
+                                "CON_FLIGHTOW": va['CON_FLIGHTOW'],
+                                "FARE": va['FARE'],
+                                "FLIGHTRT": va['FLIGHTRT'],
+                                "CON_FLIGHTRT": va['CON_FLIGHTRT'],
+                                "Deal": va['Deal'],
+                                "FARE_RULE": va['FARE_RULE'],
+                                "PAX": dict,
+                                "TYPE": "DC",
+                                "NAME": "PNR_CREATION",
+                                "Others": [
+                                    {
+                                        "REMARK": "79394396",
+                                        "CUSTOMER_EMAIL": "balwant@taxivaxi.in",
+                                        "CUSTOMER_MOBILE": "8669152900"
+                                    }
+                                ]
+                            }
+                        else:
+                            payload2 = {
+                                "PARAM": va['PARAM'],
+                                "STATUSOW": va['STATUSOW'],
+                                "FLIGHTOW": va['FLIGHTOW'],
+                                "CON_FLIGHTOW": va['CON_FLIGHTOW'],
+                                "FAREOW": va['FAREOW'],
+                                "PARAMOW": va['PARAMOW'],
+                                "STATUSRT": va['STATUSRT'],
+                                "FLIGHTRT": va['FLIGHTRT'],
+                                "CON_FLIGHTRT": va['CON_FLIGHTRT'],
+                                "FARERT": va['FARERT'],
+                                "PARAMRT": va['PARAMRT'],
+                                "Deal": va['Deal'],
+                                "FARE_RULE": va['FARE_RULE'],
+                                "PAX": dict,
+                                "TYPE": "DC",
+                                "NAME": "PNR_CREATION",
+                                "Others": [
+                                    {
+                                        "REMARK": "79394396",
+                                        "CUSTOMER_EMAIL": "balwant@taxivaxi.in",
+                                        "CUSTOMER_MOBILE": "8669152900"
+                                    }
+                                ]
+                            }
                     else:
                         payload = {
                             "STATUS": va['STATUS'],
@@ -7157,7 +7267,7 @@ def add_flight_booking_with_invoice(request):
                                          preferred_flight, assessment_code, no_of_seats,
                                          group_id, subgroup_id, spoc_id, corporate_id, billing_entity_id,
                                          reason_booking, user_id, user_type, employees, booking_email,
-                                         assessment_city_id, '@last_booking_id'])
+                                         assessment_city_id, '@last_booking_id',kafila_booking_id])
                         booking_id = dictfetchall(cursor)
 
                         if booking_id:
@@ -7210,14 +7320,14 @@ def add_flight_booking_with_invoice(request):
                                 print(result)
                                 cursor5.close()
 
-                            for xx in range(int(no_of_seats)):
-                                cursor26 = connection.cursor()
-                                cursor26.callproc('updateFlightPassangerTickectNo',
-                                                 [ticket_number[xx], employee_booking_id[xx], last_booking_id])
-                                result = dictfetchall(cursor26)
-                                print("addFlightBookingticket")
-                                print(result)
-                                cursor26.close()
+                            # for xx in range(int(no_of_seats)):
+                            #     cursor26 = connection.cursor()
+                            #     cursor26.callproc('updateFlightPassangerTickectNo',
+                            #                      [ticket_number[xx], employee_booking_id[xx], last_booking_id])
+                            #     result = dictfetchall(cursor26)
+                            #     print("addFlightBookingticket")
+                            #     print(result)
+                            #     cursor26.close()
 
                             company = dictfetchall(cursor)
                             print(company)
@@ -7254,15 +7364,23 @@ def add_flight_booking_with_invoice(request):
 
                                 add_booking_email = AddBooking_Email()
                                 if is_email == '1':
-                                    resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
+                                    thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Flight"))
+                                    thread.start()
+                                    #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
                                 if is_sms == '1':
-                                    resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
+                                    thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Flight"))
+                                    thread.start()
+                                    #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
 
                                 add_booking_email = Assign_Booking_Email()
                                 if is_sms:
-                                    resp1 = add_booking_email.send_client_sms(emp, "Flight")
+                                    thread = Thread(target=add_booking_email.send_client_sms, args=(emp, "Flight"))
+                                    thread.start()
+                                    #resp1 = add_booking_email.send_client_sms(emp, "Flight")
                                 if is_email:
-                                    resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
+                                    thread = Thread(target=add_booking_email.is_client_email, args=(emp, "Flight", get_voucher_path))
+                                    thread.start()
+                                    #resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
 
                         cursor.close()
                         data = {'success': 1, 'message': "Insert Success", 'last_booking_id': last_booking_id}
@@ -7342,7 +7460,6 @@ def get_phr_detail_assign_booking(request):
                     flight_from = []
                     is_return_flight = []
                     flight_type = ""
-                    journey_type = ""
                     from_location =""
                     to_location = ""
 
@@ -7351,6 +7468,8 @@ def get_phr_detail_assign_booking(request):
                     booking_email = ""
                     meal_is_include = ''
                     last_booking_id = 0
+
+                    print("PNEEEEEEEEEEEEEEEEEEEEEEETRRRRRRRRRRRRRRRRRRRRRRRRRR")
 
                     if journey_type == 'Round Trip':
                         print("in trip two")
@@ -7365,7 +7484,9 @@ def get_phr_detail_assign_booking(request):
                         from_location = booking1['FLIGHTOW'][0]['DES_NAME']
                         to_location = booking1['FLIGHTOW'][0]['ORG_NAME']
                         departure_datetime = datetime.strptime(booking1['FLIGHTOW'][0]['DEP_DATE'] + " " + booking1['FLIGHTOW'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
-
+                        if not booking1['PAXOW'][0]['apnr']:
+                            data = {'success': 0, 'message': "Pnr Not Generated"}
+                            return JsonResponse(data)
                         if booking1['CON_FLIGHTOW']:
                             for flightt in booking1['CON_FLIGHTOW']:
                                 ticket_number.append(booking1['FLIGHTOW'][0]['PCC'])
@@ -7437,22 +7558,23 @@ def get_phr_detail_assign_booking(request):
                             is_return_flight.append('1')
 
                             print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
-
-
                     else:
                         print("in trip one")
-
                         no_of_stops = booking1['FLIGHT'][0]['STOP']
                         flight_type = flight_type
                         fare_type = booking1['FLIGHT'][0]['FARE_TYPE']
                         meal_is_include = ''
-                        no_of_passanger = booking1['FLIGHT'][0]['SEAT']
+                        no_of_passanger = booking1['PARAM'][0]['adt']
                         ticket_price = booking1['FLIGHT'][0]['AMOUNT']
                         journey_type = "One Way"
                         from_location = booking1['FLIGHT'][0]['DES_NAME']
                         to_location = booking1['FLIGHT'][0]['ORG_NAME']
                         departure_datetime = datetime.strptime(booking1['FLIGHT'][0]['DEP_DATE'] + " " + booking1['FLIGHT'][0]['DEP_TIME'] + ":00", "%Y-%m-%d %H:%M:%S")
 
+                        if not booking1['PAX'][0]['apnr']:
+                            data = {'success': 0, 'message': "Pnr Not Generated"}
+                            return JsonResponse(data)
+                        
                         if booking1['CON_FLIGHT']:
                             for flightt in booking1['CON_FLIGHT']:
                                 ticket_number.append(booking1['FLIGHT'][0]['PCC'])
@@ -7485,7 +7607,6 @@ def get_phr_detail_assign_booking(request):
                             is_return_flight.append('0')
                             print("INNNNNNNNNNNN ELSEEEEEEEEEEEEEEEE")
 
-                    cursor = connection.cursor()
                     try:
                         booking_id = ""
 
@@ -7552,55 +7673,57 @@ def get_phr_detail_assign_booking(request):
                                 print(result)
                                 cursor26.close()
 
-                            company = dictfetchall(cursor)
-                            print(company)
-                            if company:
-                                data = {'success': 0, 'message': company}
+                            print("Last Booking ID")
+                            cursor27 = connection.cursor()
+                            cursor27.callproc('viewFlightBooking', [last_booking_id])
+                            emp = dictfetchall(cursor27)
+                            cursor27.close()
+
+                            cursor11 = connection.cursor()
+                            cursor11.callproc('getAllFlightBookingPassangers', [last_booking_id])
+                            passanger = dictfetchall(cursor11)
+                            emp[0]['Passangers'] = passanger
+                            cursor11.close()
+
+                            cursor22 = connection.cursor()
+                            cursor22.callproc('getAllFlightBookingFlights', [last_booking_id])
+                            flights = dictfetchall(cursor22)
+                            cursor22.close()
+
+                            emp[0]['Flights'] = flights
+                            client_ticket = "GEN PDF"
+                            is_email = "1"
+                            is_sms = "1"
+                            get_voucher_path = ''
+                            if client_ticket:
+                                voucher = emp[0]
+                                bus_pdf = Flight(voucher)
+                                get_vou = bus_pdf.get(request)
+                                get_voucher_path = get_vou[1]
                             else:
-                                print("Last Booking ID")
-                                cursor27 = connection.cursor()
-                                cursor27.callproc('viewFlightBooking', [last_booking_id])
-                                emp = dictfetchall(cursor27)
-                                cursor27.close()
+                                get_voucher_path = ""
 
-                                cursor11 = connection.cursor()
-                                cursor11.callproc('getAllFlightBookingPassangers', [last_booking_id])
-                                passanger = dictfetchall(cursor11)
-                                emp[0]['Passangers'] = passanger
-                                cursor11.close()
+                            add_booking_email = AddBooking_Email()
+                            if is_email == '1':
+                                thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Flight"))
+                                thread.start()
+                                #resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
+                            if is_sms == '1':
+                                thread = Thread(target=add_booking_email.send_taxi_msg, args=(emp, approvers, "Flight"))
+                                thread.start()
+                                #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
 
-                                cursor22 = connection.cursor()
-                                cursor22.callproc('getAllFlightBookingFlights', [last_booking_id])
-                                flights = dictfetchall(cursor22)
-                                cursor22.close()
+                            add_booking_email = Assign_Booking_Email()
+                            if is_sms:
+                                thread = Thread(target=add_booking_email.send_client_sms, args=(emp, "Flight"))
+                                thread.start()
+                                #resp1 = add_booking_email.send_client_sms(emp, "Flight")
+                            if is_email:
+                                thread = Thread(target=add_booking_email.is_client_email, args=(emp, "Flight", get_voucher_path))
+                                thread.start()
+                                #resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
 
-                                emp[0]['Flights'] = flights
-                                client_ticket = "GEN PDF"
-                                is_email = "1"
-                                is_sms = "1"
-                                get_voucher_path = ''
-                                if client_ticket:
-                                    voucher = emp[0]
-                                    bus_pdf = Flight(voucher)
-                                    get_vou = bus_pdf.get(request)
-                                    get_voucher_path = get_vou[1]
-                                else:
-                                    get_voucher_path = ""
-
-                                add_booking_email = AddBooking_Email()
-                                if is_email == '1':
-                                    resp6 = add_booking_email.send_taxi_email(emp, approvers, "Flight")
-                                if is_sms == '1':
-                                    resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
-
-                                add_booking_email = Assign_Booking_Email()
-                                if is_sms:
-                                    resp1 = add_booking_email.send_client_sms(emp, "Flight")
-                                if is_email:
-                                    resp1 = add_booking_email.is_client_email(emp, "Flight", get_voucher_path)
-
-                        cursor.close()
-                        data = {'success': 1, 'message': "Insert Success", 'last_booking_id': last_booking_id}
+                        data = {'success': 1, 'message': "PNR Generated Success, PNR Details Send to your Email", 'last_booking_id': last_booking_id}
                         return JsonResponse(data)
 
                     except Exception as e:
@@ -7623,6 +7746,36 @@ def get_phr_detail_assign_booking(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
+
+def get_nationality(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllNationality', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Nationality': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):

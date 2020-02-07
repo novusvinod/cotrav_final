@@ -203,6 +203,51 @@
 
                                             {% if UID2 %}
                                             <h3>OnWords Fare Details</h3>
+                                            {% if flight_class_is_international == 'I' %}
+                                            {% for fare in flights.FARE %}
+
+                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table2">
+
+
+                                                <tbody>
+                                                   <tr>
+                                                       <td class="border-section fare_amt_td"> Base Fare</td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
+                                                   </tr>
+                                                    <tr>
+                                                       <td class="border-section fare_amt_td">Service Tax </td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.TAX_ADT}}</td>
+                                                   </tr>
+                                                    <tr>
+                                                       <td class="border-section fare_amt_td"> Total</td>
+                                                         <td class="border-section fare_amt_td"><i class="fa fa-inr"> </i>{{fare.TOTAL_ADT}}</td>
+                                                   </tr>
+                                                   <tr>
+                                                       <td class="fare_amt">Total Fare :</td>
+                                                         <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
+                                                   </tr>
+                                                <tr>
+                                                       <td class="fare_amt">Fare Type :</td>
+                                                         <td style="text-transform:uppercase" class="fare_amt">{{fare.REFUNDABLE}}</td>
+                                                   </tr>
+                                                   <tr>
+                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
+                                                       {{fare1.FARE_RULE}}
+                                                       {% endfor %}
+                                                   </tr>
+
+
+
+                                                </tbody>
+
+                                            </table>
+
+                                             {% endfor %}
+
+                                            {% endif %}
+
+
+
                                                     {% for fare in flights.FAREOW %}
 
                                              <table class="table display product-overview mb-30 table_txt_align" id="support_table2">
@@ -448,30 +493,42 @@
                                             <td> <input type="text" name="employee_name_1" id="employee_name_1" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_1" id="employee_email_1" class="form-control " placeholder="Email"></td>
+                                     <td> <input type="text" name="employee_ffname_1" id="employee_ffname_1" class="form-control "></td>
+                                  <td> <input type="text" name="employee_llname_1" id="employee_llname_1" class="form-control "></td>
+                                  <td> <input type="text" name="employee_edob_1" id="employee_edob_1" class="form-control "></td>
+                                   <td> <input type="text" name="employee_ttl_1" id="employee_ttl_1" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_1" id="employee_ffname_1">
-                                   <input type="hidden" name="employee_llname_1" id="employee_llname_1">
-                                   <input type="hidden" name="employee_edob_1" id="employee_edob_1">
-                                   <input type="hidden" name="employee_ttl_1" id="employee_ttl_1">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details :(please fill if blank) </label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_1" id="employee_id_pass_1" class="form-control "></td>
-                                    <td><input type="text" name="employee_title_1" id="employee_title_1" class="form-control " placeholder="Titel"></td>
+                                    <td><select name="employee_title_1" id="employee_title_1" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_1" id="employee_fname_1" class="form-control " placeholder="First name"></td>
                                     <td><input type="text" name="employee_lname_1" id="employee_lname_1" class="form-control " placeholder="Last Name"></td>
-                                            <td> <input type="text" name="employee_dob_1" id="employee_dob_1" class="form-control " placeholder="Date Of Birth"></td>
+                                            <td> <input type="text" name="employee_dob_1 " id="employee_dob_1" class="form-control datepicker1" placeholder="Date Of Birth"></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_1" id="employee_passport_1" class="form-control" placeholder="Passport No"></td>
-                                    <td><input type="text" name="employee_pass_exp_1" id="employee_pass_exp_1" class="form-control" placeholder="Expiry Date"></td>
-                                    <td><input type="text" name="employee_nationality_1" id="employee_nationality_1" class="form-control" placeholder="Nationality"></td>
+                                    <td><input type="text" name="employee_pass_exp_1" id="employee_pass_exp_1" class="form-control datepicker1" placeholder="Expiry Date"></td>
+                                    <td><select name="employee_nationality_1" id="employee_nationality_1" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -494,30 +551,43 @@
                                             <td> <input type="text" name="employee_name_2" id="employee_name_2" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_2" id="employee_contact_2" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_2" id="employee_email_2" class="form-control " placeholder="Email"></td>
-                                       </tr>
+
+                                      <td> <input type="text" name="employee_ffname_2" id="employee_ffname_2" class="form-control "></td>
+                                  <td> <input type="text" name="employee_llname_2" id="employee_llname_2" class="form-control "></td>
+                                  <td> <input type="text" name="employee_edob_2" id="employee_edob_2" class="form-control "></td>
+                                  <td> <input type="text" name="employee_ttl_2" id="employee_ttl_2" class="form-control "></td>
+                                     <td>  </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_2" id="employee_ffname_2">
-                                   <input type="hidden" name="employee_llname_2" id="employee_llname_2">
-                                   <input type="hidden" name="employee_edob_2" id="employee_edob_2">
-                                   <input type="hidden" name="employee_ttl_2" id="employee_ttl_2">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : (please fill if blank)</label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_2" id="employee_id_pass_2" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_2" id="employee_title_2" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_2" id="employee_title_2" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_2" id="employee_fname_2" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_2" id="employee_lname_2" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_2" id="employee_dob_2" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_2" id="employee_dob_2" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_2" id="employee_passport_2" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_2" id="employee_pass_exp_2" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_2" id="employee_nationality_2" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_2" id="employee_pass_exp_2" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_2" id="employee_nationality_2" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -540,30 +610,43 @@
                                             <td> <input type="text" name="employee_name_3" id="employee_name_3" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_3" id="employee_contact_3" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_3" id="employee_email_3" class="form-control " placeholder="Email"></td>
+
+                                     <td>  <input type="text" name="employee_ffname_3" id="employee_ffname_3" class="form-control "></td>
+                                  <td> <input type="text" name="employee_llname_3" id="employee_llname_3" class="form-control "></td>
+                                   <td><input type="text" name="employee_edob_3" id="employee_edob_3" class="form-control "></td>
+                                   <td><input type="text" name="employee_ttl_3" id="employee_ttl_3" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_3" id="employee_ffname_3">
-                                   <input type="hidden" name="employee_llname_3" id="employee_llname_3">
-                                   <input type="hidden" name="employee_edob_3" id="employee_edob_3">
-                                   <input type="hidden" name="employee_ttl_3" id="employee_ttl_3">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : (please fill if blank)</label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_3" id="employee_id_pass_3" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_3" id="employee_title_3" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_3" id="employee_title_3" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_3" id="employee_fname_3" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_3" id="employee_lname_3" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_3" id="employee_dob_3" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_3" id="employee_dob_3" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_3" id="employee_passport_3" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_3" id="employee_pass_exp_3" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_3" id="employee_nationality_3" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_3" id="employee_pass_exp_3" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_3" id="employee_nationality_3" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -587,30 +670,43 @@
                                             <td> <input type="text" name="employee_name_4" id="employee_name_4" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_4" id="employee_contact_4" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_4" id="employee_email_4" class="form-control " placeholder="Email"></td>
+
+                                         <td>    <input type="text" name="employee_ffname_4" id="employee_ffname_4" class="form-control "></td>
+                                    <td><input type="text" name="employee_llname_4" id="employee_llname_4" class="form-control "></td>
+                                    <td><input type="text" name="employee_edob_4" id="employee_edob_4" class="form-control "></td>
+                                    <td><input type="text" name="employee_ttl_4" id="employee_ttl_4" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_4" id="employee_ffname_4">
-                                   <input type="hidden" name="employee_llname_4" id="employee_llname_4">
-                                   <input type="hidden" name="employee_edob_4" id="employee_edob_4">
-                                   <input type="hidden" name="employee_ttl_4" id="employee_ttl_4">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : (please fill if blank)</label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_4" id="employee_id_pass_4" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_4" id="employee_title_4" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_4" id="employee_title_4" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_4" id="employee_fname_4" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_4" id="employee_lname_4" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_4" id="employee_dob_4" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_4" id="employee_dob_4" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_4" id="employee_passport_4" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_4" id="employee_pass_exp_4" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_4" id="employee_nationality_4" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_4" id="employee_pass_exp_4" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_4" id="employee_nationality_4" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -633,30 +729,41 @@
                                             <td> <input type="text" name="employee_name_5" id="employee_name_5" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_5" id="employee_contact_5" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_5" id="employee_email_5" class="form-control " placeholder="Email"></td>
+                                       <td>    <input type="text" name="employee_ffname_5" id="employee_ffname_5" class="form-control "></td>
+                                    <td><input type="text" name="employee_llname_5" id="employee_llname_5" class="form-control "></td>
+                                    <td><input type="text" name="employee_edob_5" id="employee_edob_5" class="form-control "></td>
+                                    <td><input type="text" name="employee_ttl_5" id="employee_ttl_5" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_5" id="employee_ffname_5">
-                                   <input type="hidden" name="employee_llname_5" id="employee_llname_5">
-                                   <input type="hidden" name="employee_edob_5" id="employee_edob_5">
-                                   <input type="hidden" name="employee_ttl_5" id="employee_ttl_5">
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : (please fill if blank)</label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_5" id="employee_id_pass_5" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_5" id="employee_title_5" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_5" id="employee_title_5" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_5" id="employee_fname_5" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_5" id="employee_lname_5" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_5" id="employee_dob_5" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_5" id="employee_dob_5" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_5" id="employee_passport_5" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_5" id="employee_pass_exp_5" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_5" id="employee_nationality_5" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_5" id="employee_pass_exp_5" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_5" id="employee_nationality_5" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -679,30 +786,41 @@
                                             <td> <input type="text" name="employee_name_6" id="employee_name_6" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_6" id="employee_email_6" class="form-control " placeholder="Email"></td>
+                                       <td>    <input type="text" name="employee_ffname_6" id="employee_ffname_6" class="form-control "></td>
+                                    <td><input type="text" name="employee_llname_6" id="employee_llname_6" class="form-control "></td>
+                                    <td><input type="text" name="employee_edob_6" id="employee_edob_6" class="form-control "></td>
+                                    <td><input type="text" name="employee_ttl_6" id="employee_ttl_6" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_6" id="employee_ffname_6">
-                                   <input type="hidden" name="employee_llname_6" id="employee_llname_6">
-                                   <input type="hidden" name="employee_edob_6" id="employee_edob_6">
-                                   <input type="hidden" name="employee_ttl_6" id="employee_ttl_6">
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : (please fill if blank) </label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_6" id="employee_id_pass_6" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_6" id="employee_title_6" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_6" id="employee_title_6" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_6" id="employee_fname_6" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_6" id="employee_lname_6" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_6" id="employee_dob_6" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_6" id="employee_dob_6" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_6" id="employee_passport_6" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_6" id="employee_pass_exp_6" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_6" id="employee_nationality_6" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_6" id="employee_pass_exp_6" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_6" id="employee_nationality_6" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -726,30 +844,42 @@
                                             <td> <input type="text" name="employee_name_7" id="employee_name_7" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_7" id="employee_contact_7" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_7" id="employee_email_7" class="form-control " placeholder="Email"></td>
+                                      <td>    <input type="text" name="employee_ffname_7" id="employee_ffname_7" class="form-control "></td>
+                                    <td><input type="text" name="employee_llname_7" id="employee_llname_7" class="form-control "></td>
+                                    <td><input type="text" name="employee_edob_7" id="employee_edob_7" class="form-control "></td>
+                                    <td><input type="text" name="employee_ttl_7" id="employee_ttl_7" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_7" id="employee_ffname_7">
-                                   <input type="hidden" name="employee_llname_7" id="employee_llname_7">
-                                   <input type="hidden" name="employee_edob_7" id="employee_edob_7">
-                                   <input type="hidden" name="employee_ttl_7" id="employee_ttl_7">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details :(please fill if blank) </label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_7" id="employee_id_pass_7" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_7" id="employee_title_7" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_7" id="employee_title_7" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_7" id="employee_fname_7" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_7" id="employee_lname_7" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_7" id="employee_dob_7" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_7" id="employee_dob_7" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_7" id="employee_passport_7" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_7" id="employee_pass_exp_7" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_7" id="employee_nationality_7" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_7" id="employee_pass_exp_7" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_7" id="employee_nationality_7" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -773,30 +903,43 @@
                                             <td> <input type="text" name="employee_name_8" id="employee_name_8" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_8" id="employee_contact_8" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_8" id="employee_email_8" class="form-control " placeholder="Email"></td>
+
+                                            <td>    <input type="text" name="employee_ffname_8" id="employee_ffname_8" class="form-control "></td>
+                                    <td><input type="text" name="employee_llname_8" id="employee_llname_8" class="form-control "></td>
+                                    <td><input type="text" name="employee_edob_8" id="employee_edob_8" class="form-control "></td>
+                                    <td><input type="text" name="employee_ttl_8" id="employee_ttl_8" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_8" id="employee_ffname_8">
-                                   <input type="hidden" name="employee_llname_8" id="employee_llname_8">
-                                   <input type="hidden" name="employee_edob_8" id="employee_edob_8">
-                                   <input type="hidden" name="employee_ttl_8" id="employee_ttl_8">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details :(please fill if blank) </label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_8" id="employee_id_pass_8" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_8" id="employee_title_8" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_8" id="employee_title_8" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_8" id="employee_fname_8" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_8" id="employee_lname_8" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_8" id="employee_dob_8" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_8" id="employee_dob_8" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_8" id="employee_passport_8" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_8" id="employee_pass_exp_8" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_8" id="employee_nationality_8" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_8" id="employee_pass_exp_8" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_8" id="employee_nationality_8" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -819,30 +962,43 @@
                                             <td> <input type="text" name="employee_name_9" id="employee_name_9" class="form-control " placeholder="Employee Name"></td>
                                         <td><input type="text" name="employee_contact_9" id="employee_contact_9" class="form-control " placeholder="Contact No"></td>
                                     <td><input type="text" name="employee_email_9" id="employee_email_9" class="form-control " placeholder="Email"></td>
+
+                                            <td>    <input type="text" name="employee_ffname_9" id="employee_ffname_9" class="form-control "></td>
+                                    <td><input type="text" name="employee_llname_9" id="employee_llname_9" class="form-control "></td>
+                                    <td><input type="text" name="employee_edob_9" id="employee_edob_9" class="form-control "></td>
+                                    <td><input type="text" name="employee_ttl_9" id="employee_ttl_9" class="form-control "></td>
                                        </tr>
                                    </table>
-                                   <input type="hidden" name="employee_ffname_9" id="employee_ffname_9">
-                                   <input type="hidden" name="employee_llname_9" id="employee_llname_9">
-                                   <input type="hidden" name="employee_edob_9" id="employee_edob_9">
-                                   <input type="hidden" name="employee_ttl_9" id="employee_ttl_9">
+
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                   <label class="form-control col-sm-2" style="border:none;">Passport Details : </label>
+                                   <label class="form-control col-sm-2" style="border:none;">Passport Details :(please fill if blank) </label>
                                     <table class="form-group col-sm-10">
                                         <tr>
 
                                     <td><input type="hidden" name="employee_id_pass_9" id="employee_id_pass_9" class="form-control " ></td>
-                                    <td><input type="text" name="employee_title_9" id="employee_title_9" class="form-control " placeholder="Titel" ></td>
+                                    <td><select name="employee_title_9" id="employee_title_9" class="form-control myselect">
+                                        <option value="">Select Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        </select>
+                                        </td>
                                    <td> <input type="text" name="employee_fname_9" id="employee_fname_9" class="form-control " placeholder="First name" ></td>
                                     <td><input type="text" name="employee_lname_9" id="employee_lname_9" class="form-control " placeholder="Last Name" ></td>
-                                            <td> <input type="text" name="employee_dob_9" id="employee_dob_9" class="form-control " placeholder="Date Of Birth" ></td>
+                                            <td> <input type="text" name="employee_dob_9" id="employee_dob_9" class="form-control datepicker1" placeholder="Date Of Birth" ></td>
                                        </tr>
                                         <tr>
                                     <td></td>
                                     <td><input type="text" name="employee_passport_9" id="employee_passport_9" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_9" id="employee_pass_exp_9" class="form-control" placeholder="Expiry Date" ></td>
-                                    <td><input type="text" name="employee_nationality_9" id="employee_nationality_9" class="form-control" placeholder="Nationality" ></td>
+                                    <td><input type="text" name="employee_pass_exp_9" id="employee_pass_exp_9" class="form-control datepicker1" placeholder="Expiry Date" ></td>
+                                    <td><select name="employee_nationality_9" id="employee_nationality_9" class="form-control myselect">
+                                        <option value="">Select Nationality</option>
+                                        {% for nationality in nationalities %}
+                                        <option value="{{nationality.code}}">{{nationality.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                        </td>
                                         </tr>
                                 </table>
                                    {% endif %}
@@ -882,9 +1038,59 @@
 {% else %}
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
+<script type="text/javascript">
+   $(".myselect").select2();
+   var emp_1_n = $("#employee_nationality_1");
+   emp_1_n.select2();
+   var emp_1_t = $("#employee_title_1");
+   emp_1_t.select2();
 
+   var emp_2_n = $("#employee_nationality_2");
+   emp_2_n.select2();
+   var emp_2_t = $("#employee_title_2");
+   emp_2_t.select2();
+
+   var emp_3_n = $("#employee_nationality_3");
+   emp_3_n.select2();
+   var emp_3_t = $("#employee_title_3");
+   emp_3_t.select2();
+
+   var emp_4_n = $("#employee_nationality_4");
+   emp_4_n.select2();
+   var emp_4_t = $("#employee_title_4");
+   emp_4_t.select2();
+
+   var emp_5_n = $("#employee_nationality_5");
+   emp_5_n.select2();
+   var emp_5_t = $("#employee_title_5");
+   emp_5_t.select2();
+
+   var emp_6_n = $("#employee_nationality_6");
+   emp_6_n.select2();
+   var emp_6_t = $("#employee_title_6");
+   emp_6_t.select2();
+
+   var emp_7_n = $("#employee_nationality_7");
+   emp_7_n.select2();
+   var emp_7_t = $("#employee_title_7");
+   emp_7_t.select2();
+
+   var emp_8_n = $("#employee_nationality_8");
+   emp_8_n.select2();
+   var emp_8_t = $("#employee_title_8");
+   emp_8_t.select2();
+
+   var emp_9_n = $("#employee_nationality_9");
+   emp_9_n.select2();
+   var emp_9_t = $("#employee_title_9");
+   emp_9_t.select2();
+
+
+
+</script>
 <script type="text/javascript">
 $(document).ready(function() {
+
     	var no_of_seats = {{no_of_seats}};
     	if(no_of_seats > 0){
            for(i=1;i<=no_of_seats;i++)
@@ -930,23 +1136,27 @@ $("#employee_id_1").change(function()
         {
            //alert(myObject[i]["fname"]);
            $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
            $("#employee_fname_1").val(myObject[i]["fname"]);
            $("#employee_lname_1").val(myObject[i]["lname"]);
            $("#employee_dob_1").val(myObject[i]["dob"]);
            $("#employee_passport_1").val(myObject[i]["passport_no"]);
            $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           emp_1_t.val(myObject[i]["title"]);
+           emp_1_t.trigger('change.select2');
+           emp_1_n.val(myObject[i]["nationality"]);
+           emp_1_n.trigger('change.select2');
         }
         }else{
             $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
            $("#employee_fname_1").val('');
            $("#employee_lname_1").val('');
            $("#employee_dob_1").val('');
            $("#employee_passport_1").val('');
            $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+           emp_1_t.val('');
+           emp_1_t.trigger('change.select2');
+           emp_1_n.val('');
+           emp_1_n.trigger('change.select2');
         }
 
     });
@@ -967,24 +1177,28 @@ $("#employee_id_2").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_2").val(myObject[i]["employee_id"]);
+           $("#employee_fname_2").val(myObject[i]["fname"]);
+           $("#employee_lname_2").val(myObject[i]["lname"]);
+           $("#employee_dob_2").val(myObject[i]["dob"]);
+           $("#employee_passport_2").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_2").val(myObject[i]["expiry_date"]);
+           emp_2_t.val(myObject[i]["title"]);
+           emp_2_t.trigger('change.select2');
+           emp_2_n.val(myObject[i]["nationality"]);
+           emp_2_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_2").val('');
+           $("#employee_fname_2").val('');
+           $("#employee_lname_2").val('');
+           $("#employee_dob_2").val('');
+           $("#employee_passport_2").val('');
+           $("#employee_pass_exp_2").val('');
+           emp_2_t.val('');
+           emp_2_t.trigger('change.select2');
+           emp_2_n.val('');
+           emp_2_n.trigger('change.select2');
         }
 
     });
@@ -1005,24 +1219,28 @@ $("#employee_id_3").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_3").val(myObject[i]["employee_id"]);
+           $("#employee_fname_3").val(myObject[i]["fname"]);
+           $("#employee_lname_3").val(myObject[i]["lname"]);
+           $("#employee_dob_3").val(myObject[i]["dob"]);
+           $("#employee_passport_3").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_3").val(myObject[i]["expiry_date"]);
+           emp_3_t.val(myObject[i]["title"]);
+           emp_3_t.trigger('change.select2');
+           emp_3_n.val(myObject[i]["nationality"]);
+           emp_3_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_3").val('');
+           $("#employee_fname_3").val('');
+           $("#employee_lname_3").val('');
+           $("#employee_dob_3").val('');
+           $("#employee_passport_3").val('');
+           $("#employee_pass_exp_3").val('');
+           emp_3_t.val('');
+           emp_3_t.trigger('change.select2');
+           emp_3_n.val('');
+           emp_3_n.trigger('change.select2');
         }
     });
 
@@ -1041,24 +1259,28 @@ $("#employee_id_4").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_4").val(myObject[i]["employee_id"]);
+           $("#employee_fname_4").val(myObject[i]["fname"]);
+           $("#employee_lname_4").val(myObject[i]["lname"]);
+           $("#employee_dob_4").val(myObject[i]["dob"]);
+           $("#employee_passport_4").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_4").val(myObject[i]["expiry_date"]);
+           emp_4_t.val(myObject[i]["title"]);
+           emp_4_t.trigger('change.select2');
+           emp_4_n.val(myObject[i]["nationality"]);
+           emp_4_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_4").val('');
+           $("#employee_fname_4").val('');
+           $("#employee_lname_4").val('');
+           $("#employee_dob_4").val('');
+           $("#employee_passport_4").val('');
+           $("#employee_pass_exp_4").val('');
+           emp_4_t.val('');
+           emp_4_t.trigger('change.select2');
+           emp_4_n.val('');
+           emp_4_n.trigger('change.select2');
         }
     });
 
@@ -1077,24 +1299,28 @@ $("#employee_id_5").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_5").val(myObject[i]["employee_id"]);
+           $("#employee_fname_5").val(myObject[i]["fname"]);
+           $("#employee_lname_5").val(myObject[i]["lname"]);
+           $("#employee_dob_5").val(myObject[i]["dob"]);
+           $("#employee_passport_5").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_5").val(myObject[i]["expiry_date"]);
+           emp_5_t.val(myObject[i]["title"]);
+           emp_5_t.trigger('change.select2');
+           emp_5_n.val(myObject[i]["nationality"]);
+           emp_5_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_5").val('');
+           $("#employee_fname_5").val('');
+           $("#employee_lname_5").val('');
+           $("#employee_dob_5").val('');
+           $("#employee_passport_5").val('');
+           $("#employee_pass_exp_5").val('');
+           emp_5_t.val('');
+           emp_5_t.trigger('change.select2');
+           emp_5_n.val('');
+           emp_5_n.trigger('change.select2');
         }
     });
 
@@ -1113,24 +1339,28 @@ $("#employee_id_5").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_6").val(myObject[i]["employee_id"]);
+           $("#employee_fname_6").val(myObject[i]["fname"]);
+           $("#employee_lname_6").val(myObject[i]["lname"]);
+           $("#employee_dob_6").val(myObject[i]["dob"]);
+           $("#employee_passport_6").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_6").val(myObject[i]["expiry_date"]);
+           emp_6_t.val(myObject[i]["title"]);
+           emp_6_t.trigger('change.select2');
+           emp_6_n.val(myObject[i]["nationality"]);
+           emp_6_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_6").val('');
+           $("#employee_fname_6").val('');
+           $("#employee_lname_6").val('');
+           $("#employee_dob_6").val('');
+           $("#employee_passport_6").val('');
+           $("#employee_pass_exp_6").val('');
+           emp_6_t.val('');
+           emp_6_t.trigger('change.select2');
+           emp_6_n.val('');
+           emp_6_n.trigger('change.select2');
         }
     });
 
@@ -1149,24 +1379,28 @@ $("#employee_id_5").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_7").val(myObject[i]["employee_id"]);
+           $("#employee_fname_7").val(myObject[i]["fname"]);
+           $("#employee_lname_7").val(myObject[i]["lname"]);
+           $("#employee_dob_7").val(myObject[i]["dob"]);
+           $("#employee_passport_7").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_7").val(myObject[i]["expiry_date"]);
+           emp_7_t.val(myObject[i]["title"]);
+           emp_7_t.trigger('change.select2');
+           emp_7_n.val(myObject[i]["nationality"]);
+           emp_7_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_7").val('');
+           $("#employee_fname_7").val('');
+           $("#employee_lname_7").val('');
+           $("#employee_dob_7").val('');
+           $("#employee_passport_7").val('');
+           $("#employee_pass_exp_7").val('');
+           emp_7_t.val('');
+           emp_7_t.trigger('change.select2');
+           emp_7_n.val('');
+           emp_7_n.trigger('change.select2');
         }
     });
         $("#employee_id_8").change(function()
@@ -1184,24 +1418,29 @@ $("#employee_id_5").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_8").val(myObject[i]["employee_id"]);
+
+           $("#employee_fname_8").val(myObject[i]["fname"]);
+           $("#employee_lname_8").val(myObject[i]["lname"]);
+           $("#employee_dob_8").val(myObject[i]["dob"]);
+           $("#employee_passport_8").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_8").val(myObject[i]["expiry_date"]);
+           emp_8_t.val(myObject[i]["title"]);
+           emp_8_t.trigger('change.select2');
+           emp_8_n.val(myObject[i]["nationality"]);
+           emp_8_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_8").val('');
+           $("#employee_fname_8").val('');
+           $("#employee_lname_8").val('');
+           $("#employee_dob_8").val('');
+           $("#employee_passport_8").val('');
+           $("#employee_pass_exp_8").val('');
+           emp_8_t.val('');
+           emp_8_t.trigger('change.select2');
+           emp_8_n.val('');
+           emp_8_n.trigger('change.select2');
         }
     });
         $("#employee_id_9").change(function()
@@ -1219,24 +1458,29 @@ $("#employee_id_5").change(function()
         for (i in myObject)
         {
            //alert(myObject[i]["fname"]);
-           $("#employee_id_pass_1").val(myObject[i]["employee_id"]);
-           $("#employee_title_1").val(myObject[i]["title"]);
-           $("#employee_fname_1").val(myObject[i]["fname"]);
-           $("#employee_lname_1").val(myObject[i]["lname"]);
-           $("#employee_dob_1").val(myObject[i]["dob"]);
-           $("#employee_passport_1").val(myObject[i]["passport_no"]);
-           $("#employee_pass_exp_1").val(myObject[i]["expiry_date"]);
-           $("#employee_nationality_1").val(myObject[i]["nationality"]);
+           $("#employee_id_pass_9").val(myObject[i]["employee_id"]);
+
+           $("#employee_fname_9").val(myObject[i]["fname"]);
+           $("#employee_lname_9").val(myObject[i]["lname"]);
+           $("#employee_dob_9").val(myObject[i]["dob"]);
+           $("#employee_passport_9").val(myObject[i]["passport_no"]);
+           $("#employee_pass_exp_9").val(myObject[i]["expiry_date"]);
+           emp_9_t.val(myObject[i]["title"]);
+           emp_9_t.trigger('change.select2');
+           emp_9_n.val(myObject[i]["nationality"]);
+           emp_9_n.trigger('change.select2');
         }
         }else{
-            $("#employee_id_pass_1").val('');
-           $("#employee_title_1").val('');
-           $("#employee_fname_1").val('');
-           $("#employee_lname_1").val('');
-           $("#employee_dob_1").val('');
-           $("#employee_passport_1").val('');
-           $("#employee_pass_exp_1").val('');
-           $("#employee_nationality_1").val('');
+            $("#employee_id_pass_9").val('');
+           $("#employee_fname_9").val('');
+           $("#employee_lname_9").val('');
+           $("#employee_dob_9").val('');
+           $("#employee_passport_9").val('');
+           $("#employee_pass_exp_9").val('');
+           emp_9_t.val('');
+           emp_9_t.trigger('change.select2');
+           emp_9_n.val('');
+           emp_9_n.trigger('change.select2');
         }
     });
 

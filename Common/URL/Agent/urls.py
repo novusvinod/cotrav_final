@@ -159,7 +159,8 @@ urlpatterns = [
     path('agents/lead-doc-delete/<int:pk>', lead_doc_delete, name='lead-doc-delete'),
     
     path('agents/bill-create', agent_views.bill_create),
-    path('agents/bill-nontax-invoice', agent_views.hotel_billing),
+    path('agents/bill-create-nontax-invoice', agent_views.bill_create_nontax_invoice),
+    path('agents/bill-nontax-invoice/<int:id>', agent_views.get_all_generated_bills),
     path('agents/bill-tax-invoice', agent_views.hotel_billing),
     path('agents/bill-offline', agent_views.hotel_billing),
     path('agents/bill-report', agent_views.hotel_billing),

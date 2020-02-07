@@ -115,5 +115,6 @@ urlpatterns = [
     path('api/dashboard_taxable_amount_table', agent_api_view.dashboard_taxable_amount_table),
 
     path('api/get_all_bills', agent_api_view.get_all_bills),
+    path('api/get_all_generated_bills', agent_api_view.get_all_generated_bills),
 
 ]

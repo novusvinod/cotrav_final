@@ -1,0 +1,155 @@
+{% extends 'Agent/layout/header.html' %}
+
+{% block content %}
+
+{% if user %}
+<!-- start page content -->
+{% include 'cotrav_alert_message.html' %}
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_action">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="delete_label" class="modal-title-status">Invoice Action</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/accept-bus-booking" method="post" enctype="multipart/form-data" id="form_id">
+                <input type="hidden" name="booking_id" id="booking_id">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="accept_id" id="accept_id">
+                <input type="hidden" name="reject_id" id="reject_id">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <label>Are you sure you want to Perform Action</label>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-topline-aqua">
+                    <div class="card-head">
+                        <header>Non-Taxable Invoice Status</header>
+                        <div class="tools">
+                            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+                            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+                            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                        </div>
+                    </div>
+
+                    <div class="card-body ">
+                        <div class = "mdl-tabs mdl-js-tabs">
+                           <div class = "mdl-tabs__tab-bar tab-left-side">
+                              <a href = "/agents/bill-nontax-invoice//1" class = "mdl-tabs__tab {% if bill_type == 1 %} is-active {% endif %} ">Non-Taxable Invoice Status</a>
+                              <a href = "/agents/bill-nontax-invoice//2" class = "mdl-tabs__tab {% if bill_type == 2 %} is-active {% endif %}">Pending for Client Verification</a>
+                              <a href = "/agents/bill-nontax-invoice/3" class = "mdl-tabs__tab {% if bill_type == 3 %} is-active {% endif %}">Invoice Raised for Correction</a>
+                              <a href = "/agents/bill-nontax-invoice/4" class = "mdl-tabs__tab {% if bill_type == 4 %} is-active {% endif %}">Client Verified Bills</a>
+
+                           </div>
+
+                        </div>
+
+
+                    </div>
+
+{% include 'cotrav_alert_message.html' %}
+                    <div class="card-body ">
+
+                        <div class="table-scrollable table-bordered">
+
+                            <table id="example1" class="display full-width table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Bill id</th>
+                                    <th>Corporate Name</th>
+                                    <th>No of Invoices</th>
+                                    <th>Billing Entity</th>
+                                    <th>Service Type</th>
+                                    <th>Service Details</th>
+                                    <th>Created Date</th>
+                                    <th>City</th>
+                                    <th>Service Datetime</th>
+                                    <th>Booking Datetime</th>
+                                    <th>Total Tax</th>
+                                    <th>Management Fee</th>
+                                    <th>TDS</th>
+                                    <th>IGST</th>
+                                    <th>CGST</th>
+                                    <th>SGST</th>
+                                    <th>Total Amount</th>
+
+
+
+                                    <th>Details</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for bill in bills %}
+                                <tr>
+                                    <td>{{bill.id}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{bill.client_billing_entity}}</td>
+                                    <td>service_type</td>
+                                    <td>service_details</td>
+                                    <td>{{bill.bill_created_date}}</td>
+                                    <td>city</td>
+                                    <td>service_datetime</td>
+                                    <td>booking_datetime</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{bill.system_calculated_tds}}</td>
+                                    <td>{{bill.igst}}</td>
+                                    <td>{{bill.cgst}}</td>
+                                    <td>{{bill.sgst}}</td>
+                                    <td>{{bill.total_amount}}</td>
+
+                                    <td>
+                                        <a href="#" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end page content -->
+
+
+{% else %}
+<p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
+{% endif %}
+
+<script type="text/javascript">
+$(function() {
+
+});
+
+
+
+</script>
+
+{% endblock %}

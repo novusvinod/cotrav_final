@@ -43,7 +43,7 @@
                                 <label class="col-sm-4" >Company Name</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="corporate_id"  required>
+                                    <select class="col-sm-8 form-control myselect" name="corporate_id"  required disabled>
                                         <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}" {% if employee.corporate_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>

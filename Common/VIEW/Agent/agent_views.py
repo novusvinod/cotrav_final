@@ -85,7 +85,7 @@ def agent_login_action(request):
             if user:
                 request.session.set_expiry(7200)  # sets the exp. value of the session
                 auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
-                #messages.success(request, 'Login Successful..!')
+                messages.success(request, 'Login Successful..!')
                 return HttpResponseRedirect("/agents/agent_home")
         else:
             messages.error(request, 'Invalid Email Or Password..!')
@@ -2462,6 +2462,7 @@ def add_operator(request,id):
 
             operator_contact = request.POST.get('operator_contact', '')
             website = request.POST.get('website', '')
+            operator_address = request.POST.get('operator_address', '')
 
             is_service_tax_applicable = request.POST.get('is_service_tax_applicable', '')
             service_tax_number = request.POST.get('service_tax_number', '')
@@ -2481,7 +2482,7 @@ def add_operator(request,id):
                 operator_id = 0
 
             payload = {'type':type,'username':username,'password':password,'operator_name':operator_name,'operator_email':operator_email,'operator_contact':operator_contact,
-                       'website':website,
+                       'website':website,'operator_address':operator_address,
                        'is_service_tax_applicable':is_service_tax_applicable,'service_tax_number':service_tax_number,'night_start_time':night_start_time,
                        'night_end_time':night_end_time,'tds_rate':tds_rate,'gst_id':gst_id,'pan_no':pan_no,'operator_id':operator_id,'user_id':cotrav_agent_id,'user_type':login_type}
 
@@ -7556,19 +7557,99 @@ def add_cotrav_billing_entities(request,id):
 
 def bill_create(request):
     if 'agent_login_type' in request.session:
-        if id:
+        if request.method == 'POST':
+            login_type = request.session['agent_login_type']
+            access_token = request.session['agent_access_token']
+            
+            corporate_id = request.POST.get('corporate_id', '')
+            if not corporate_id:
+                corporate_id = 0
+            service_type = request.POST.get('service_type', '')
+            invoice_type = request.POST.get('invoice_type', '')
+            date_type = request.POST.get('date_type', '')
+            from_date = request.POST.get('from_date', '')
+            to_date = request.POST.get('to_date', '')
+            payload = {'corporate_id': int(corporate_id),'service_type':service_type,'invoice_type':invoice_type,'date_type':date_type,'from_date':from_date,'to_date':to_date}
+            print(payload)
+            url = settings.API_BASE_URL + "companies"
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            companies = company['Corporates']
+
+            url = settings.API_BASE_URL + "get_all_bills"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print(operator)
+            operator = operator['Bill']
+
+            return render(request, 'Agent/bills_create.html', {'bills': operator,'companies':companies,'data':payload})
+        else:
             login_type = request.session['agent_login_type']
             access_token = request.session['agent_access_token']
             payload = {'': id}
+
+            url = settings.API_BASE_URL + "companies"
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            companies = company['Corporates']
+
             url = settings.API_BASE_URL + "get_all_bills"
             operator = getDataFromAPI(login_type, access_token, url, payload)
             operator = operator['Bill']
 
-            return render(request, 'Agent/bills.html', {'bills': operator})
-        else:
-            return render(request, 'Agent/bills.html', {})
+            return render(request, 'Agent/bills_create.html', {'bills': operator, 'companies': companies})
     else:
         return HttpResponseRedirect("/agents/login")
+
+
+def get_all_generated_bills(request, id):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+        payload = {'bill_type': id}
+        url = settings.API_BASE_URL + "get_all_generated_bills"
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company['Bill']
+        return render(request, 'Agent/bills_geterated.html', {'bills': companies, 'bill_type':id})
+    else:
+        return HttpResponseRedirect("/agents/login")
+    
+
+def bill_create_nontax_invoice(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        invoice_id = request.POST.getlist('invoice_ids')
+        service_types = request.POST.getlist('service_types')
+        management_fees = request.POST.getlist('management_fees')
+        management_fee_igsts = request.POST.getlist('management_fee_igsts')
+        management_fee_cgsts = request.POST.getlist('management_fee_cgsts')
+        management_fee_sgsts = request.POST.getlist('management_fee_sgsts')
+        sub_totals = request.POST.getlist('sub_totals')
+
+        payload = {'invoice_id': invoice_id,'service_types':service_types,'management_fees':management_fees,'management_fee_igsts':management_fee_igsts,
+                   'management_fee_cgsts':management_fee_cgsts,'management_fee_sgsts':management_fee_sgsts,'sub_totals':sub_totals}
+        print(payload)
+
+        url = settings.API_BASE_URL + "bill_create_nontax_invoice"
+        operator = getDataFromAPI(login_type, access_token, url, payload)
+        print(operator)
+        payload = {'id': ''}
+        url = settings.API_BASE_URL + "companies"
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company['Corporates']
+        url = settings.API_BASE_URL + "get_all_bills"
+        operator = getDataFromAPI(login_type, access_token, url, payload)
+        operator = operator['Bill']
+        if operator['success'] == '1':
+            messages.success(request, "Bill Generated Success")
+            return render(request, 'Agent/bills_create.html', {'bills': operator, 'companies': companies})
+        else:
+            messages.error(request, "Bill Generated Fail")
+            return render(request, 'Agent/bills_create.html', {'bills': operator, 'companies': companies})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
 
 
 
