@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------
 
-    Theme Name: CoTrav - Multipurpose Business and Admin Template
+    Theme Name: Fabrex - Multipurpose Business and Admin Template
     Description: Multipurpose Business and Admin Template
     Author: Chitrakoot Web
     Version: 3.3

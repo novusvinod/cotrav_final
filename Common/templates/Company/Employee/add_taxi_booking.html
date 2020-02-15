@@ -39,7 +39,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Tour Type*</label>
-                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type myselect" required>
+                                 <select id="tour_type" name="tour_type" class="form-control col-sm-8 tour_type  myselect" style="width:66%"  required>
                                       <option value="">Select Tour Type </option>
                                     {% for corp_acces in corp_access %}
 
@@ -62,7 +62,7 @@
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Pickup City*</label>
-                                 <select id="current_city_id" name="current_city_id" class="form-control col-sm-8 myselect" required>
+                                 <select id="current_city_id" name="current_city_id" class="form-control col-sm-8  myselect" style="width:66%"  required>
                                       <option value="">Select City </option>
                                         {% for cities in citiess %}
                                          <option value="{{cities.id}}">{{cities.city_name}}</option>
@@ -74,7 +74,7 @@
 
                               <div class="form-group row" id="tr_taxi_type">
                                     <label class="col-sm-4" >Taxi Type</label>
-                                     <select name="taxi_type" class="form-control col-sm-8 myselect" id="select_taxi_type">
+                                     <select name="taxi_type" class="form-control col-sm-8  myselect" style="width:66%"  id="select_taxi_type">
                                          <option value="" >Select Taxi Type</option>
                                         {% for taxi in taxies %}
                                         <option value="{{taxi.id}}">{{taxi.name}}</option>
@@ -84,7 +84,7 @@
 
                              <div class="form-group row" id="tr_package" >
                                     <label class="col-sm-4" >Select Package</label>
-                                     <select name="package_id" id="package_id" class="form-control col-sm-8 myselect">
+                                     <select name="package_id" id="package_id" class="form-control col-sm-8  myselect" style="width:66%" >
 
                                     </select>
                                 </div>
@@ -106,7 +106,7 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Pickup DateTime*</label>
-                                 <input type="text" class="form-control col-sm-8 datetimepicker1" name="pickup_datetime" placeholder="Pickup Date/Time" required>
+                                 <input type="text" class="form-control col-sm-8 datetimepicker1" autocomplete="off" name="pickup_datetime" placeholder="Pickup Date/Time" required>
                             </div>
 
 
@@ -115,7 +115,7 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
-                                   <select name="assessment_code" class="form-control col-sm-8 myselect">
+                                   <select name="assessment_code" class="form-control col-sm-8  myselect" style="width:66%" >
                                        <option value="" >Select Assessment Code</option>
                                         {% for assessment in assessments %}
                                         <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
@@ -125,7 +125,7 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment City*</label>
-                                   <select name="assessment_city_id" class="form-control col-sm-8 myselect">
+                                   <select name="assessment_city_id" class="form-control col-sm-8  myselect" style="width:66%" >
                                        <option value="" >Select Assessment City</option>
                                         {% for city in cities %}
                                         <option value="{{city.id}}">{{city.city_name}}</option>

@@ -48,7 +48,7 @@
                 {% if corp_acces.no_of_auth_level == 2 %}
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Group Name</label>
-                                <select class="form-control col-sm-8 myselect" name="group_id">
+                                <select class="form-control col-sm-8  myselect" style="width:66%"  name="group_id" required>
                                     <option value="">Select Group</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -66,8 +66,8 @@
                             </select>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4" >Select SubGroup Group</label>
-                                <select class="form-control col-sm-8 myselect" name="subgroup_id">
+                                <label class="col-sm-4" >Select SubGroup</label>
+                                <select class="form-control col-sm-8  myselect" style="width:66%"  name="subgroup_id" required>
                                     <option value="">Select SubGroup</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -86,7 +86,7 @@
 {% if corp_acces.no_of_auth_level == 1 %}
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select SubGroup Group</label>
-                                <select class="form-control col-sm-8 myselect" name="subgroup_id">
+                                <select class="form-control col-sm-8  myselect" style="width:66%"  name="subgroup_id" required>
                                     <option value="">Select SubGroup</option>
                                     {% if spoc %}
                                     {% for spoc in spoc %}
@@ -358,6 +358,38 @@
                                         {% if spoc %}
                                         {% for spoc in spoc %}
                                          <option value="1" {% if spoc.has_single_employee == 1 %} selected {%endif%}>Yes</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="1">Yes</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                              <div class="form-group row">
+                                <label class="col-sm-4 control-label">Is Send Email?</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_send_email">
+                                         <option value="0">No</option>
+                                        {% if spoc %}
+                                        {% for spoc in spoc %}
+                                         <option value="1" {% if spoc.is_send_email == 1 %} selected {%endif%}>Yes</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="1">Yes</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <label class="col-sm-4 control-label">Is Send SMS?</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_send_sms">
+                                         <option value="0">No</option>
+                                        {% if spoc %}
+                                        {% for spoc in spoc %}
+                                         <option value="1" {% if spoc.is_send_sms == 1 %} selected {%endif%}>Yes</option>
                                          {% endfor %}
                                         {% else %}
                                          <option value="1">Yes</option>

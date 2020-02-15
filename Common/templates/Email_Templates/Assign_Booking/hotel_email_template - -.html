@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="utf-8"> <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no"> <!-- Tell iOS not to automatically link certain text strings. -->
+
+    <title> Cotrav Train template </title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+
+
+    <!-- CSS Reset : BEGIN -->
+    <style>
+
+        /* What it does: Remove spaces around the email design added by some email clients. */
+        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+            font-family: Montserrat !important;
+        }
+
+        /* What it does: Stops email clients resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* What it does: Centers email on Android 4.4 */
+        div[style*="margin: 16px 0"] {
+            margin: 0 !important;
+        }
+        /* What it does: forces Samsung Android mail clients to use the entire viewport */
+        #MessageViewBody, #MessageWebViewDiv{
+            width: 100% !important;
+        }
+
+        /* What it does: Stops Outlook from adding extra spacing to tables. */
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* What it does: Fixes webkit padding issue. */
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            margin: 0 auto !important;
+        }
+
+        /* What it does: Uses a better rendering method when resizing images in IE. */
+        img {
+            -ms-interpolation-mode:bicubic;
+        }
+
+        /* What it does: Prevents Windows 10 Mail from underlining links despite inline CSS. Styles for underlined links should be inline. */
+        a {
+            text-decoration: none;
+        }
+
+        /* What it does: A work-around for email clients meddling in triggered links. */
+        a[x-apple-data-detectors],  /* iOS */
+        .unstyle-auto-detected-links a,
+        .aBn {
+            border-bottom: 0 !important;
+            cursor: default !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        /* What it does: Prevents Gmail from changing the text color in conversation threads. */
+        .im {
+            color: inherit !important;
+        }
+
+        /* What it does: Prevents Gmail from displaying a download button on large, non-linked images. */
+        .a6S {
+            display: none !important;
+            opacity: 0.01 !important;
+        }
+        /* If the above doesn't work, add a .g-img class to any image in question. */
+        img.g-img + div {
+            display: none !important;
+        }
+
+        /* What it does: Removes right gutter in Gmail iOS app: https://github.com/TedGoas/Cerberus/issues/89  */
+        /* Create one of these media queries for each additional viewport size you'd like to fix */
+
+        /* iPhone 4, 4S, 5, 5S, 5C, and 5SE */
+        @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+            u ~ div .email-container {
+                min-width: 320px !important;
+            }
+        }
+        /* iPhone 6, 6S, 7, 8, and X */
+        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+            u ~ div .email-container {
+                min-width: 375px !important;
+            }
+        }
+        /* iPhone 6+, 7+, and 8+ */
+        @media only screen and (min-device-width: 414px) {
+            u ~ div .email-container {
+                min-width: 414px !important;
+            }
+        }
+
+    </style>
+
+    <!-- What it does: Makes background images in 72ppi Outlook render at correct size. -->
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
+
+    <!-- CSS Reset : END -->
+
+    <!-- Progressive Enhancements : BEGIN -->
+    <style>
+
+      /* What it does: Hover styles for buttons */
+      .button-td,
+      .button-a {
+          transition: all 100ms ease-in;
+      }
+      .button-td-primary:hover,
+      .button-a-primary:hover {
+          background: #555555 !important;
+          border-color: #555555 !important;
+      }
+
+      /* Media Queries */
+      @media screen and (max-width: 480px) {
+
+          /* What it does: Forces table cells into full-width rows. */
+          .stack-column,
+          .stack-column-center {
+              display: block !important;
+              width: 100% !important;
+              max-width: 100% !important;
+              direction: ltr !important;
+          }
+          /* And center justify these ones. */
+          .stack-column-center {
+              text-align: center !important;
+          }
+
+          /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+          .center-on-narrow {
+              text-align: center !important;
+              display: block !important;
+              margin-left: auto !important;
+              margin-right: auto !important;
+              float: none !important;
+          }
+          table.center-on-narrow {
+              display: inline-block !important;
+          }
+
+          /* What it does: Adjust typography on small screens to improve readability */
+          .email-container p {
+              font-size: 17px !important;
+          }
+      }
+
+    </style>
+    <!-- Progressive Enhancements : END -->
+
+</head>
+{% for booking in bookings %}
+<body  style="font-family: Montserrat; margin: 0; padding: 0 !important; mso-line-height-rule: exactly;" width="700px;">
+  <center style="width: 100%; background-color: #cfcbcb">
+  
+        <!-- Preview Text Spacing Hack : BEGIN -->
+        <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+          &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+        </div>
+        <!-- Preview Text Spacing Hack : END -->
+
+        <!--
+            Set the email width. Defined in two places:
+            1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 680px.
+            2. MSO tags for Desktop Windows Outlook enforce a 680px width.
+            Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
+        -->
+        <div style="width: 680px; margin: 0 auto;" class="email-container">
+            <!--[if mso]>
+            <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="680">
+            <tr>
+            <td>
+            <![endif]-->
+
+          <!-- Email Body : BEGIN -->
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
+            <!-- Email Header : BEGIN -->
+              <tr>
+                  <td style="text-align: center; line-height:0px;">
+                      <img src="http://cotrav.co/static/email_template_images/bg_1.png" width="680" height="120" alt="alt_text" border="0" style="height: auto; background: #ffffff; font-family: Montserrat; font-size: 15px; line-height: 15px; color: #555555;">
+                  </td>
+              </tr>
+            <!-- Email Header : END -->
+
+            
+
+                <!-- 1 Column Text + Button : BEGIN -->
+                <tr>
+                    <td style="background-color: #ffffff;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+
+                          <tr>
+                            <td>
+                             <div style="margin-left: 500px; padding-bottom: 37px;margin-top: -44px;"> <img src="http://cotrav.co/static/email_template_images/hotel_1.png"></div>
+                            </td>
+
+                          </tr>
+                            <tr>
+                                <td style=" font-family: Montserrat; font-size: 15px;  color: black; ">
+                                    <h1 style="margin: -38px 0 10px; font-size: 20px; line-height: 30px; color: #000000; text-align: center; font-weight: normal; background-color: whitesmoke;">  <img src="http://cotrav.co/static/email_template_images/dot.png"> Booking Confirmation from Cotrav <br><small style="font-size: 14px;">Booking ID : {{ booking.reference_no }} </small></h1>
+                                   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 20px 20px;">
+                                    <!-- Button : BEGIN -->
+                                    <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
+                                        <tr>
+                                           <td  style=" font-family: Montserrat; font-size: 15px;  color: black; text-align: center;">
+                                             
+                                             <h1 style="font-size: 16px;"> Dear {{user_name}},</h1>
+                                             <p style="font-size: 12px;">This is to inform you that your railway travel has been confirmed by Cotrav Team.The details of your booking are mentioned below:</p>
+                                           </td>
+                                        </tr>
+                                    </table>
+                                    <!-- Button : END -->
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+                <!-- 1 Column Text + Button : END -->
+
+                <!-- Background Image with Text : BEGIN -->
+                <tr>
+                  
+                    <td style="text-align: center; background-color: #ffffff;">
+                     <fieldset style="border:solid 1px black;">
+                      <legend style="font-size: 16px;font-family: Montserrat; font-weight: 600; margin-right: auto;margin-left: auto;">Booking Details</legend>
+                        <div>
+                          <span style="font-size: 13px;font-family: Montserrat; color: black;">Booking ID : {{ booking.reference_no }}</span>
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style=" margin: auto;">
+                                <tr>
+                                    <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 0; color: black;"><img src="http://cotrav.co/static/email_template_images/dot_1_1.png">Hotel Name:<br>  {{ booking.operator_name }}<br>{{ booking.checkin_datetime }}</p>
+                                    </td>
+                                    <td align="center" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                       
+                                    </td>
+                                      <td align="right" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 0;color: black;"><img src="http://cotrav.co/static/email_template_images/dot_1_2.png"> Hotel Contact:<br>  {{ booking.operator_contact }}</p>
+                                    </td>
+                                </tr>
+
+                                   <tr>
+                                    <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10;"> From City: <br> {{ booking.from_city_name }}
+                                    </td>
+                                       <td align="center" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                     From Area: <br> {{ booking.from_area_id_name }}
+                                    </td>
+                                      <td align="right" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10;">Hotel Type: <br> {{ booking.hotel_type_name }}</p>
+                                    </td>
+
+                                </tr>
+
+                                 <tr>
+                                    <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10;">Checkin :<br> {{ booking.checkin_datetime }}
+                                  </p>
+                                    </td>
+                                       <td align="center" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                    Checkout :<br>{{ booking.checkout_datetime }}
+                                    </td>
+
+                                     <td align="right" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                     Room Type: <br> {{ booking.hotel_type_name }}
+                                    </td>
+                                </tr>
+
+                                   <tr>
+                                    <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10;">is AC Room:  <br>{{ booking.is_ac_room|yesno:'Yes,No' }}
+                                  </p>
+                                    </td>
+                                       <td align="center" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                  Daily Brakefast: <br>{{ booking.daily_brakefast|yesno:'Yes,No' }}
+                                    </td>
+
+                                     <td align="right" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                 is Prepaid: <br> {{ booking.daily_brakefast|yesno:'Yes,No' }}
+                                    </td>
+
+                                   </tr>
+                                    
+
+                               
+                            </table>
+                           
+                        </div>
+                       </fieldset>
+                    </td>
+                </tr>
+             
+               <tr>
+                 <td style="text-align: center; background-color: #ffffff;padding-top: 20px;">
+                     <fieldset style="border:solid 1px black;">
+                      <legend style="font-size: 16px;font-family: Montserrat;font-weight: 600;margin-right: auto;margin-left: auto;">Spoc Details</legend>
+                        <div>
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style=" margin: auto;">
+                             
+                                   <tr>
+                                    <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10; "><a href="#" style="color: black;"> Email :     <br>  {{ booking.user_email }}</a></p>
+                                    </td>
+                                      <td align="center" style="padding-right: 50px; font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10; ">Spoc Name :      <br> {{ booking.user_name }}</p>
+                                    </td>
+
+                                       <td align="right" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10;">Contact :    <br>  {{ booking.user_contact }}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                           
+                        </div>
+                       </fieldset>
+                    </td>
+                </tr>
+
+
+               <tr>
+                 <td style="text-align: center; background-color: #ffffff;padding-top: 20px;">
+                     <fieldset style="border:solid 1px black;">
+                      <legend style="font-size: 16px;font-family: Montserrat;font-weight: 600;margin-right: auto;margin-left: auto;">Passenger Details</legend>
+                        <div>
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style=" margin: auto;">
+                             {% for passanger in booking.Passangers %}
+                                   <tr>
+                                    <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10; "><a href="#" style="color: black;"> Email: <br>{{ passanger.employee_email|default:'' }}</a></p>
+                                    </td>
+                                      <td align="center" style="padding-right: 50px; font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10; ">Name: <br>{{ passanger.employee_name|default:'' }}</p>
+                                    </td>
+
+                                       <td align="right" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                        <p style="margin: 10;">Contact: <br>{{ passanger.employee_contact|default:'' }}</p>
+                                    </td>
+                                </tr>
+                                 {% endfor %}
+                            </table>
+                           
+                        </div>
+                       </fieldset>
+                    </td>
+                </tr>
+               
+
+            </table>
+            <!-- Email Body : END -->
+
+            <!-- Email Footer : BEGIN -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" width="100%" style="max-width: 680px;">
+                <tr>
+                    <td style="padding: 20px; font-family: sans-serif; font-size: 12px; line-height: 15px; text-align: center; color: #888888;">
+                     
+                    </td>
+                </tr>
+            </table>
+          
+        </div>
+
+       
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: rgb(0, 102, 153);;width: 680px;">
+            <tr>
+                <td>
+                    <div align="center" style="max-width: 680px; margin: auto;">
+                      
+                          <table  role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td align="left" style=" text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px;  color: #ffffff;">
+                                    <p style="margin: 0;font-family: Montserrat; color: #ffffff;" > <img src="http://cotrav.co/static/email_template_images/email_1.png" style="color: #ffffff;position: relative;top: 2px;"> 7291995220, 9990045853</p>
+                                </td>
+
+                                     <td align="center" style="padding: 20px; text-align: center; font-family: Montserrat; font-size: 13px;  color: #ffffff;">
+                                   
+                                </td>
+                                  <td align="right" style=" text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px;  color: #ffffff; ">
+                                    <p style="margin: 0;font-family: Montserrat;color: #ffffff;"> <img src="http://cotrav.co/static/email_template_images/email_2.png" style="color: #ffffff; position: relative; top: 2px;"> <a href="#" style="color: #ffffff;">  Info@cotrav.co </a></p> 
+                                </td>
+                            </tr>
+
+                              <tr>
+                                 <td align="left"></td>
+                                  <td align="center" style="text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px; color: #ffffff;">
+                                    <p style="margin: 0; font-family: Montserrat; color: #ffffff;"> <img src="http://cotrav.co/static/email_template_images/email_3.png"  style="color: #ffffff; position: relative; top: 2px;"> 6/813 Main Market, Mehrauli,<br>
+                                 New Delhi 110030</p>
+                                </td>
+                                 <td align="right"></td>
+                            </tr>
+
+                              <tr>
+                                 <td align="center">&nbsp;</td>
+                                  <td align="center">
+
+                                  <a href="#" >  <img src="http://cotrav.co/static/email_template_images/f1.png"></a>
+                                 <a href="#">    <img src="http://cotrav.co/static/email_template_images/f2.png"></a>
+                                   <a href="#">  <img src="http://cotrav.co/static/email_template_images/f3.png"></a>
+                                </td>
+                                 <td align="center"></td>
+                            </tr>
+
+                             <tr>
+                                 <td align="left"></td>
+                                  <td align="center" style="text-align: center; font-family: Montserrat; font-weight: 500; font-size: 16px; line-height: 20px; color: #ffffff;">
+                                    <p style="margin: 0; font-family: Montserrat;">  © 2020 Powered by Cotrav</p>
+                                </td>
+                                 <td align="right"></td>
+                            </tr>
+                              
+                              
+                        </table>
+                       
+                    </div>
+                </td>
+            </tr>
+        </table>
+     
+    </center>
+</body>
+ {% endfor %}
+</html>

@@ -50,7 +50,7 @@
                                                 <label class="col-sm-4">Operator</label>
                                              {% if operator_drivers %}
                                             {% for driver in operator_drivers %}
-	                                                 <select class="col-sm-8 form-control myselect" name="operator_id" required>
+	                                                 <select class="col-sm-8 form-control  myselect" style="width:66%"  name="operator_id" required>
                                                          <option value="">Select Operator</option>
                                                     {% for operator in operators %}
                                                      <option value="{{operator.id}}" {%if driver.operator_id == operator.id %} selected {%endif%}>{{operator.operator_name}}</option>
@@ -59,7 +59,7 @@
                                             {% endfor %}
                                               {% else %}
 
-                                                <select class="col-sm-8 form-control myselect" name="operator_id" required>
+                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="operator_id" required>
                                                     <option value="">Select Operator</option>
 	                                                {% for operator in operators %}
                                                      <option value="{{operator.id}}" >{{operator.operator_name}}</option>
@@ -130,7 +130,7 @@
                                                 <label class="col-sm-4">Taxi Registration No</label>
                                              {% if operator_drivers %}
                                             {% for driver in operator_drivers %}
-	                                                 <select class="col-sm-8 form-control myselect" name="taxi_id" required>
+	                                                 <select class="col-sm-8 form-control  myselect" style="width:66%"  name="taxi_id" required>
                                                          <option value="">Select Taxi</option>
                                                     {% for tax in taxies %}
                                                      <option value="{{tax.id}}" {%if driver.taxi_id == tax.id %} selected {%endif%}>{{tax.taxi_reg_no}}</option>
@@ -139,7 +139,7 @@
                                             {% endfor %}
                                               {% else %}
 
-                                                <select class="col-sm-8 form-control myselect" name="taxi_id" required>
+                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="taxi_id" required>
                                                     <option value="">Select Taxi</option>
 	                                                {% for tax in taxies %}
                                                      <option value="{{tax.id}}" {%if driver.taxi_id == tax.id %} selected {%endif%}>{{tax.taxi_reg_no}}</option>

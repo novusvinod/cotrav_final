@@ -22,7 +22,7 @@
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="delete_id" id="delete_id">
                 <input type="hidden" name="corporate_id" value="{{user.corporate_id}}">
- <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
 
                 <div class="modal-footer">
@@ -38,6 +38,21 @@
 
 {% include 'cotrav_alert_message.html' %}
 
+{% for corp_acces in corp_access %}
+{% if corp_acces.has_auth_level >= 1 %}
+{% if not subgroups %}
+     <div class="col-sm-12">
+
+          <ul class="list-group messages" id="info-message">
+          <li class="info"> Please Add Group / Subgroup to Proceed
+              <span class="close">&times;</span>
+          </li>
+      </ul>
+      </div>
+{% endif %}
+{% endif %}
+{% endfor %}
+
             <div class="page-content-wrapper">
                 <div class="page-content">
 
@@ -52,7 +67,6 @@
                                            <div class="row">
                                         <div class="col-md-10">
                                             <div class="btn-group">
-
                                                 <a class="btn btn-info" href="/Corporate/Admin/add-spoc/0" > Add New <i class="fa fa-plus"></i> </a>
                                             </div>
                                         </div>

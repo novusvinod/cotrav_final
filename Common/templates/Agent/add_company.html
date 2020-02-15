@@ -112,7 +112,7 @@
 
                                      <div class="form-group row" id="billing_city_id1">
                                         <label class="col-sm-4 control-label">Billing City</label>
-                                            <select class="col-sm-8 form-control myselect" name="billing_city_id" id="billing_city_id" required>
+                                            <select class="col-sm-8 form-control  myselect" style="width:66%"  name="billing_city_id" id="billing_city_id" required>
                                                 <option value="">Select City</option>
                                                 {% for city in cities %}
                                                 <option value="{{city.id}}">{{city.city_name}}</option>

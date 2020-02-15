@@ -12,8 +12,6 @@ from django.contrib import messages
 from openpyxl import Workbook
 
 from Common.models import Corporate_Login_Access_Token
-from landing.cotrav_messeging import Excelexport
-
 
 def logout_action(request):
     if 'admin_login_type' in request.session:
@@ -33,11 +31,9 @@ def logout_action(request):
         return redirect("/login")
 
 def homepage(request):
-    print("i ma session Data")
-    for key, value in request.session.items():
-        print('{} => {}'.format(key, value))
-    print("i ma session Data")
+
     if 'admin_login_type' in request.session:
+
         user_type = request.session['admin_login_type']
         access_token = request.session['admin_access_token']
         print(request.user)
@@ -46,8 +42,7 @@ def homepage(request):
         print(access_token)
         payload = {'admin_id':request.user.id, 'corporate_id':request.user.id}
         url = settings.API_BASE_URL + "admin_dashboard"
-        print(access_token)
-        print(user_type)
+
         data = getDataFromAPI(user_type, access_token, url, payload)
         dataDashboard = data['Dashboard']
         print(dataDashboard)
@@ -330,7 +325,12 @@ def company_spocs(request, id):
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             spocs = company['Spocs']
-            return render(request, "Company/Admin/spocs.html", {'spocs': spocs})
+
+            url_subgroup = settings.API_BASE_URL + "subgroups"
+            company_sub = getDataFromAPI(login_type, access_token, url_subgroup, payload)
+            subgroups = company_sub['Subgroups']
+
+            return render(request, "Company/Admin/spocs.html", {'spocs': spocs, 'subgroups':subgroups})
         else:
             return render(request, "Company/Admin/spocs.html", {'spocs': {}})
     else:
@@ -465,6 +465,8 @@ def add_company_group(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+            is_send_email = request.POST.get('is_send_email', '')
+            is_send_sms = request.POST.get('is_send_sms', '')
             access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
             password = "taxi123"
 
@@ -472,7 +474,7 @@ def add_company_group(request, id):
                        'access_token': access_token, 'group_name': group_name, 'zone_name': zone_name,'access_token_auth':access_token_auth,'name':name,
                        'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,
                        'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles':is_water_bottles,'is_reverse_logistics':is_reverse_logistics,
-                       'password':password}
+                       'password':password,'is_send_email':is_send_email,'is_send_sms':is_send_sms}
 
             url = settings.API_BASE_URL + "add_group"
             company = getDataFromAPI(login_type, access_token, url, payload)
@@ -515,6 +517,8 @@ def add_company_subgroup(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+            is_send_email = request.POST.get('is_send_email', '')
+            is_send_sms = request.POST.get('is_send_sms', '')
             access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
             password = "taxi123"
 
@@ -522,7 +526,7 @@ def add_company_subgroup(request, id):
                        'access_token': access_token, 'subgroup_name': subgroup_name, 'group_id': group_id,'name':name,
                        'email':email,'cid':cid,'contact_no':contact_no,'is_radio':is_radio,'is_local':is_local,'is_outstation':is_outstation,'is_bus':is_bus,
                        'is_train':is_train,'is_hotel':is_hotel,'is_meal':is_meal,'is_flight':is_flight,'is_water_bottles':is_water_bottles,'is_reverse_logistics':is_reverse_logistics,
-                       'password':password}
+                       'password':password,'is_send_email':is_send_email,'is_send_sms':is_send_sms}
 
             #print(payload)
             url = settings.API_BASE_URL + "add_subgroup"
@@ -681,7 +685,8 @@ def add_company_group_auth(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
-
+            is_send_email = request.POST.get('is_send_email', '')
+            is_send_sms = request.POST.get('is_send_sms', '')
             group_id = request.POST.get('group_id')
             group_auth_id = request.POST.get('group_auth_id')
             delete_id = request.POST.get('delete_id')
@@ -701,7 +706,7 @@ def add_company_group_auth(request, id):
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
                        'group_id': group_id, 'delete_id': delete_id, 'password': password, 'group_auth_id': group_auth_id,
-                       'access_token_auth': access_token_auth}
+                       'access_token_auth': access_token_auth,'is_send_sms':is_send_sms,'is_send_email':is_send_email}
 
             url = ""
             if group_auth_id:
@@ -754,7 +759,8 @@ def add_company_subgroup_auth(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
-
+            is_send_email = request.POST.get('is_send_email', '')
+            is_send_sms = request.POST.get('is_send_sms', '')
             subgroup_id = request.POST.get('subgroup_id')
             subgroup_auth_id = request.POST.get('subgroup_auth_id')
             delete_id = request.POST.get('delete_id')
@@ -774,7 +780,7 @@ def add_company_subgroup_auth(request, id):
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
                        'subgroup_id': subgroup_id, 'delete_id': delete_id, 'password': password,
-                       'subgroup_auth_id': subgroup_auth_id, 'access_token_auth': access_token_auth}
+                       'subgroup_auth_id': subgroup_auth_id, 'access_token_auth': access_token_auth,'is_send_email':is_send_email,'is_send_sms':is_send_sms}
 
             url = ""
             if subgroup_auth_id:
@@ -827,7 +833,8 @@ def add_company_admins(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
-
+            is_send_email = request.POST.get('is_send_email', '')
+            is_send_sms = request.POST.get('is_send_sms', '')
             admin_id = request.POST.get('admin_id')
 
             delete_id = request.POST.get('delete_id')
@@ -843,7 +850,7 @@ def add_company_admins(request, id):
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
                        'admin_id': admin_id, 'delete_id': delete_id, 'password': password,
-                       'access_token_auth': access_token_auth}
+                       'access_token_auth': access_token_auth,'is_send_email':is_send_email,'is_send_sms':is_send_sms}
 
             url = ""
             print(payload)
@@ -902,7 +909,8 @@ def add_spocs(request, id):
             is_flight = request.POST.get('is_flight', '')
             is_water_bottles = request.POST.get('is_water_bottles', '')
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
-
+            is_send_email = request.POST.get('is_send_email', '')
+            is_send_sms = request.POST.get('is_send_sms', '')
             spoc_id = request.POST.get('spoc_id')
 
             delete_id = request.POST.get('delete_id')
@@ -919,7 +927,7 @@ def add_spocs(request, id):
                        'is_radio': is_radio, 'is_local': is_local, 'is_outstation': is_outstation, 'is_bus': is_bus,
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
-                       'spoc_id': spoc_id, 'delete_id': delete_id, 'password': password}
+                       'spoc_id': spoc_id, 'delete_id': delete_id, 'password': password,'is_send_sms':is_send_sms,'is_send_email':is_send_email}
 
             url = ""
             print(payload)
@@ -1288,7 +1296,7 @@ def add_taxi_booking(request,id):
 
             payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
+                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime+':00','taxi_type':taxi_type,
                        'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,
                        'employees':employees,'user_id':user_id,'entity_id':entity_id,'is_sms':1,'is_email':1}
             print(payload)
@@ -1482,7 +1490,7 @@ def add_bus_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'bus_type':bus_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime,'journey_datetime_to':journey_datetime_to,'entity_id':entity_id,
+                       'bus_type':bus_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime+':00','journey_datetime_to':journey_datetime_to+':00','entity_id':entity_id,
                        'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'is_sms':1,'is_email':1}
             print(payload)
 
@@ -1670,9 +1678,9 @@ def add_train_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'train_type':train_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime,'entity_id':entity_id,
+                       'train_type':train_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime+':00','entity_id':entity_id,
                        'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,
-                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to}
+                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to+':00'}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_train_booking"
@@ -1854,7 +1862,7 @@ def add_hotel_booking(request,id):
             room_occupancy = request.POST.get('room_occupancy')
             preferred_hotel = request.POST.get('preferred_hotel')
             booking_date = request.POST.get('booking_datetime')
-
+            no_of_nights = request.POST.get('no_of_nights', '')
             assessment_code = request.POST.get('assessment_code')
 
             assessment_city = request.POST.get('assessment_city')
@@ -1872,10 +1880,10 @@ def add_hotel_booking(request,id):
             payload = {'login_type': login_type, 'user_id': user_id, 'access_token': access_token,
                        'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
                        'subgroup_id': subgroup_id, 'from_city_id': from_city, 'from_area_id': city_area,
-                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date,
-                       'checkout_datetime': check_out_date, 'bucket_priority_1': room_type_priority1,
+                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date+':00',
+                       'checkout_datetime': check_out_date+':00', 'bucket_priority_1': room_type_priority1,
                        'bucket_priority_2': room_type_priority2, 'room_type_id': room_occupancy,
-                       'preferred_hotel': preferred_hotel, 'booking_datetime': booking_date,
+                       'preferred_hotel': preferred_hotel, 'booking_datetime': booking_date,'no_of_nights':no_of_nights,
                        'assessment_code': assessment_code, 'assessment_city_id': assessment_city,
                        'billing_entity_id': billing_entity, 'employees': employees,'reason_booking':reason_for_booking,'no_of_seats':no_of_seats,
                        'is_sms':1,'is_email':1}

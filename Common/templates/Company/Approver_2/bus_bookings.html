@@ -36,14 +36,14 @@
           <tr>
             <th id="download_from_date1"> From Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
             </td>
           </tr>
 
           <tr>
             <th id="download_to_date1"> To Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
             </td>
           </tr>
 
@@ -220,7 +220,7 @@
                                 {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.id }}</td>
-                                   <td>{{ booking.reference_no }}</td>
+                                   <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location}}</td>
                                     <td>{{ booking.booking_datetime }}</td>
@@ -230,29 +230,30 @@
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }}
                                     {% if booking.status_cotrav > 1 %}
-                                            ({{ booking.cotrav_agent_name|default:'' }})</td>
+                                            ({{ booking.cotrav_agent_name|default:'' }})
+
                                         {% endif %}
                                     </td>
 
-                                    {% if booking.status_client == 1 %}
-                                    <td>
+
+                                    <td style="display: inline-flex;">
+                                        {% if booking.status_client == 1 %}
                                         <a style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
-                                        </a>
+
                                          <a data-target="#model_action1" data-id="{{booking.id}}" data-reject_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
-                                    </td>
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i> </a>
                                     {% else %}
-                                    <td>
                                         {% now "d-m-Y H:m" as current_datetime %}
-                                        {% if booking.pickup_from_datetime >= current_datetime %}
+                                        {% if booking.pickup_from_datetime >= current_datetime and booking_type|stringformat:"s" == "5" %}
                                             <a style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
-                                        </a>
                                         {% endif %}
-
-                                    </td>
                                     {% endif %}
+                                    </td>
+
+
+
 
                                     <td>
                                         <a href="/Corporate/Approver_2/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i>

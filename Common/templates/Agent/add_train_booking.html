@@ -22,7 +22,7 @@
             <input type="hidden" name="subgroup_id" id="subgroup_id">
              <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>Booking Details</header>
@@ -37,7 +37,7 @@
 
                               <div class="form-group row">
                                     <label class="col-sm-4" >Select Company</label>
-                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8 myselect" required>
+                                     <select name="corporate_id" id="corporate_id" class="form-control col-sm-8  myselect" style="width:66%"  required>
                                          <option value="">Select Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -54,7 +54,7 @@
                               <div class="form-group row">
                                 <label class="col-sm-4" >From City*</label>
 <!--                                 <input type="text" class="form-control col-sm-8" name="from" id="pickup_location" placeholder="From" required>-->
-                                  <select name="from" id="pickup_location" class="form-control col-sm-8 myselect" required>
+                                  <select name="from" id="pickup_location" class="form-control col-sm-8  myselect" style="width:66%"  required>
                                          <option value="">Select From Station</option>
                                         {% for railway_station in railway_stations %}
                                         <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
@@ -65,7 +65,7 @@
                               <div class="form-group row">
                                 <label class="col-sm-4" >To City*</label>
 <!--                                 <input type="text" class="form-control col-sm-8" name="to" id="drop_location" placeholder="To" required>-->
-                                   <select name="to" id="drop_location" class="form-control col-sm-8 myselect" required>
+                                   <select name="to" id="drop_location" class="form-control col-sm-8  myselect" style="width:66%"  required>
                                          <option value="">Select To Station</option>
                                         {% for railway_station in railway_stations %}
                                         <option value="{{railway_station.id}}">{{railway_station.station_name}}( {{railway_station.station_code}} )</option>
@@ -75,7 +75,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-4" >Coach Type*</label>
-                                 <select name="train_type" class="form-control col-sm-8 myselect">
+                                 <select name="train_type" class="form-control col-sm-8  myselect" style="width:66%" >
                                      <option value="">Select Coach Type </option>
                                        {% for type in types %}
                                         <option value="{{type.id}}">{{type.name}}</option>
@@ -108,21 +108,21 @@
 
                           <div class="form-group row">
                                 <label class="col-sm-4" >Assessment Code*</label>
-                                   <select name="assessment_code" id="assessment_code" class="form-control col-sm-8 myselect">
+                                   <select name="assessment_code" id="assessment_code" class="form-control col-sm-8  myselect" style="width:66%" >
                                         <option value="">Select Assessment Code </option>
                                     </select>
                             </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Assessment City*</label>
-                                   <select name="assessment_city_id" id="assessment_city_id" class="form-control col-sm-8 myselect">
+                                   <select name="assessment_city_id" id="assessment_city_id" class="form-control col-sm-8  myselect" style="width:66%" >
                                         <option value="">Select Assessment City </option>
                                     </select>
                             </div>
 
                              <div class="form-group row">
                                 <label class="col-sm-4" >Select Billing Entity*</label>
-                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8 myselect" required>
+                                 <select id="entity_id" name="entity_id" class="form-control col-sm-8  myselect" style="width:66%"  required>
                                       <option value="">Select Billing Entity </option>
 
                                   </select>
@@ -157,7 +157,7 @@
 
 
 
-            <div class="col-md-7">
+            <div class="col-md-8">
              <div class="card card-topline-aqua">
                     <div class="card-head">
                         <header>SPOC and Passanger Details</header>
@@ -171,7 +171,7 @@
 
                          <div class="form-group row">
                                 <label class="col-sm-2" >Select Spoc*</label>
-                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-9 myselect" required>
+                                 <select id="spoc_id" name="spoc_id" class="form-control col-sm-9  myselect" style="width:66%"  required>
                                       <option value="">Select Spoc </option>
                                   </select>
                             </div>
@@ -179,7 +179,7 @@
 
                                <div class="form-group row">
                                 <label class="col-sm-2" >Number Of Employees*</label>
-                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-9 no_of_seats myselect" required>
+                                <select id="no_of_seats" name="no_of_seats" class="form-control col-sm-9 no_of_seats  myselect" style="width:66%"  required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -191,7 +191,7 @@
 
                                <div class="form-group row" id="emp_row_1">
                                     <label class="col-sm-2" >Employee 1</label>
-                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-2 myselect">
+                                     <select name="employee_id_1" id="employee_id_1" class="form-control col-sm-2  myselect" style="width:13%" >
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
@@ -204,9 +204,9 @@
 
                               <div class="form-group row" id="emp_row_2">
                                     <label class="col-sm-2" >Employee 2</label>
-                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-2 myselect">
+                                     <select name="employee_id_2" id="employee_id_2" class="form-control col-sm-2  myselect" style="width:13%" >
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}" >{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}" >{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
                                    <input type="text" name="emp_id_2" id="emp_id_2" class="form-control col-sm-2" placeholder="Employee Id">
@@ -217,9 +217,9 @@
 
                               <div class="form-group row"  id="emp_row_3">
                                     <label class="col-sm-2" >Employee 3</label>
-                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-2 myselect">
+                                     <select name="employee_id_3" id="employee_id_3" class="form-control col-sm-2  myselect" style="width:13%" >
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
                                    <input type="text" name="emp_id_3" id="emp_id_3" class="form-control col-sm-2" placeholder="Employee Id">
@@ -230,9 +230,9 @@
 
                               <div class="form-group row"  id="emp_row_4" >
                                     <label class="col-sm-2" >Employee 4</label>
-                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-2 myselect">
+                                     <select name="employee_id_4" id="employee_id_4" class="form-control col-sm-2  myselect" style="width:13%" >
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
                                    <input type="text" name="emp_id_4" id="emp_id_4" class="form-control col-sm-2" placeholder="Employee Id">
@@ -243,9 +243,9 @@
 
                                <div class="form-group row"  id="emp_row_5" >
                                     <label class="col-sm-2" >Employee 5</label>
-                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-2 myselect">
+                                     <select name="employee_id_5" id="employee_id_5" class="form-control col-sm-2  myselect" style="width:13%" >
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
                                     <input type="text" name="emp_id_5" id="emp_id_5" class="form-control col-sm-2" placeholder="Employee Id">
@@ -256,9 +256,9 @@
 
                                <div class="form-group row"  id="emp_row_6" >
                                     <label class="col-sm-2" >Employee 6</label>
-                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-2 myselect">
+                                     <select name="employee_id_6" id="employee_id_6" class="form-control col-sm-2  myselect" style="width:13%" >
                                         {% for employee in employees %}
-                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_contact}}</option>
+                                        <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
                                     <input type="text" name="emp_id_6" id="emp_id_6" class="form-control col-sm-2" placeholder="Employee Id">
@@ -334,7 +334,7 @@ $(document).ready(function() {
     $('#emp_row_4').hide();
     $('#emp_row_5').hide();
     $('#emp_row_6').hide();
-    var today = moment().format('DD-MM-YYYY HH:mm:ss');
+    var today = moment().format('DD-MM-YYYY HH:mm');
 document.getElementById("booking_datetime").value = today;
 
 $(".js-example-basic-single").select2();
@@ -535,12 +535,12 @@ $("#spoc_id").change(function(){
         $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
          for (var i=0;i<employee.length;i++) {
 
-            $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
-            $('#employee_id_2').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
-            $('#employee_id_3').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
-            $('#employee_id_4').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
-            $('#employee_id_5').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
-            $('#employee_id_6').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"/"+employee[i].employee_cid+"</option>"));
+            $('#employee_id_2').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"/"+employee[i].employee_cid+"</option>"));
+            $('#employee_id_3').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"/"+employee[i].employee_cid+"</option>"));
+            $('#employee_id_4').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"/"+employee[i].employee_cid+"</option>"));
+            $('#employee_id_5').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"/"+employee[i].employee_cid+"</option>"));
+            $('#employee_id_6').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"/"+employee[i].employee_cid+"</option>"));
 
          }
        var emp_len = data['Employees'].length;

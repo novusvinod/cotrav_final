@@ -26,7 +26,7 @@
                         <label class="col-sm-5 control-label">Company Name</label>
                         <div class="col-sm-7">
 
-                            <select class="form-control myselect" name="corporate_id" id="corporate_name" style="width:100%;" required>
+                            <select class="form-control myselect" style="width:66%"name="corporate_id" id="corporate_name" style="width:100%;" required>
                                 <option value="">Select Company</option>
                                {% for company in companies %}
                                 <option value="{{company.id}}">{{company.corporate_name}}</option>
@@ -177,6 +177,26 @@
                         <label class="col-sm-5 control-label">Reverse Logistics Bookings</label>
                         <div class="col-sm-7">
                             <select class="form-control" name="is_reverse_logistics">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                <div class="form-group row" id="is_send_email1">
+                        <label class="col-sm-5 control-label">Is Send Email?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_email">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_send_sms1">
+                        <label class="col-sm-5 control-label">Is Send SMS?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_sms">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>

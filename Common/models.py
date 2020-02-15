@@ -25,6 +25,8 @@ class Corporate_Login(models.Model):
     is_flight = models.BooleanField()
     is_water_bottles = models.BooleanField()
     is_reverse_logistics = models.BooleanField()
+    is_send_email = models.BooleanField()
+    is_send_sms = models.BooleanField()
     class Meta:
         db_table = "corporate_logins"
 
@@ -103,6 +105,8 @@ class Corporate_Spoc_Login(models.Model):
     is_flight = models.BooleanField()
     is_water_bottles = models.BooleanField()
     is_reverse_logistics = models.BooleanField()
+    is_send_email = models.BooleanField()
+    is_send_sms = models.BooleanField()
     class Meta:
         db_table = "corporate_spocs"
 
@@ -167,6 +171,8 @@ class Corporate_Approves_1_Login(models.Model):
     is_flight = models.BooleanField()
     is_water_bottles = models.BooleanField()
     is_reverse_logistics = models.BooleanField()
+    is_send_email = models.BooleanField()
+    is_send_sms = models.BooleanField()
     class Meta:
         db_table = "corporate_subgroup_authenticater"
 
@@ -202,6 +208,8 @@ class Corporate_Approves_2_Login(models.Model):
     is_flight = models.BooleanField()
     is_water_bottles = models.BooleanField()
     is_reverse_logistics = models.BooleanField()
+    is_send_email = models.BooleanField()
+    is_send_sms = models.BooleanField()
 
     class Meta:
         db_table = "corporate_group_authenticator"
@@ -240,6 +248,8 @@ class Corporate(models.Model):
     is_flight = models.BooleanField()
     is_water_bottles = models.BooleanField()
     is_reverse_logistics = models.BooleanField()
+    is_send_email = models.BooleanField()
+    is_send_sms = models.BooleanField()
 
     class Meta:
         db_table = "corporates"

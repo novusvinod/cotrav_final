@@ -63,10 +63,10 @@ foreach($files as $file){
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="keywords" content="Charity Nonprofit Template" />
-    <meta name="description" content="CoTrav - Charity Nonprofit Template" />
+    <meta name="description" content="Fabrex - Charity Nonprofit Template" />
 
     <!-- title  -->
-    <title>CoTrav - Multipurpose Business and Admin Template</title>
+    <title>Fabrex - Multipurpose Business and Admin Template</title>
 
     <!-- favicon -->
     <link rel="shortcut icon" href="../img/logos/favicon.png">

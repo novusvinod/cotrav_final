@@ -70,7 +70,7 @@
                     <div class="form-group row" id="is_radio1">
                         <label class="col-sm-5 control-label">Radio Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_radio">
+                            <select class="form-control" name="is_radio" id="is_radio">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -80,7 +80,7 @@
                     <div class="form-group row" id="is_local1">
                         <label class="col-sm-5 control-label">Local Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_local">
+                            <select class="form-control" name="is_local" id="is_local">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -90,7 +90,7 @@
                     <div class="form-group row" id="is_outstation1">
                         <label class="col-sm-5 control-label">Outstation Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_outstation">
+                            <select class="form-control" name="is_outstation" id="is_outstation">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -100,7 +100,7 @@
                     <div class="form-group row" id="is_bus1">
                         <label class="col-sm-5 control-label">Bus Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_bus">
+                            <select class="form-control" name="is_bus" id="is_bus">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -110,7 +110,7 @@
                     <div class="form-group row" id="is_train1">
                         <label class="col-sm-5 control-label">Train Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_train">
+                            <select class="form-control" name="is_train" id="is_train">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -121,7 +121,7 @@
                     <div class="form-group row" id="is_hotel1">
                         <label class="col-sm-5 control-label">Hotel Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_hotel">
+                            <select class="form-control" name="is_hotel" id="is_hotel">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -132,7 +132,7 @@
                     <div class="form-group row" id="is_flight1">
                         <label class="col-sm-5 control-label">Flight Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_flight">
+                            <select class="form-control" name="is_flight" id="is_flight">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -142,7 +142,7 @@
                     <div class="form-group row" id="is_meal1">
                         <label class="col-sm-5 control-label">Meal Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_meal">
+                            <select class="form-control" name="is_meal" id="is_meal">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -152,7 +152,7 @@
                     <div class="form-group row" id="is_water_bottles1">
                         <label class="col-sm-5 control-label">Water Bottles Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_water_bottles">
+                            <select class="form-control" name="is_water_bottles" id="is_water_bottles">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -162,7 +162,27 @@
                     <div class="form-group row" id="is_reverse_logistics1">
                         <label class="col-sm-5 control-label">Reverse Logistics Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_reverse_logistics">
+                            <select class="form-control" name="is_reverse_logistics" id="is_reverse_logistics">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_send_email1">
+                        <label class="col-sm-5 control-label">Is Send Email?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_email" id="is_send_email">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_send_sms1">
+                        <label class="col-sm-5 control-label">Is Send SMS?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_sms" id="is_send_sms">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -241,7 +261,7 @@
                                         data-target="#model_add_new_group"  data-id="{{admin.id}}" data-corporate_id="{{admin.corporate_id}}" data-name="{{admin.name}}" data-email="{{admin.email}}"
                                         data-contact_no="{{admin.contact_no}}" data-cid="{{admin.cid}}" data-is_reverse_logistics="{{admin.is_reverse_logistics}}"
                                         data-is_local="{{admin.is_local}}" data-is_water_bottles="{{admin.is_water_bottles}}" data-is_radio="{{admin.is_radio}}"
-                                        data-is_hotel="{{admin.is_hotel}}" data-is_outstation="{{admin.is_outstation}}" data-is_bus="{{admin.is_bus}}"
+                                        data-is_hotel="{{admin.is_hotel}}" data-is_outstation="{{admin.is_outstation}}" data-is_bus="{{admin.is_bus}}" data-is_send_email="{{admin.is_send_email}}" data-is_send_sms="{{admin.is_send_sms}}"
                                         data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}">
                                             <i class="fa fa-pencil"></i>
                                         </a>
@@ -249,7 +269,7 @@
                                         data-contact_no="{{admin.contact_no}}" data-cid="{{admin.cid}}" data-corporate_id="{{admin.corporate_id}}" data-is_reverse_logistics="{{admin.is_reverse_logistics}}"
                                         data-is_local="{{admin.is_local}}" data-is_water_bottles="{{admin.is_water_bottles}}" data-is_radio="{{admin.is_radio}}"
                                         data-is_hotel="{{admin.is_hotel}}" data-is_outstation="{{admin.is_outstation}}" data-is_bus="{{admin.is_bus}}"
-                                        data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}"
+                                        data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}" data-is_send_email="{{admin.is_send_email}}" data-is_send_sms="{{admin.is_send_sms}}"
                                            data-target="#model_add_new_group" data-toggle="modal" href="#">
                                             <i class="fa fa-trash-o "></i>
                                         </a>
@@ -305,6 +325,8 @@ $(function() {
     var is_flight = button.data('is_flight');
     var is_water_bottles = button.data('is_water_bottles');
     var is_reverse_logistics = button.data('is_reverse_logistics');
+    var is_send_email = button.data('is_send_email');
+    var is_send_sms = button.data('is_send_sms');
 
     var delete_id = button.data('delete_id');
 
@@ -336,6 +358,8 @@ $(function() {
     modal.find('#is_flight').val(is_flight);
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+    modal.find('#is_send_email').val(is_send_email);
+    modal.find('#is_send_sms').val(is_send_sms);
 
     $('#delete_label').text("Do You Want to Delete Company Admin ?");
     $('#delete_btn').html("Yes");
@@ -355,8 +379,12 @@ $(function() {
     $('#is_flight1').hide();
     $('#is_water_bottles1').hide();
     $('#is_reverse_logistics1').hide();
+    $('#is_send_email1').hide();
+    $('#is_send_sms1').hide();
 
-    }else{
+    }
+    if(typeof name != "undefined")
+    {
         mymod.val(corporate_id);
         mymod.trigger('change.select2');
         
@@ -375,6 +403,8 @@ $(function() {
     modal.find('#is_flight').val(is_flight);
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+    modal.find('#is_send_email').val(is_send_email);
+    modal.find('#is_send_sms').val(is_send_sms);
 
     modal.find('#delete_id').val('');
 
@@ -397,9 +427,15 @@ $(function() {
     $('#is_flight1').show();
     $('#is_water_bottles1').show();
     $('#is_reverse_logistics1').show();
+    $('#is_send_email1').show();
+    $('#is_send_sms1').show();
 
 
 
+    }else{
+        $('#model_add_new_group').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
     }
 
     });

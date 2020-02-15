@@ -63,10 +63,10 @@ foreach($files as $file){
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="keywords" content="School Education and Children Kids Template Template" />
-    <meta name="description" content="CoTrav - School Education and Children Kids Template" />
+    <meta name="description" content="Fabrex - School Education and Children Kids Template" />
 
     <!-- title  -->
-    <title>CoTrav - School Education and Children Kids Template</title>
+    <title>Fabrex - School Education and Children Kids Template</title>
 
     <!-- favicon -->
     <link rel="shortcut icon" href="../img/logos/favicon.png" />

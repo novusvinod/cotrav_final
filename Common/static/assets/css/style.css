@@ -664,7 +664,7 @@ body {
     background-color:#eef1f5;
     padding: 0!important;
     margin: 0!important;
-    font-family: Montserrat;
+    font-family: Poppins,sans-serif;
     font-size: 11px;
     font-weight: 400;
     line-height: 1.7;
@@ -9121,6 +9121,7 @@ margin-right: 17px;
 }
 .md_fli_fnt{
     font-size: 12px;
+    font-family: Montserrat;
     font-weight: 500;
 }
 .fli_mar{

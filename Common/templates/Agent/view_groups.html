@@ -63,7 +63,7 @@
                     <div class="form-group row" id="is_radio1">
                         <label class="col-sm-5 control-label">Radio Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_radio">
+                            <select class="form-control" name="is_radio" id="is_radio">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -73,7 +73,7 @@
                     <div class="form-group row" id="is_local1">
                         <label class="col-sm-5 control-label">Local Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_local">
+                            <select class="form-control" name="is_local" id="is_local">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -83,7 +83,7 @@
                     <div class="form-group row" id="is_outstation1">
                         <label class="col-sm-5 control-label">Outstation Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_outstation">
+                            <select class="form-control" name="is_outstation" id="is_outstation">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -93,7 +93,7 @@
                     <div class="form-group row" id="is_bus1">
                         <label class="col-sm-5 control-label">Bus Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_bus">
+                            <select class="form-control" name="is_bus" id="is_bus">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -103,7 +103,7 @@
                     <div class="form-group row" id="is_train1">
                         <label class="col-sm-5 control-label">Train Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_train">
+                            <select class="form-control" name="is_train" id="is_train">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -114,7 +114,7 @@
                     <div class="form-group row" id="is_hotel1">
                         <label class="col-sm-5 control-label">Hotel Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_hotel">
+                            <select class="form-control" name="is_hotel" id="is_hotel">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -125,7 +125,7 @@
                     <div class="form-group row" id="is_flight1">
                         <label class="col-sm-5 control-label">Flight Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_flight">
+                            <select class="form-control" name="is_flight" id="is_flight">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -135,7 +135,7 @@
                     <div class="form-group row" id="is_meal1">
                         <label class="col-sm-5 control-label">Meal Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_meal">
+                            <select class="form-control" name="is_meal" id="is_meal">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -145,7 +145,7 @@
                     <div class="form-group row" id="is_water_bottles1">
                         <label class="col-sm-5 control-label">Water Bottles Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_water_bottles">
+                            <select class="form-control" name="is_water_bottles" id="is_water_bottles">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -155,7 +155,27 @@
                     <div class="form-group row" id="is_reverse_logistics1">
                         <label class="col-sm-5 control-label">Reverse Logistics Bookings</label>
                         <div class="col-sm-7">
-                            <select class="form-control" name="is_reverse_logistics">
+                            <select class="form-control" name="is_reverse_logistics" id="is_reverse_logistics">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_send_email1">
+                        <label class="col-sm-5 control-label">Is Send Email?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_email" id="is_send_email">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_send_sms1">
+                        <label class="col-sm-5 control-label">Is Send SMS?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_sms" id="is_send_sms">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -233,7 +253,7 @@
 
         </div>
   {% endfor %}
-
+  {% include 'cotrav_alert_message.html' %}
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-topline-aqua">
@@ -277,6 +297,8 @@
                                     <th>Flight</th>
                                     <th>Watter Bottle</th>
                                     <th>Reverse Logistics</th>
+                                    <th>Send Email</th>
+                                    <th>Send SMS</th>
                                     <th>Action</th>
 
                                 </tr>
@@ -358,13 +380,25 @@
                                     <td>No</td>
                                     {% endif %}
 
+                                    {% if group.is_send_email == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
+                                    {% if group.is_send_sms == 1 %}
+                                    <td>Yes</td>
+                                    {% else %}
+                                    <td>No</td>
+                                    {% endif %}
+
                                     <td>
                                         <a class="btn btn-tbl-edit btn-xs" href="#" data-toggle="modal" class="btn btn-tbl-delete btn-xs"
                                         data-target="#model_add_new_group"  data-id="{{group.id}}" data-name="{{group.name}}" data-email="{{group.email}}"
                                         data-contact_no="{{group.contact_no}}" data-cid="{{group.cid}}" data-is_reverse_logistics="{{group.is_reverse_logistics}}"
                                         data-is_local="{{group.is_local}}" data-is_water_bottles="{{group.is_water_bottles}}" data-is_radio="{{group.is_radio}}"
                                         data-is_hotel="{{group.is_hotel}}" data-is_outstation="{{group.is_outstation}}" data-is_bus="{{group.is_bus}}"
-                                        data-is_train="{{group.is_train}}" data-is_flight="{{group.is_flight}}" data-is_meal="{{group.is_meal}}">
+                                        data-is_train="{{group.is_train}}" data-is_flight="{{group.is_flight}}" data-is_meal="{{group.is_meal}}" data-is_send_email="{{group.is_send_email}}" data-is_send_sms="{{group.is_send_sms}}">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                         <a class="btn btn-tbl-delete btn-xs" data-delete_id="1" data-id="{{group.id}}" data-name="{{group.name}}" data-email="{{group.email}}"
@@ -372,7 +406,7 @@
                                         data-is_local="{{group.is_local}}" data-is_water_bottles="{{group.is_water_bottles}}" data-is_radio="{{group.is_radio}}"
                                         data-is_hotel="{{group.is_hotel}}" data-is_outstation="{{group.is_outstation}}" data-is_bus="{{group.is_bus}}"
                                         data-is_train="{{group.is_train}}" data-is_flight="{{group.is_flight}}" data-is_meal="{{group.is_meal}}"
-                                           data-target="#model_add_new_group" data-toggle="modal" href="#">
+                                           data-target="#model_add_new_group" data-toggle="modal" href="#" data-is_send_email="{{group.is_send_email}}" data-is_send_sms="{{group.is_send_sms}}">
                                             <i class="fa fa-trash-o "></i>
                                         </a>
 
@@ -422,6 +456,8 @@ $('#set_group_id').val(bla);
     var is_flight = button.data('is_flight');
     var is_water_bottles = button.data('is_water_bottles');
     var is_reverse_logistics = button.data('is_reverse_logistics');
+    var is_send_email = button.data('is_send_email');
+    var is_send_sms = button.data('is_send_sms');
 
     var delete_id = button.data('delete_id');
 
@@ -447,6 +483,8 @@ $('#set_group_id').val(bla);
     modal.find('#is_flight').val(is_flight);
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+    modal.find('#is_send_email').val(is_send_email);
+    modal.find('#is_send_sms').val(is_send_sms);
 
     $('#delete_label').text("Do You Want to Delete Group Authenticator");
     $('#delete_btn').html("Yes");
@@ -466,8 +504,11 @@ $('#set_group_id').val(bla);
     $('#is_flight1').hide();
     $('#is_water_bottles1').hide();
     $('#is_reverse_logistics1').hide();
+    $('#is_send_email1').hide();
+    $('#is_send_sms1').hide();
 
-    }else{
+    }
+    if(typeof name != "undefined"){
 
     modal.find('#group_auth_id').val(id);
     modal.find('#name').val(name);
@@ -485,6 +526,8 @@ $('#set_group_id').val(bla);
     modal.find('#is_flight').val(is_flight);
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+    modal.find('#is_send_email').val(is_send_email);
+    modal.find('#is_send_sms').val(is_send_sms);
 
     modal.find('#delete_id').val('');
 
@@ -506,9 +549,15 @@ $('#set_group_id').val(bla);
     $('#is_flight1').show();
     $('#is_water_bottles1').show();
     $('#is_reverse_logistics1').show();
+     $('#is_send_email1').show();
+    $('#is_send_sms1').show();
 
 
 
+    }else{
+        $('#model_add_new_group').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
     }
 
     });

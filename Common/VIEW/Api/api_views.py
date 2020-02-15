@@ -313,6 +313,8 @@ def add_companies(request):
         has_self_booking_access = request.POST.get('has_self_booking_access', '')
         will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
         is_spoc = request.POST.get('is_spoc', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         cotrav_agent_id = request.POST.get('cotrav_agent_id', '')
         user_type = request.POST.get('user_type', '')
@@ -327,7 +329,7 @@ def add_companies(request):
                     cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
                       address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
                        is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type,
-                    billing_city_id,has_self_booking_access,will_do_realtime_payment,has_billing_admin_level])
+                    billing_city_id,has_self_booking_access,will_do_realtime_payment,has_billing_admin_level,is_send_email,is_send_sms])
                     company = dictfetchall(cursor)
                     print(company)
                     cursor.close()
@@ -394,6 +396,9 @@ def update_company(request):
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
         user_type = request.POST.get('user_type', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
+
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
@@ -404,7 +409,7 @@ def update_company(request):
                     cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
                       has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
                        is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type,
-                        has_self_booking_access,will_do_realtime_payment,has_billing_admin_level])
+                        has_self_booking_access,will_do_realtime_payment,has_billing_admin_level,is_send_email,is_send_sms])
                     company = dictfetchall(cursor)
                     cursor.close()
                     company = dictfetchall(cursor)
@@ -2480,6 +2485,8 @@ def add_group(request):
         is_flight = request.POST.get('is_flight', '')
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
         access_token = request.POST.get('access_token_auth', '')
         password = make_password(request.POST.get('password', ''))
 
@@ -2491,7 +2498,7 @@ def add_group(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('addNewCorporateGroup', [user_id,corporate_id,user_type,group_name,zone_name,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,access_token,password])
+                                                             is_water_bottles,is_reverse_logistics,access_token,password,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -2632,6 +2639,8 @@ def add_subgroup(request):
         is_flight = request.POST.get('is_flight', '')
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
         access_token = request.POST.get('access_token_auth', '')
         password = make_password(request.POST.get('password', ''))
         print(password)
@@ -2643,7 +2652,7 @@ def add_subgroup(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('addNewCorporateSubGroup', [user_id,corporate_id,user_type,subgroup_name,group_id,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,access_token,password])
+                                                             is_water_bottles,is_reverse_logistics,access_token,password,is_send_email,is_send_sms])
                     print(subgroup_name)
                     company = dictfetchall(cursor)
                     print(company)
@@ -2794,6 +2803,8 @@ def add_group_auth(request):
         access_token = request.POST.get('access_token_auth', '')
         password = make_password(request.POST.get('password', ''))
         group_auth_id = request.POST.get('group_auth_id', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         if corporate_id:
             corporate_id = corporate_id
@@ -2817,7 +2828,7 @@ def add_group_auth(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('addNewCorporateGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,group_id,is_delete,access_token,password,group_auth_id])
+                                                             is_water_bottles,is_reverse_logistics,group_id,is_delete,access_token,password,group_auth_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
 
@@ -2868,6 +2879,8 @@ def update_group_auth(request):
         is_flight = request.POST.get('is_flight', '')
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         group_auth_id = request.POST.get('group_auth_id', '')
         user_token = req_token.split()
@@ -2878,7 +2891,7 @@ def update_group_auth(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('updateCorporateGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,
-                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,group_auth_id])
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,group_auth_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -2972,6 +2985,8 @@ def add_subgroup_auth(request):
         access_token = request.POST.get('access_token_auth', '')
         password = make_password(request.POST.get('password', ''))
         subgroup_auth_id = request.POST.get('subgroup_auth_id', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         if corporate_id:
             corporate_id = corporate_id
@@ -2995,7 +3010,7 @@ def add_subgroup_auth(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('addNewCorporateSubGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,subgroup_id,is_delete,access_token,password,subgroup_auth_id])
+                                                             is_water_bottles,is_reverse_logistics,subgroup_id,is_delete,access_token,password,subgroup_auth_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3046,6 +3061,8 @@ def update_subgroup_auth(request):
         is_water_bottles = request.POST.get('is_water_bottles', '')
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
         subgroup_auth_id = request.POST.get('subgroup_auth_id', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -3055,7 +3072,7 @@ def update_subgroup_auth(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('updateCorporateSubGroupAuthenticator', [user_id,corporate_id,user_type,name,email,cid,contact_no,is_radio,is_local,
-                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,subgroup_auth_id])
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,subgroup_auth_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3146,6 +3163,8 @@ def add_admin(request):
         access_token = request.POST.get('access_token_auth', '')
         password = make_password(request.POST.get('password', ''))
         admin_id = request.POST.get('admin_id', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         if corporate_id:
             corporate_id = corporate_id
@@ -3169,7 +3188,7 @@ def add_admin(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('addNewCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id])
+                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id,is_send_email,is_send_sms])
                     company = dictfetchall(cursor)
                     
                     if company:
@@ -3221,6 +3240,8 @@ def update_admin(request):
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
 
         admin_id = request.POST.get('admin_id', '')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -3230,7 +3251,7 @@ def update_admin(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('updateCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,
-                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,admin_id])
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,admin_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3329,6 +3350,8 @@ def add_spoc(request):
         access_token = request.POST.get('access_token_auth', '')
         password = make_password(request.POST.get('password', ''))
         spoc_id = request.POST.get('spoc_id')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         if corporate_id:
             corporate_id = corporate_id
@@ -3358,7 +3381,7 @@ def add_spoc(request):
                 try:
                     cursor.callproc('addNewCorporateSpoc', [user_id,corporate_id,user_type,group_id,subgroup_id,user_cid,user_name,user_contact,email,username,
                                                             budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,spoc_id])
+                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,spoc_id,is_send_email,is_send_sms])
                     company = dictfetchall(cursor)
                     print(company)
                     if company:
@@ -3420,6 +3443,8 @@ def update_spoc(request):
         is_delete = request.POST.get('delete_id')
         access_token = request.POST.get('access_token_auth', '')
         spoc_id = request.POST.get('spoc_id')
+        is_send_email = request.POST.get('is_send_email', '')
+        is_send_sms = request.POST.get('is_send_sms', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -3430,7 +3455,7 @@ def update_spoc(request):
                 try:
                     cursor.callproc('updateCorporateSpoc', [user_id,corporate_id,user_type,group_id,subgroup_id,user_cid,user_name,user_contact,email,username,
                                                             budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,is_delete,spoc_id])
+                                                             is_water_bottles,is_reverse_logistics,is_delete,spoc_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3921,6 +3946,43 @@ def delete_agent(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
+
+def activate_agent(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        agent_id = request.POST.get('agent_id', '')
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('activateAgent', [user_id,user_type,agent_id])
+                    company = dictfetchall(cursor)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        data = {'success': 1, 'message': "Agent Deleted Successfully"}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 1, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 def view_group(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -5149,7 +5211,7 @@ def add_taxi_booking(request):
                 try:
 
                     cursor.callproc('addTaxiBooking', [user_type,user_id,entity_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
-                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_datetime,booking_email,'@last_booking_id'])
+                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_datetime,booking_email,'@last_booking_id','@booking_reference_no'])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -5158,6 +5220,14 @@ def add_taxi_booking(request):
                         last_booking_id = cursor.fetchone()[0]
                         print(last_booking_id)
                         cursor.close()
+
+                        cursor12 = connection.cursor()
+                        cursor12.execute("SELECT @booking_reference_no")
+                        booking_reference_no = cursor12.fetchone()[0]
+                        print("Booking Refrence no")
+                        print(booking_reference_no)
+                        cursor12.close()
+
                         cursor2 = connection.cursor()
                         cursor2.callproc('viewTaxiBooking', [last_booking_id])
                         emp = dictfetchall(cursor2)
@@ -5170,7 +5240,7 @@ def add_taxi_booking(request):
                         cursor1.close()
 
                         cursor3 = connection.cursor()
-                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id,1])
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
@@ -5184,7 +5254,7 @@ def add_taxi_booking(request):
                             thread.start()
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Taxi")
 
-                        data = {'success': 1, 'message': "Taxi Booking Added Successfully"}
+                        data = {'success': 1, 'message': "Taxi Booking Added Successfully",'booking_reference_no':booking_reference_no}
                         return JsonResponse(data)
                     return JsonResponse(data)
                 except Exception as e:
@@ -5268,7 +5338,7 @@ def add_bus_booking(request):
 
                     cursor.callproc('addBusBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
                                                       to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id'])
+                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no'])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -5277,6 +5347,14 @@ def add_bus_booking(request):
                         last_booking_id = cursor.fetchone()[0]
                         print(last_booking_id)
                         cursor.close()
+
+                        cursor12 = connection.cursor()
+                        cursor12.execute("SELECT @booking_reference_no")
+                        booking_reference_no = cursor12.fetchone()[0]
+                        print("Booking Refrence no")
+                        print(booking_reference_no)
+                        cursor12.close()
+
                         cursor2 = connection.cursor()
                         cursor2.callproc('viewBusBooking', [last_booking_id])
                         emp = dictfetchall(cursor2)
@@ -5289,7 +5367,7 @@ def add_bus_booking(request):
                         cursor1.close()
 
                         cursor3 = connection.cursor()
-                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id,2])
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
@@ -5304,7 +5382,7 @@ def add_bus_booking(request):
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Bus")
 
                     cursor.close()
-                    data = {'success': 1, 'message': "Bus Booking Added Success"}
+                    data = {'success': 1, 'message': "Bus Booking Added Success",'booking_reference_no':booking_reference_no}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5388,7 +5466,7 @@ def add_train_booking(request):
 
                     cursor.callproc('addTrainBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
                                                       to_location,train_type,train_type,train_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_train,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id'])
+                                                             entity_id,preferred_train,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no'])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     if booking_id:
@@ -5398,6 +5476,14 @@ def add_train_booking(request):
                         last_booking_id = cursor.fetchone()[0]
                         print(last_booking_id)
                         cursor.close()
+
+                        cursor12 = connection.cursor()
+                        cursor12.execute("SELECT @booking_reference_no")
+                        booking_reference_no = cursor12.fetchone()[0]
+                        print("Booking Refrence no")
+                        print(booking_reference_no)
+                        cursor12.close()
+
                         cursor2 = connection.cursor()
                         cursor2.callproc('viewTrainBooking', [last_booking_id])
                         emp = dictfetchall(cursor2)
@@ -5410,7 +5496,7 @@ def add_train_booking(request):
                         cursor1.close()
 
                         cursor3 = connection.cursor()
-                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id,3])
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
@@ -5434,7 +5520,7 @@ def add_train_booking(request):
                                 booking_id = dictfetchall(cursor)
 
                                 cursor.close()
-                                data = {'success': 1, 'message': "Train Booking Added Success"}
+                                data = {'success': 1, 'message': "Train Booking Added Success",'booking_reference_no':booking_reference_no}
                                 return JsonResponse(data)
                             except Exception as e:
                                 data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -5491,6 +5577,7 @@ def add_hotel_booking(request):
         checkin_datetime = datetime.strptime(checkin_datetime, '%d-%m-%Y %H:%M:%S')
         checkout_datetime = request.POST.get('checkout_datetime', '')
         checkout_datetime = datetime.strptime(checkout_datetime, '%d-%m-%Y %H:%M:%S')
+        no_of_nights = request.POST.get('no_of_nights','')
 
         preferred_hotel= request.POST.get('preferred_hotel','')
         billing_entity_id = request.POST.get('billing_entity_id', '')
@@ -5529,7 +5616,7 @@ def add_hotel_booking(request):
 
                     cursor.callproc('addHotelBooking', [from_city_id,from_area_id,preferred_area,checkin_datetime,checkout_datetime,bucket_priority_1,bucket_priority_2,
                                                       room_type_id,preferred_hotel,booking_datetime,assessment_code,assessment_city_id,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,'@last_booking_id'])
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,'@last_booking_id',no_of_nights,'@booking_reference_no'])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -5538,6 +5625,14 @@ def add_hotel_booking(request):
                         last_booking_id = cursor.fetchone()[0]
                         print(last_booking_id)
                         cursor.close()
+
+                        cursor12 = connection.cursor()
+                        cursor12.execute("SELECT @booking_reference_no")
+                        booking_reference_no = cursor12.fetchone()[0]
+                        print("Booking Refrence no")
+                        print(booking_reference_no)
+                        cursor12.close()
+
                         cursor2 = connection.cursor()
                         cursor2.callproc('viewHotelBooking', [last_booking_id])
                         emp = dictfetchall(cursor2)
@@ -5550,7 +5645,7 @@ def add_hotel_booking(request):
                         cursor1.close()
 
                         cursor3 = connection.cursor()
-                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id,4])
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
@@ -5564,7 +5659,7 @@ def add_hotel_booking(request):
                             thread.start()
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Hotel")
 
-                    data = {'success': 1, 'message': "Hotel Booking Added Success"}
+                    data = {'success': 1, 'message': "Hotel Booking Added Success",'booking_reference_no':booking_reference_no}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5653,7 +5748,7 @@ def add_flight_booking(request):
 
                     cursor.callproc('addFlightBooking', [usage_type,journey_type,flight_class,from_location,to_location,booking_datetime,departure_datetime,
                                                       preferred_flight,assessment_code,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking])
+                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking,'@booking_reference_no'])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     if booking_id:
@@ -5663,6 +5758,14 @@ def add_flight_booking(request):
                         last_booking_id = cursor.fetchone()[0]
                         print(last_booking_id)
                         cursor.close()
+
+                        cursor12 = connection.cursor()
+                        cursor12.execute("SELECT @booking_reference_no")
+                        booking_reference_no = cursor12.fetchone()[0]
+                        print("Booking Refrence no")
+                        print(booking_reference_no)
+                        cursor12.close()
+
                         cursor2 = connection.cursor()
                         cursor2.callproc('viewFlightBooking', [last_booking_id])
                         emp = dictfetchall(cursor2)
@@ -5675,7 +5778,7 @@ def add_flight_booking(request):
                         cursor1.close()
 
                         cursor3 = connection.cursor()
-                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                        cursor3.callproc('getAllApproverByBookingID', [last_booking_id,5])
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
@@ -5690,7 +5793,7 @@ def add_flight_booking(request):
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Flight")
 
                     cursor.close()
-                    data = {'success': 1, 'message': "Flight Booking Added Success",'last_booking_id':last_booking_id}
+                    data = {'success': 1, 'message': "Flight Booking Added Success",'last_booking_id':last_booking_id,'booking_reference_no':booking_reference_no}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -6568,13 +6671,32 @@ def get_flight_search(request):
                             print("trip type")
                             sorted_obj = dict(api_response)
                             sorted_obj['FLIGHT'] = sorted(sorted_obj['FLIGHT'], key=lambda x: int(x['AMT']), reverse=False)
-                            print(sorted_obj['FLIGHT'])
+                            for dura in sorted_obj['FLIGHT']:
+                                data1 = dura['DUR'].split(':')
+                                if data1[0] == '0d':
+                                    data1[0] = ''
+                                data = data1[0]+' '+data1[1]+' '+data1[2]
+                                dura['DUR'] = data
                         else:
                             print(trip_type)
                             sorted_obj = dict(api_response)
                             print(sorted_obj)
                             sorted_obj['FLIGHTOW'] = sorted(sorted_obj['FLIGHTOW'], key=lambda x: int(x['AMT']), reverse=False)
                             sorted_obj['FLIGHTRT'] = sorted(sorted_obj['FLIGHTRT'], key=lambda x: int(x['AMT']), reverse=False)
+
+                            for dura in sorted_obj['FLIGHTOW']:
+                                data1 = dura['DUR'].split(':')
+                                if data1[0] == '0d':
+                                    data1[0] = ''
+                                data = data1[0]+' '+data1[1]+' '+data1[2]
+                                dura['DUR'] = data
+                            for dura in sorted_obj['FLIGHTRT']:
+                                data1 = dura['DUR'].split(':')
+                                if data1[0] == '0d':
+                                    data1[0] = ''
+                                data = data1[0]+' '+data1[1]+' '+data1[2]
+                                dura['DUR'] = data
+
                         data = {'success': 1, 'Data': sorted_obj}
                         return JsonResponse(data)
                     except Exception as e:
@@ -6718,15 +6840,38 @@ def get_flight_fare_search(request):
                         ],
 
                     }
-                    #print(payload)
+                    print(payload)
                     #print(payload2)
                     headers = {}
                     r = {}
+                    api_response = ''
                     if UID2:
                         r = requests.post(url, json=payload2)
+                        api_response = r.json()
+                        for dura in api_response['FLIGHTRT']:
+                            data1 = dura['DURATION'].split(':')
+                            if data1[0] == '0d':
+                                data1[0] = ''
+                            data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
+                            dura['DURATION'] = data
+                        for dura in api_response['FLIGHTOW']:
+                            data1 = dura['DURATION'].split(':')
+                            if data1[0] == '0d':
+                                data1[0] = ''
+                            data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
+                            dura['DURATION'] = data
                     else:
                         r = requests.post(url, json=payload)
-                    api_response = r.json()
+                        print(r)
+                        api_response = r.json()
+                        print(api_response)
+                        for dura in api_response['FLIGHT']:
+                            data1 = dura['DURATION'].split(':')
+                            if data1[0] == '0d':
+                                data1[0] = ''
+                            data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
+                            dura['DURATION'] = data
+
                     print("API TYPE")
                     print(type(api_response))
                     data = {'success': 1, 'Data': api_response}
@@ -6933,9 +7078,9 @@ def save_flight_booking(request):
                             "CON_FLIGHT": va['CON_FLIGHT'],
                             "FARE": va['FARE'],
                             "PARAM": va['PARAM'],
+                            "GSTINFO": va['GSTINFO'],
                             "Deal": va['Deal'],
                             "FARE_RULE": va['FARE_RULE'],
-                            "GSTINFO": va['GSTINFO'],
                             "PAX": dict,
                             "TYPE": "DC",
                             "NAME": "PNR_CREATION",
@@ -7290,7 +7435,7 @@ def add_flight_booking_with_invoice(request):
                             cursor1.close()
 
                             cursor3 = connection.cursor()
-                            cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                            cursor3.callproc('getAllApproverByBookingID', [last_booking_id, 5])
                             approvers = dictfetchall(cursor3)
                             cursor3.close()
 
@@ -7628,7 +7773,7 @@ def get_phr_detail_assign_booking(request):
                             cursor1.close()
                             print(emp)
                             cursor3 = connection.cursor()
-                            cursor3.callproc('getAllApproverByBookingID', [last_booking_id])
+                            cursor3.callproc('getAllApproverByBookingID', [last_booking_id,5])
                             approvers = dictfetchall(cursor3)
                             cursor3.close()
 
@@ -7776,6 +7921,44 @@ def get_nationality(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
+
+
+def get_operator_package(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        operator_id = request.POST.get('operator_id', '')
+
+        if not operator_id:
+            operator_id = 0
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllOperatorRatesDetails', [operator_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Rate': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
 
 
 def getUserinfoFromAccessToken(user_token=None, user_type=None):

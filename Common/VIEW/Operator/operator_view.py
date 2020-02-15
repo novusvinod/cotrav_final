@@ -42,7 +42,13 @@ def operator_login_action(request):
         if user is not None:
             if user:
                 request.session.set_expiry(7200)  # sets the exp. value of the session
+                request.session.set_expiry(7200)  # sets the exp. value of the session
+                user_type_login = request.session['operator_login_type']
+                access_token_login = request.session['operator_access_token']
                 auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                request.session['operator_access_token'] = access_token_login
+                request.session['operator_login_type'] = user_type_login
+                request.session.set_expiry(7200)  # sets the exp. value of the session
                 messages.success(request, 'Login Successfully..!')
                 return redirect("/operator/operator_home")
         else:

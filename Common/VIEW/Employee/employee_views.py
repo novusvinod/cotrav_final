@@ -327,7 +327,7 @@ def add_taxi_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':employee_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
+                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime+':00','taxi_type':taxi_type,
                        'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,
                        'employees':employees,'entity_id':entity_id,'is_sms':1,'is_email':1}
 
@@ -472,7 +472,7 @@ def add_bus_booking(request,id):
             payload = {'login_type': login_type, 'user_id': employee_id, 'access_token': access_token,
                        'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
                        'subgroup_id': subgroup_id, 'from': from_location, 'to': to_location,
-                       'bus_type': bus_type, 'booking_datetime': booking_datetime, 'journey_datetime': journey_datetime,'journey_datetime_to':journey_datetime_to,
+                       'bus_type': bus_type, 'booking_datetime': booking_datetime, 'journey_datetime': journey_datetime+':00','journey_datetime_to':journey_datetime_to+':00',
                        'entity_id': entity_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
                        'preferred_bus': preferred_bus, 'reason_booking': reason_booking, 'no_of_seats': no_of_seats,
                        'employees': employees,'is_sms':1,'is_email':1}
@@ -600,8 +600,8 @@ def add_train_booking(request,id):
 
             payload = {'login_type': login_type, 'user_id': employee_id, 'access_token': access_token,
                        'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
-                       'subgroup_id': subgroup_id, 'from': from_location, 'to': to_location,'journey_datetime_to':journey_datetime_to,
-                       'train_type': train_type, 'booking_datetime': booking_datetime, 'journey_datetime': journey_datetime,
+                       'subgroup_id': subgroup_id, 'from': from_location, 'to': to_location,'journey_datetime_to':journey_datetime_to+':00',
+                       'train_type': train_type, 'booking_datetime': booking_datetime, 'journey_datetime': journey_datetime+':00',
                        'entity_id': entity_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
                        'preferred_bus': preferred_bus, 'reason_booking': reason_booking, 'no_of_seats': no_of_seats,
                        'employees': employees,'is_sms':1,'is_email':1}
@@ -727,7 +727,7 @@ def add_hotel_booking(request,id):
             room_occupancy = request.POST.get('room_occupancy')
             preferred_hotel = request.POST.get('preferred_hotel')
             booking_date = request.POST.get('booking_datetime')
-
+            no_of_nights = request.POST.get('no_of_nights', '')
             assessment_code = request.POST.get('assessment_code')
 
             assessment_city = request.POST.get('assessment_city')
@@ -748,12 +748,12 @@ def add_hotel_booking(request,id):
             payload = {'login_type': login_type, 'user_id': user_id, 'access_token': access_token,
                        'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
                        'subgroup_id': subgroup_id, 'from_city_id': from_city, 'from_area_id': city_area,
-                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date,
-                       'checkout_datetime': check_out_date, 'bucket_priority_1': room_type_priority1,
+                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date+':00',
+                       'checkout_datetime': check_out_date+':00', 'bucket_priority_1': room_type_priority1,
                        'bucket_priority_2': room_type_priority2, 'room_type_id': room_occupancy,
                        'preferred_hotel': preferred_hotel, 'booking_datetime': booking_date,
                        'assessment_code': assessment_code, 'assessment_city_id': assessment_city,
-                       'billing_entity_id': billing_entity, 'employees': employees,
+                       'billing_entity_id': billing_entity, 'employees': employees,'no_of_nights':no_of_nights,
                        'reason_booking':reason_for_booking,'no_of_seats':1,'is_sms':1,'is_email':1}
 
             url_taxi_booking = settings.API_BASE_URL + "add_hotel_booking"

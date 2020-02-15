@@ -156,6 +156,26 @@
                         </div>
                     </div>
 
+                      <div class="form-group row" id="is_send_email1">
+                        <label class="col-sm-5 control-label">Is Send Email?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_email" id="is_send_email">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="is_send_sms1">
+                        <label class="col-sm-5 control-label">Is Send SMS?</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" name="is_send_sms" id="is_send_sms">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger" data-dismiss="modal" type="button">Close</button>
@@ -239,7 +259,7 @@
                                         data-contact_no="{{admin.contact_no}}" data-cid="{{admin.cid}}" data-is_reverse_logistics="{{admin.is_reverse_logistics}}"
                                         data-is_local="{{admin.is_local}}" data-is_water_bottles="{{admin.is_water_bottles}}" data-is_radio="{{admin.is_radio}}"
                                         data-is_hotel="{{admin.is_hotel}}" data-is_outstation="{{admin.is_outstation}}" data-is_bus="{{admin.is_bus}}"
-                                        data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}">
+                                        data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}" data-is_send_email="{{admin.is_send_email}}" data-is_send_sms="{{admin.is_send_sms}}">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                         <a class="btn btn-tbl-delete btn-xs" data-delete_id="1" data-id="{{admin.id}}" data-name="{{admin.name}}" data-email="{{admin.email}}"
@@ -247,7 +267,7 @@
                                         data-is_local="{{admin.is_local}}" data-is_water_bottles="{{admin.is_water_bottles}}" data-is_radio="{{admin.is_radio}}"
                                         data-is_hotel="{{admin.is_hotel}}" data-is_outstation="{{admin.is_outstation}}" data-is_bus="{{admin.is_bus}}"
                                         data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}"
-                                           data-target="#model_add_new_group" data-toggle="modal" href="#">
+                                           data-target="#model_add_new_group" data-toggle="modal" href="#" data-is_send_email="{{admin.is_send_email}}" data-is_send_sms="{{admin.is_send_sms}}">
                                             <i class="fa fa-trash-o "></i>
                                         </a>
 
@@ -291,6 +311,8 @@ $(function() {
     var is_flight = button.data('is_flight');
     var is_water_bottles = button.data('is_water_bottles');
     var is_reverse_logistics = button.data('is_reverse_logistics');
+    var is_send_email = button.data('is_send_email');
+    var is_send_sms = button.data('is_send_sms');
 
     var delete_id = button.data('delete_id');
 
@@ -317,6 +339,8 @@ $(function() {
     modal.find('#is_flight').val(is_flight);
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+    modal.find('#is_send_email').val(is_send_email);
+    modal.find('#is_send_sms').val(is_send_sms);
 
     $('#delete_label').text("Do You Want to Delete This Record");
     $('#delete_btn').html("Yes");
@@ -335,8 +359,12 @@ $(function() {
     $('#is_flight1').hide();
     $('#is_water_bottles1').hide();
     $('#is_reverse_logistics1').hide();
+    $('#is_send_email1').hide();
+    $('#is_send_sms1').hide();
 
-    }else{
+    }
+
+    if(typeof name != "undefined"){
 
     modal.find('#name').val(name);
     modal.find('#email').val(email);
@@ -353,6 +381,8 @@ $(function() {
     modal.find('#is_flight').val(is_flight);
     modal.find('#is_water_bottles').val(is_water_bottles);
     modal.find('#is_reverse_logistics').val(is_reverse_logistics);
+    modal.find('#is_send_email').val(is_send_email);
+    modal.find('#is_send_sms').val(is_send_sms);
 
     modal.find('#delete_id').val('');
 
@@ -374,9 +404,13 @@ $(function() {
     $('#is_flight1').show();
     $('#is_water_bottles1').show();
     $('#is_reverse_logistics1').show();
+    $('#is_send_email1').show();
+    $('#is_send_sms1').show();
 
-
-
+    }else{
+        $('#model_add_new_group').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
     }
 
     });

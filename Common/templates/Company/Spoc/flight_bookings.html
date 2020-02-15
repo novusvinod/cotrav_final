@@ -235,7 +235,7 @@
                                 <tr>
                                     <td>{{ booking.id }}</td>
                                     <td>{{ booking.booking_datetime }}</td>
-                                     <td>{{ booking.reference_no }}</td>
+                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.assessment_code }}</td>
                                      <td>{{ booking.from_location }}</td>
                                     <td>{{ booking.to_location}}</td>
@@ -265,7 +265,7 @@
                                     <td>
                                         {% if booking.status_cotrav == 1 %}
                                         <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i> </a>
                                     {% endif %}
 
 

@@ -57,14 +57,25 @@
 
                 <div class="form-group row" >
                        <label class="col-sm-5 control-label">Select Operator Name</label>
-                            <div class="col-sm-7">
-                                <select name="operator_id" id="operator_id" class="form-control myselect" required>-->
+                            <div class="col-sm-7" >
+                                <select name="operator_id" id="operator_id" class="form-control myselect" required style="width:100%">
                                     <option value="">Select Operator Name</option>
                                     {% for operator in operators %}
                                     {% if operator.service_type_id == 2 or operator.service_type_id == 3 or operator.service_type_id == 1  %}
                                         <option value="{{operator.id}}" contact="{{operator.operator_contact}}" email="{{operator.operator_email}}">{{operator.operator_name}} ({{operator.operator_contact}})</option>
                                     {% endif %}
                                     {% endfor %}
+                                </select>
+
+                            </div>
+                    </div>
+
+                <div class="form-group row" >
+                       <label class="col-sm-5 control-label">Select Operator Package</label>
+                            <div class="col-sm-7" >
+                                <select name="operator_package_id" id="operator_package_id" class="form-control myselect" required style="width:100%">
+                                    <option value="">Select Operator Package</option>
+
                                 </select>
 
                             </div>
@@ -263,7 +274,7 @@
                                     <th>CoTrav Status</th>
                                     <th>Action</th>
                                     <th>Operator Details</th>
-                                    <th>Taxi/Driver Assign</th>
+                                    <th>Taxi/Driver Details</th>
                                     <th>Spoc Details</th>
 
                                     <th>Passenger Details</th>
@@ -276,7 +287,7 @@
                                 {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.id }}</td>
-                                    <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.city_name }}</td>
                                     <td>{{ booking.booking_date}}</td>
                                     <td>{{ booking.pickup_datetime }}</td>
@@ -297,13 +308,13 @@
                                         {% if booking.status_cotrav > 1 %}
                                             ({{ booking.cotrav_agent_name|default:'' }})
                                         {% endif %}
-                                    <td>
+                                    <td style="display: inline-flex;">
                                         {% if booking.status_cotrav == 1 %}
                                      <a title="Accept Booking" style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
                                     {% endif %}
                                         <a title="Reject Booking"  data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i> </a>
 
                                         {% if booking.status_cotrav == 2 %}
                                         <a title="Assign Booking" href="/agents/assign-taxi-booking/{{booking.id}}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;">  <i class="fa fa-pencil"></i> </a>
@@ -324,7 +335,7 @@
                                         {% if booking.status_cotrav == 2 %}
 
                                         <a title="Assign Operator" style="background:cadetblue; color:white;" data-target="#model_action_assign_oper" data-id="{{booking.id}}" data-accept_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-plus"></i> </a>
                                         {% endif %}
 
                                     </td>
@@ -409,8 +420,36 @@ $(function() {
 $("#operator_id").change(function(){
 var contact = $('option:selected',"#operator_id").attr("contact");
 var email = $('option:selected',"#operator_id").attr("email");
+var operator_id = $('option:selected',"#operator_id").attr("id");
 $("#operator_contact").val(contact);
 $("#operator_email").val(email);
+
+$.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+        //       For Employees
+
+    var_url_spoc_employee = '/api/'+'get_operator_package'
+     $.post(var_url_spoc_employee,{ operator_id: operator_id },
+      function(data)
+      {
+
+       if(data['Rate'].length != 0){
+        rate = data['Rate'];
+
+         for (var i=0;i<rate.length;i++) {
+            $('#operator_package_id').append($("<option value='"+rate[i].id+"' >"+rate[i].package_name+"</option>"));
+                }
+       }else{
+        alert('No Package Available')
+       }
+       });
+
 });
 </script>
 

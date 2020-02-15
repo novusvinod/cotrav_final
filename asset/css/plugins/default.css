@@ -213,7 +213,7 @@ h6 {font-size:22px;}
 ====================================== */
 
 .center-col {float:none; margin-left:auto; margin-right:auto; }
-section {padding: 90px 0; overflow: hidden; background: #f9f9f9;}
+section {padding: 90px 0; overflow: hidden;}
 
 .big-input, .big-textarea, .big-select select { padding: 18px 25px; font-size: 14px; border-radius: 0;}
 .medium-input, .medium-textarea, .medium-select select { padding: 12px 20px; font-size: 14px; line-height: normal; border-radius: 5px;}
@@ -5297,4 +5297,35 @@ section {padding: 90px 0; overflow: hidden; background: #f9f9f9;}
 /* ipad Landscape */
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
     .parallax {background-attachment: inherit; background-position: center;}
+}
+.txt-block-sec {
+    margin-left: 1px;
+    font-size: 60px;
+    color: #4583ff;
+    font-family: 'Montserrat',Regular;
+    padding-top: 71px;
+}
+
+.logo-img{
+    margin-left: -96px;
+    width: 280px;
+}
+.p-txt{
+  color: #191919;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: montserrat;
+}
+.img_1{
+  margin-top: -50px;
+  width: 75%;
+}
+
+.txt_center_align{
+  text-align: left;
+}
+
+.txt-underline{
+  text-decoration: underline;
+  font-size: 20px;
 }

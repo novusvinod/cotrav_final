@@ -35,14 +35,14 @@
           <tr>
             <th id="download_from_date1"> From Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
             </td>
           </tr>
 
           <tr>
             <th id="download_to_date1"> To Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
             </td>
           </tr>
 
@@ -227,7 +227,7 @@
                                                                 {% for booking in bookings %}
                                 <tr>
 
-                                    <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.from_city_name }}</td>
                                     <td>{{ booking.from_area_id_name}}</td>
                                     <td>{{ booking.booking_datetime}}</td>
@@ -256,7 +256,7 @@
                                     </td>
 
                                     {% if booking.status_client == 1 %}
-                                    <td>
+                                    <td style="display: inline-flex;">
                                         <a style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
                                         </a>
@@ -266,7 +266,7 @@
                                     {% else %}
                                     <td>
                                         {% now "d-m-Y H:m" as current_datetime %}
-                                        {% if booking.checkin_datetime >= current_datetime %}
+                                        {% if booking.checkin_datetime >= current_datetime and booking_type|stringformat:"s" == "5" %}
                                             <a style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
                                         </a>

@@ -16,8 +16,8 @@ from django.http import HttpResponse
 import razorpay
 razorpay_client = razorpay.Client(auth=("rzp_test_eipQBGxGd1SmmJ", "r82J3rVV4NEAZKMGxIJVPyGY"))
 
-def logout_action(request):
 
+def logout_action(request):
     if 'spoc_login_type' in request.session:
         request = get_request()
         login_type = request.session['spoc_login_type']
@@ -34,12 +34,11 @@ def logout_action(request):
     else:
         return redirect("/login")
 
+
 def homepage(request):
-    print("i ma session Data")
-    for key, value in request.session.items():
-        print('{} => {}'.format(key, value))
-    print("i ma session Data")
+
     if 'spoc_login_type' in request.session:
+
         user_type = request.session['spoc_login_type']
         access_token = request.session['spoc_access_token']
         payload = {'spoc_id': request.user.id, 'corporate_id':request.user.corporate_id}
@@ -347,7 +346,7 @@ def add_taxi_booking(request,id):
 
             payload = {'login_type':login_type,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'tour_type':tour_type,'pickup_city':actual_city_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime,'taxi_type':taxi_type,
+                       'pickup_location':pickup_location,'drop_location':drop_location,'pickup_datetime':pickup_datetime+':00','taxi_type':taxi_type,
                        'package_id':package_id,'no_of_days':no_of_days,'reason_booking':reason_booking,'no_of_seats':no_of_seats,
                        'employees':employees,'user_id':user_id,'entity_id':entity_id,'is_sms':1,'is_email':1}
             print(payload)
@@ -507,9 +506,9 @@ def add_bus_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'bus_type':bus_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime,'entity_id':entity_id,
+                       'bus_type':bus_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime+':00','entity_id':entity_id,
                        'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,
-                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to}
+                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to+':00'}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_bus_booking"
@@ -660,9 +659,9 @@ def add_train_booking(request,id):
 
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
-                       'train_type':train_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime,'entity_id':entity_id,
+                       'train_type':train_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime+':00','entity_id':entity_id,
                        'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,
-                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to}
+                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to+':00'}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_train_booking"
@@ -805,7 +804,7 @@ def add_hotel_booking(request,id):
             room_occupancy = request.POST.get('room_occupancy')
             preferred_hotel = request.POST.get('preferred_hotel')
             booking_date = request.POST.get('booking_datetime')
-
+            no_of_nights = request.POST.get('no_of_nights', '')
             assessment_code = request.POST.get('assessment_code')
 
             assessment_city = request.POST.get('assessment_city')
@@ -823,13 +822,13 @@ def add_hotel_booking(request,id):
             payload = {'login_type': login_type, 'user_id': user_id, 'access_token': access_token,
                        'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
                        'subgroup_id': subgroup_id, 'from_city_id': from_city, 'from_area_id': city_area,
-                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date,
-                       'checkout_datetime': check_out_date, 'bucket_priority_1': room_type_priority1,
+                       'preferred_area': preferred_hotel_area, 'checkin_datetime': check_in_date+':00',
+                       'checkout_datetime': check_out_date+':00', 'bucket_priority_1': room_type_priority1,
                        'bucket_priority_2': room_type_priority2, 'room_type_id': room_occupancy,
                        'preferred_hotel': preferred_hotel, 'booking_datetime': booking_date,
                        'assessment_code': assessment_code, 'assessment_city_id': assessment_city,
                        'billing_entity_id': billing_entity, 'employees': employees,'reason_booking':reason_for_booking,'no_of_seats':no_of_seats,
-                       'is_sms':1,'is_email':1}
+                       'is_sms':1,'is_email':1,'no_of_nights':no_of_nights}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_hotel_booking"
@@ -1231,8 +1230,7 @@ def add_flight_booking_self_conformation(request,id):
             nationality = getDataFromAPI(login_type, access_token, url_nat, payload)
             nationalities = nationality['Nationality']
 
-            return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees, 'cities_ass': cities,
-                'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats, 'flight_class_is_international':flight_class_is_international,'nationalities':nationalities})
+            return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees, 'cities_ass': cities,'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats, 'flight_class_is_international':flight_class_is_international,'nationalities':nationalities})
         else:
             return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': ''})
 
@@ -1275,7 +1273,7 @@ def add_flight_booking_self_final(request, id):
         emp_data = {}
         if flight_class_is_international:
             for i in range(1, no_of_emp):
-                emp_data['emp_id'] =  request.POST.get('employee_id_pass_' + str(i), '')
+                emp_data['emp_id'] =  request.POST.get('emp_id_' + str(i), '')
                 emp_data['emp_title'] =  request.POST.get('employee_title_' + str(i), '')
                 emp_data['emp_fname'] =  request.POST.get('employee_fname_' + str(i), '')
                 emp_data['emp_lname'] =  request.POST.get('employee_lname_' + str(i), '')
@@ -1286,9 +1284,9 @@ def add_flight_booking_self_final(request, id):
                 emp_info_international.append(emp_data)
         else:
             for i in range(1, no_of_emp):
-                emp_data['emp_title'] =  request.POST.get('employee_ttl_' + str(i), '')
-                emp_data['emp_fname'] =  request.POST.get('employee_ffname_' + str(i), '')
-                emp_data['emp_lname'] =  request.POST.get('employee_llname_' + str(i), '')
+                emp_data['emp_title'] =  request.POST.get('employee_title_' + str(i), '')
+                emp_data['emp_fname'] =  request.POST.get('employee_fname_' + str(i), '')
+                emp_data['emp_lname'] =  request.POST.get('employee_lname_' + str(i), '')
                 emp_data['emp_dob'] =  request.POST.get('employee_edob_' + str(i), '')
                 emp_info_international.append(emp_data)
 

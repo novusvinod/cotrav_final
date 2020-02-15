@@ -21,7 +21,6 @@ from Common.models import Corporate_Agent_Login_Access_Token
 from Common.email_settings import SignIn_OTP,AddBooking_Email
 COTRAV_NUMBERS = "8669152900"
 
-
 def login(request):
     form = Corporate_Login_Form()
     return render(request, 'corporate_login.html', {'form': form})
@@ -37,6 +36,8 @@ def login_action(request):
         user_type = corporate_login_type
         print("user Login From Page Type ")
         print(user_type)
+        user_type_login = ''
+        access_token_login = ''
         user = authenticate(username=username, post_password=password, login_type=corporate_login_type)
         print(user)
         if user:
@@ -49,39 +50,62 @@ def login_action(request):
                 cursor = connection.cursor()
 
                 if user_type == '1':
-                    print("i ma session Data11")
-                    for key, value in request.session.items():
-                        print('{} => {}'.format(key, value))
-                    print("i ma session Data11")
+                    user_type_login = request.session['admin_login_type']
+                    access_token_login = request.session['admin_access_token']
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    request.session['admin_access_token'] = access_token_login
+                    request.session['admin_login_type'] = user_type_login
+                    request.session['login_type'] = user_type
+                    request.session.set_expiry(7200)  # sets the exp. value of the session
                     return HttpResponseRedirect("Corporate/Admin/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '2':
+                    user_type_login = request.session['approves_1_login_type']
+                    access_token_login = request.session['approves_1_access_token']
                     auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    request.session['approves_1_access_token'] = access_token_login
+                    request.session['approves_1_login_type'] = user_type_login
+                    request.session['login_type'] = user_type
+                    request.session.set_expiry(7200)  # sets the exp. value of the session
                     return HttpResponseRedirect("Corporate/Approver_1/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '3':
-                    print("i ma session Data22")
-                    for key, value in request.session.items():
-                        print('{} => {}'.format(key, value))
-                    print("i ma session Data22")
-                    auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    user_type_login = request.session['approves_2_login_type']
+                    access_token_login = request.session['approves_2_access_token']
+                    auth_login(request, user,backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    request.session['approves_2_access_token'] = access_token_login
+                    request.session['approves_2_login_type'] = user_type_login
+                    request.session['login_type'] = user_type
+                    request.session.set_expiry(7200)  # sets the exp. value of the session
                     return HttpResponseRedirect("Corporate/Approver_2/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '4':
-                    auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    user_type_login = request.session['spoc_login_type']
+                    access_token_login = request.session['spoc_access_token']
+                    auth_login(request, user,backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    request.session['spoc_access_token'] = access_token_login
+                    request.session['spoc_login_type'] = user_type_login
+                    request.session['login_type'] = user_type
+                    request.session.set_expiry(7200)  # sets the exp. value of the session
+
                     return HttpResponseRedirect("Corporate/Spoc/home")
                 else:
                     print("User Info Not Found")
 
                 if user_type == '6':
-                    auth_login(request, user, backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    user_type_login = request.session['employee_login_type']
+                    access_token_login = request.session['employee_access_token']
+                    auth_login(request, user,backend='Common.backends.CustomCompanyUserAuth')  # the user is now logged in
+                    request.session['employee_access_token'] = access_token_login
+                    request.session['employee_login_type'] = user_type_login
+                    request.session['login_type'] = user_type
+                    request.session.set_expiry(7200)  # sets the exp. value of the session
                     return HttpResponseRedirect("Corporate/Employee/home")
                 else:
                     print("User Info Not Found")

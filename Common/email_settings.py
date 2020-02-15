@@ -191,9 +191,16 @@ class AddBooking_Email:
         global sms_body
 
         if booking_type == "Taxi":
+            tour_type = str(booking[0]['tour_type'])
+            if tour_type == '1':
+                tour_type = "Radio"
+            if tour_type == '2':
+                tour_type = "Local"
+            if tour_type == '3':
+                tour_type = "Outstation"
             sms_body = "Dear " + name + ",\n\nBooking successfully registered with id " + booking[0]['reference_no'] + ".\n\nPickup from " + \
                 booking[0]['pickup_location'] + " on " + booking[0]['pickup_datetime'] + ".\nDrop: " + booking[0]['drop_location'] + "\nTrip Type: " + \
-                str(booking[0]['tour_type']) + ".\nTaxi Type: " + str(booking[0]['tour_type']) + ".\n\nPlease call at " + COTRAV_NUMBERS + \
+                str(tour_type) + ".\nTaxi Type: " + str(booking[0]['taxi_type_request']) + ".\n\nPlease call at " + COTRAV_NUMBERS + \
                             " for any query.\n\nRgrds,\nTaxiVaxi.";
         elif booking_type == "Bus":
             sms_body = "Dear "+name+",\n\nYour Bus Booking is created.\n\nID: "+booking[0]['reference_no']+"\n\nFrom: "+\

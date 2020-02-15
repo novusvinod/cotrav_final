@@ -30,10 +30,20 @@ def logout_action(request):
         return redirect("/login")
 
 def homepage(request):
+    print("i ma session Data Home Page")
+    for key, value in request.session.items():
+        print('{} => {}'.format(key, value))
+    print("i ma session Data")
     if 'approves_2_login_type' in request.session:
         user_type = request.session['approves_2_login_type']
         access_token = request.session['approves_2_access_token']
         payload = {'approver_1_id': request.user.id}
+
+        print("print from home")
+        print(user_type)
+        print(access_token)
+        print("print from home")
+
         url = settings.API_BASE_URL + "approver_1_dashboard"
         data = getDataFromAPI(user_type, access_token, url, payload)
         dataDashboard = data['Dashboard']

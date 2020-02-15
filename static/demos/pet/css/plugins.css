@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------
 
-    Theme Name: CoTrav - Pet Adoption, Care and Shop Responsive Template
+    Theme Name: Fabrex - Pet Adoption, Care and Shop Responsive Template
     Description: Pet Adoption, Care and Shop Responsive Template
     Author: Chitrakoot Web
 

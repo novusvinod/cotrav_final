@@ -45,7 +45,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Select Spoc</label>
-                                <select class="col-sm-8 form-control myselect" name="spoc_id" required>
+                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="spoc_id" required>
                                 {% if employee %}
                                 {% for employee in employee %}
 
@@ -68,7 +68,7 @@
 
                            <div class="form-group row">
                                 <label class="col-sm-4" >Billing Entity</label>
-                               <select class="col-sm-8 form-control myselect" name="billing_entity_id" required>
+                               <select class="col-sm-8 form-control  myselect" style="width:66%"  name="billing_entity_id" required>
                                 {% if employee %}
                                 {% for employee in employee %}
 
@@ -246,7 +246,7 @@
                                 <label class="col-sm-4" >Home City</label>
                                 {% if employee %}
                                 {% for employee in employee %}
-                                    <select class="col-sm-8 form-control myselect" name="home_city" id="city_id" required>
+                                    <select class="col-sm-8 form-control  myselect" style="width:66%"  name="home_city" id="city_id">
                                         <option value="">Select Home City</option>
                                         {% for citie in cities %}
                                         <option value="{{citie.id}}" {% if employee.home_city == citie.id %} selected {%endif%}>{{citie.city_name}}</option>
@@ -255,7 +255,7 @@
                                 {% endfor %}
                                 {% else %}
 
-                                     <select class="col-sm-8 form-control myselect" name="home_city" id="city_id_edit" required>
+                                     <select class="col-sm-8 form-control  myselect" style="width:66%"  name="home_city" id="city_id_edit">
                                         <option value="">Select Home City</option>
                                         {% for citie in cities %}
                                         <option value="{{citie.id}}">{{citie.city_name}}</option>
@@ -281,7 +281,7 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-4" >Reporting Manager</label>
-                                <select name="reporting_manager" id="reporting_manager" class="form-control col-sm-8 myselect">
+                                <select name="reporting_manager" id="reporting_manager" class="form-control col-sm-8  myselect" style="width:66%" >
                                     <option value=" " >Select Reporting Manager</option>
                                 {% if employee %}
                                 {% for employe in employee %}
@@ -319,17 +319,17 @@
                                 {% for employee in employee %}
                                  {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
 
-                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth" value="{{employee.date_of_birth}}"
+                                <input type="text" class="col-sm-8 form-control datepicker1" autocomplete="off" name="date_of_birth" value="{{employee.date_of_birth}}"
                                        placeholder="Assistant ID" required>
                                 {% else %}
 
-                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker1" autocomplete="off" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                                  {% endfor %}
 
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control datepicker1" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker1" autocomplete="off" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                             </div>
@@ -399,7 +399,7 @@
 
                             <div class="form-group row" id="row_assistant_id">
                                 <label class="col-sm-4" >Select Assistant</label>
-                                <select name="assistant_id" class="form-control col-sm-8 myselect">
+                                <select name="assistant_id" class="form-control col-sm-8  myselect" style="width:66%" >
                                     <option value=" " >Select Assistant</option>
                                 {% if employee %}
                                 {% for employe in employee %}

@@ -229,7 +229,7 @@
                           </tr>
                             <tr>
                                 <td style=" font-family: Montserrat; font-size: 15px;  color: black; ">
-                                    <h1 style="margin: -38px 0 10px; font-size: 20px; line-height: 30px; color: #000000; text-align: center; font-weight: normal; background-color: whitesmoke;">  <img src="http://cotrav.co/static/email_template_images/dot.png"> Booking Confirmation from Cotrav <br><small style="font-size: 14px;">Booking ID : {{ booking.reference_no }} </small></h1>
+                                    <h1 style="margin: -38px 0 10px; font-size: 20px; line-height: 30px; color: #000000; text-align: center; font-weight: normal; background-color: whitesmoke;">  <img src="http://cotrav.co/static/email_template_images/dot.png"> Taxi Booking Received <br><small style="font-size: 14px;">Booking ID : {{ booking.reference_no }} </small></h1>
                                    
                                 </td>
                             </tr>
@@ -241,7 +241,7 @@
                                            <td  style=" font-family: Montserrat; font-size: 15px;  color: black; text-align: center;">
                                              
                                              <h1 style="font-size: 16px;"> Dear {{user_name}},</h1>
-                                             <p style="font-size: 12px;">This is to inform you that your taxi booking has been received by CoTrav Team.The details of your booking are mentioned below:</p>
+                                             <p style="font-size: 12px;">This is to inform you that your railway travel has been confirmed by Cotrav Team.The details of your booking are mentioned below:</p>
                                            </td>
                                         </tr>
                                     </table>
@@ -259,7 +259,7 @@
                   
                     <td style="text-align: center; background-color: #ffffff;">
                      <fieldset style="border:solid 1px black;">
-                      <legend style="font-size: 16px;font-family: Montserrat; font-weight: 600; color: #000000;">Booking Details</legend>
+                      <legend style="font-size: 16px;font-family: Montserrat; font-weight: 600;margin-right: auto;margin-left: auto;">Booking Details</legend>
                         <div>
                           <span style="font-size: 13px;font-family: Montserrat; color: black;">Booking ID : {{ booking.reference_no }}</span>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style=" margin: auto;">
@@ -304,7 +304,7 @@
                <tr>
                  <td style="text-align: center; background-color: #ffffff;padding-top: 20px;">
                      <fieldset style="border:solid 1px black;">
-                      <legend style="font-size: 16px;font-family: Montserrat;font-weight: 600">Spoc Details</legend>
+                      <legend style="font-size: 16px;font-family: Montserrat;font-weight: 600;margin-right: auto;margin-left: auto;">Spoc Details</legend>
                         <div>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style=" margin: auto;">
                              
@@ -312,7 +312,7 @@
                                     <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
                                         <p style="margin: 10; "><a href="#" style="color: black;"> Email :     <br>  {{ booking.user_email }}</a></p>
                                     </td>
-                                      <td align="center" style="padding-right: 50px; font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                      <td align="center" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
                                         <p style="margin: 10; ">Spoc Name :      <br> {{ booking.user_name }}</p>
                                     </td>
 
@@ -331,7 +331,7 @@
                <tr>
                  <td style="text-align: center; background-color: #ffffff;padding-top: 20px;">
                      <fieldset style="border:solid 1px black;">
-                      <legend style="font-size: 16px;font-family: Montserrat;font-weight: 600">Passenger Details</legend>
+                      <legend style="font-size: 16px;font-family: Montserrat;font-weight: 600;margin-right: auto;margin-left: auto;">Passenger Details</legend>
                         <div>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style=" margin: auto;">
                              {% for passanger in booking.Passangers %}
@@ -339,7 +339,7 @@
                                     <td align="left" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
                                         <p style="margin: 10; "><a href="#" style="color: black;"> Email: <br>{{ passanger.employee_email|default:'' }}</a></p>
                                     </td>
-                                      <td align="center" style="padding-right: 50px; font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
+                                      <td align="center" style=" font-family: Montserrat; font-size: 13px; line-height: 20px; color: #000000;">
                                         <p style="margin: 10; ">Name: <br>{{ passanger.employee_name|default:'' }}</p>
                                     </td>
 
@@ -378,42 +378,42 @@
                       
                         <table  role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tr>
-                                <td align="left" style=" text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px; line-height: 20px; color: #ffffff;">
-                                    <p style="margin: 0;font-family: Montserrat;" ><img src="http://cotrav.co/static/email_template_images/email_1.png">7291995220, 9990045853</p>
+                                <td align="left" style=" text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px;  color: #ffffff;">
+                                    <p style="margin: 0;font-family: Montserrat; color: #ffffff;" > <img src="http://cotrav.co/static/email_template_images/email_1.png" style="color: #ffffff;position: relative;top: 2px;"> 7291995220, 9990045853</p>
                                 </td>
 
-                                     <td align="center" style="padding: 20px; text-align: center; font-family: Montserrat; font-size: 13px; line-height: 20px; color: #ffffff;">
+                                     <td align="center" style="padding: 20px; text-align: center; font-family: Montserrat; font-size: 13px;  color: #ffffff;">
                                    
                                 </td>
-                                  <td align="right" style=" text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px; line-height: 20px; color: #ffffff;">
-                                    <p style="margin: 0;font-family: Montserrat;"> <img src="http://cotrav.co/static/email_template_images/email_2.png"><a href="#" style="color: #ffffff;"> Info@cotrav.co</p>
+                                  <td align="right" style=" text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px;  color: #ffffff; ">
+                                    <p style="margin: 0;font-family: Montserrat;color: #ffffff;"> <img src="http://cotrav.co/static/email_template_images/email_2.png" style="color: #ffffff; position: relative; top: 2px;"> <a href="#" style="color: #ffffff;">  Info@cotrav.co </a></p> 
                                 </td>
                             </tr>
 
                               <tr>
                                  <td align="left"></td>
-                                  <td align="center" style="text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px; line-height: 20px; color: #ffffff;">
-                                    <p style="margin: 0; font-family: Montserrat;"> <img src="http://cotrav.co/static/email_template_images/email_3.png"> 6/813 Main Market, Mehrauli,<br>
+                                  <td align="center" style="text-align: center; font-family: Montserrat; font-weight: 500; font-size: 13px; color: #ffffff;">
+                                    <p style="margin: 0; font-family: Montserrat; color: #ffffff;"> <img src="http://cotrav.co/static/email_template_images/email_3.png"  style="color: #ffffff; position: relative; top: 2px;"> 6/813 Main Market, Mehrauli,<br>
                                  New Delhi 110030</p>
                                 </td>
                                  <td align="right"></td>
                             </tr>
 
                               <tr>
-                                 <td align="left"></td>
-                                  <td align="center" style="text-align: center; display: inline-flex; font-family: Montserrat; font-weight: 500; font-size: 16px;  color: #ffffff; ">
-                                   <div style="display: inline-flex; position: relative;left: 50%;"> <img src="http://cotrav.co/static/email_template_images/f1.png">
-                                   <img src="http://cotrav.co/static/email_template_images/f2.png">
-                                   <img src="http://cotrav.co/static/email_template_images/f3.png">
-                                 </div>
+                                 <td align="center">&nbsp;</td>
+                                  <td align="center">
+
+                                  <a href="#" >  <img src="http://cotrav.co/static/email_template_images/f1.png"></a>
+                                 <a href="#">    <img src="http://cotrav.co/static/email_template_images/f2.png"></a>
+                                   <a href="#">  <img src="http://cotrav.co/static/email_template_images/f3.png"></a>
                                 </td>
-                                 <td align="right"></td>
+                                 <td align="center"></td>
                             </tr>
 
                              <tr>
                                  <td align="left"></td>
                                   <td align="center" style="text-align: center; font-family: Montserrat; font-weight: 500; font-size: 16px; line-height: 20px; color: #ffffff;">
-                                    <p style="margin: 0; font-family: Montserrat;">  © 2019 Powered by Cotrav</p>
+                                    <p style="margin: 0; font-family: Montserrat;">  © 2020 Powered by Cotrav</p>
                                 </td>
                                  <td align="right"></td>
                             </tr>

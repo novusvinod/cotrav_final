@@ -158,6 +158,8 @@ urlpatterns = [
     path('api/add_agent', api_views.add_agent),
     path('api/update_agent', api_views.update_agent),
     path('api/delete_agent', api_views.delete_agent),
+    path('api/activate_agent', api_views.activate_agent),
+    path('api/get_operator_package', api_views.get_operator_package),
 
     ######### TAXI BOOKING API #####################
 

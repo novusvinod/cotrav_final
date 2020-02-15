@@ -47,7 +47,26 @@
     <!--select2-->
     <link href="{% static 'assets/plugins/select2/css/select2.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+<style>
+  .datetimepicker{
+        background: #ffffff;
+        transform: translate(0, 9.4em);
 
+  }
+  .datetimepicker.dropdown-menu{
+    padding: 10px;
+
+  }
+  .datetimepicker table th {
+    font-weight: 600 !important;
+    font-family: 'Poppins,sans-serif';
+    font-size: 12px;
+}
+  .datetimepicker thead tr:first-child th:hover, .datetimepicker tfoot th:hover {
+    background: #427BD1;
+}
+
+</style>
 </head>
 <!-- END HEAD -->
 
@@ -61,7 +80,21 @@
 
 
 {% endblock %}
+<script type="text/javascript">
+   $(".myselect").select2({width: 100%});
+</script>
+<script type="text/javascript">
 
+    $(".js-select2").select2({
+        theme: "material",
+        width: 100%
+    });
+
+    $(".select2-selection__arrow")
+        .addClass("material-icons")
+        .html("arrow_drop_down");
+
+</script>
 <!-- start footer -->
 <div class="page-footer">
     <div class="page-footer-inner"> 2019 &copy;
@@ -109,7 +142,38 @@
 	<script src="{% static 'assets/plugins/material-datetimepicker/moment-with-locales.min.js' %}"></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/datetimepicker.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+<script>
 
+        $(function () {
+         $('.datetimepicker1').datetimepicker(
+         {
+           minDate: 0,
+           inline: true,
+           sideBySide: true,
+           autoclose: true,
+           format: 'dd-mm-yyyy hh:ii', /*remove this line if you want to use time as well */
+           startDate: new Date(),  /* disable past date*/
+           orientation: 'bottom left',
+
+       });
+
+       $('.datepicker1').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy', /*remove this line if you want to use time as well */
+           orientation: 'bottom left',
+       });
+
+
+
+
+   });
+    </script>
  <script>
         $(document).ready(function() {
             $('#example1').DataTable({

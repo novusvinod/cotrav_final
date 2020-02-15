@@ -214,7 +214,7 @@
                                 {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.id }}</td>
-                                    <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location}}</td>
                                     <td>{{ booking.booking_datetime }}</td>
@@ -228,7 +228,7 @@
                                         {% endif %}
                                     </td>
 
-                                    <td>
+                                    <td style="display: inline-flex;">
                                         {% if booking.status_cotrav == 1 %}
                                      <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i> </a>

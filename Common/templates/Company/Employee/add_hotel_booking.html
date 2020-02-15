@@ -23,6 +23,7 @@
             <input type="hidden" name="spoc_id" value="{{user.spoc_id}}">
             <input type="hidden" name="entity_id" value="{{user.billing_entity_id}}">
             <input type="hidden" name="employee_id" value="{{user.id}}">
+     <input type="hidden" name="no_of_nights" id="no_of_nights">
       <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                     <div class="row">
@@ -47,7 +48,7 @@
                                             <div class="form-group row">
                                                     <label class="col-sm-4">From City</label>
 
-                                                    <select class="col-sm-8 form-control myselect" name="from_city" id="from_city"  required>
+                                                    <select class="col-sm-8 form-control  myselect" style="width:66%"  name="from_city" id="from_city"  required>
                                                         <option value="">Select City</option>
                                                         {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
@@ -58,7 +59,7 @@
 
                                             <div class="form-group row">
                                                     <label class="col-sm-4" >City Area</label>
-                                                    <select class="col-sm-8 form-control myselect" name="city_area" id="city_area"  required>
+                                                    <select class="col-sm-8 form-control  myselect" style="width:66%"  name="city_area" id="city_area"  required>
                                                        <option value="">Select Area</option>
                                                        {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
@@ -69,24 +70,24 @@
 
                                             <div class="form-group row">
                                                     <label class="col-sm-4">Preferred Hotel Area</label>
-                                                    <input type="text" class="col-sm-8 form-control" name="preferred_hotel_area" id="preferred_hotel_area">
+                                                    <input type="text" class="col-sm-8 form-control" name="preferred_hotel_area" id="preferred_hotel_area" placeholder="Preferred Hotel Area">
 
                                             </div>
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check In DateTime</label>
-                                                <input type="text" class="col-sm-8 form-control datetimepicker1" name="check_in_date">
+                                                <input type="text" class="col-sm-8 form-control datetimepicker1"  autocomplete="off" name="check_in_date" id="check_in_date">
                                         </div>
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check Out DateTime</label>
-                                                <input type="text" class="col-sm-8 form-control datetimepicker1" name="check_out_date">
+                                                <input type="text" class="col-sm-8 form-control datetimepicker1" autocomplete="off" name="check_out_date" id="check_out_date">
                                         </div>
 
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Room type (Priority 1)</label>
-                                                <select class="col-sm-8 form-control myselect" name="room_type_priority1" id="room_type_priority1"  required>
+                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority1" id="room_type_priority1"  required>
                                                     <option value="">Select Room Type</option>
                                                     {% for room_type in room_types %}
                                                         <option value="{{room_type.id}}">{{room_type.name}}</option>
@@ -98,7 +99,7 @@
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Room type (Priority 2)</label>
 
-                                                <select class="col-sm-8 form-control myselect" name="room_type_priority2" id="room_type_priority2" >
+                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority2" id="room_type_priority2" >
                                                 <option value="">Select Room Type</option>
                                                     {% for room_type in room_types %}
                                                 <option value="{{room_type.id}}">{{room_type.name}}</option>
@@ -110,7 +111,7 @@
                                         <div class="form-group row">
                                                 <label class="col-sm-4" for="room_occupancy">Room Occupancy</label>
 
-                                                    <select class="col-sm-8 form-control myselect" name="room_occupancy" id="room_occupancy"  required>
+                                                    <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_occupancy" id="room_occupancy"  required>
                                                        <option value="">Select Room Occupancy</option>
                                                         {% for hotel_type in hotel_types %}
                                                 <option value="{{hotel_type.id}}">{{hotel_type.name}}</option>
@@ -130,7 +131,7 @@
 
                                         <div class="form-group row">
                                             <label class="col-sm-4">Assessment Code</label>
-                                            <select class="col-sm-8 form-control myselect" name="assessment_code" id="assessment_code">
+                                            <select class="col-sm-8 form-control  myselect" style="width:66%"  name="assessment_code" id="assessment_code">
                                                 <option value="">Select Assessment Code</option>
                                                 {% for assessment in assessments %}
                                                 <option value="{{assessment.id}}">{{assessment.assessment_code}}</option>
@@ -143,7 +144,7 @@
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Assessment City</label>
-                                                <select class="col-sm-8 form-control myselect" name="assessment_city" id="assessment_cities">
+                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="assessment_city" id="assessment_cities">
                                                     <option value="">Select Assessment City</option>
                                                     {% for city in cities_ass %}
                                                         <option value="{{city.id}}">{{city.city_name}}</option>
@@ -220,6 +221,73 @@ var_url = '/api/'+'cities'
        });
 
 });
+
+
+$("#check_in_date,#check_out_date").change(function()
+		{
+			var ddStr =  $("#check_in_date").val();
+			var adStr =  $("#check_out_date").val();
+
+			var dd = ddStr.replace(" ", "T");
+			var ddTime = Date.parse(ddStr);
+			var ddDate = new Date(ddTime);
+
+			var ad = adStr.replace(" ", "T");
+			var adTime = Date.parse(adStr);
+			var adDate = new Date(adTime);
+
+			var d = new Date();
+
+			if(ddTime < adTime)
+			{
+				//alert("Please select a future Departure date");
+				//return false;
+				ddTime = adTime + (3600000*24); //Add One day time
+				ddDate  = new Date(ddTime);
+				var day = ddDate.getDate();
+				if(day < 10)
+				day = "0"+day;
+				var mon = ddDate.getMonth() + 1;
+				if(mon < 10)
+				mon = "0"+mon;
+				var year = ddDate.getFullYear();
+				ddString = year + "-" + mon + "-" + day + " 12:00";
+				$("#check_in_date").val(ddString);
+				$("#no_of_nights").val(1);
+			}
+			else
+			{
+				var diff = ddTime - adTime;
+				var day_diff = diff/(3600000*24);
+				days = Math.round(day_diff);
+				var adHour = adDate.getHours();
+				var adMin = adDate.getMinutes();
+				if(adMin > 0)
+				{
+					if(adHour != '11')
+					{
+						adHour += 1;
+					}
+				}
+				var ddHour = ddDate.getHours();
+				var ddMin = ddDate.getMinutes();
+				if(ddMin > 0)
+				ddHour += 1;
+				if(adHour < 12 && ddHour <= 12)
+				days += 1;
+				if(adHour < 12 && ddHour > 12)
+				{
+					days += 2;
+				}
+				if(adHour >= 12 && ddHour > 12)
+				days += 1;
+				if(days > 1)
+				$("#no_of_nights").val(days-1);
+				else
+				$("#no_of_nights").val(1);
+			}
+		});
+
 </script>
 
 {% endblock %}

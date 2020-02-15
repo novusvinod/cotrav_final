@@ -126,40 +126,49 @@
 
             <div class="container">
 
-                      <div class="row" style="margin-top: -6%;">
-                      <div class="col-sm-5  text-center" style="background-image: url({% static 'img/bg/bg_login.jpg' %}); background-repeat: no-repeat; margin-left: auto;margin-right: auto;padding: 20px; "> <i class="fa fa-user-circle fa-5x fa_login" aria-hidden="true"></i>
-                         <h2 class="account-text">Wel-Come To Cotrav</h2>
-                            <h4 class="account-description">Corporate Travel Simplified</h4>
 
-                          <h4 class="account-description">Login</h4>
+                  <div class="row" style="margin-top: -6%;">
+                         <div class="col-sm-6  text-center" style="background-image: url({% static 'img/bg/bg-sign.jpg' %});background-repeat: no-repeat;"> <i class="fa fa-user-circle fa-5x" aria-hidden="true" style="margin-top: 64px;height: 90px;"></i>
+                         <h2 class="account-text" style="font-size: 28px;">WelCome To CoTrav</h2>
+
                          </div>
-
-                     </div>
-                     <div class="row">
-
-                      <div class="col-sm-5 text-center abc-login" style="margin-left: auto;margin-right: auto;" >
-
-                        <form method="POST" action="/agents/login" class="registration-form">
+                      <div class="col-sm-6 text-center abc" style="height: 325px;">
+                        <h2 style="font-size: 23px;">Login</h2>
+                        <form method="POST" action="/agents/login" class="registration-form section_signup">
                                 <div class="row">
- <div class="alert alert-primary" style="display: none" role="alert"><p style="color:red; font-weight:bold;">{{error}}</p></div>
+
+
                                     <div class="col-11">
-                                     <img src="{% static 'img/logos/2.png' %}" id="contact_icon1">
-                                        <input type="text" name="email" id="email" required="required" placeholder="Email *" maxlength="70" class="medium-input input_signupform input_signup">
+                                         <img src="{% static 'img/logos/2.png' %}" id="contact_icon1" style="margin-right: 6px;">
+                                        <input type="email" name="email" id="email" required="required" placeholder="Email*" maxlength="70" class="medium-input input_signupform input_signup">
                                     </div>
 
-                                       <div class="col-11">
-                                        <img src="{% static 'img/logos/4.png' %}" id="contact_icon1">
+
+
+                                    <div class="col-11">
+                                       <img src="{% static 'img/logos/4.png' %}" id="contact_icon1" style="margin-right: 6px;">
                                         <input type="password" name="password" id="password" required="required" placeholder="Password *" maxlength="70" class="medium-input input_signupform input_signup">
                                     </div>
 
-                                    <div class="col-12" >
-                                        <button class="butn theme medium bt_par" type="submit"><span>Login</span></button>
+
+
+                                    <div class="col-12">
+                                        <button class="butn theme medium " type="submit" style="width: 26%; font-size: 18px; border-radius: 21px;" ><span>Login</span></button>
+
 
                                     </div>
+
                                 </div>
-                             </form>
+                            </form>
                         </div>
-                    </div>
+
+                     </div>
+
+
+
+
+
+
 
 
                 </div>

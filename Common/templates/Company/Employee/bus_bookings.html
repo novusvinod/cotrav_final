@@ -35,14 +35,14 @@
           <tr>
             <th id="download_from_date1"> From Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
             </td>
           </tr>
 
           <tr>
             <th id="download_to_date1"> To Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
             </td>
           </tr>
 
@@ -87,7 +87,7 @@
             <div class="col-md-12">
                 <div class="card card-topline-aqua">
                     <div class="card-head">
-                        <header>ALL CORPORATE TAXI BOOKINGS</header>
+                        <header>ALL CORPORATE BUS BOOKINGS</header>
                              <div class="row p-b-20">
                                  <div class="row">
                                      {% for corp_acces in corp_access %}
@@ -162,7 +162,7 @@
                                 {% for booking in bookings %}
                                 <tr>
                                      <td>{{ booking.id }}</td>
-                                    <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location}}</td>
                                     <td>{{ booking.booking_datetime }}</td>

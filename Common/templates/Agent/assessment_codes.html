@@ -51,28 +51,28 @@
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">From Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control datepicker1" name="from_date" id="from_date" placeholder="From Date" type="text" required>
+                                <input class="form-control datepicker1" autocomplete="off" name="from_date" id="from_date" placeholder="From Date" type="text" required>
                             </div>
                     </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">To Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control datepicker1"  name="to_date" id="to_date" placeholder="To Date" type="text" required>
+                                <input class="form-control datepicker1" autocomplete="off"  name="to_date" id="to_date" placeholder="To Date" type="text" required>
                             </div>
                     </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Service From Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control datepicker1" name="service_from" id="service_from" placeholder="Service From Date" type="text" required>
+                                <input class="form-control datepicker1" autocomplete="off" name="service_from" id="service_from" placeholder="Service From Date" type="text" required>
                             </div>
                     </div>
 
                  <div class="form-group row" >
                        <label class="col-sm-5 control-label">Service To Date</label>
                             <div class="col-sm-7">
-                                <input class="form-control datepicker1" name="service_to" id="service_to" placeholder="Service To Date" type="text" required>
+                                <input class="form-control datepicker1" autocomplete="off" name="service_to" id="service_to" placeholder="Service To Date" type="text" required>
                             </div>
                     </div>
 
@@ -170,10 +170,10 @@
                                     <td>{{ code.corporate_name }}</td>
                                     <td>{{ code.assessment_code }}</td>
                                     <td>{{ code.code_desc }}</td>
-                                     <td>{{ code.from_date }}</td>
-                                     <td>{{ code.to_date }}</td>
-                                     <td>{{ code.service_from }}</td>
-                                     <td>{{ code.service_to }}</td>
+                                    <td>{{ code.from_date }}</td>
+                                    <td>{{ code.to_date }}</td>
+                                    <td>{{ code.service_from }}</td>
+                                    <td>{{ code.service_to }}</td>
 
                                     <td>
                                         <a class="btn btn-tbl-edit btn-xs" data-target="#add_group_model"
@@ -219,7 +219,7 @@
 <script type="text/javascript">
 $(function() {
 
-  $('#add_group_model').on('shows.bs.modal', function (event) {
+  $('#add_group_model').on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('id'); // Extract info from data-* attributes
     var corporate_id = button.data('corporate_id');

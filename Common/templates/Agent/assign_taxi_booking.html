@@ -170,7 +170,7 @@ list-style:
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type = "text" name="vendor_booking_id"  readonly>
+					                     <input class = "mdl-textfield__input" type = "text" name="vendor_booking_id" >
 					                     <label class = "mdl-textfield__label">Reference No/Account Used</label>
 					                  </div>
 						            </div>
@@ -182,6 +182,19 @@ list-style:
 					                     <label class = "mdl-textfield__label">Operator Name</label>
 					                  </div>
 						            </div>
+
+						<div class="col-lg-2 p-t-20" >
+						  <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
+							 <select class="mdl-textfield__input js-select2" name="operator_package_id">
+								 <option>Select Package</option>
+								  {% for opr_rate in opr_rates %}
+									<option value="{{opr_rate.id}}" {% if opr_rate.id == booking.operator_package_id %}  selected {%endif%}>{{opr_rate.package_name}}</option>
+								  {% endfor %}
+							 </select>
+
+							  <label class = "mdl-textfield__label">Operator Package</label>
+						  </div>
+						</div>
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >

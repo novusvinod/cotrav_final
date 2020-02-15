@@ -36,14 +36,14 @@
           <tr>
             <th id="download_from_date1"> From Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
             </td>
           </tr>
 
           <tr>
             <th id="download_to_date1"> To Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
+            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
             </td>
           </tr>
 
@@ -193,7 +193,7 @@
                                     <th>CoTrav Status</th>
 
                                     <th>Operator Details</th>
-                                    <th>Taxi/Driver Assign</th>
+                                    <th>Taxi/Driver Details</th>
                                     <th>Spoc Details</th>
 
                                     <th>Passenger Details</th>
@@ -206,7 +206,7 @@
                                  {% for booking in bookings %}
                                 <tr>
                                     <td>{{ booking.id }}</td>
-                                    <td>{{ booking.reference_no }}</td>
+                                    <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.city_name }}</td>
                                     <td>{{ booking.booking_date}}</td>
                                     <td>{{ booking.pickup_datetime }}</td>

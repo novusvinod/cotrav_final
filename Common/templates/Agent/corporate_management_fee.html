@@ -129,7 +129,7 @@
                                     <td>{{ fee.corporate_name }}</td>
                                     <td>{{ fee.service_fees_name }}</td>
                                     <td>{{ fee.service_fees_type_value }}</td>
-                                    <td>{{ fee.service_fees_type }}</td>
+                                    <td>{{ fee.service_fees_type|yesno:'Fix,Percentage' }}</td>
 
                                     <td>
                                         <a class="btn btn-tbl-edit btn-xs" data-target="#add_group_model"

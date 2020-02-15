@@ -63,6 +63,7 @@
 <style>
   .datetimepicker{
         background: #ffffff;
+        transform: translate(0, 9.4em);
 
   }
   .datetimepicker.dropdown-menu{
@@ -98,18 +99,14 @@
 {% endblock %}
 
 
-</body>
-
 <script type="text/javascript">
-   $(".myselect").select2({
-    width: 'resolve'
-    });
+   $(".myselect").select2({width: 'resolve',});
 </script>
 <script type="text/javascript">
 
     $(".js-select2").select2({
         theme: "material",
-        width: 'resolve'
+        width: 'resolve',
     });
 
     $(".select2-selection__arrow")
@@ -190,10 +187,10 @@
          {
            inline: true,
            sideBySide: true,
-           showMeridian: true,
            autoclose: true,
-           format: 'dd-mm-yyyy HH:ii:ss', /*remove this line if you want to use time as well */
+           format: 'dd-mm-yyyy hh:ii', /*remove this line if you want to use time as well */
            orientation: 'bottom left',
+           autocomplete: false,
        });
 
        $('.datepicker1').datetimepicker(

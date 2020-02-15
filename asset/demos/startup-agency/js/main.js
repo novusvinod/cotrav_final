@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------
 
-    Theme Name: CoTrav - Startup Agency and Technology
+    Theme Name: Fabrex - Startup Agency and Technology
     Description: Startup Agency and Technology
     Author: Chitrakoot Web
 

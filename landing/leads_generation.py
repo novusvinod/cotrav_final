@@ -154,8 +154,15 @@ def my_handler(sender, instance , created , **kwargs):
 
 @login_required(login_url='/agents/login')
 def leads(request):
-
-    leads = Leadgeneration.objects.raw('SELECT l.*,ca.user_name FROM cotrav_lead_generation_module l LEFT JOIN corporate_agents ca ON l.Assigned_Sales_Person = ca.id WHERE 1 ORDER BY l.`created` DESC')
+    user_id = request.user.id
+    print("is admin")
+    print(request.user.is_super_admin)
+    if request.user.is_super_admin == 1:
+        print("in if")
+        leads = Leadgeneration.objects.raw('SELECT l.*,ca.user_name FROM cotrav_lead_generation_module l LEFT JOIN corporate_agents ca ON l.Assigned_Sales_Person = ca.id WHERE 1 ORDER BY l.`created` DESC')
+    else:
+        print("in else")
+        leads = Leadgeneration.objects.raw('SELECT l.*,ca.user_name FROM cotrav_lead_generation_module l LEFT JOIN corporate_agents ca ON l.Assigned_Sales_Person = ca.id WHERE l.Assigned_Sales_Person = '+str(user_id)+' ORDER BY l.`created` DESC')
     agents = Corporate_Agent.objects.all()
     return render(request,'landing/leadgeneration_list.html',{'leads':leads,'agents':agents})
 
@@ -211,7 +218,8 @@ def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
             messages.success(request, "Lead Status Updated Successfully..!")
             return redirect('lead-list')
         else:
-            print(form.errors)
+            print(form.errors.as_data())
+
             messages.error(request, "Lead Status Not Updated ..!")
             form = LeadUpdateForm(request.POST or None, instance=lead , initial={'Comments': ''})
             return render(request, template_name, {'form': form, 'comments': comments, 'attachments': attachment, 'form_title': 'Update Lead'})

@@ -61,7 +61,26 @@
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
 
+<style>
+  .datetimepicker{
+        background: #ffffff;
+        transform: translate(0, 9.4em);
 
+  }
+  .datetimepicker.dropdown-menu{
+    padding: 10px;
+
+  }
+  .datetimepicker table th {
+    font-weight: 600 !important;
+    font-family: 'Poppins,sans-serif';
+    font-size: 12px;
+}
+  .datetimepicker thead tr:first-child th:hover, .datetimepicker tfoot th:hover {
+    background: #427BD1;
+}
+
+</style>
 
 
 </head>
@@ -74,18 +93,14 @@
 
 
 {% endblock %}
-
-
-</body>
-
 <script type="text/javascript">
-   $(".myselect").select2({width: 'resolve'});
+   $(".myselect").select2({width: 'resolve',});
 </script>
 <script type="text/javascript">
 
     $(".js-select2").select2({
         theme: "material",
-        width: 'resolve'
+        width: 'resolve',
     });
 
     $(".select2-selection__arrow")
@@ -93,6 +108,7 @@
         .html("arrow_drop_down");
 
 </script>
+
 
     <!-- start footer -->
     <div class="page-footer">
@@ -147,14 +163,16 @@
     <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
     <script>
 
-            $(function () {
+             $(function () {
              $('.datetimepicker1').datetimepicker(
              {
                inline: true,
                sideBySide: true,
-               showMeridian: true,
                autoclose: true,
-               format: 'dd-mm-yyyy HH:ii:ss' /*remove this line if you want to use time as well */
+               format: 'dd-mm-yyyy hh:ii', /*remove this line if you want to use time as well */
+               startDate: new Date(),  /* disable past date*/
+               orientation: 'bottom left',
+               autocomplete: false,
            });
 
            $('.datepicker1').datetimepicker(
@@ -167,7 +185,18 @@
                format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
            });
 
+           $('.datepicker2').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy', /*remove this line if you want to use time as well */
+           startDate: new Date(),  /* disable past date*/
        });
+
+   });
     </script>
 
      <script>
