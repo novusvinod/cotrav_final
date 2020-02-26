@@ -1,9 +1,8 @@
 from django.db import models
-
-from Common.models import Corporate_Agent
 from landing.utils import get_choice
 from django.contrib.contenttypes.fields import GenericRelation
 
+from Common.models import Corporate_Agent
 abc = get_choice()
 
 sts = (
@@ -49,9 +48,7 @@ class Leadgeneration(models.Model):
     Contact_Address = models.CharField(max_length=255)
     Company_Website = models.CharField(max_length=255)
     Message = models.CharField(max_length=255)
-    Assigned_Sales_Person = models.IntegerField(
-        choices=abc,
-    )
+    Assigned_Sales_Person = models.IntegerField()
     Status = models.CharField(max_length=255,choices=sts,)
     Lead_Source = models.CharField(max_length=255,choices=source,)
     Attachments = models.ImageField(upload_to='photos')

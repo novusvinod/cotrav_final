@@ -97,6 +97,12 @@
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <label>Are you sure you want to Reject Booking</label>
 
+                <div class="row">
+                    <label class="control-label col-sm-2">Comment</label>
+                    <textarea class="form-control col-sm-10" id="user_comment" required rows="4" name="user_comment" placeholder="Comment.."></textarea>
+                </div>
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                     <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>

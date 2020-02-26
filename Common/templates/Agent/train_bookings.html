@@ -109,6 +109,12 @@
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <label>Are you sure you want to Perform Action</label>
+                <div class="modal-body">
+                <div class="row">
+                    <label class="control-label col-sm-2">Comment</label>
+                    <textarea class="form-control col-sm-10" id="user_comment" rows="4" name="user_comment" placeholder="Comment.."></textarea>
+                </div>
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
@@ -293,9 +299,11 @@ $(function() {
 
     if(reject_id == 1){
         modal.find('#reject_id').val(1);
+        modal.find('#user_comment').prop('required',true);
     }
     if(accept_id == 1){
         modal.find('#accept_id').val(1);
+        modal.find('#user_comment').prop('required',false);
     }
 
     });

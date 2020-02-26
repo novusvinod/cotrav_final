@@ -171,14 +171,24 @@
 
     <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
 
-
+<script>
+var myInputs = document.querySelectorAll('.fixed');
+myInputs.forEach(function(elem) {
+ elem.addEventListener("input", function() {
+   var dec = elem.getAttribute('decimals');
+   var regex = new RegExp("(\\.\\d{" + dec + "})\\d+", "g");
+   elem.value = elem.value.replace(regex, '$1');
+ });
+});
+</script>
      <script>
         $(document).ready(function() {
             $('#example1').DataTable({
             'ordering': false
             });
         } );
-    
+
+
     </script>   
 <script>
 
@@ -248,9 +258,8 @@
             pickDate: false,
             minuteStep: 15,
             pickerPosition: 'bottom-right',
-            format: 'HH:ii',
+            format: 'hh:ii',
             autoclose: true,
-            showMeridian: true,
             startView: 1,
             maxView: 1,
             orientation: "bottom left",

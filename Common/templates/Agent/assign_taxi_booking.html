@@ -153,9 +153,6 @@ list-style:
                           <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                          <input type="hidden" name="tour_typ_save" value="{{booking.tour_type}}">
 
-
-
-
 						<div class="col-sm-12">
 							<div class="card card-box" >
 								<div class="card-head">
@@ -178,7 +175,7 @@ list-style:
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" id="operators" type="text" name="operator_id" value="{{booking.operator_name|default:''}}" autocomplete="off" placeholder="Operator Name">
+					                     <input class = "mdl-textfield__input" id="operators" type="text" name="operator_id" value="{{booking.operator_name|default:''}}" autocomplete="off" placeholder="Operator Name" required>
 					                     <label class = "mdl-textfield__label">Operator Name</label>
 					                  </div>
 						            </div>
@@ -198,28 +195,28 @@ list-style:
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" id="driver_id" type="text" name="driver_id" something="9999999999" value="" autocomplete="off" placeholder="Driver Name">
+					                     <input class = "mdl-textfield__input" id="driver_id" type="text" name="driver_id" something="9999999999" value="" autocomplete="off" placeholder="Driver Name" required>
 					                     <label class = "mdl-textfield__label">Driver Name</label>
 					                  </div>
 						            </div>
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" name="driver_contact" id="driver_contact" placeholder="Driver Contact">
+					                     <input class = "mdl-textfield__input" name="driver_contact" id="driver_contact" placeholder="Driver Contact" required>
 					                     <label class = "mdl-textfield__label">Driver Contact</label>
 					                  </div>
 						            </div>
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type="text" name="taxi_id" id="taxi_id" value=""  placeholder="Taxi Reg No">
+					                     <input class = "mdl-textfield__input" type="text" name="taxi_id" id="taxi_id" value=""  placeholder="Taxi Reg No" required>
 					                     <label class = "mdl-textfield__label">Taxi Reg No</label>
 					                  </div>
 						            </div>
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type="text" name="taxi_model" id="taxi_model" value=""  placeholder="Taxi Model">
+					                     <input class = "mdl-textfield__input" type="text" name="taxi_model" id="taxi_model" value=""  placeholder="Taxi Model" required>
 					                     <label class = "mdl-textfield__label">Taxi Model</label>
 					                  </div>
 						            </div>
@@ -227,7 +224,7 @@ list-style:
 
                          <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type="text" name="taxi_types" id="taxi_types" value="" placeholder="Taxi Type">
+					                     <input class = "mdl-textfield__input" type="text" name="taxi_types" id="taxi_types" value="" placeholder="Taxi Type" required>
 					                     <label class = "mdl-textfield__label">Taxi Type</label>
 					                  </div>
 						            </div>

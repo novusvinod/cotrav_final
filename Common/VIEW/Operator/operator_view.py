@@ -337,7 +337,7 @@ def delete_operator_driver(request,id):
             messages.success(request, 'Operator Driver Deleted Successfully..!')
             return HttpResponseRedirect("/operator/operator-drivers/0", {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Delete Operator Driver..!')
+            messages.error(request, 'Failed to Delete Operator Driver..!')
             return HttpResponseRedirect("/operator/operator-drivers/0", {'message': "Operation Fails"})
     else:
         return HttpResponseRedirect("/operator/login")
@@ -393,16 +393,17 @@ def reject_taxi_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "operator_reject_taxi_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Taxi Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Reject Taxi Booking..!')
+            messages.error(request, 'Failed to Reject Taxi Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/operator/login')
@@ -482,7 +483,7 @@ def assign_taxi_booking(request,id):
                 messages.success(request, 'Taxi Booking Assigned..!')
                 return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Fail to Assign Taxi Booking..!')
+                messages.error(request, 'Failed to Assign Taxi Booking..!')
                 return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
         else:
             login_type = request.session['operator_login_type']

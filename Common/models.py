@@ -27,6 +27,8 @@ class Corporate_Login(models.Model):
     is_reverse_logistics = models.BooleanField()
     is_send_email = models.BooleanField()
     is_send_sms = models.BooleanField()
+    has_billing_access = models.BooleanField()
+    is_deleted = models.BooleanField()
     class Meta:
         db_table = "corporate_logins"
 
@@ -67,6 +69,9 @@ class Corporate_Agent(models.Model):
     has_voucher_payment_access = models.CharField(max_length=100)
     has_voucher_approval_access = models.CharField(max_length=100)
     is_super_admin = models.CharField(max_length=100)
+    is_relationship_manager = models.CharField(max_length=100)
+    is_operation_manager = models.CharField(max_length=100)
+    is_deleted = models.BooleanField()
 
     class Meta:
         db_table = "corporate_agents"
@@ -107,6 +112,7 @@ class Corporate_Spoc_Login(models.Model):
     is_reverse_logistics = models.BooleanField()
     is_send_email = models.BooleanField()
     is_send_sms = models.BooleanField()
+    is_deleted = models.BooleanField()
     class Meta:
         db_table = "corporate_spocs"
 
@@ -135,6 +141,7 @@ class Corporate_Employee_Login(models.Model):
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
+    is_deleted = models.BooleanField()
 
     class Meta:
         db_table = "corporate_employees"
@@ -173,6 +180,7 @@ class Corporate_Approves_1_Login(models.Model):
     is_reverse_logistics = models.BooleanField()
     is_send_email = models.BooleanField()
     is_send_sms = models.BooleanField()
+    is_deleted = models.BooleanField()
     class Meta:
         db_table = "corporate_subgroup_authenticater"
 
@@ -210,6 +218,7 @@ class Corporate_Approves_2_Login(models.Model):
     is_reverse_logistics = models.BooleanField()
     is_send_email = models.BooleanField()
     is_send_sms = models.BooleanField()
+    is_deleted = models.BooleanField()
 
     class Meta:
         db_table = "corporate_group_authenticator"

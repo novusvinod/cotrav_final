@@ -101,6 +101,12 @@
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <label>Are You Sure You Want to Accept Booking</label>
+                <div class="modal-body">
+                <div class="row">
+                    <label class="control-label col-sm-2">Comment</label>
+                    <textarea class="form-control col-sm-10" rows="4" name="user_comment" placeholder="Comment.."></textarea>
+                </div>
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
@@ -133,6 +139,12 @@
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
                 <label>Are You Sure You Want to Reject Booking</label>
+                <div class="modal-body">
+                <div class="row">
+                    <label class="control-label col-sm-2">Comment</label>
+                    <textarea class="form-control col-sm-10" id="user_comment" rows="4" name="user_comment" required placeholder="Comment.."></textarea>
+                </div>
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>

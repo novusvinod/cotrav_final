@@ -281,6 +281,30 @@ def view_taxi_booking(request,id):
         return HttpResponseRedirect("/login")
 
 
+def reject_taxi_booking(request,id):
+    if 'employee_login_type' in request.session:
+        login_type = request.session['employee_login_type']
+        access_token = request.session['employee_access_token']
+        user_id = request.user.id
+        current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
+
+        url = settings.API_BASE_URL + "employee_reject_taxi_booking"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            messages.success(request, 'Taxi Booking Rejected Successfully..!')
+            return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+        else:
+            messages.error(request, 'Failed to Reject Taxi Booking..!')
+            return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
+    else:
+        return redirect('/login')
+
+
 def add_taxi_booking(request,id):
     if request.method == 'POST':
         if 'employee_login_type' in request.session:
@@ -335,10 +359,10 @@ def add_taxi_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Taxi Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Employee/taxi-bookings/2", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Fail To Add Taxi Booking..!')
+                messages.error(request, 'Failed To Add Taxi Booking..!')
                 return HttpResponseRedirect("/Corporate/Employee/taxi-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -427,6 +451,31 @@ def view_bus_booking(request,id):
         return HttpResponseRedirect("/login")
 
 
+def reject_bus_booking(request,id):
+    if 'employee_login_type' in request.session:
+        login_type = request.session['employee_login_type']
+        access_token = request.session['employee_access_token']
+        user_id = request.user.id
+        current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
+
+        url = settings.API_BASE_URL + "employee_reject_bus_booking"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
+        print(payload)
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            messages.success(request, 'Bus Booking Rejected Successfully..!')
+            return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+        else:
+            messages.error(request, 'Failed to Reject Bus Booking..!')
+            return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
+    else:
+        return redirect('/login')
+
+
 def add_bus_booking(request,id):
     if request.method == 'POST':
         if 'employee_login_type' in request.session:
@@ -481,10 +530,10 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Bus Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Employee/bus-bookings/2", {'message': "Operation Successfully"})
             else:
-                return HttpResponseRedirect("/Corporate/Employee/bus-bookings/2", {'message': "Operation Fail"})
+                return HttpResponseRedirect("/Corporate/Employee/bus-bookings/2", {'message': "Operation Failed"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -558,6 +607,30 @@ def view_train_booking(request,id):
         return HttpResponseRedirect("/login")
 
 
+def reject_train_booking(request,id):
+    if 'employee_login_type' in request.session:
+        login_type = request.session['employee_login_type']
+        access_token = request.session['employee_access_token']
+        user_id = request.user.id
+        current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
+
+        url = settings.API_BASE_URL + "employee_reject_train_booking"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            messages.success(request, 'Train Booking Rejected Successfully..!')
+            return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+        else:
+            messages.error(request, 'Failed to Reject Train Booking..!')
+            return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
+    else:
+        return redirect('/login')
+    
+
 def add_train_booking(request,id):
     if request.method == 'POST':
         if 'employee_login_type' in request.session:
@@ -610,10 +683,10 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Train Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Employee/train-bookings/2", {})
             else:
-                messages.error(request,'Fail To Add Train Booking')
+                messages.error(request,'Failed To Add Train Booking')
                 return HttpResponseRedirect("/Corporate/Employee/train-bookings/2", {})
         else:
             return HttpResponseRedirect("/login")
@@ -697,6 +770,30 @@ def view_hotel_booking(request,id):
         return HttpResponseRedirect("/login")
 
 
+def reject_hotel_booking(request,id):
+    if 'employee_login_type' in request.session:
+        login_type = request.session['employee_login_type']
+        access_token = request.session['employee_access_token']
+        user_id = request.user.id
+        current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
+
+        url = settings.API_BASE_URL + "employee_reject_hotel_booking"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            messages.success(request, 'Hotel Booking Rejected Successfully..!')
+            return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+        else:
+            messages.error(request, 'Hotel to Reject Train Booking..!')
+            return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
+    else:
+        return redirect('/login')
+
+
 def add_hotel_booking(request,id):
     if request.method == 'POST':
         if 'employee_login_type' in request.session:
@@ -760,10 +857,10 @@ def add_hotel_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Hotel Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Employee/hotel-bookings/2", {})
             else:
-                messages.error(request, 'Fail To Add Hotel Booking..!')
+                messages.error(request, 'Failed To Add Hotel Booking..!')
                 return HttpResponseRedirect("/Corporate/Employee/hotel-bookings/2", {})
         else:
             return HttpResponseRedirect("/login")
@@ -849,6 +946,30 @@ def view_flight_booking(request,id):
         return HttpResponseRedirect("/login")
 
 
+def reject_flight_booking(request,id):
+    if 'employee_login_type' in request.session:
+        login_type = request.session['employee_login_type']
+        access_token = request.session['employee_access_token']
+        user_id = request.user.id
+        current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
+
+        url = settings.API_BASE_URL + "employee_reject_flight_booking"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            messages.success(request, 'Flight Booking Rejected Successfully..!')
+            return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+        else:
+            messages.error(request, 'Failed to Reject Flight Booking..!')
+            return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
+    else:
+        return redirect('/login')
+
+
 def add_flight_booking(request,id):
     if request.method == 'POST':
         if 'employee_login_type' in request.session:
@@ -902,10 +1023,10 @@ def add_flight_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Flight Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Employee/flight-bookings/2", {})
             else:
-                messages.error(request,'Fail To Add Flight Booking')
+                messages.error(request,'Failed To Add Flight Booking')
                 return HttpResponseRedirect("/Corporate/Employee/flight-bookings/2", {})
         else:
             return HttpResponseRedirect("/login")

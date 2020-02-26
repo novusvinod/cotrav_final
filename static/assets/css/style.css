@@ -8632,9 +8632,40 @@ font-weight: 500;
     padding-bottom: 40px;
     margin-top: -60px;
     font-weight: 600;
-    color:#3366cc;
+    color:#20bf7a;
+    text-transform: capitalize;
+    /*border: solid 1px #20bf7a;*/
 
 }
+
+#large-div-text {
+  padding: 5px;
+  border-top: 2px solid #f4f4f4;
+  position: relative;
+  margin-top: -12px;
+}
+
+#why {
+  text-align: center;
+  position: relative;
+  z-index: 1000;
+  width: 250px;
+  margin: 0 auto;
+    font-size: 12px;
+    background-color: #f4f4f4;
+    border: 2px solid #f4f4f4;
+    border-radius: 25px;
+    color: gray;
+}
+
+.payment_refund{
+border: 1px solid #20bf7a;
+    padding: 1px 10px 1px 10px;
+    background-color: aliceblue;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
 .border-section{
     border-bottom:1px solid #dee2e6
 }
@@ -8846,16 +8877,17 @@ font-size: 18px;
 
 }
 .fli_bac{
-    width: 81%;
-    background-color: #3366cc;
+   width: 100%;
+   background-color: #8bb1de;
     border-radius: 3px;
     color: white;
     font-family: Montserrat;
     font-size: 15px;
     line-height: 38px;
-    padding-left: 24px;
-    margin-left: -1px;
-    margin-top: 12px;
+    margin-top: -8px;
+    /* margin-top: 12px; */
+    font-weight: 600;
+    text-align: center;
 }
 .pull-right_fli{
 float: right;
@@ -8893,17 +8925,7 @@ margin-right: 17px;
     margin-top: -10px;
 
 }
-.fli_bac{
-  width: 80%;
-    background-color: #e0e0e0;
-    border-radius: 3px;
-    color: black;
-    font-family: Montserrat;
-    font-size: 15px;
-    line-height: 38px;
-    padding-left: 24px;
-    margin-top: 12px;
-}
+
 
 .pull-right_fli{
 float: right;

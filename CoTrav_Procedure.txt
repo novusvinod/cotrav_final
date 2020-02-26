@@ -1,7 +1,5 @@
-Login Type
-1. Corporate Admin
-2. Corporate Approver_1
-3. Corporate Approver_2
-4. Corporate Spocs
-
-10. Agents
+ALTER TABLE `bus_bookings_action_log` ADD `user_comment` VARCHAR(255) NULL DEFAULT NULL AFTER `user_type`;
+ALTER TABLE `taxi_bookings_action_log` ADD `user_comment` VARCHAR(255) NULL DEFAULT NULL AFTER `user_type`;
+ALTER TABLE `train_bookings_action_log` ADD `user_comment` VARCHAR(255) NULL DEFAULT NULL AFTER `user_type`;
+ALTER TABLE `hotel_bookings_action_log` ADD `user_comment` VARCHAR(255) NULL DEFAULT NULL AFTER `user_type`;
+ALTER TABLE `flight_bookings_action_log` ADD `user_comment` VARCHAR(255) NULL DEFAULT NULL AFTER `user_type`;

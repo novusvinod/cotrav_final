@@ -1,14 +1,17 @@
+import os
 from datetime import datetime
 import socket
 from threading import Thread
 
+import sys
+from django.utils.timesince import timesince
 from dateutil.parser import parse
 import json
 import requests
 from django.utils import timezone
 import pytz
 from django.contrib import messages
-from django.shortcuts import render , redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.db import connection
@@ -32,9 +35,12 @@ from Common.models import Operator_Login_Access_Token
 from django.contrib.auth.hashers import check_password
 import string
 import random
-from Common.email_settings import SignIn_OTP, AddBooking_Email, newUserAdd_Email, Assign_Booking_Email
+from Common.email_settings import SignIn_OTP, AddBooking_Email, newUserAdd_Email, Assign_Booking_Email, FCM, SignupEmail
 from landing.cotrav_messeging import Flight
-
+from landing.forms import LeadGenerationModelForm, LeadUpdateForm
+from landing.leads_generation import file_upload
+from landing.models import Leadgeneration , LeadComments , LeadLog
+from Common.email_settings import SignupEmail,Lead_Status_Change_Email
 COTRAV_EMAILS = "balwant@taxiaxi.in,chauhanbalwant007@gmail.com"
 COTRAV_NUMBERS = "9579477262,"
 
@@ -54,38 +60,45 @@ def login(request):
         cursor = connection.cursor()
         cursor.callproc('getLoginDetails', [user_name,user_type])
         user = dictfetchall(cursor)
+        print(user)
+        print("user infoofofofoffoo")
+        print(user[0]['is_deleted'])
+        print("user infoofofofoffoo")
         if user:
-            password = check_password(user_password, user[0]['password'])
-            if password:
-                gen_access_token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
-                generate_otp = ''.join(random.choice(string.digits) for _ in range(6))
-                add_otp = SignIn_OTP()
-                email_subject = "Cotrav - Verify Your Email"
-                email_body = "Dear User,<br><br>" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
-                thread = Thread(target=add_otp.send_email, args=(user_name, email_subject, email_body))
-                thread.start()
-                resp1 = 1
+            if not user[0]['is_deleted']:
+                password = check_password(user_password, user[0]['password'])
+                if password:
+                    gen_access_token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
+                    generate_otp = ''.join(random.choice(string.digits) for _ in range(6))
+                    add_otp = SignIn_OTP()
+                    email_subject = "Cotrav - Verify Your Email"
+                    email_body = "Dear User,<br><br>" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
+                    thread = Thread(target=add_otp.send_email, args=(user_name, email_subject, email_body))
+                    thread.start()
+                    resp1 = 1
 
-                if resp1:
-                    if user_type == '1':
-                        insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user[0]['id'], access_token=gen_access_token,user_agent=user_info)
-                    elif user_type == '2':
-                        insert_data = Corporate_Approves_1_Login_Access_Token.objects.create(subgroup_authenticater_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
-                        print(insert_data)
-                    elif user_type == '3':
-                        insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user[0]['id'], access_token=gen_access_token,user_agent=user_info)
-                    elif user_type == '4':
-                        insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user[0]['id'],access_token=gen_access_token,user_agent=user_info)
-                    elif user_type == '6':
-                        insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
-                    elif user_type == '10':
-                        insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+                    if resp1:
+                        if user_type == '1':
+                            insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user[0]['id'], access_token=gen_access_token,user_agent=user_info)
+                        elif user_type == '2':
+                            insert_data = Corporate_Approves_1_Login_Access_Token.objects.create(subgroup_authenticater_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+                            print(insert_data)
+                        elif user_type == '3':
+                            insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user[0]['id'], access_token=gen_access_token,user_agent=user_info)
+                        elif user_type == '4':
+                            insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user[0]['id'],access_token=gen_access_token,user_agent=user_info)
+                        elif user_type == '6':
+                            insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+                        elif user_type == '10':
+                            insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
 
-                    data = {'success': 1,'access_token':gen_access_token, 'message': 'Login Successfully', 'User': user,'OTP':generate_otp}
+                        data = {'success': 1,'access_token':gen_access_token, 'message': 'Login Successfully', 'User': user,'OTP':generate_otp}
+                    else:
+                        data = {'success': 0, 'message': 'OTP Not Send To Your Email Id Please Type Anothe Email'}
                 else:
-                    data = {'success': 0, 'message': 'OTP Not Send To Your Email Id Please Type Anothe Email'}
+                    data = {'success': 0, 'message': 'Invalid User Name Or Password'}
             else:
-                data = {'success': 0, 'message': 'Invalid User Name Or Password'}
+                data = {'success': 0, 'message': 'Invalid User'}
         else:
             data = {'success': 0, 'message': 'Invalid User Name Or Password'}
     else:
@@ -807,6 +820,44 @@ def admins(request):
                 try:
                     cursor = connection.cursor()
                     cursor.callproc('getAllCorporateAdminsDetails', [corporate_id])
+                    admin = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Admins': admin}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def view_admin(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        admin_id = request.POST.get('admin_id', '')
+        if admin_id:
+            admin_id = admin_id
+        else:
+            admin_id = '0'
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewAdminDetails', [admin_id])
                     admin = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Admins': admin}
@@ -2505,7 +2556,9 @@ def add_group(request):
                         data = {'success': 0, 'message': company}
                     else:
                         add_user = newUserAdd_Email()
-                        resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 2")
+                        #resp1 = add_user.new_user_send_email(name, email, "taxi123", "Approver 2")
+                        thread = Thread(target=add_user.new_user_send_email, args=(name, email, "taxi123", "Approver 2"))
+                        thread.start()
                         data = {'success': 1, 'message': "Company Group Added Successfully"}
                     cursor.close()
                     return JsonResponse(data)
@@ -3165,6 +3218,7 @@ def add_admin(request):
         admin_id = request.POST.get('admin_id', '')
         is_send_email = request.POST.get('is_send_email', '')
         is_send_sms = request.POST.get('is_send_sms', '')
+        has_billing_access = request.POST.get('has_billing_access', '')
 
         if corporate_id:
             corporate_id = corporate_id
@@ -3188,7 +3242,7 @@ def add_admin(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('addNewCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id,is_send_email,is_send_sms])
+                    is_water_bottles,is_reverse_logistics,is_delete,access_token,password,admin_id,is_send_email,is_send_sms,has_billing_access])
                     company = dictfetchall(cursor)
                     
                     if company:
@@ -3242,6 +3296,7 @@ def update_admin(request):
         admin_id = request.POST.get('admin_id', '')
         is_send_email = request.POST.get('is_send_email', '')
         is_send_sms = request.POST.get('is_send_sms', '')
+        has_billing_access = request.POST.get('has_billing_access', '')
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -3251,7 +3306,8 @@ def update_admin(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('updateCorporateAdmin', [user_id,corporate_id,user_type,name,email,contact_no,is_radio,is_local,
-                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,admin_id,is_send_email,is_send_sms])
+                        is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,is_water_bottles,is_reverse_logistics,admin_id,is_send_email,
+                        is_send_sms,has_billing_access])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3454,8 +3510,8 @@ def update_spoc(request):
                 cursor = connection.cursor()
                 try:
                     cursor.callproc('updateCorporateSpoc', [user_id,corporate_id,user_type,group_id,subgroup_id,user_cid,user_name,user_contact,email,username,
-                                                            budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
-                                                             is_water_bottles,is_reverse_logistics,is_delete,spoc_id,is_send_email,is_send_sms])
+                       budget,expense,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,is_meal,is_flight,
+                       is_water_bottles,is_reverse_logistics,is_delete,spoc_id,is_send_email,is_send_sms])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3527,6 +3583,9 @@ def active_spoc(request):
         user_id = request.POST.get('user_id', '')
 
         spoc_id = request.POST.get('spoc_id', '')
+        print("spoc id")
+        print(spoc_id)
+        print(user_id)
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
@@ -3804,6 +3863,8 @@ def add_agent(request):
         has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
         has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
         is_super_admin = request.POST.get('is_super_admin', '')
+        is_relationship_manager = request.POST.get('is_relationship_manager', '')
+        is_operation_manager = request.POST.get('is_operation_manager', '')
 
         password = make_password(request.POST.get('password', ''))
         user_token = req_token.split()
@@ -3814,9 +3875,8 @@ def add_agent(request):
                 cursor = connection.cursor()
                 try:
                     result = cursor.callproc('addAgent', [emp_id, username, contact_no,email,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,
-                                                          is_meal,is_flight,is_water_bottles,is_reverse_logistics,has_billing_access,
-                                                          has_voucher_payment_access,has_voucher_approval_access,is_super_admin,password,user_id,
-                                                          user_type])
+                    is_meal,is_flight,is_water_bottles,is_reverse_logistics,has_billing_access,has_voucher_payment_access,has_voucher_approval_access,
+                    is_super_admin,password,user_id,user_type,is_relationship_manager,is_operation_manager])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -3871,6 +3931,8 @@ def update_agent(request):
         has_voucher_payment_access = request.POST.get('has_voucher_payment_access', '')
         has_voucher_approval_access = request.POST.get('has_voucher_approval_access', '')
         is_super_admin = request.POST.get('is_super_admin', '')
+        is_relationship_manager = request.POST.get('is_relationship_manager', '')
+        is_operation_manager = request.POST.get('is_operation_manager', '')
 
         agent_id = request.POST.get('agent_id', '')
 
@@ -3884,7 +3946,7 @@ def update_agent(request):
                     result = cursor.callproc('updateAgent', [emp_id, username, contact_no,email,is_radio,is_local,is_outstation,is_bus,is_train,is_hotel,
                                                           is_meal,is_flight,is_water_bottles,is_reverse_logistics,has_billing_access,
                                                           has_voucher_payment_access,has_voucher_approval_access,is_super_admin,user_id,
-                                                          user_type,agent_id])
+                                                          user_type,agent_id,is_relationship_manager,is_operation_manager])
 
                     company = dictfetchall(cursor)
                     if company:
@@ -4723,6 +4785,37 @@ def get_agents(request):
         return JsonResponse(data)
 
 
+def view_agents(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        agent_id = request.POST.get('agent_id', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewAgentsDetails', [agent_id])
+                    emp = dictfetchall(cursor)
+                    data = {'success': 1, 'Agents': emp}
+                    cursor.close()
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 ################################## Taxi Booking  ###############################
 
 def view_taxi_booking(request):
@@ -5133,6 +5226,7 @@ def add_taxi_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         user_id = request.POST.get('user_id', '')
 
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
         corporate_id = request.POST.get('corporate_id', '')
         booking_email = request.POST.get('booking_email', '')
         entity_id = request.POST.get('entity_id', '')
@@ -5209,9 +5303,10 @@ def add_taxi_booking(request):
             if user:
                 cursor = connection.cursor()
                 try:
-
+                    booking_reference_no = ''
                     cursor.callproc('addTaxiBooking', [user_type,user_id,entity_id,corporate_id,spoc_id,group_id,subgroup_id,tour_type,pickup_city,pickup_location,drop_location,pickup_datetime,
-                                                             taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_datetime,booking_email,'@last_booking_id','@booking_reference_no'])
+                    taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_datetime,
+                    booking_email,'@last_booking_id','@booking_reference_no',bta_code_travel_req_no])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -5244,6 +5339,10 @@ def add_taxi_booking(request):
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
+                        fcm = FCM()
+                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Taxi"))
+                        thread.start()
+
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
                             thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Taxi"))
@@ -5254,7 +5353,7 @@ def add_taxi_booking(request):
                             thread.start()
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Taxi")
 
-                        data = {'success': 1, 'message': "Taxi Booking Added Successfully",'booking_reference_no':booking_reference_no}
+                        data = {'success': 1, 'message': "Taxi Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
                         return JsonResponse(data)
                     return JsonResponse(data)
                 except Exception as e:
@@ -5280,6 +5379,7 @@ def add_bus_booking(request):
 
         user_id = request.POST.get('user_id', '')
 
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
         corporate_id = request.POST.get('corporate_id', '')
         booking_email = request.POST.get('booking_email', '')
         spoc_id = request.POST.get('spoc_id', '')
@@ -5335,10 +5435,10 @@ def add_bus_booking(request):
             if user:
                 cursor = connection.cursor()
                 try:
-
+                    booking_reference_no = ''
                     cursor.callproc('addBusBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
-                                                      to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_bus,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no'])
+                    to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,entity_id,preferred_bus,reason_booking,no_of_seats,
+                    assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no',bta_code_travel_req_no])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -5371,6 +5471,10 @@ def add_bus_booking(request):
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
+                        fcm = FCM()
+                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Bus"))
+                        thread.start()
+
                         add_booking_email = AddBooking_Email()
                         if is_email  == '1':
                             thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Bus"))
@@ -5382,7 +5486,7 @@ def add_bus_booking(request):
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Bus")
 
                     cursor.close()
-                    data = {'success': 1, 'message': "Bus Booking Added Success",'booking_reference_no':booking_reference_no}
+                    data = {'success': 1, 'message': "Bus Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5408,6 +5512,7 @@ def add_train_booking(request):
 
         user_id = request.POST.get('user_id', '')
 
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
         corporate_id = request.POST.get('corporate_id', '')
         booking_email = request.POST.get('booking_email', '')
         spoc_id = request.POST.get('spoc_id', '')
@@ -5463,10 +5568,10 @@ def add_train_booking(request):
             if user:
                 cursor = connection.cursor()
                 try:
-
+                    booking_reference_no = ''
                     cursor.callproc('addTrainBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
-                                                      to_location,train_type,train_type,train_type,booking_datetime,journey_datetime,
-                                                             entity_id,preferred_train,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no'])
+                    to_location,train_type,train_type,train_type,booking_datetime,journey_datetime,entity_id,preferred_train,reason_booking,
+                    no_of_seats,assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no',bta_code_travel_req_no])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     if booking_id:
@@ -5500,6 +5605,10 @@ def add_train_booking(request):
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
+                        fcm = FCM()
+                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Train"))
+                        thread.start()
+
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
                             thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Train"))
@@ -5520,7 +5629,7 @@ def add_train_booking(request):
                                 booking_id = dictfetchall(cursor)
 
                                 cursor.close()
-                                data = {'success': 1, 'message': "Train Booking Added Success",'booking_reference_no':booking_reference_no}
+                                data = {'success': 1, 'message': "Train Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
                                 return JsonResponse(data)
                             except Exception as e:
                                 data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -5552,6 +5661,7 @@ def add_hotel_booking(request):
 
         user_id = request.POST.get('user_id', '')
 
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
         corporate_id = request.POST.get('corporate_id', '')
         booking_email = request.POST.get('booking_email', '')
         spoc_id = request.POST.get('spoc_id', '')
@@ -5577,7 +5687,7 @@ def add_hotel_booking(request):
         checkin_datetime = datetime.strptime(checkin_datetime, '%d-%m-%Y %H:%M:%S')
         checkout_datetime = request.POST.get('checkout_datetime', '')
         checkout_datetime = datetime.strptime(checkout_datetime, '%d-%m-%Y %H:%M:%S')
-        no_of_nights = request.POST.get('no_of_nights','')
+        no_of_nights = 1
 
         preferred_hotel= request.POST.get('preferred_hotel','')
         billing_entity_id = request.POST.get('billing_entity_id', '')
@@ -5613,10 +5723,10 @@ def add_hotel_booking(request):
             if user:
                 cursor = connection.cursor()
                 try:
-
+                    booking_reference_no = ''
                     cursor.callproc('addHotelBooking', [from_city_id,from_area_id,preferred_area,checkin_datetime,checkout_datetime,bucket_priority_1,bucket_priority_2,
-                                                      room_type_id,preferred_hotel,booking_datetime,assessment_code,assessment_city_id,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,'@last_booking_id',no_of_nights,'@booking_reference_no'])
+                     room_type_id,preferred_hotel,booking_datetime,assessment_code,assessment_city_id,no_of_seats,group_id,subgroup_id,spoc_id,
+                    corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,'@last_booking_id',no_of_nights,'@booking_reference_no',bta_code_travel_req_no])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -5649,6 +5759,10 @@ def add_hotel_booking(request):
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
 
+                        fcm = FCM()
+                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Hotel"))
+                        thread.start()
+
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
                             thread = Thread(target=add_booking_email.send_taxi_email, args=(emp, approvers, "Hotel"))
@@ -5659,7 +5773,7 @@ def add_hotel_booking(request):
                             thread.start()
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Hotel")
 
-                    data = {'success': 1, 'message': "Hotel Booking Added Success",'booking_reference_no':booking_reference_no}
+                    data = {'success': 1, 'message': "Train Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -5686,6 +5800,7 @@ def add_flight_booking(request):
 
         user_id = request.POST.get('user_id', '')
         vendor_booking = request.POST.get('vendor_booking', '')
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
 
         corporate_id = request.POST.get('corporate_id', '')
         booking_email = request.POST.get('booking_email', '')
@@ -5745,10 +5860,10 @@ def add_flight_booking(request):
             if user:
                 cursor = connection.cursor()
                 try:
-
+                    last_booking_id = ''
                     cursor.callproc('addFlightBooking', [usage_type,journey_type,flight_class,from_location,to_location,booking_datetime,departure_datetime,
-                                                      preferred_flight,assessment_code,no_of_seats,
-                                                             group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking,'@booking_reference_no'])
+                    preferred_flight,assessment_code,no_of_seats,group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,
+                    user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking,'@booking_reference_no',bta_code_travel_req_no])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     if booking_id:
@@ -5781,6 +5896,10 @@ def add_flight_booking(request):
                         cursor3.callproc('getAllApproverByBookingID', [last_booking_id,5])
                         approvers = dictfetchall(cursor3)
                         cursor3.close()
+
+                        fcm = FCM()
+                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Flight"))
+                        thread.start()
 
                         add_booking_email = AddBooking_Email()
                         if is_email == '1':
@@ -5978,9 +6097,10 @@ def admin_dashboard(request):
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
         user = {}
-        admin_id = request.POST.get('admin_id', '')
+        admin_id = request.POST.get('corporate_id', '')
+        print("Corporate id")
         print(admin_id)
-        print("admin id")
+        print("Corporate id")
         user_token = req_token.split()
         print("aaaaacccccc")
         print(user_token)
@@ -6677,6 +6797,14 @@ def get_flight_search(request):
                                     data1[0] = ''
                                 data = data1[0]+' '+data1[1]+' '+data1[2]
                                 dura['DUR'] = data
+                                if dura['CON_DETAILS']:
+                                    for dura1 in dura['CON_DETAILS']:
+                                        data2 = dura1['DURATION'].split(':')
+                                        if data2[0] == '0d':
+                                            data2[0] = ''
+                                        data = data2[0] + ' ' + data2[1] + ' ' + data2[2]
+                                        dura1['DURATION'] = data
+                                        #print("in conn flight")
                         else:
                             print(trip_type)
                             sorted_obj = dict(api_response)
@@ -6690,12 +6818,27 @@ def get_flight_search(request):
                                     data1[0] = ''
                                 data = data1[0]+' '+data1[1]+' '+data1[2]
                                 dura['DUR'] = data
+                                if dura['CON_DETAILS']:
+                                    for dura1 in dura['CON_DETAILS']:
+                                        data2 = dura1['DURATION'].split(':')
+                                        if data2[0] == '0d':
+                                            data2[0] = ''
+                                        data = data2[0] + ' ' + data2[1] + ' ' + data2[2]
+                                        dura1['DURATION'] = data
+
                             for dura in sorted_obj['FLIGHTRT']:
                                 data1 = dura['DUR'].split(':')
                                 if data1[0] == '0d':
                                     data1[0] = ''
                                 data = data1[0]+' '+data1[1]+' '+data1[2]
                                 dura['DUR'] = data
+                                if dura['CON_DETAILS']:
+                                    for dura1 in dura['CON_DETAILS']:
+                                        data2 = dura1['DURATION'].split(':')
+                                        if data2[0] == '0d':
+                                            data2[0] = ''
+                                        data = data2[0] + ' ' + data2[1] + ' ' + data2[2]
+                                        dura1['DURATION'] = data
 
                         data = {'success': 1, 'Data': sorted_obj}
                         return JsonResponse(data)
@@ -6840,11 +6983,22 @@ def get_flight_fare_search(request):
                         ],
 
                     }
-                    print(payload)
+                    #print(payload)
                     #print(payload2)
                     headers = {}
                     r = {}
                     api_response = ''
+                    dayHours = ''
+                    dayHours_onword = ''
+                    dayHours_return = ''
+                    DEP_TIME1 = []
+                    DEP_DATE1 = []
+                    ARRV_TIME1 = []
+                    ARRV_DATE1 = []
+                    DEP_TIME = []
+                    DEP_DATE = []
+                    ARRV_TIME = []
+                    ARRV_DATE = []
                     if UID2:
                         r = requests.post(url, json=payload2)
                         api_response = r.json()
@@ -6854,27 +7008,111 @@ def get_flight_fare_search(request):
                                 data1[0] = ''
                             data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
                             dura['DURATION'] = data
+                            print(dura)
+                            dura['DEP_DATE'] = datetime.strptime(str(dura['DEP_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                            dura['ARRV_DATE'] = datetime.strptime(str(dura['ARRV_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+
+                        if api_response['CON_FLIGHTRT']:
+                            for dura1 in api_response['CON_FLIGHTRT']:
+                                data2 = dura1['DURATION'].split(':')
+                                if data2[0] == '0d':
+                                    data2[0] = ''
+                                data = data2[0] + ' ' + data2[1] + ' ' + data2[2]
+                                dura1['DURATION'] = data
+                                dura1['DEP_DATE'] = datetime.strptime(str(dura1['DEP_DATE']), "%Y-%m-%d").strftime( "%d-%m-%Y")
+                                dura1['ARRV_DATE'] = datetime.strptime(str(dura1['ARRV_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                                DEP_TIME.append(dura1['DEP_TIME'])
+                                DEP_DATE.append(dura1['DEP_DATE'])
+                                ARRV_TIME.append(dura1['ARRV_TIME'])
+                                ARRV_DATE.append(dura1['ARRV_DATE'])
+
                         for dura in api_response['FLIGHTOW']:
                             data1 = dura['DURATION'].split(':')
                             if data1[0] == '0d':
                                 data1[0] = ''
                             data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
                             dura['DURATION'] = data
+                            dura['DEP_DATE'] = datetime.strptime(str(dura['DEP_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                            dura['ARRV_DATE'] = datetime.strptime(str(dura['ARRV_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+
+                        if api_response['CON_FLIGHTOW']:
+                            for dura1 in api_response['CON_FLIGHTOW']:
+                                data2 = dura1['DURATION'].split(':')
+                                if data2[0] == '0d':
+                                    data2[0] = ''
+                                data = data2[0] + ' ' + data2[1] + ' ' + data2[2]
+                                dura1['DURATION'] = data
+                                dura1['DEP_DATE'] = datetime.strptime(str(dura1['DEP_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                                dura1['ARRV_DATE'] = datetime.strptime(str(dura1['ARRV_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                                DEP_TIME1.append(dura1['DEP_TIME'])
+                                DEP_DATE1.append(dura1['DEP_DATE'])
+                                ARRV_TIME1.append(dura1['ARRV_TIME'])
+                                ARRV_DATE1.append(dura1['ARRV_DATE'])
+                        print(DEP_DATE)
+                        print(DEP_DATE1)
+                        if DEP_DATE1:
+                            adDate = datetime.strptime(str(DEP_DATE1[-1] + ' ' + DEP_TIME1[-1]), "%d-%m-%Y %H:%M")
+                            ddDate = datetime.strptime(str(ARRV_DATE1[0] + ' ' + ARRV_TIME1[0]), "%d-%m-%Y %H:%M")
+                            diff = ddDate - adDate
+                            print(diff)
+                            dayHours_onword = timesince(ddDate, adDate)
+                        if DEP_DATE:
+                            adDate = datetime.strptime(str(DEP_DATE[-1] + ' ' + DEP_TIME[-1]), "%d-%m-%Y %H:%M")
+                            ddDate = datetime.strptime(str(ARRV_DATE[0] + ' ' + ARRV_TIME[0]), "%d-%m-%Y %H:%M")
+                            diff = ddDate - adDate
+                            print(diff)
+                            dayHours_return = timesince(ddDate, adDate)
+                            print("DAY DILLGLDLGDGDGDLG")
+                            print(dayHours_return)
+
                     else:
                         r = requests.post(url, json=payload)
                         print(r)
                         api_response = r.json()
-                        print(api_response)
-                        for dura in api_response['FLIGHT']:
-                            data1 = dura['DURATION'].split(':')
-                            if data1[0] == '0d':
-                                data1[0] = ''
-                            data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
-                            dura['DURATION'] = data
+                        #print(api_response)
+                        try:
+                            for dura in api_response['FLIGHT']:
+                                data1 = dura['DURATION'].split(':')
+                                if data1[0] == '0d':
+                                    data1[0] = ''
+                                data = data1[0] + ' ' + data1[1] + ' ' + data1[2]
+                                dura['DURATION'] = data
+                                dura['DEP_DATE'] = datetime.strptime(str(dura['DEP_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                                dura['ARRV_DATE'] = datetime.strptime(str(dura['ARRV_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                            if api_response['CON_FLIGHT']:
+                                DEP_TIME = []
+                                DEP_DATE = []
+                                ARRV_TIME = []
+                                ARRV_DATE = []
+                                for dura1 in api_response['CON_FLIGHT']:
+                                    data2 = dura1['DURATION'].split(':')
+                                    if data2[0] == '0d':
+                                        data2[0] = ''
+                                    data = data2[0] + ' ' + data2[1] + ' ' + data2[2]
+                                    dura1['DURATION'] = data
+                                    dura1['DEP_DATE'] = datetime.strptime(str(dura1['DEP_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                                    dura1['ARRV_DATE'] = datetime.strptime(str(dura1['ARRV_DATE']), "%Y-%m-%d").strftime("%d-%m-%Y")
+                                    DEP_TIME.append(dura1['DEP_TIME'])
+                                    DEP_DATE.append(dura1['DEP_DATE'])
+                                    ARRV_TIME.append(dura1['ARRV_TIME'])
+                                    ARRV_DATE.append(dura1['ARRV_DATE'])
+
+                            adDate = datetime.strptime(str(DEP_DATE[-1]+' '+DEP_TIME[-1]), "%d-%m-%Y %H:%M")
+                            ddDate = datetime.strptime(str(ARRV_DATE[0]+' '+ARRV_TIME[0]), "%d-%m-%Y %H:%M")
+                            diff = ddDate - adDate
+                            print(diff)
+                            dayHours_onword = timesince(ddDate, adDate)
+                            print("DAY DILLGLDLGDGDGDLG")
+                            print(dayHours_onword)
+
+                        except Exception as e:
+                            print("exception")
+                            print(e)
 
                     print("API TYPE")
-                    print(type(api_response))
-                    data = {'success': 1, 'Data': api_response}
+                    #print(type(api_response))
+                    data = {'success': 1, 'Data': api_response, 'dayHours_onword':str(dayHours_onword), 'dayHours_return':str(dayHours_return)}
+                    #print(data)
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'Data': ''}
@@ -7023,6 +7261,55 @@ def save_flight_booking(request):
                     url = "http://mdt.ksofttechnology.com/API/flight"
 
                     if UID2:
+                        for dura in va['FLIGHTRT']:
+                            data1 = dura['DURATION'].split(' ')
+                            data = ''
+                            find_len = len(data1)
+                            if find_len == '3':
+                                data = data1[0] + ':' + data1[1] + ':' + data1[2]
+                            else:
+                                data = '0d:' + data1[1] + ':' + data1[2]
+                            dura['DURATION'] = data
+                            dura['DEP_DATE'] = datetime.strptime(str(dura['DEP_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                            dura['ARRV_DATE'] = datetime.strptime(str(dura['ARRV_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+
+                        if va['CON_FLIGHTRT']:
+                            for dura1 in va['CON_FLIGHTRT']:
+                                data2 = dura1['DURATION'].split(' ')
+                                data = ''
+                                find_len = len(data2)
+                                if find_len == '3':
+                                    data = data2[0] + ':' + data2[1] + ':' + data2[2]
+                                else:
+                                    data = '0d:' + data1[1] + ':' + data1[2]
+                                dura1['DURATION'] = data
+                                dura1['DEP_DATE'] = datetime.strptime(str(dura1['DEP_DATE']), "%d-%m-%Y").strftime( "%Y-%m-%d")
+                                dura1['ARRV_DATE'] = datetime.strptime(str(dura1['ARRV_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+
+                        for dura in va['FLIGHTOW']:
+                            data1 = dura['DURATION'].split(' ')
+                            data = ''
+                            find_len = len(data1)
+                            if find_len == '3':
+                                data = data1[0] + ':' + data1[1] + ':' + data1[2]
+                            else:
+                                data = '0d:' + data1[1] + ':' + data1[2]
+                            dura['DURATION'] = data
+                            dura['DEP_DATE'] = datetime.strptime(str(dura['DEP_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                            dura['ARRV_DATE'] = datetime.strptime(str(dura['ARRV_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+
+                        if va['CON_FLIGHTOW']:
+                            for dura1 in va['CON_FLIGHTOW']:
+                                data2 = dura1['DURATION'].split(' ')
+                                find_len = len(data2)
+                                if find_len == '3':
+                                    data = data2[0] + ':' + data2[1] + ':' + data2[2]
+                                else:
+                                    data = '0d:' + data1[1] + ':' + data1[2]
+                                dura1['DURATION'] = data
+                                dura1['DEP_DATE'] = datetime.strptime(str(dura1['DEP_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                                dura1['ARRV_DATE'] = datetime.strptime(str(dura1['ARRV_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                                
                         if flight_class_is_international == 'I':
                             payload2 = {
                                 "PARAM": va['PARAM'],
@@ -7072,6 +7359,42 @@ def save_flight_booking(request):
                                 ]
                             }
                     else:
+                        print("i m herer first")
+                        print(type(va))
+                        for dura in va['FLIGHT']:
+                            print(dura['DURATION'])
+                            data1 = dura['DURATION'].split(' ')
+                            data = ''
+                            print(len(data1))
+                            print(data1)
+                            find_len = len(data1)
+                            if find_len == '3':
+                                data = data1[0]+':' + data1[1] + ':' + data1[2]
+                            else:
+                                data = '0d:' + data1[1] + ':' + data1[1]
+                            print("FLIGHT DURATION")
+                            print(data)
+                            dura['DURATION'] = data
+                            dura['DEP_DATE'] = datetime.strptime(str(dura['DEP_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                            dura['ARRV_DATE'] = datetime.strptime(str(dura['ARRV_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                            print("i m herer")
+                        if va['CON_FLIGHT']:
+                            for dura1 in va['CON_FLIGHT']:
+                                data1 = dura1['DURATION'].split(' ')
+                                data = ''
+                                print(len(data1))
+                                print(data1)
+                                find_len = len(data1)
+                                if find_len == '3':
+                                    data = data1[0] + ':' + data1[1] + ':' + data1[2]
+                                else:
+                                    data = '0d:' + data1[1] + ':' + data1[2]
+                                print("FLIGHT DURATION CON")
+                                print(data)
+                                dura1['DURATION'] = data
+                                dura1['DEP_DATE'] = datetime.strptime(str(dura1['DEP_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                                dura1['ARRV_DATE'] = datetime.strptime(str(dura1['ARRV_DATE']), "%d-%m-%Y").strftime("%Y-%m-%d")
+                                print("i m herer11")
                         payload = {
                             "STATUS": va['STATUS'],
                             "FLIGHT": va['FLIGHT'],
@@ -7094,8 +7417,10 @@ def save_flight_booking(request):
                         }
                     headers = {}
                     if UID2:
+                        print(payload)
                         r = requests.post(url, json=payload2)
                     else:
+                        print(payload)
                         r = requests.post(url, json=payload)
                     api_response = r.json()
                     data = {'success': 1, 'Data':api_response}
@@ -7103,6 +7428,9 @@ def save_flight_booking(request):
                 except Exception as e:
                     print("in EXCEPTION sss")
                     print(e)
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    print(exc_type, fname, exc_tb.tb_lineno)
                     data = {'success': 0, 'Data': ""}
                     return JsonResponse(data)
             else:
@@ -7960,7 +8288,372 @@ def get_operator_package(request):
         return JsonResponse(data)
 
 
+def update_fcm_regid(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
 
+        user_id = request.POST.get('user_id', '')
+        fcm_regid = request.POST.get('fcm_regid', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('updateFcmRegID', [user_id,user_type,fcm_regid])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'message': "FCM Updated Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_notice(request):
+    FCM1 = FCM()
+    test = FCM1.send_custome_msg_notification('test')
+    data = {'success': 1, 'message': "Notice Send Successfully..!"}
+    return JsonResponse(data)
+
+
+def send_broadcast_notification(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id', '')
+        msg_head = request.POST.get('msg_head', '')
+        msg_title = request.POST.get('msg_title', '')
+        msg_text = request.POST.get('msg_text', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    print("i m hererererer")
+                    FCM1 = FCM()
+                    thread = Thread(target=FCM1.send_broadcast_notification, args=(msg_head, msg_title, msg_text))
+                    thread.start()
+                    #test = FCM1.send_broadcast_notification(msg_head, msg_title, msg_text)
+                    data = {'success': 1, 'message': "Notice Send Successfully..!"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def send_message_to_moblies(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        mobile_nos = request.POST.get('mobile_nos', '')
+        msg_text = request.POST.get('msg_text', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    print("i m hererererer")
+                    FCM1 = FCM()
+                    thread = Thread(target=FCM1.send_message_to_moblies, args=(mobile_nos, msg_text))
+                    thread.start()
+                    #test = FCM1.send_broadcast_notification(msg_head, msg_title, msg_text)
+                    data = {'success': 1, 'message': "Message Send Successfully..!"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+    
+def send_mail_to_user(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        email_subject = request.POST.get('email_subject', '')
+        email_body = request.POST.get('email_body', '')
+        email_to = request.POST.get('email_to', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    print("i m hererererer")
+                    FCM1 = FCM()
+                    thread = Thread(target=FCM1.send_mail_to_user, args=(email_subject, email_body, email_to))
+                    thread.start()
+                    #test = FCM1.send_broadcast_notification(msg_head, msg_title, msg_text)
+                    data = {'success': 1, 'message': "Mail Send Successfully..!"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_all_leads(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllLeadDetails', [user_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    for comp in company:
+                        lead_id = comp['id']
+                        cursor11 = connection.cursor()
+                        cursor11.callproc('getAllLeadComments', [lead_id])
+                        passanger = dictfetchall(cursor11)
+                        comp['LeadComments'] = passanger
+                        cursor11.close()
+
+                        cursor22 = connection.cursor()
+                        cursor22.callproc('getAllLeadActionLogs', [lead_id])
+                        flights = dictfetchall(cursor22)
+                        comp['ActionLogs'] = flights
+                        cursor22.close()
+
+
+                    data = {'success': 1, 'Lead': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def add_lead(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    # cursor = connection.cursor()
+                    # cursor.callproc('addNewLeadDetails', [contact_name,company_name,contact_number,contact_email,company_location,contact_address,company_website,
+                    # message,hear_about_us,assigned_sales_person,status,lead_source,lead_communication,attachments,comments,user_id])
+                    # company = dictfetchall(cursor)
+                    # cursor.close()
+
+                    form = LeadGenerationModelForm(request.POST or None, request.FILES)
+                    if form.is_valid():
+
+                        new_lead = form.save()
+                        if request.FILES:
+                            resp = file_upload(request, new_lead.pk)
+
+                        new_comment = form.cleaned_data['Comments']
+                        status_action = form.cleaned_data['Status']
+                        # print(new_lead.pk)
+                        # print(form.cleaned_data['Comments'])
+                        cmt = LeadComments()
+                        cmt.lead_id = new_lead.pk
+                        cmt.comment = new_comment
+                        cmt.created_by = Corporate_Agent.objects.get(pk=user_id)
+                        cmt.created_at = timezone.now()
+                        cmt.save()
+                        log = LeadLog()
+                        log.lead_id = new_lead.pk
+                        log.comment = new_comment
+                        log.status_action = status_action
+                        log.action_initiated_by = user_id
+                        log.save()
+                        is_email = request.POST.get('is_email')
+                        is_sms = request.POST.get('is_sms')
+
+                        if is_email:
+                            print("in email")
+                            Contact_Name = request.POST.get('Contact_Name', '')
+                            Company_Name = request.POST.get('Company_Name', '')
+                            Contact_Number = request.POST.get('Contact_Number', '')
+                            Contact_Email = request.POST.get('Contact_Email', '')
+                            corporate_location = request.POST.get('Company_Location', '')
+                            message = "Thank you for contacting us, our sales person will get in touch with you as earliest as possible.<br><br>Regards,<br>CoTrav"
+                            signup = SignupEmail(Company_Name, corporate_location, Contact_Name, Contact_Number,
+                                                 Contact_Email, message)
+                            resp1 = signup.send_email()
+                            print(resp1)
+                        if is_sms:
+                            print("in smsm")
+                            sender_id = 'COTRAV'
+                            exotel_sid = "novuslogic1"
+                            exotel_key = "6ae4c99860c31346203da94dc98a4de7fd002addc5848182"
+                            exotel_token = "a2c78520d23942ad9ad457b81de2ee3f3be743a8188f8c39"
+                            Contact_no = request.POST.get('Contact_Number')
+                            sms_body = "Thank you for contacting us, our sales person will get in touch with you as earliest as possible.<br><br>Regards,<br>CoTrav";
+
+                            requests.post(
+                                'https://twilix.exotel.in/v1/Accounts/{exotel_sid}/Sms/send.json'.format(
+                                    exotel_sid=exotel_sid),
+                                auth=(exotel_key, exotel_token),
+                                data={
+                                    'From': sender_id,
+                                    'To': Contact_no,
+                                    'Body': sms_body
+                                })
+
+                        messages.success(request, "Lead Created Successfully..!")
+                        data = {'success': 1, 'message': 'Lead created Successfully..!'}
+                    else:
+                        print("eoorr listing")
+                        print(form.errors)
+                        messages.error(request, "Lead Status Not Created ..!")
+                        data = {'success': 0, 'message': 'Lead Not Created..Parameter Missing!'}
+
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def update_lead(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+        lead_id = request.POST.get('lead_id', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    # cursor = connection.cursor()
+                    # cursor.callproc('addNewLeadDetails', [contact_name,company_name,contact_number,contact_email,company_location,contact_address,company_website,
+                    # message,hear_about_us,assigned_sales_person,status,lead_source,lead_communication,attachments,comments,user_id])
+                    # company = dictfetchall(cursor)
+                    # cursor.close()
+                    lead = get_object_or_404(Leadgeneration, pk=lead_id)
+                    form = LeadUpdateForm(request.POST or None, instance=lead, initial={'Comments': ''})
+
+                    if form.is_valid():
+                        edit_lead = form.save()
+                        if request.FILES:
+                            resp = file_upload(request, edit_lead.pk)
+                        new_comment = form.cleaned_data['Comments']
+                        status_action = form.cleaned_data['Status']
+                        # print(new_lead.pk)
+                        # print(form.cleaned_data['Comments'])
+                        cmt = LeadComments()
+                        cmt.lead_id = edit_lead.pk
+                        cmt.comment = new_comment
+                        cmt.created_by = Corporate_Agent.objects.get(pk=user_id)
+                        cmt.created_at = timezone.now()
+                        cmt.save()
+                        log = LeadLog()
+                        log.lead_id = edit_lead.pk
+                        log.comment = new_comment
+                        log.status_action = status_action
+                        log.action_initiated_by = user_id
+                        log.save()
+
+                        data = {'success': 1, 'message': 'Lead Updated Successfully..!'}
+                    else:
+                        print("eoorr listing")
+                        print(form.errors)
+                        messages.error(request, "Lead  Not Update ..!")
+                        data = {'success': 0, 'message': 'Lead Not Update..Parameter Missing!'}
+
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+    
 def getUserinfoFromAccessToken(user_token=None, user_type=None):
     try:
         user = {}
@@ -8012,8 +8705,6 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
     except Exception as e:
         print(e)
         return None
-
-
 
 
 def dictfetchall(cursor):

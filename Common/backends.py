@@ -94,38 +94,59 @@ class CustomCompanyUserAuth(object):
                     today = datetime.now()
                     gen_expiry_date = today + relativedelta(months=1)
                     if login_type == '1':
-                        insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user.id,access_token=gen_access_token,user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['admin_access_token'] = insert_data.access_token
-                        request.session['admin_login_type'] = login_type
-                        response.set_cookie('admin_access_token', insert_data.access_token)
-                        response.set_cookie('admin_login_type', login_type)
+                        print("is delete")
+                        print(user.is_deleted)
+                        if not user.is_deleted:
+                            insert_data = Corporate_Login_Access_Token.objects.create(corporate_login_id=user.id,access_token=gen_access_token,user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['admin_access_token'] = insert_data.access_token
+                            request.session['admin_login_type'] = login_type
+                            response.set_cookie('admin_access_token', insert_data.access_token)
+                            response.set_cookie('admin_login_type', login_type)
+                        else:
+                            return None
                     elif login_type == '2':
-                        insert_data = Corporate_Approves_1_Login_Access_Token.objects.create(subgroup_authenticater_id=user.id,access_token=gen_access_token,user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['approves_1_access_token'] = insert_data.access_token
-                        request.session['approves_1_login_type'] = login_type
-                        print("App 1 Save Session")
+                        if not user.is_deleted:
+                            insert_data = Corporate_Approves_1_Login_Access_Token.objects.create(subgroup_authenticater_id=user.id,access_token=gen_access_token,user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['approves_1_access_token'] = insert_data.access_token
+                            request.session['approves_1_login_type'] = login_type
+                            print("App 1 Save Session")
+                        else:
+                            return None
                     elif login_type == '3':
-                        insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user.id, access_token=gen_access_token,user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['approves_2_access_token'] = insert_data.access_token
-                        request.session['approves_2_login_type'] = login_type
+                        if not user.is_deleted:
+                            insert_data = Corporate_Approves_2_Login_Access_Token.objects.create(group_authenticater_id=user.id, access_token=gen_access_token,user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['approves_2_access_token'] = insert_data.access_token
+                            request.session['approves_2_login_type'] = login_type
+                        else:
+                            return None
                     elif login_type == '4':
-                        insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user.id,access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['spoc_access_token'] = insert_data.access_token
-                        request.session['spoc_login_type'] = login_type
-                        response.set_cookie('spoc_access_token', insert_data.access_token)
-                        response.set_cookie('spoc_login_type', login_type)
+                        if not user.is_deleted:
+                            insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user.id,access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['spoc_access_token'] = insert_data.access_token
+                            request.session['spoc_login_type'] = login_type
+                            response.set_cookie('spoc_access_token', insert_data.access_token)
+                            response.set_cookie('spoc_login_type', login_type)
+                        else:
+                            return None
                     elif login_type == '6':
-                        insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user.id, access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['employee_access_token'] = insert_data.access_token
-                        request.session['employee_login_type'] = login_type
+                        if not user.is_deleted:
+                            insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user.id, access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['employee_access_token'] = insert_data.access_token
+                            request.session['employee_login_type'] = login_type
                     elif login_type == '10':
-                        insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user.id, access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['agent_access_token'] = insert_data.access_token
-                        request.session['agent_login_type'] = login_type
+                        if not user.is_deleted:
+                            insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user.id, access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['agent_access_token'] = insert_data.access_token
+                            request.session['agent_login_type'] = login_type
+                        else:
+                            return None
                     elif login_type == '7':
-                        insert_data = Operator_Login_Access_Token.objects.create(operator_id=user.id,access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
-                        request.session['operator_access_token'] = insert_data.access_token
-                        request.session['operator_login_type'] = login_type
+                        if not user.is_deleted:
+                            insert_data = Operator_Login_Access_Token.objects.create(operator_id=user.id,access_token=gen_access_token, user_agent=user_info, expiry_date=gen_expiry_date)
+                            request.session['operator_access_token'] = insert_data.access_token
+                            request.session['operator_login_type'] = login_type
+                        else:
+                            return None
 
                     return user
                 else:

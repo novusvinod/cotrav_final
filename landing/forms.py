@@ -4,9 +4,6 @@ from Common.models import Corporate_Agent
 from landing.utils import get_choice
 from django.core.validators import DecimalValidator
 
-
-
-
 abc = get_choice()
 
 
@@ -33,7 +30,6 @@ source = (
     ('LinkedIn','LinkedIn'),
     ('Bulk Upload','Bulk Upload'),
     ('Other','Other'),
-
 )
 
 communication = (
@@ -46,11 +42,10 @@ communication = (
 
 hear_about = (
     ('','Select Communication'),
-    ('Website', 'Website'),
-    ('News Paper', 'News Paper'),
+    ('SMS', 'SMS'),
     ('Email', 'Email'),
-    ('Mobile SMS', 'Mobile SMS'),
-    ('Others SMS', 'Others')
+    ('Call', 'Call'),
+    ('In-Person', 'In-Person')
 )
 
 
@@ -75,21 +70,17 @@ class LeadGenerationModelForm(forms.ModelForm):
     Assigned_Sales_Person = forms.CharField(max_length=255 ,widget = forms.Select( choices=abc,attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}),)
     Status = forms.CharField(label='Status' , max_length=255 , widget = forms.Select(choices=sts,attrs={'class': "form-control col-sm-8 myselect",'id':"status"}),)
     Lead_Source = forms.CharField(label='Lead_Source', max_length=255 , widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
-    Attachments = forms.FileField(required=False,allow_empty_file=True)
+    Attachments = forms.FileField(required=False)
     Lead_Communication = forms.CharField(label='Lead_Communication', max_length=255 , required=False , widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
     Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255 , required=False , widget = forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"Hear_About_Us"}),)
     Comments = forms.CharField(label='Comments', max_length=255 , widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
 
-    def __init__(self, user, *args, **kwargs):
-        super(LeadUpdateForm, self).__init__(*args, **kwargs)
-        pqr = get_choice()
-        print(pqr)
-        self.fields['Assigned_Sales_Person'] = forms.CharField(max_length=255, widget=forms.Select(choices=pqr, attrs={
-            'class': "form-control col-sm-8 myselect", 'id': "sales_person"}), )
 
     class Meta:
         model = Leadgeneration
         fields = "__all__"
+
+
 
 
 class LeadUpdateForm(forms.ModelForm):
@@ -101,21 +92,35 @@ class LeadUpdateForm(forms.ModelForm):
     Contact_Address = forms.CharField(label='Contact_Address', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
     Company_Website = forms.CharField(label='Company_Website', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
     Message = forms.CharField(label='Message', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
-    Assigned_Sales_Person = forms.CharField(max_length=255, widget=forms.Select(choices=abc, attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}), )
+    #Assigned_Sales_Person = forms.ModelChoiceField()
+    #Assigned_Sales_Person = forms.ModelChoiceField(required=False, widget=forms.Select, queryset= get_choice() )
+    #Assigned_Sales_Person = forms.CharField(max_length=255, widget=forms.Select(choices=abc, attrs={'class': "form-control col-sm-8 myselect", 'id': "sales_person"}), )
+    Assigned_Sales_Person = forms.CharField(max_length=255 ,widget = forms.Select( choices=abc,attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}),)
+
+    #Assigned_Sales_Person = forms.ChoiceField(choices=[(agent.id, agent.user_name) for agent in Corporate_Agent.objects.all()])
+
     Status = forms.CharField(label='Status', max_length=255,widget=forms.Select(choices=sts, attrs={'class': "form-control col-sm-8 myselect",'id':"status"}), )
     Lead_Source = forms.CharField(label='Lead_Source', max_length=255,widget = forms.Select(choices=source,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_source"}),)
-    Attachments = forms.FileField(required=False,allow_empty_file=True)
+    Attachments = forms.FileField(required=False)
     Lead_Communication = forms.CharField(label='Lead_Communication', max_length=255, required=False,widget = forms.Select(choices=communication,attrs={'class': "form-control col-sm-8 myselect",'id':"lead_communication"}),)
-    Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255, required=False,widget = forms.TextInput(attrs={'class': "form-control col-sm-8"}),)
+    Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255, required=False,widget = forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"Hear_About_Us"}),)
     Comments = forms.CharField(label='Comments', max_length=255,widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
+
+    def __init__(self,*args, **kwargs):
+        super(LeadUpdateForm, self).__init__(*args, **kwargs)
+        pqr = get_choice()
+        self.fields['Assigned_Sales_Person'] = forms.CharField(max_length=255, widget=forms.Select(choices=pqr, attrs={
+            'class': "form-control col-sm-8 myselect", 'id': "sales_person"}), )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        Assigned_Sales_Person = cleaned_data.get("Assigned_Sales_Person")
+
 
     class Meta:
         model = Leadgeneration
         fields = "__all__"
 
-
-
-        
 
 
         

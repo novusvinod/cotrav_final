@@ -8,4 +8,10 @@ urlpatterns = [
     path('api/employee_hotel_bookings', employee_api_view.employee_hotel_bookings),
     path('api/employee_flight_bookings', employee_api_view.employee_flight_bookings),
 
+    path('api/employee_reject_taxi_booking', employee_api_view.employee_reject_taxi_bookings),
+    path('api/employee_reject_bus_booking', employee_api_view.employee_reject_bus_bookings),
+    path('api/employee_reject_train_booking', employee_api_view.employee_reject_train_bookings),
+    path('api/employee_reject_hotel_booking', employee_api_view.employee_reject_hotel_bookings),
+    path('api/employee_reject_flight_booking', employee_api_view.employee_reject_flight_bookings),
+
 ]

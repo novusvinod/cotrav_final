@@ -1,13 +1,11 @@
 import random
 import string
-
 import requests
-from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render , redirect , get_object_or_404
 from django_global_request.middleware import get_request
-
+from django.utils import timezone
 
 from Common.VIEW.Agent.agent_views import getDataFromAPI
 from landing.forms import LeadGenerationModelForm , LeadUpdateForm
@@ -46,6 +44,8 @@ from django.core.files.storage import default_storage
 from landing.models import Document
 from Common.email_settings import SignupEmail,Lead_Status_Change_Email
 
+from landing.utils import get_choice
+
 
 def lead_detail_view(request, pk):
     try:
@@ -75,6 +75,12 @@ def my_handler(sender, instance , created , **kwargs):
 
     if(created) :
         print ("create call")
+        message = "New Lead Generated with id " + str(instance.id) + " and status Lead Created "
+        signup = SignupEmail(corporate_name, corporate_location, contact_person_name, contact_person_no,
+                             contact_person_email, message)
+        resp1 = signup.send_email()
+
+        print(resp1)
     else:
         print("update call")
         print(instance.id)
@@ -118,6 +124,8 @@ def my_handler(sender, instance , created , **kwargs):
                 company.is_water_bottles = 1
                 company.is_reverse_logistics = 1
                 company.is_deleted = 0
+                company.is_send_email = 0
+                company.is_send_sms = 0
 
                 company.save()
                 request = get_request()
@@ -140,7 +148,8 @@ def my_handler(sender, instance , created , **kwargs):
                 message = "Lead with Company Name " + str(instance.Company_Name) + " is converted to new Corporate in Corporate database after Leads closed-win status"
 
         elif instance.Status == "Assigned":
-            message = " <br> Company Name: " + str(instance.Company_Name) + "<br> Customer Name:  " + instance.Contact_Name + "<br> Contact Email : " + instance.Contact_Email + " <br>  Contact Number : " + instance.Contact_Number + " Kindly take it further. "
+            message = " <br> Company Name: " + str(
+            instance.Company_Name) + "<br> Customer Name:  " + instance.Contact_Name + "<br> Contact Email : " + instance.Contact_Email + " <br>  Contact Number : " + instance.Contact_Number + " Kindly take it further. "
             # message = "Lead with id " + str(instance.id) + " is updated and assigned to agent " + ag_email
         else:
             message = ""
@@ -150,6 +159,8 @@ def my_handler(sender, instance , created , **kwargs):
             resp1 = signup.send_email()
             print("in mail send fun")
             print(resp1)
+
+
 
 
 @login_required(login_url='/agents/login')
@@ -175,7 +186,7 @@ def file_upload(request,lead_id):
     path = default_storage.save(save_path, request.FILES['Attachments'])
     doc_name = request.POST.get('doc_name', '')
     lead = Leadgeneration.objects.get(id=lead_id)
-   #document = Document.objects.create(document=path, upload_by=lead, doc_name=doc_name)
+   # document = Document.objects.create(document=path, upload_by=lead, doc_name=doc_name)
     document = Document.objects.create(document=str(file_up), upload_by=lead, doc_name=doc_name)
     return JsonResponse({'document': document.id})
 
@@ -184,19 +195,20 @@ def file_upload(request,lead_id):
 
 @login_required(login_url='/agents/login')
 def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
+
     lead = get_object_or_404(Leadgeneration, pk=pk)
+
     comments = LeadComments.objects.filter(lead_id=pk)
     attachment = Document.objects.filter(upload_by=pk)
+
     if request.method == 'POST':
 
-        form = LeadUpdateForm(request.POST or None,request.FILES, instance=lead , initial={'Comments': ''})
-        print(form.is_valid())
+        form = LeadUpdateForm(request.POST or None, instance=lead , initial={'Comments': ''})
+
         if form.is_valid():
             edit_lead = form.save()
             if request.FILES:
-                print("i m gere")
                 resp = file_upload(request, edit_lead.pk)
-                print(resp)
             new_comment = form.cleaned_data['Comments']
             status_action = form.cleaned_data['Status']
             # print(new_lead.pk)
@@ -204,7 +216,6 @@ def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
             cmt = LeadComments()
             cmt.lead_id = edit_lead.pk
             cmt.comment = new_comment
-            print(request.user.id)
             cmt.created_by = request.user
             cmt.created_at = timezone.now()
             cmt.save()
@@ -218,16 +229,18 @@ def lead_update(request, pk, template_name='landing/leadgeneration_form.html'):
             messages.success(request, "Lead Status Updated Successfully..!")
             return redirect('lead-list')
         else:
-            print(form.errors.as_data())
 
+            print("eoorr listing")
+            print(form.errors)
             messages.error(request, "Lead Status Not Updated ..!")
             form = LeadUpdateForm(request.POST or None, instance=lead , initial={'Comments': ''})
-            return render(request, template_name, {'form': form, 'comments': comments, 'attachments': attachment, 'form_title': 'Update Lead'})
+
+            return render(request, template_name, {'form': form, 'comments': comments, 'attachments': attachment, 'form_title': 'Update Lead' })
     else:
 
         form = LeadUpdateForm(request.POST or None, instance=lead , initial={'Comments': ''})
 
-    return render(request, template_name, {'form':form,'comments':comments,'attachments':attachment, 'form_title': 'Update Lead'})
+    return render(request, template_name, {'form':form,'comments':comments,'attachments':attachment, 'form_title': 'Update Lead' })
 
 
 
@@ -249,6 +262,7 @@ def lead_create(request, template_name='landing/leadgeneration_form.html'):
             cmt.lead_id = new_lead.pk
             cmt.comment = new_comment
             cmt.created_by = request.user
+            cmt.created_at = timezone.now()
             cmt.save()
             log = LeadLog()
             log.lead_id = new_lead.pk
@@ -256,8 +270,6 @@ def lead_create(request, template_name='landing/leadgeneration_form.html'):
             log.status_action = status_action
             log.action_initiated_by = request.user.id
             log.save()
-            print("Save Data")
-            print(request.POST.get('is_email'))
             is_email = request.POST.get('is_email')
             is_sms = request.POST.get('is_sms')
 
@@ -294,8 +306,9 @@ def lead_create(request, template_name='landing/leadgeneration_form.html'):
             messages.success(request, "Lead Created Successfully..!")
             return redirect('lead-list')
         else:
-            messages.error(request, "Lead Status Not Updated ..!")
-            return redirect('lead-list')
+            messages.error(request, "Lead Status Not Created ..!")
+            form = LeadUpdateForm(request.POST or None)
+            return render(request, template_name, {'form': form, 'form_title': 'Update Lead'})
     else:
         form = LeadGenerationModelForm()
 

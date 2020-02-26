@@ -1,7 +1,10 @@
 from datetime import datetime
+from threading import Thread
+
 from django.http import JsonResponse
 from django.db import connection
 from Common.VIEW.Api.api_views import getUserinfoFromAccessToken, dictfetchall
+from Common.email_settings import RejectBooking_Email
 
 
 def operator_taxi_bookings(request):
@@ -216,6 +219,7 @@ def operator_reject_taxi_bookings(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -223,10 +227,26 @@ def operator_reject_taxi_bookings(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectOperatorTaxiBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectOperatorTaxiBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Reject Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = RejectBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Flight"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}

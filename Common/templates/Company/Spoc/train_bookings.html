@@ -36,14 +36,14 @@
           <tr>
             <th id="download_from_date1"> From Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
+            <input type="text" class="form-control datepicker_download" autocomplete="off" name="booking_from_datetime" id="download_from_date" placeholder="From Date">
             </td>
           </tr>
 
           <tr>
             <th id="download_to_date1"> To Date </th>
             <td>
-            <input type="text" class="form-control datepicker1" autocomplete="off" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
+            <input type="text" class="form-control datepicker_download" autocomplete="off" name="booking_to_datetime" id="download_to_date" placeholder="To Date">
             </td>
           </tr>
 
@@ -94,9 +94,15 @@
             <form action="/Corporate/Spoc/reject-train-booking/0" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="booking_id" id="booking_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
-                <input type="hidden" name="reject_id" id="1">
+                <input type="hidden" name="accept_id" id="accept_id">
+                <input type="hidden" name="reject_id" id="reject_id">
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                 <label>Are you sure you want to Reject Booking</label>
+                <div class="row">
+                    <label class="control-label col-sm-2">Comment</label>
+                    <textarea class="form-control col-sm-10" id="user_comment" rows="4" name="user_comment" placeholder="Comment.."></textarea>
+                </div>
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
@@ -220,13 +226,14 @@
                                         {% endif %}
                                     </td>
 
-                                   <td>
+                                   <td style="display: inline-flex;">
                                         {% if booking.status_cotrav == 1 %}
-                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i> </a>
+                                         <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>
+
+                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i></a>
                                     {% endif %}
-
-
                                     </td>
 
                                     {% if booking.operator_name %}
@@ -271,9 +278,20 @@ $(function() {
   $('#model_action').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('id'); // Extract info from data-* attributes
+    var accept_id = button.data('accept_id');
+    var reject_id = button.data('reject_id');
 
     var modal = $(this);
     modal.find('#booking_id').val(id);
+
+    if(reject_id == 1){
+        modal.find('#reject_id').val(1);
+        modal.find('#user_comment').prop('required',true);
+    }
+    if(accept_id == 1){
+        modal.find('#accept_id').val(1);
+        modal.find('#user_comment').prop('required',false);
+    }
 
     });
 

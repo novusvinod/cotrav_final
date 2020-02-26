@@ -230,6 +230,15 @@
 
 						{% if user.is_super_admin == 1 %}
 						<li class="mega-menu-dropdown ">
+                            <a href="/agents/cotrav-communication" class="dropdown-toggle"> <i class="material-icons">cast_connected</i>  Communication
+
+                            </a>
+
+                        </li>
+						{% endif %}
+
+						{% if user.is_super_admin == 1 %}
+						<li class="mega-menu-dropdown ">
                             <a href="#" class="dropdown-toggle"> <i class="material-icons">description</i> Billing
  								<i class="fa fa-angle-down"></i>
                                 <span class="arrow "></span>

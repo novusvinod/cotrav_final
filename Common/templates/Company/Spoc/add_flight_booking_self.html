@@ -121,13 +121,13 @@
 
                                               <div class="col-lg-6 ">
                                         <p class="md_fli_fnt"><i class="fa fa-calendar"></i> DEPARTURE DATE</p>
-                                          <input class = "floating-label mdl-textfield__input datepicker2" type="text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
+                                          <input class = "floating-label mdl-textfield__input datepicker2" autocomplete="off" type="text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
                                                  <input type="hidden" value="{{ booking_datas.departure_datetime }}" id="d_date">
                                         </div>
 
                                          <div class="col-lg-6 ">
                                         <p  class="md_fli_fnt"><i class="fa fa-calendar"></i> RETURN DATE</p>
-                                          <input class = "floating-label mdl-textfield__input datepicker2" type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
+                                          <input class = "floating-label mdl-textfield__input datepicker2" autocomplete="off" type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
                                                  <input type="hidden" value="{{ booking_datas.return_date }}" id="r_date">
                                         </div>
 
@@ -261,6 +261,13 @@ $('#flight_loader').hide();
 });
 
 $(document).ready(function() {
+var trip_type = $('input[name="trip_type"]:checked').val();
+if(trip_type == '2'){
+$("#return_date").show();
+}else{
+$("#return_date").hide();
+}
+
 
 $("form").submit(function(){
 $('#flight_loader').show();
@@ -297,7 +304,7 @@ $('#option_2').change(function() {
         }
 
     });
-$("#return_date").hide();
+
 
 
 });

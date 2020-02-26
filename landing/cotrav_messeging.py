@@ -1,15 +1,33 @@
 from django.shortcuts import render,redirect
+
 from django.http import HttpResponse
+
 from django.core.mail import EmailMultiAlternatives, get_connection
+
+from django.core.mail import send_mail
+
+from django.core import mail
+
+from django.utils.html import strip_tags
+
 from django.template.loader import render_to_string
+
 from datetime import datetime
 from datetime import timedelta
 from openpyxl import Workbook
+
 from io import BytesIO
+
 from django.template.loader import get_template
+
 from xhtml2pdf import pisa
+
 import os
 from random import randint
+
+from django.core.files import File
+
+from threading import Thread, activeCount
 from landing.utils import render_to_pdf
 
 
@@ -123,7 +141,7 @@ class SignupEmail():
         html_content = render_to_string(tempalte, {'company': self.company, 'location': self.company_location,
                                                    'cp_name': self.cp_name, 'cp_no': self.cp_no,
                                                    'cp_email': self.cp_email, 'message': self.message})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.cp_email])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'balwant@taxivaxi.in', [self.cp_email])
         msg.attach_alternative(html_content, "text/html")
 
         res = msg.send(fail_silently=True)
@@ -144,7 +162,7 @@ class LeadGenerationEmail():
          self.cp_email = cp_email
          self.message = message
          self.status = status
-         self.send_to = "sanketongmel@gmail.com,vinod@taxivaxi.com,cotrav@taxivaxi.in"
+         self.send_to = "sanketongmel@gmail.com,vinod@taxivaxi.com,balwant@taxivaxi.in"
 
 
     def lead_create_send_email(self):
@@ -285,7 +303,32 @@ class Render:
         return [file_name, file_path]
 
 
+class TaxCalc():
 
+    def __init__(self):
+        self.base_rate = 100
+        self.ticket_price = 0
+        self.management_fee = 0
+        self.tax_on_management_fee = 0
+        self.tax_on_management_fee_percentage = 0
+        self.sub_total = 0
+        self.cotrav_billing_entity = 0
+        self.igst = 0
+        self.cgst = 0
+        self.sgst = 0
+        self.management_fee_igst = 0
+        self.management_fee_cgst = 0
+        self.management_fee_sgst = 0
+        self.management_fee_igst_rate = 0
+        self.management_fee_cgst_rate = 0
+        self.management_fee_sgst_rate = 0
+
+    def taxOnManagement(self):
+        pass
+
+
+    def taxIgst(self):
+        pass
 
 
 

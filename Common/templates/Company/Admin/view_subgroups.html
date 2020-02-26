@@ -500,7 +500,7 @@ $('#set_subgroup_id').val(bla);
      $('#is_send_email1').hide();
     $('#is_send_sms1').hide();
 
-    }
+    }else{
 
    if(typeof name != "undefined"){
 
@@ -550,6 +550,8 @@ $('#set_subgroup_id').val(bla);
         $('#model_add_new_group').on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
         })
+    }
+
     }
 
     });

@@ -18,22 +18,27 @@ urlpatterns = [
     path('Corporate/Employee/taxi-bookings/<int:id>', employee_views.taxi_bookings),
     path('Corporate/Employee/add-taxi-booking/<int:id>', employee_views.add_taxi_booking),
     path('Corporate/Employee/view-taxi-booking/<int:id>', employee_views.view_taxi_booking),
+    path('Corporate/Employee/reject-taxi-booking/<int:id>', employee_views.reject_taxi_booking),
 
     path('Corporate/Employee/bus-bookings/<int:id>', employee_views.bus_bookings),
     path('Corporate/Employee/add-bus-booking/<int:id>', employee_views.add_bus_booking),
     path('Corporate/Employee/view-bus-booking/<int:id>', employee_views.view_bus_booking),
+    path('Corporate/Employee/reject-bus-booking/<int:id>', employee_views.reject_bus_booking),
 
     path('Corporate/Employee/train-bookings/<int:id>', employee_views.train_bookings),
     path('Corporate/Employee/add-train-booking/<int:id>', employee_views.add_train_booking),
     path('Corporate/Employee/view-train-booking/<int:id>', employee_views.view_train_booking),
+    path('Corporate/Employee/reject-train-booking/<int:id>', employee_views.reject_train_booking),
 
     path('Corporate/Employee/hotel-bookings/<int:id>', employee_views.hotel_bookings),
     path('Corporate/Employee/add-hotel-booking/<int:id>', employee_views.add_hotel_booking),
     path('Corporate/Employee/view-hotel-booking/<int:id>', employee_views.view_hotel_booking),
+    path('Corporate/Employee/reject-hotel-booking/<int:id>', employee_views.reject_hotel_booking),
 
     path('Corporate/Employee/flight-bookings/<int:id>', employee_views.flight_bookings),
     path('Corporate/Employee/add-flight-booking/<int:id>', employee_views.add_flight_booking),
     path('Corporate/Employee/view-flight-booking/<int:id>', employee_views.view_flight_booking),
+    path('Corporate/Employee/reject-flight-booking/<int:id>', employee_views.reject_flight_booking),
 
     path('Corporate/Employee/download-taxi-bookings', employee_views.download_taxi_bookings),
     path('Corporate/Employee/download-bus-bookings', employee_views.download_bus_bookings),

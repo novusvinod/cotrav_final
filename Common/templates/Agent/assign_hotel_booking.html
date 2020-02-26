@@ -168,7 +168,7 @@
     <input type="hidden" name="sgst_amount" id="sgst_amount" value="0">
     <input  class="form-control" type="hidden"  name="assign_room_type" value="{{booking.room_type_id}}">
     <input  class="form-control" type="hidden" name="no_of_seats" id="no_of_seats" value="{{booking.no_of_seats}}">
-
+<input class = "mdl-textfield__input" type="hidden" name="no_of_days" id="no_of_days_send">
 
 						<div class="col-sm-12">
 							<div class="card card-box" >
@@ -367,7 +367,7 @@
 
                           <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                     <input class = "mdl-textfield__input" type="number" name="ticket_price" id="ticket_price" value="" >
+					                     <input class = "mdl-textfield__input fixed" decimals="2" type="number" name="ticket_price" id="ticket_price" value="" >
 					                     <label class = "mdl-textfield__label">Room Price:</label>
 					                  </div>
 						            </div>
@@ -482,14 +482,14 @@
 
                                <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                       <input type="number" class="mdl-textfield__input" name="oper_ticket_price" id="oper_ticket_price" >
+					                       <input type="number" decimals="2" class="mdl-textfield__input fixed" name="oper_ticket_price" id="oper_ticket_price" >
 					                     <label class = "mdl-textfield__label">Room Price:</label>
 					                  </div>
 						            </div>
 
                                <div class="col-lg-2 p-t-20" >
 						              <div class = "mdl-textfield mdl-textfield--floating-label txt-full-width is-dirty" >
-					                       <input type="number" class="mdl-textfield__input" name="operator_commission" id="operator_commission">
+					                       <input type="number" class="mdl-textfield__input fixed" decimals="2" name="operator_commission" id="operator_commission">
 					                     <label class = "mdl-textfield__label">Commission:</label>
 					                  </div>
 						            </div>
@@ -837,10 +837,15 @@ function valueChanged()
 				}
 				if(adHour >= 12 && ddHour > 12)
 				days += 1;
-				if(days > 1)
+				if(days > 1){
 				$('#no_of_days').val(days);
-				else
+				$('#no_of_days_send').val(days);
+				}
+				else{
 				$('#no_of_days').val(1);
+				$('#no_of_days_send').val(1);
+				}
+
 
 
 

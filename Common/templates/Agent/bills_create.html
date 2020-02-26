@@ -39,12 +39,12 @@
                            <div class="row">
 
                                <div class="col-sm-1">
-                                    <label class="form-control">Select Filter</label>
+                                    <label class="card-head">Select Filter</label>
                                 </div>
 
                                 <div class="col-sm-2">
                                     <select name="corporate_id" class="form-control myselect">
-                                         <option value="">Select Company</option>
+                                         <option value="">All Company</option>
                                         {% for company in companies %}
                                         <option value="{{company.id}}" {% if data.corporate_id == company.id %} selected {%endif%}>{{company.corporate_name}}</option>
                                         {% endfor %}
@@ -55,8 +55,12 @@
                                     <select name="service_type" class="form-control myselect">
                                          <option value="">Select Service Type</option>
                                          <option value="2" {% if data.service_type == '2' %} selected {%endif%}>Taxi</option>
+                                         <option value="5" {% if data.service_type == '5' %} selected {%endif%}>Bus</option>
+                                         <option value="6" {% if data.service_type == '6' %} selected {%endif%}>Train</option>
+                                         <option value="7" {% if data.service_type == '7' %} selected {%endif%}>Flight</option>
                                          <option value="3" {% if data.service_type == '3' %} selected {%endif%}>Travel(Bus,Train,Flight)</option>
                                          <option value="4" {% if data.service_type == '4' %} selected {%endif%}>Hotel</option>
+
                                     </select>
                                 </div>
 

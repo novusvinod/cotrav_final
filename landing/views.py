@@ -15,6 +15,8 @@ from django.contrib import messages
 from landing.utils import render_to_pdf
 from Common.email_settings import SignupEmail
 
+from threading import Thread, activeCount
+
 
 # Create your views here.
 def index_cs(request):
@@ -139,12 +141,20 @@ def testsignup(request):
 def testemail(request):
     corporate_name = "taxivaxi"
     contact_person_name = "vinod"
-    contact_person_no = "9876787676"
-    contact_person_email = "vinod@gmail.com"
+    contact_person_no = "9765420456"
+    contact_person_email = "sanketongmel@gmail.com"
     corporate_location = "pune"
     message = "testing cotrav"
     signup = SignupEmail(corporate_name,corporate_location,contact_person_name,contact_person_no,contact_person_email,message)
-    resp1 = signup.send_test_email()
+    thread = Thread(target=signup.send_email, args=())
+    resp1 = thread.start()
+    #resp1 = signup.send_test_email()
+
+    # sm = BookingEmail(params)
+    # thread = Thread(target=sm.send_email2, args=())
+    # thread.start()
+
+
     return HttpResponse(resp1)
 
 

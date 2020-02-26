@@ -18,12 +18,12 @@ subgroup_id = 1
 
 tour_type = 1
 pickup_city = 276
-pickup_location = "Mumbai, Maharashtra, India"
-pickup_location_train = 224
-drop_location = "Pune, Maharashtra, India"
-drop_location_train = 244
-pickup_datetime = "2020-01-30 12:00:00"
-booking_datetime = "2020-01-13 12:00:00"
+pickup_location = "Pune, Maharashtra, India"
+pickup_location_train = 412
+drop_location = "Mumbai, Maharashtra, India"
+drop_location_train = 323
+pickup_datetime = "2019-07-24 05:00:00"
+booking_datetime = "2019-07-24 03:00:00"
 taxi_type = "1"
 package_id = "1"
 no_of_days = "1"
@@ -77,8 +77,8 @@ extra_km_charges ="0"
 driver_allowance ="0"
 total_excluding_tax = "0"
 other_charges = "0"
-total = "1220"
-sub_total = "1200"
+total = "2000"
+sub_total = "2200"
 
 bus_type = "1"
 preferred_bus = "Test Bus"
@@ -87,10 +87,10 @@ pnr_no = "PNR12345"
 assign_bus_type_id = "1"
 seat_no = "11"
 portal_used = "1"
-operator_name = "Pintu Kumar"
+operator_name = "Mahesh Kumar"
 operator_contact = "9876543131"
 boarding_point = "Pune Bus Stand"
-boarding_datetime = "2020-01-23 12:00:00"
+boarding_datetime = "2019-07-23 12:00:00"
 
 oper_ticket_price = "1000"
 oper_commission = "200"
@@ -110,20 +110,20 @@ journey_type = "One Way"
 flight_class = "Economy"
 no_of_stops = "0"
 flight_from = ["Pune","Mumbai"]
-departure_time = ["2020-01-23 12:00:00","2020-01-23 12:00:00"]
-arrival_time = ["2020-01-23 12:00:00","2020-01-23 12:00:00"]
+departure_time = ["2019-07-12 12:00:00","2019-07-15 05:30:33"]
+arrival_time = ["2019-07-15 23:00:00","2019-07-17 07:00:00"]
 flight_name = ["Spice Jet","Spice Jet"]
-flight_no = ["Fligh54325","Fligh54325"]
-flight_to = ["Pune","Mumbai"]
+flight_no = ["Fligh4444","Fligh76565"]
+flight_to = ["Bengalore","Kolkata"]
 is_return_flight = ["0","0"]
 finalpass = 1
 employee_booking_id = ["1","2"]
-ticket_number = ["Ti142","Ti142"]
-train_name = "Pune-Mumbai Exp"
+ticket_number = ["Ti123","Ti456"]
+train_name = "Indrayani Exp"
 
 
 def add_flight(request):
-    for x in range(1, 100):
+    for x in range(1, 10):
         cursor3 = connection.cursor()
         cursor3.callproc('addFlightBooking',
                         [usage_type, journey_type, flight_class, pickup_location, drop_location, booking_datetime,boarding_datetime,
@@ -178,7 +178,7 @@ def add_flight(request):
 
 
 def add_hotel(request):
-    for x in range(1, 100):
+    for x in range(1, 10):
         cursor = connection.cursor()
         cursor.callproc('addHotelBooking',
                         [pickup_city, pickup_city, preferred_area, boarding_datetime, boarding_datetime,
@@ -216,7 +216,7 @@ def add_hotel(request):
 
 
 def add_train(request):
-    for x in range(1, 100):
+    for x in range(1, 10):
         cursor = connection.cursor()
         cursor.callproc('addTrainBooking',
                         [user_type, user_id, corporate_id, spoc_id, group_id, subgroup_id, pickup_location_train,
@@ -248,7 +248,7 @@ def add_train(request):
 
 
 def add_bus(request):
-    for x in range(1, 5):
+    for x in range(1, 10):
         cursor = connection.cursor()
         cursor.callproc('addBusBooking',
                         [user_type, user_id, corporate_id, spoc_id, group_id, subgroup_id, pickup_location,
@@ -265,18 +265,17 @@ def add_bus(request):
         data = dictfetchall(cursor1)
         cursor1.close()
 
-        # cursor2 = connection.cursor()
-        # cursor2.callproc('assignBusBooking',
-        #                 [ticket_no, pnr_no, assign_bus_type_id, seat_no, portal_used, operator_name, operator_contact,
-        #                  boarding_point, boarding_datetime, last_booking_id, user_id, user_type, base_rate,
-        #                  management_fee, tax_on_management_fee, tax_on_management_fee_percentage, sub_total,
-        #                  cotrav_billing_entity, igst, cgst, sgst, management_fee_igst, management_fee_cgst,
-        #                  management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate,
-        #                  management_fee_sgst_rate, tax_mng_amt, oper_ticket_price, oper_commission,
-        #                  oper_commission_type, oper_cotrav_billing_entity, oper_igst, oper_cgst, oper_sgst,
-        #                  client_ticket_path, vender_ticket_path, igst_amount, cgst_amount, sgst_amount])
-        # company = dictfetchall(cursor2)
-        # cursor2.close()
+        cursor2 = connection.cursor()
+        cursor2.callproc('assignBusBooking',
+                        [ticket_no, pnr_no, assign_bus_type_id, seat_no, portal_used, operator_name, operator_contact,
+                         boarding_point, boarding_datetime, last_booking_id, user_id, user_type, base_rate,
+                         management_fee, tax_on_management_fee, tax_on_management_fee_percentage, sub_total,
+                         cotrav_billing_entity, igst, cgst, sgst, management_fee_igst, management_fee_cgst,
+                         management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate,
+                         management_fee_sgst_rate, tax_mng_amt, oper_ticket_price, oper_commission,
+                         oper_commission_type, oper_cotrav_billing_entity, oper_igst, oper_cgst, oper_sgst,
+                         client_ticket_path, vender_ticket_path, igst_amount, cgst_amount, sgst_amount])
+        company = dictfetchall(cursor2)
 
     data = {'success':1, 'message':'data insert Successfully..!'}
     return JsonResponse(data)
@@ -294,7 +293,7 @@ def get_test_data(request):
         return JsonResponse(data)
 
 def add_taxi(request):
-    for x in range(1, 100):
+    for x in range(1, 10):
         cursor = connection.cursor()
         cursor.callproc('addTaxiBooking',[user_type, user_id, entity_id, corporate_id, spoc_id, group_id, subgroup_id, tour_type,
                          pickup_city, pickup_location, drop_location, pickup_datetime,taxi_type, package_id, no_of_days, reason_booking, no_of_seats, assessment_code,
@@ -304,26 +303,24 @@ def add_taxi(request):
         print(last_booking_id)
         cursor.close()
 
-        # cursor1 = connection.cursor()
-        # cursor1.callproc('acceptTaxiBooking',[last_booking_id, user_id,user_type])
-        # data = dictfetchall(cursor1)
-        # cursor1.close()
-        #
-        # cursor2 = connection.cursor()
-        # cursor2.callproc('assignTaxiBooking', [vendor_booking_id, operator_id, driver_id, taxi_id, last_booking_id, user_id, user_type])
-        # company = dictfetchall(cursor2)
-        #
-        # cursor3 = connection.cursor()
-        # cursor3.callproc('addTaxiInvoice',
-        #                 [tax_on_management_fee, tax_on_management_fee_percentage, management_fee_igst, management_fee_cgst,
-        #                  management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate, management_fee_sgst_rate,
-        #                  igst_amount, cgst_amount, sgst_amount,
-        #                  hours_done, allowed_hours, extra_hours, charge_hour, days, start_km, end_km, kms_done, allowed_kms,
-        #                  extra_kms, extra_km_rate, base_rate, extra_hr_charges,
-        #                  extra_km_charges, driver_allowance, total_excluding_tax, other_charges, total, sub_total,
-        #                  radio_rate, bb_entity, cotrav_billing_entity, last_booking_id, user_id, user_type])
-        # company = dictfetchall(cursor3)
+        cursor1 = connection.cursor()
+        cursor1.callproc('acceptTaxiBooking',[last_booking_id, user_id,user_type])
+        data = dictfetchall(cursor1)
+        cursor1.close()
+
+        cursor2 = connection.cursor()
+        cursor2.callproc('assignTaxiBooking', [vendor_booking_id, operator_id, driver_id, taxi_id, last_booking_id, user_id, user_type])
+        company = dictfetchall(cursor2)
+
+        cursor3 = connection.cursor()
+        cursor3.callproc('addTaxiInvoice',
+                        [tax_on_management_fee, tax_on_management_fee_percentage, management_fee_igst, management_fee_cgst,
+                         management_fee_sgst, management_fee_igst_rate, management_fee_cgst_rate, management_fee_sgst_rate,
+                         igst_amount, cgst_amount, sgst_amount,
+                         hours_done, allowed_hours, extra_hours, charge_hour, days, start_km, end_km, kms_done, allowed_kms,
+                         extra_kms, extra_km_rate, base_rate, extra_hr_charges,
+                         extra_km_charges, driver_allowance, total_excluding_tax, other_charges, total, sub_total,
+                         radio_rate, bb_entity, cotrav_billing_entity, last_booking_id, user_id, user_type])
+        company = dictfetchall(cursor3)
     data = {'success':1, 'message':'data insert Successfully..!'}
     return JsonResponse(data)
-
-

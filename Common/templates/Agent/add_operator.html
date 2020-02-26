@@ -196,20 +196,20 @@
                                             <label class="col-sm-4" for="simpleFormEmail">Night Start Time</label>
                                          {% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control timepicker1" name="night_start_time" value="{{operator.night_start_time}}">
+                                            <input type="text" class="col-sm-8 form-control timepicker1" autocomplete="off" name="night_start_time" value="{{operator.night_start_time}}">
                                             {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control timepicker1" name="night_start_time" placeholder="Night Start Time">
+                                            <input type="text" class="col-sm-8 form-control timepicker1" autocomplete="off" name="night_start_time" placeholder="Night Start Time">
                                          {% endif %}
                                         </div>
 
                                      <div class="form-group row" id="row_end_time">
                                             <label class="col-sm-4" for="simpleFormEmail">Night End Time</label>{% if operators %}
                                             {% for operator in operators %}
-                                            <input type="text" class="col-sm-8 form-control timepicker1" name="night_end_time"  value="{{operator.night_end_time}}">
+                                            <input type="text" class="col-sm-8 form-control timepicker1" autocomplete="off" name="night_end_time"  value="{{operator.night_end_time}}">
                                             {% endfor %}
                                               {% else %}
-                                            <input type="text" class="col-sm-8 form-control timepicker1" name="night_end_time" placeholder="Night End Time">
+                                            <input type="text" class="col-sm-8 form-control timepicker1" autocomplete="off" name="night_end_time" placeholder="Night End Time">
                                          {% endif %}
                                         </div>
 

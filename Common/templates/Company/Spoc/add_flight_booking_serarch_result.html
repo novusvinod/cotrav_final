@@ -75,14 +75,14 @@
                                  <div class="row">
                                   <div class="col-sm-3 ">
                                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option_1">
-                                              <input type="radio" id="option_1" class="mdl-radio__button" name="trip_type" value="1" {% if booking_datas.trip_type == '1' %} checked {%endif%} checked >
+                                              <input type="radio" id="option_1" class="mdl-radio__button " name="trip_type" value="1" {% if booking_datas.trip_type == '1' %} checked {%endif%} checked >
                                               <span class="mdl-radio__label">One-Way</span>
                                             </label>
                                  </div>
 
                                    <div class="col-sm-3 ">
                                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option_2">
-                                              <input type="radio" id="option_2" class="mdl-radio__button" name="trip_type" value="2" {% if booking_datas.trip_type == '2' %} checked {%endif%}>
+                                              <input type="radio" id="option_2" class="mdl-radio__button " name="trip_type" value="2" {% if booking_datas.trip_type == '2' %} checked {%endif%}>
                                               <span class="mdl-radio__label">Round-Trip</span>
                                             </label>
                                         </div>
@@ -121,13 +121,13 @@
 
                                       <div class="col-sm-2 border_right">
                                         <p class="md_fli_fnt"><i class="fa fa-calendar"></i> DEPARTURE DATE</p>
-                                          <input class = "floating-label mdl-textfield__input datepicker2" type="text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
+                                          <input class = "floating-label mdl-textfield__input datepicker2" autocomplete="off"  type="text" name="departure_date" id="departure_date" style="border:none;background: none; background-color: none;">
                                                  <input type="hidden" value="{{ booking_datas.departure_datetime }}" id="d_date">
                                     </div>
 
                                      <div class="col-sm-2 border_right">
                                         <p  class="md_fli_fnt"><i class="fa fa-calendar"></i> RETURN DATE</p>
-                                          <input class = "floating-label mdl-textfield__input datepicker2" type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
+                                          <input class = "floating-label mdl-textfield__input datepicker2" autocomplete="off"  type = "text" name="return_date" id="return_date" style="border:none;background: none; background-color: none;">
                                                  <input type="hidden" value="{{ booking_datas.return_date }}" id="r_date">
                                       </div>
 
@@ -200,6 +200,7 @@
                                              <thead>
                                                     {% if forloop.counter == 1 %}
                                                     <tr class="bg_color" >
+                                                        <th colspan="2">Select</th>
                                                         <th colspan="2">Airline</th>
                                                         <th colspan="2">Departure</th>
                                                         <th colspan="2">Duration</th>
@@ -253,7 +254,7 @@
                                                             <input type="hidden" name="trip_string" value="{{param.Trip_String}}">
                                                             {% endfor %}
 
-                                                          <td colspan="2">  <p class="font_txt1 butn_color"><a href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" class="read accordion-toggle accordion-toggle-styled" > <i class="fa fa-angle-down"></i> Flight Details</a></p></td>
+                                                          <td colspan="2">  <p class="font_txt1 butn_color"><a href="#collapse_31_{{forloop.counter}}" data-toggle="collapse" class="read accordion-toggle accordion-toggle-styled" > <i class="fa fa-angle-down"></i> Flight Details</a></p></td>
 
                                                        </tr>
                                                        </tbody>
@@ -261,7 +262,7 @@
 
 
 
-                                              <div id="collapse_3_{{forloop.counter}}" class="panel-collapse collapse ">
+                                              <div id="collapse_31_{{forloop.counter}}" class="panel-collapse collapse ">
                                                   <div class="panel-body">
                                              <div class="table-responsive mar_blk border_panel">
 
@@ -279,7 +280,7 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="home1_{{forloop.counter}}">
 
-                                            <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
+                                            <table class="table display product-overview mb-30 table_txt_align ">
 
                                                 <tbody>
                                                 <p class="fli_bac">  Connected Flights </p>
@@ -287,7 +288,7 @@
                                              <tr>
 
 
-                                                <td >  <img alt="" src="../../assets/img/blog/flight_indigo.png" class="img_alig "/>{{flight_fl.FLIGHT_NAME}} <br>
+                                                <td >  <img style='background-position: {{flight.F_LOGO}}' class="fltLogo">{{flight_fl.FLIGHT_NAME}} <br>
                                                    <p class="font_txt">{{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}}</p></td>
 
                                                    <td>{{flight_fl.DEP_TIME}}<br><p class="font_txt1">{{flight_fl.ORG_NAME}}</p> </td>
@@ -295,10 +296,6 @@
                                                     <td>{{flight_fl.DURATION}}  <br> <p class="font_txt1">Non Stop<p></td>
 
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
-
-
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
-                                                    <td></td> <td></td> <td></td> <td></td><td></td><td></td>
 
                                                     </tr>
                                                  {% endfor %}
@@ -309,11 +306,8 @@
                                                      </table>
                                                  </div>
                                             <div class="tab-pane" id="about1_{{forloop.counter}}">
-                                                <p> {{flight_fl.FLIGHT_INFO}}</p>
-                                        </div> <div class="tab-pane" id="profile">
-                                             <p> {{flight_fl.LAYOVER_INFO}}</p>
-                                             <p> {{flight_fl.FLIGHT_INFO}}</p>
-                                    </div>
+                                                <p> mportant Rules: For B2C customers 200Rs charges per person per sector will be charged on all cancellations and 200Rs as Rescheduling charges. Changes/cancellations are subject to 4hrs prior to departure. The charges are per passenger per sector. Partial cancellation is not allowed on tickets booked under special discounted fares. In case of no-show or ticket not cancelled within the stipulated time only statutory taxes are refundable Infant fare is non-refundable. The above Fare Rules are just a guideline for your convenience and is subject to changes by the Airline from time to time.</p>
+                                        </div>
 
 
                                               </div>
@@ -351,6 +345,7 @@
                                              <thead>
                                                     {% if forloop.counter == 1 %}
                                                     <tr class="bg_color" >
+                                                        <th colspan="2">Select</th>
                                                         <th colspan="2">Airline</th>
                                                         <th colspan="2">Departure</th>
                                                         <th colspan="2">Duration</th>
@@ -384,9 +379,6 @@
                                                         <p class="font_txt1">{{flight.F_CLASS}}</p></td>
 
                                                       <td colspan="2" height="100"  class="accordion-toggle accordion-toggle-styled"  href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" data-parent="#accordion3">  <i class="fa fa-inr"></i> {{flight.AMT}} <br>
-                                                        <p class="font_txt1">{{flight.OI}}</p></td>
-
-
 
                                                             <input type="hidden" name="UID" value="{{flight.UID}}">
                                                             <input type="hidden" name="ID" value="{{flight.ID}}">
@@ -409,16 +401,16 @@
 
 
                                         <ul class="nav nav-tabs nav-tabs1">
-                                        <li class="nav-item"><a href="#home_{{forloop.counter}}" data-toggle="tab" class="active">Flight Details</a>
+                                        <li class="nav-item"><a href="#home2_{{forloop.counter}}" data-toggle="tab" class="active">Flight Details</a>
                                         </li>
-                                        <li class="nav-item"><a href="#about_{{forloop.counter}}" data-toggle="tab">Cancellation Policy</a>
+                                        <li class="nav-item"><a href="#about2_{{forloop.counter}}" data-toggle="tab">Cancellation Policy</a>
                                         </li>
 
                                     </ul>
                                 </header>
                                 <div class="panel-body">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="home_{{forloop.counter}}">
+                                        <div class="tab-pane active" id="home2_{{forloop.counter}}">
 
                                             <table class="table display product-overview mb-30 table_txt_align " id="support_table5">
 
@@ -428,7 +420,7 @@
                                              <tr>
 
 
-                                                <td >  <img alt="" src="../../assets/img/blog/flight_indigo.png" class="img_alig "/>{{flight_fl.FLIGHT_NAME}} <br>
+                                                <td >  <img style='background-position: {{flight.F_LOGO}}' class="fltLogo">{{flight_fl.FLIGHT_NAME}} <br>
                                                    <p class="font_txt">{{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}}</p></td>
 
                                                    <td>{{flight_fl.DEP_TIME}}<br><p class="font_txt1">{{flight_fl.ORG_NAME}}</p> </td>
@@ -438,9 +430,6 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
-                                                    <td></td> <td></td> <td></td> <td></td><td></td><td></td>
-
                                                     </tr>
                                                  {% endfor %}
 
@@ -449,12 +438,9 @@
                                                        </tbody>
                                                      </table>
                                                  </div>
-                                            <div class="tab-pane" id="about">
-                                                <p> {{flight_fl.FLIGHT_INFO}}</p>
-                                        </div> <div class="tab-pane" id="profile">
-                                             <p> {{flight_fl.LAYOVER_INFO}}</p>
-                                             <p> {{flight_fl.FLIGHT_INFO}}</p>
-                                    </div>
+                                            <div class="tab-pane" id="about2_{{forloop.counter}}">
+                                                <p> mportant Rules: For B2C customers 200Rs charges per person per sector will be charged on all cancellations and 200Rs as Rescheduling charges. Changes/cancellations are subject to 4hrs prior to departure. The charges are per passenger per sector. Partial cancellation is not allowed on tickets booked under special discounted fares. In case of no-show or ticket not cancelled within the stipulated time only statutory taxes are refundable Infant fare is non-refundable. The above Fare Rules are just a guideline for your convenience and is subject to changes by the Airline from time to time.</p>
+                                        </div>
 
 
                                               </div>
@@ -506,6 +492,8 @@
 
                                     <form method="post" action="/Corporate/Spoc/add-flight-booking-self-conformation/{{user.id}}">
                                             <input type="hidden" name="no_of_seats" value="{{no_of_seats}}">
+                                            <input type="hidden" name="departure_datetime" value="{{booking_datas.departure_datetime}}">
+                                            <input type="hidden" name="return_datetime" value="{{booking_datas.return_date}}">
                                         <div id="form_data_to_save"></div>
                                         <div id="form_data_to_save2"></div>
 
@@ -708,16 +696,18 @@
                                      <div class="panel-group accordion" id="accordion3">
 
 
-                                           <div class="table-responsive">
+                                           <div class="">
                                         <form method="post" action="/Corporate/Spoc/add-flight-booking-self-conformation/{{user.id}}">
                                             <input type="hidden" name="no_of_seats" value="{{no_of_seats}}">
+                                            <input type="hidden" name="departure_datetime" value="{{booking_datas.departure_datetime}}">
+                                            <input type="hidden" name="return_datetime" value="{{booking_datas.return_date}}">
 
                                             {% for deal in Deals %}
                                             {% if deal.TRIP == 'I' %}
                                                 <input type="hidden" name="flight_class_is_international" value="{{deal.TRIP}}">
                                             {% endif %}
                                             {% endfor %}
-                                        <table class="table display product-overview mb-30 table_txt_align" >
+                                        <table class="table display product-overview mb-30 table_txt_align" style="margin-bottom:-25px;">
                                              <thead>
                                                     {% if forloop.counter == 1 %}
                                                     <tr class="bg_color" >
@@ -770,7 +760,7 @@
                                                             <input type="hidden" name="trip_string" value="{{param.Trip_String}}">
                                                             {% endfor %}
 
-                                                          <td colspan="2"> <input type="submit" value="Book" class="btn btn-info"> <p class="font_txt1 butn_color"><a href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" class="read accordion-toggle accordion-toggle-styled" > <i class="fa fa-angle-down"></i> Flight Details</a></p></td>
+                                                          <td colspan="2"> <input type="submit" value="Book Now" class="btn btn-info"> <p class="font_txt1 butn_color"><a href="#collapse_3_{{forloop.counter}}" data-toggle="collapse" class="read accordion-toggle accordion-toggle-styled" > <i class="fa fa-angle-down"></i> Flight Details</a></p></td>
 
                                                        </tr>
                                                        </tbody>
@@ -805,7 +795,7 @@
                                              <tr>
 
 
-                                                <td >  <img alt="" src="../../assets/img/blog/flight_indigo.png" class="img_alig "/>{{flight_fl.FLIGHT_NAME}} <br>
+                                                <td >  <img style='background-position: {{flight.F_LOGO}}' class="fltLogo">{{flight_fl.FLIGHT_NAME}} <br>
                                                    <p class="font_txt">{{flight_fl.FLIGHT_CODE}}-{{flight_fl.FLIGHT_NO}}</p></td>
 
                                                    <td>{{flight_fl.DEP_TIME}}<br><p class="font_txt1">{{flight_fl.ORG_NAME}}</p> </td>
@@ -815,8 +805,7 @@
                                                     <td> {{flight_fl.ARRV_TIME}}  <br><p class="font_txt1">{{flight_fl.DES_NAME}}</p></td>
 
 
-                                                    <td> <i class="fa fa-inr"></i> {{flight_fl.AMT}} <br><p class="font_txt1">Partially Refundable</p></td>
-                                                    <td></td> <td></td> <td></td> <td></td><td></td><td></td>
+
 
                                                     </tr>
                                                  {% endfor %}
@@ -912,12 +901,19 @@ $('#flight_loader').hide();
 
 $(document).ready(function(){
 
+var trip_type = $('input[name="trip_type"]:checked').val();
+if(trip_type == '2'){
+$("#return_date").show();
+}else{
+$("#return_date").hide();
+}
+
+
 $("form").submit(function(){
 $('#flight_loader').show();
 
 });
 
-$("#return_date").hide();
 $('#option_2').change(function() {
         if(this.checked) {
             $("#return_date").show();

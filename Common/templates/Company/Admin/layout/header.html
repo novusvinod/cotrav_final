@@ -174,6 +174,38 @@
 
        });
 
+       $('.datetimepicker2').datetimepicker(
+         {
+           minDate: 0,
+           inline: true,
+           sideBySide: true,
+           autoclose: true,
+           format: 'dd-mm-yyyy hh:ii', /*remove this line if you want to use time as well */
+           startDate: new Date(),  /* disable past date*/
+           orientation: 'bottom left',
+
+       });
+
+       $(".datetimepicker1").on("changeDate", function (e) {
+            var minDate = new Date(e.date.valueOf());
+            $('.datetimepicker2').datetimepicker('setStartDate', minDate);
+        });
+
+    $(".datetimepicker2").on("changeDate", function (e) {
+         var maxDate = new Date(e.date.valueOf());
+        $('.datetimepicker1').datetimepicker('setEndDate', maxDate);
+    });
+
+       $('.datepicker_download').datetimepicker(
+         {
+           inline: true,
+           sideBySide: true,
+           showMeridian: true,
+           minView: 2,
+           autoclose: true,
+           format: 'dd-mm-yyyy', /*remove this line if you want to use time as well */
+       });
+
        $('.datepicker1').datetimepicker(
          {
            inline: true,
@@ -181,7 +213,8 @@
            showMeridian: true,
            minView: 2,
            autoclose: true,
-           format: 'dd-mm-yyyy' /*remove this line if you want to use time as well */
+           format: 'dd-mm-yyyy', /*remove this line if you want to use time as well */
+           startDate: new Date(),  /* disable past date*/
        });
 
         $('.datepicker2').datetimepicker(
@@ -194,6 +227,16 @@
            format: 'dd-mm-yyyy', /*remove this line if you want to use time as well */
            startDate: new Date(),  /* disable past date*/
        });
+
+       $(".datepicker1").on("changeDate", function (e) {
+            var minDate = new Date(e.date.valueOf());
+            $('.datepicker2').datetimepicker('setStartDate', minDate);
+        });
+
+    $(".datepicker2").on("changeDate", function (e) {
+         var maxDate = new Date(e.date.valueOf());
+        $('.datepicker1').datetimepicker('setEndDate', maxDate);
+    });
 
 
    });

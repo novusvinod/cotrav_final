@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('Common.URL.Api.approver_2_urls')),
     path('', include('Common.URL.Api.agent_urls')),
     path('', include('Common.URL.Api.operator_urls')),
+    path('', include('Common.URL.Api.self_booking_urls')),
 ######################### END CORPORATE URLS ####################
 
     path('api/login', api_views.login),
@@ -27,6 +28,15 @@ urlpatterns = [
     path('api/agent_dashboard', api_views.agent_dashboard),
     path('api/operator_dashboard', api_views.operator_dashboard),
 
+    path('api/update_fcm_regid', api_views.update_fcm_regid),
+    path('api/get_notice', api_views.get_notice),
+    path('api/send_broadcast_notification', api_views.send_broadcast_notification),
+    path('api/send_message_to_moblies', api_views.send_message_to_moblies),
+    path('api/send_mail_to_user', api_views.send_mail_to_user),
+
+    path('api/get_all_leads', api_views.get_all_leads),
+    path('api/add_lead', api_views.add_lead),
+    path('api/update_lead', api_views.update_lead),
 
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
@@ -95,6 +105,7 @@ urlpatterns = [
     path('api/billing_entities', api_views.billing_entities),
     path('api/view_billing_entitie', api_views.view_billing_entitie),
     path('api/admins', api_views.admins),
+    path('api/view_admin', api_views.view_admin),
     path('api/groups', api_views.groups),
     path('api/subgroups', api_views.subgroups),
     path('api/spocs', api_views.spocs),

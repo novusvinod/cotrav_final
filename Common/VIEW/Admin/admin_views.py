@@ -89,10 +89,10 @@ def assessment_cities(request,id):
 
             if city_id:
                 url = settings.API_BASE_URL + "update_assessment_cities"
-                opr_msg = "Assessment Cities Updated Successfully"
+                opr_msg = "Assessment City Updated Successfully..!"
             else:
                 url = settings.API_BASE_URL + "add_assessment_cities"
-                opr_msg = "Assessment Cities Added Successfully"
+                opr_msg = "Assessment City Added Successfully..!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
             if company['success'] == 1:
@@ -147,7 +147,7 @@ def assessment_codes(request,id):
                 opr_msg = "Assessment Code Updated Successfully"
             else:
                 url = settings.API_BASE_URL + "add_assessment_codes"
-                opr_msg = "Assessment Code Updated Successfully"
+                opr_msg = "Assessment Code Added Successfully"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
             print(company)
@@ -197,7 +197,7 @@ def delete_assessment_codes(request, id):
                 messages.success(request, 'Assessment Code Deleted Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Deleted Successfully"})
             else:
-                messages.error(request, 'Assessment Code Delete Operation Fails..!')
+                messages.error(request, 'Failed to Delete Assessment Code..!')
                 return HttpResponseRedirect(current_url, {'message': "Fails"})
         else:
             return HttpResponseRedirect("/login")
@@ -219,10 +219,10 @@ def delete_assessment_cities(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Assessment Cities Deleted Successfully')
+                messages.success(request, 'Assessment City Deleted Successfully')
                 return HttpResponseRedirect(current_url, {'message': "Deleted Successfully"})
             else:
-                messages.error(request, 'Assessment Cities Delete Operation Fails')
+                messages.error(request, 'Failed to Delete Assessment City..!')
                 return HttpResponseRedirect(current_url, {'message': "Fails"})
         else:
             return HttpResponseRedirect("/login")
@@ -368,10 +368,10 @@ def add_company_rate(request, id):
             payload = {'corporate_id': id}
             company = getDataFromAPI(login_type, access_token, url, payload)
             if company['success'] == 1:
-                messages.success(request, 'Company Rate Added Successfully..!')
+                messages.success(request, 'Company Package Added Successfully..!')
                 return HttpResponseRedirect("/Corporate/Admin/company-rates/" + id, {'message': "Added Successfully"})
             else:
-                messages.error(request, "This Rate Already Exists. Try with another data..!")
+                messages.error(request, "Similar Package Already Exists..!")
                 return HttpResponseRedirect("/Corporate/Admin/company-rates/" + id, {'message': "Operation Fails"})
         else:
             return HttpResponseRedirect("/login")
@@ -416,7 +416,7 @@ def add_company_entity(request, id):
 
             if entity_id:
                 url = settings.API_BASE_URL + "update_billing_entity"
-                operation_message = "Company Entity Updaed Successfully..!"
+                operation_message = "Company Entity Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_billing_entity"
                     operation_message = "Company Entity Deleted Successfully..!"
@@ -430,7 +430,7 @@ def add_company_entity(request, id):
                 messages.success(request, operation_message)
                 return HttpResponseRedirect(current_url,{})
             else:
-                messages.error(request, 'This Billing Entity Already Exists. Try with another data..!')
+                messages.error(request, 'Billing Entity Already Exists..!')
                 return HttpResponseRedirect(current_url,{})
         else:
             return HttpResponseRedirect("/login")
@@ -483,7 +483,7 @@ def add_company_group(request, id):
                 messages.success(request, 'Company Group Added Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
             else:
-                messages.error(request, 'This Group Already Exists. Try with another data..!')
+                messages.error(request, 'Group Name Already Exists..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -537,7 +537,7 @@ def add_company_subgroup(request, id):
                 messages.success(request, 'Add Company Subgroup Added Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
             else:
-                messages.error(request, 'This Subgroup Already Exists. Try with another data..!')
+                messages.error(request, 'Subgroup Name Already Exists..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -565,10 +565,10 @@ def update_company_group(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Company Group Update Successfully..!')
+                messages.success(request, 'Company Group Updated Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Update Successfully"})
             else:
-                messages.error(request, 'Fail to Update Company Group..! ')
+                messages.error(request, 'Company Group Update Failed..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Updated"})
         else:
             return HttpResponseRedirect("/login")
@@ -595,10 +595,10 @@ def update_company_subgroup(request, id):
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
-                messages.success(request, 'Company Subgroup Update Successfully..!')
+                messages.success(request, 'Company Subgroup Updated Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Update Successfully"})
             else:
-                messages.error(request, 'Fail To Update Company Subgroup..!')
+                messages.error(request, 'Company Subgroup Update Failed..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Updated"})
         else:
             return HttpResponseRedirect("/login")
@@ -625,7 +625,7 @@ def delete_company_group(request, id):
                 messages.success(request, 'Company Group Deleted Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Delete Successfully"})
             else:
-                messages.error(request, 'Fail To Delete Company Group..!')
+                messages.error(request, 'Company Group Deletion Failed..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -652,7 +652,7 @@ def delete_company_subgroup(request, id):
                 messages.success(request, 'Company Sub-group Deleted Successfully..!')
                 return HttpResponseRedirect(current_url, {'message': "Delete Successfully"})
             else:
-                messages.error(request, 'Fail to Delete Company Sub-group..!')
+                messages.error(request, 'Company Sub-group Deletion Failed..!')
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
         else:
             return HttpResponseRedirect("/login")
@@ -711,20 +711,20 @@ def add_company_group_auth(request, id):
             url = ""
             if group_auth_id:
                 url = settings.API_BASE_URL + "update_group_auth"
-                oper_msg = "Company Group Authentication Updated Successful"
+                oper_msg = "Company Group Authentication Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_group_auth"
-                    oper_msg = "Company Group Authentication Deleted Successful"
+                    oper_msg = "Company Group Authentication Deleted Successfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_group_auth"
-                oper_msg = "Company Group Authentication Added Successful"
+                oper_msg = "Company Group Authentication Added Successfully..!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
 
             if company['success'] == 1:
                 messages.success(request, oper_msg)
-                return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
+                return HttpResponseRedirect(current_url, {})
             else:
                 messages.error(request, "Authenticator Already Exists. Try with another data..!")
                 return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
@@ -785,14 +785,14 @@ def add_company_subgroup_auth(request, id):
             url = ""
             if subgroup_auth_id:
                 url = settings.API_BASE_URL + "update_subgroup_auth"
-                operation_msg = "Company SubGroup Authentication Updated Successful"
+                operation_msg = "Company SubGroup Authentication Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_subgroup_auth"
-                    operation_msg = "Company SubGroup Authentication Deleted Successful"
+                    operation_msg = "Company SubGroup Authentication Deleted Successfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_subgroup_auth"
-                operation_msg = "Company SubGroup Authentication Added Successful"
+                operation_msg = "Company SubGroup Authentication Added Successfully..!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -835,6 +835,7 @@ def add_company_admins(request, id):
             is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
             is_send_email = request.POST.get('is_send_email', '')
             is_send_sms = request.POST.get('is_send_sms', '')
+            has_billing_access = request.POST.get('has_billing_access', '')
             admin_id = request.POST.get('admin_id')
 
             delete_id = request.POST.get('delete_id')
@@ -849,21 +850,21 @@ def add_company_admins(request, id):
                        'is_radio': is_radio, 'is_local': is_local, 'is_outstation': is_outstation, 'is_bus': is_bus,
                        'is_train': is_train, 'is_hotel': is_hotel, 'is_meal': is_meal, 'is_flight': is_flight,
                        'is_water_bottles': is_water_bottles, 'is_reverse_logistics': is_reverse_logistics,
-                       'admin_id': admin_id, 'delete_id': delete_id, 'password': password,
+                       'admin_id': admin_id, 'delete_id': delete_id, 'password': password,'has_billing_access':has_billing_access,
                        'access_token_auth': access_token_auth,'is_send_email':is_send_email,'is_send_sms':is_send_sms}
 
             url = ""
             print(payload)
             if admin_id:
                 url = settings.API_BASE_URL + "update_admin"
-                opration_msg = "Company Admin Updated Successfully"
+                opration_msg = "Company Admin Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_admin"
-                    opration_msg = "Company Admin Deleted Successfully"
+                    opration_msg = "Company Admin Deleted Successfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_admin"
-                opration_msg = "Company Admin Added Successfully"
+                opration_msg = "Company Admin Added Successfully..!"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
             print(company)
@@ -933,17 +934,17 @@ def add_spocs(request, id):
             print(payload)
             if spoc_id:
                 url = settings.API_BASE_URL + "update_spoc"
-                success_msg = "Spoc Updated Successfully"
+                success_msg = "Spoc Updated Successfully..!"
                 if delete_id == '1':
                     url = settings.API_BASE_URL + "delete_spoc"
-                    success_msg = "Spoc In-Active Successfully"
+                    success_msg = "Spoc De-Activated Successfully..!"
                 if delete_id == '2':
                     url = settings.API_BASE_URL + "active_spoc"
-                    success_msg = "Spoc Active Successfully"
+                    success_msg = "Spoc Activated Successfully..!"
 
             else:
                 url = settings.API_BASE_URL + "add_spoc"
-                success_msg = "Spoc Added Successfully"
+                success_msg = "Spoc Added Successfully..1"
 
             company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -1215,10 +1216,11 @@ def accept_taxi_booking(request,id):
         access_token = request.session['admin_access_token']
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user_id = request.user.id
 
         url = settings.API_BASE_URL + "admin_accept_taxi_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -1226,7 +1228,7 @@ def accept_taxi_booking(request,id):
             messages.success(request, 'Taxi Booking Accepted Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Taxi Booking Fail To Accept..!')
+            messages.error(request, 'Taxi Booking Failed To Accept..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1241,16 +1243,18 @@ def reject_taxi_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_reject_taxi_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
         print(company)
         if company['success'] == 1:
+            messages.error(request, 'Taxi Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Reject Taxi Booking')
+            messages.error(request, 'Failed To Reject Taxi Booking')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1305,10 +1309,10 @@ def add_taxi_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Taxi Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Admin/taxi-bookings/2", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Fail To Reject Taxi Booking')
+                messages.error(request, 'Failed To Add Taxi Booking')
                 return HttpResponseRedirect("/Corporate/Admin/taxi-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -1413,9 +1417,11 @@ def accept_bus_booking(request,id):
         access_token = request.session['admin_access_token']
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_accept_bus_booking"
-        payload = {'booking_id': id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -1423,7 +1429,7 @@ def accept_bus_booking(request,id):
             messages.success(request, 'Bus Booking Accepted Successfully...!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Accept Bus Booking...!')
+            messages.error(request, 'Failed To Accept Bus Booking...!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1438,16 +1444,17 @@ def reject_bus_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_reject_bus_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Bus Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Reject Bus Booking...!')
+            messages.error(request, 'Failed To Reject Bus Booking...!')
             return HttpResponseRedirect(current_url , {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1498,10 +1505,10 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Bus Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Admin/bus-bookings/2", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Bus Booking Not Added Successfully..!')
+                messages.error(request, 'Failed to Add Bus Booking..!')
                 return HttpResponseRedirect("/Corporate/Admin/bus-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -1601,9 +1608,11 @@ def accept_train_booking(request,id):
         access_token = request.session['admin_access_token']
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_accept_train_booking"
-        payload = {'booking_id': id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -1611,7 +1620,7 @@ def accept_train_booking(request,id):
             messages.success(request, 'Train Booking Accepted Successfully...!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Accept Train Booking..!')
+            messages.error(request, 'Failed To Accept Train Booking..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1626,16 +1635,17 @@ def reject_train_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_reject_train_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Train Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Reject Train Booking..!')
+            messages.error(request, 'Failed To Reject Train Booking..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1687,10 +1697,10 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Train Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Admin/train-bookings/1", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Train Booking Not Added Successfully..!')
+                messages.error(request, 'Failed to Add Train Booking..!')
                 return HttpResponseRedirect("/Corporate/Admin/train-bookings/1", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -1797,9 +1807,11 @@ def accept_hotel_booking(request,id):
         access_token = request.session['admin_access_token']
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_accept_hotel_booking"
-        payload = {'booking_id': id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -1807,7 +1819,7 @@ def accept_hotel_booking(request,id):
             messages.success(request, 'Hotel Booking Accepted Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Accept Hotel Booking..!')
+            messages.error(request, 'Failed To Accept Hotel Booking..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1822,16 +1834,17 @@ def reject_hotel_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_reject_hotel_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Hotel Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Reject Hotel Booking..!')
+            messages.error(request, 'Failed To Reject Hotel Booking..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -1893,10 +1906,10 @@ def add_hotel_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Hotel Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Admin/hotel-bookings/2", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Hotel Booking Not Added Successfully..!')
+                messages.error(request, 'Failed to Add Hotel Booking..!')
                 return HttpResponseRedirect("/Corporate/Admin/hotel-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -2004,9 +2017,11 @@ def accept_flight_booking(request,id):
         access_token = request.session['admin_access_token']
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
+        booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_accept_flight_booking"
-        payload = {'booking_id': id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
 
@@ -2014,7 +2029,7 @@ def accept_flight_booking(request,id):
             messages.success(request, 'Flight Booking Accepted Successfully...!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail To Accept Flight Booking...!')
+            messages.error(request, 'Failed To Accept Flight Booking...!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -2029,16 +2044,17 @@ def reject_flight_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
         url = settings.API_BASE_URL + "admin_reject_flight_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Flight Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fails to Reject Flight Booking..!')
+            messages.error(request, 'Failed to Reject Flight Booking..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
     else:
         return HttpResponseRedirect("/login")
@@ -2097,10 +2113,10 @@ def add_flight_booking(request,id):
             print(booking)
 
             if booking['success'] == 1:
-                messages.success(request, 'Flight Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Admin/flight-bookings/2", {'message': "Operation Successfully"})
             else:
-                messages.error(request, 'Flight Booking Not Added Successfully..!')
+                messages.error(request, 'Failed to Add Flight Booking..!')
                 return HttpResponseRedirect("/Corporate/Admin/flight-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")

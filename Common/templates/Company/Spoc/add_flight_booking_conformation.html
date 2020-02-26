@@ -5,7 +5,7 @@
 {% if user %}
 <!-- start page content -->
 
-{% include 'cotrav_alert_message.html' %}
+
 <style>
 
     #flight_loader {
@@ -25,6 +25,13 @@
         <!-- start page content -->
        <div class="page-content-wrapper">
     <div class="page-content">
+
+
+
+
+
+
+
               <div class="row">
                        <div class="col-sm-8 col-md-8 margin_auto">
                           <div class="card card-topline-aqua">
@@ -38,171 +45,263 @@
                                 <div class="card-body">
                                    <div class="table-wrap">
                                        {% if UID2 %}
-                                    {% for flight in flights.STATUSOW %}
-                                    {% if flight.status == 'F'%}
-                                    <h3 style="color:orange;">Onword Flight Please note change in fare, do you want to continue or cancel the booking? </h3>
-                                    {% endif %}
-                                 {% endfor %}
 
-                                 {% for flight in flights.STATUSRT %}
-                                    {% if flight.status == 'F'%}
-                                    <h3 style="color:orange;">Return Flight Please note change in fare, do you want to continue or cancel the booking?</h3>
-                                    {% endif %}
-                                    {% endfor %}
+                                       {% for flight in flights.STATUSOW %}
+    {% if flight.status == 'F'%}
+      <input type="hidden" name="onword_flight_alert" id="onword_flight_alert" value="1">
 
-                                 {% else %}
-                                    {% for flight in flights.STATUS %}
-                                    {% if flight.status == 'F'%}
-                                    <h3 style="color:red;">Please note change in fare, do you want to continue or cancel the booking?</h3>
-                                    {% endif %}
-                                    {% endfor %}
-                                  {% endif %}
+    {% endif %}
+ {% endfor %}
+
+ {% for flight in flights.STATUSRT %}
+    {% if flight.status == 'F'%}
+    <input type="hidden" name="return_flight_alert" id="return_flight_alert" value="1">
+
+    {% endif %}
+    {% endfor %}
+
+ {% else %}
+    {% for flight in flights.STATUS %}
+    {% if flight.status == 'F'%}
+     <input type="hidden" name="flight_alert" id="flight_alert" value="1">
+
+    {% endif %}
+    {% endfor %}
+  {% endif %}
 
                                         <div class="table-responsive tblDriverDetail">
                                             {% if UID2 %}
-                                            <h3>OnWords Flight Details</h3>
-
+                                            <h4 class="text-center" style="border-top:none; font-size:12px; font-weight:bold; background: #f7f7f7;">OnWords Flight Details</h4>
+                                            <br>
                                             {% for flight in flights.FLIGHTOW %}
+
                                              <table class="table display product-overview mb-30 table_txt_align" id="support_table1">
                                               <thead>
                                                  <tr>
                                                     <div class="txt-block-1">{{flight.ORG_NAME}} <i class="fa fa-long-arrow-right"></i>{{flight.DES_NAME}} </div>
-                                                     <p>{{flight.DEP_DATE}}<br> </p>
+                                                     <p>{{departure_datetime}}<br>  </p>
+                                                     {% for fare in flights.FAREOW %}
+                                                     <div class="block_txt"> <span class="payment_refund">{{fare.REFUNDABLE}}</span> </div>
+                                                     {% endfor %}
 
                                                 </tr>
                                              </thead>
 
-                                                <tbody>
-                                                    <tr>
-                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
-                                                       </td>
-                                                        <td >{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}}
-                                                            <br>{{flight.ORG_NAME}} Airport</p> </td>
-
-                                                        <td>{{flight.DURATION}} <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{flight.STOP}} Stop<p></td>
-
-                                                     <td>{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}}
-                                                            <br>{{flight.DES_NAME}} Airport</p> </td>
-
-                                                    </tr>
-                                                </tbody>
-
+                                                 {% if flights.CON_FLIGHTOW %}
                                                  {% for containg in flights.CON_FLIGHTOW %}
-                                                 <tbody>
+                                                 <tbody style="border:none;">
                                                     <tr>
-                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo">  {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
+                                                        <td style="border:none;"> <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo">  {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
                                                        </td>
-                                                        <td >{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}}
-                                                            <br>{{containg.ORG_NAME}} Airport</p> </td>
+                                                        <td style="border:none;">{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}} Airport</p> </td>
 
-                                                        <td>{{containg.DURATION}}   <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{containg.STOP}} Stop<p></td>
+                                                        <td style="border:none;">{{containg.DURATION}}   <br> <i class="fa fa-exchange"></i> </td>
 
-                                                     <td>{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}}
-                                                            <br>{{containg.DES_NAME}} Airport</p> </td>
+                                                     <td style="border:none;">{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}} Airport</p> </td>
 
                                                     </tr>
                                                 </tbody>
+                                                 {% if forloop.counter == 1 %}
+                                                  <tbody style="border:none;">
+
+                                                   <tr >
+
+                                                          <td colspan="4" style="border-top:none">
+                                                           <div  id="why">
+                                                          Layover Time : &nbsp;&nbsp; {{dayHours_onword}}
+                                                        </div>
+                                                        <div id="large-div-text">
+
+                                                        </div>
+                                                           </td>
+
+                                                   </tr>
+                                                </tbody>
+                                                 {% endif %}
 
                                                  {% endfor %}
+                                                 {% else %}
+                                                <tbody style="border:none;">
+                                                    <tr>
+                                                        <td style="border:none;"> <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td style="border:none;">{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}} Airport</p> </td>
+
+                                                        <td style="border:none;">{{flight.DURATION}} <br> <i class="fa fa-exchange"></i></td>
+
+                                                     <td style="border:none;">{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+                                                </tbody>
+                                                 {% endif %}
+
+
 
                                             </table>
                                              {% endfor %}
 
-                                            <h3>Return Flight Details</h3>
+                                            <h4 class="text-center" style="border-top:none; font-size:12px; font-weight:bold; background: #f7f7f7;">Return Flight Details</h4>
+                                            <br>
                                             {% for flight in flights.FLIGHTRT %}
-                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table1">
+                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table1" border="0">
                                               <thead>
                                                  <tr>
                                                     <div class="txt-block-1">{{flight.ORG_NAME}} <i class="fa fa-long-arrow-right"></i>{{flight.DES_NAME}} </div>
-                                                     <p>{{flight.DEP_DATE}}<br> </p>
+                                                     <p>{{return_datetime}}<br> </p>
+                                                     {% for fare in flights.FARERT %}
+                                                     <div class="block_txt"> <span class="payment_refund">{{fare.REFUNDABLE}}</span> </div>
+                                                     {% endfor %}
 
                                                 </tr>
                                              </thead>
 
-                                                <tbody>
+                                                 {% if flights.CON_FLIGHTRT %}
+                                                  {% for containg in flights.CON_FLIGHTRT %}
+                                                 <tbody style="border:none;">
                                                     <tr>
-                                                        <td >  <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo">  {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                        <td style="border:none;">  <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
                                                        </td>
-                                                        <td >{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}}
-                                                            <br>{{flight.ORG_NAME}} Airport</p> </td>
+                                                        <td style="border:none;">{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}} Airport</p> </td>
 
-                                                        <td>{{flight.DURATION}}   <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{flight.STOP}} Stop<p></td>
+                                                        <td style="border:none;">{{containg.DURATION}}   <br> <i class="fa fa-exchange"></i> </td>
 
-                                                     <td>{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}}
-                                                            <br>{{flight.DES_NAME}} Airport</p> </td>
+                                                     <td style="border:none;">{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}} Airport</td>
 
                                                     </tr>
                                                 </tbody>
 
-                                                 {% for containg in flights.CON_FLIGHTRT %}
-                                                 <tbody>
-                                                    <tr>
-                                                        <td >  <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
-                                                       </td>
-                                                        <td >{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}}
-                                                            <br>{{containg.ORG_NAME}} Airport</p> </td>
+                                                 {% if forloop.counter == 1 %}
+                                                  <tbody style="border:none;">
 
-                                                        <td>{{containg.DURATION}}   <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{containg.STOP}} Stop<p></td>
+                                                   <tr >
 
-                                                     <td>{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}}
-                                                            <br>{{containg.DES_NAME}} Airport</p> </td>
+                                                          <td colspan="4" style="border-top:none">
+                                                           <div  id="why">
+                                                          Layover Time : &nbsp;&nbsp; {{dayHours_return}}
+                                                        </div>
+                                                        <div id="large-div-text">
 
-                                                    </tr>
+                                                        </div>
+                                                           </td>
+
+                                                   </tr>
                                                 </tbody>
+                                                 {% endif %}
 
                                                  {% endfor %}
+                                                 {% else %}
+                                                <tbody style="border:none;">
+                                                    <tr>
+                                                        <td style="border:none;">  <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo">  {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td style="border:none;">{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br> {{flight.ORG_NAME}} Airport</p> </td>
+
+                                                        <td style="border:none;">{{flight.DURATION}}   <br> <i class="fa fa-exchange"></i> </td>
+
+                                                     <td style="border:none;">{{flight.ARRV_TIME}}<br><p class="font_txt1"> {{flight.ARRV_DATE}}<br> {{flight.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+                                                </tbody>
+                                                 {% endif %}
+
+
 
                                             </table>
                                              {% endfor %}
-
+<!-- ccccccccccccccccccccccccccccc -->
                                             {% else %}
+                                            <table class="table display product-overview mb-30 table_txt_align" id="support_table1" style="border:none;">
                                             {% for flight in flights.FLIGHT %}
-                                             <table class="table display product-overview mb-30 table_txt_align" id="support_table1">
-                                              <thead>
+                                                 <thead>
                                                  <tr>
-                                                    <div class="txt-block-1">{{flight.ORG_NAME}} <i class="fa fa-long-arrow-right"></i>{{flight.DES_NAME}} </div>
-                                                     <p>{{flight.DEP_DATE}}<br> </p>
+                                                    <div class="txt-block-1">{{flight.ORG_NAME}} <span><i class="fa fa-long-arrow-right"></i></span> {{flight.DES_NAME}} </div>
+                                                     <p>{{departure_datetime}}<br> </p>
+                                                     {% for fare in flights.FARE %}
+                                                     <div class="block_txt"> <span class="payment_refund">{{fare.REFUNDABLE}}</span> </div>
+                                                     {% endfor %}
 
                                                 </tr>
                                              </thead>
 
-                                                <tbody>
+                                                {% if flights.CON_FLIGHT %}
+
+                                            {% for containg in flights.CON_FLIGHT %}
+                                                 <tbody style="border:none;">
                                                     <tr>
-                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                        <td style="border:none;"> <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
                                                        </td>
-                                                        <td >{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}}
-                                                            <br>{{flight.ORG_NAME}} Airport</p> </td>
+                                                        <td style="border:none;">{{containg.DEP_TIME}}<br> <p class="font_txt1">{{containg.DEP_DATE}} <br>{{containg.ORG_NAME}} Airport</p> </td>
 
-                                                        <td>{{flight.DURATION}}   <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{flight.STOP}} Stop<p></td>
+                                                        <td style="border:none;"> <i class="fa fa-exchange"></i> <br>{{containg.DURATION}}</td>
 
-                                                     <td>{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}}
-                                                            <br>{{flight.DES_NAME}} Airport</p> </td>
+                                                     <td style="border:none;">{{containg.ARRV_TIME}}<br><p class="font_txt1"> {{containg.ARRV_DATE}}<br> {{containg.DES_NAME}} Airport</p> </td>
 
                                                     </tr>
+
+
+                                                </tbody >
+                                                    {% if forloop.counter == 1 %}
+                                                  <tbody style="border:none;">
+
+                                                   <tr>
+
+
+                                                       <td colspan="4" style="border-top:none">
+                                                           <div  id="why">
+                                                          Layover Time : &nbsp;&nbsp; {{dayHours_onword}}
+                                                        </div>
+                                                        <div id="large-div-text">
+
+                                                        </div>
+                                                           </td>
+
+
+                                                   </tr>
                                                 </tbody>
+                                                 {% endif %}
 
-                                                 {% for containg in flights.CON_FLIGHT %}
-                                                 <tbody>
-                                                    <tr>
-                                                        <td > <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{containg.FLIGHT_NAME}} {{containg.FLIGHT_CODE}}-{{containg.FLIGHT_NO}} <br>
-                                                       </td>
-                                                        <td >{{containg.DEP_TIME}}<br><p class="font_txt1">{{containg.DEP_DATE}}<br>{{containg.ORG_NAME}}
-                                                            <br>{{containg.ORG_NAME}} Airport</p> </td>
 
-                                                        <td>{{containg.DURATION}}   <br> <i class="fa fa-exchange"></i> <p class="font_txt1 color_set">{{containg.STOP}} Stop<p></td>
-
-                                                     <td>{{containg.ARRV_TIME}}<br><p class="font_txt1">{{containg.ARRV_DATE}}<br>{{containg.DES_NAME}}
-                                                            <br>{{containg.DES_NAME}} Airport</p> </td>
-
-                                                    </tr>
-                                                </tbody>
 
                                                  {% endfor %}
 
-                                            </table>
-                                             {% endfor %}
+                                             {% else %}
 
+
+                                            {% for flight in flights.FLIGHT %}
+
+
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td  style="border:none;"> <img style='background-position: {{flight.FLIGHT_LOGO}}' class="fltLogo"> {{flight.FLIGHT_NAME}} {{flight.FLIGHT_CODE}}-{{flight.FLIGHT_NO}} <br>
+                                                       </td>
+                                                        <td  style="border:none;">{{flight.DEP_TIME}}<br><p class="font_txt1">{{flight.ORG_NAME}}
+                                                            <br>{{flight.DEP_DATE}}<br>{{flight.ORG_NAME}} Airport</p> </td>
+
+                                                        <td style="border:none;"><i class="fa fa-exchange"></i> <br>{{flight.DURATION}} </td>
+
+                                                     <td style="border:none;">{{flight.ARRV_TIME}}<br><p class="font_txt1">{{flight.DES_NAME}}
+                                                            <br>{{flight.ARRV_DATE}}<br>{{flight.DES_NAME}} Airport</p> </td>
+
+                                                    </tr>
+
+
+
+                                                </tbody>
+
+
+
+                                                 {% endfor %}
+
+
+
+
+                                             {% endif %}
+                                                {% endfor %}
+                                                </table>
+<!-- ccccccccccccccccccccccccccccc -->
                                             {% endif %}
+
                                         </div>
                                     </div>
                                </div>
@@ -226,10 +325,7 @@
 
 
                                                 <tbody>
-                                                 <tr>
-                                                       <td class="border-section fare_amt_td">Fare Type :</td>
-                                                         <td style="text-transform:uppercase" class="border-section fare_amt_td">{{fare.REFUNDABLE}}</td>
-                                                   </tr>
+
                                                    <tr>
                                                        <td class="border-section fare_amt_td"> Base Fare</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
@@ -247,11 +343,11 @@
                                                          <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
                                                    </tr>
 
-                                                   <tr>
-                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
-                                                       {{fare1.FARE_RULE}}
-                                                       {% endfor %}
-                                                   </tr>
+<!--                                                   <tr>-->
+<!--                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}-->
+<!--                                                       {{fare1.FARE_RULE}}-->
+<!--                                                       {% endfor %}-->
+<!--                                                   </tr>-->
 
 
 
@@ -271,10 +367,7 @@
 
 
                                                 <tbody>
-                                                <tr>
-                                                       <td class="border-section fare_amt_td">Fare Type :</td>
-                                                         <td style="text-transform:uppercase" class="border-section fare_amt_td">{{fare.REFUNDABLE}}</td>
-                                                   </tr>
+
                                                    <tr>
                                                        <td class="border-section fare_amt_td"> Base Fare</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
@@ -287,16 +380,16 @@
                                                        <td class="border-section fare_amt_td"> Total</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"> </i>{{fare.TOTAL_ADT}}</td>
                                                    </tr>
-                                                   <tr>
-                                                       <td class="fare_amt">Total Fare :</td>
+                                                   <tr style="background-color: whitesmoke;">
+                                                       <td class="fare_amt">Grand Total :</td>
                                                          <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
                                                    </tr>
 
-                                                   <tr>
-                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
-                                                       {{fare1.FARE_RULE}}
-                                                       {% endfor %}
-                                                   </tr>
+<!--                                                   <tr>-->
+<!--                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}-->
+<!--                                                       {{fare1.FARE_RULE}}-->
+<!--                                                       {% endfor %}-->
+<!--                                                   </tr>-->
 
 
 
@@ -313,10 +406,7 @@
 
 
                                                 <tbody>
-                                                <tr>
-                                                       <td class="border-section fare_amt_td">Fare Type :</td>
-                                                         <td style="text-transform:uppercase" class="border-section fare_amt_td">{{fare.REFUNDABLE}}</td>
-                                                   </tr>
+
                                                    <tr>
                                                        <td class="border-section fare_amt_td"> Base Fare</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
@@ -329,16 +419,16 @@
                                                        <td class="border-section fare_amt_td"> Total</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"> </i>{{fare.TOTAL_ADT}}</td>
                                                    </tr>
-                                                   <tr>
-                                                       <td class="fare_amt">Total Fare :</td>
+                                                   <tr style="background-color: whitesmoke;">
+                                                       <td class="fare_amt">Grand Total :</td>
                                                          <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
                                                    </tr>
 
-                                                   <tr>
-                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}
-                                                       {{fare1.FARE_RULE}}
-                                                       {% endfor %}
-                                                   </tr>
+<!--                                                   <tr>-->
+<!--                                                       Fare Rule : {% for fare1 in flights.FARE_RULE %}-->
+<!--                                                       {{fare1.FARE_RULE}}-->
+<!--                                                       {% endfor %}-->
+<!--                                                   </tr>-->
 
 
 
@@ -354,10 +444,7 @@
 
 
                                                 <tbody>
-                                                <tr>
-                                                       <td class="border-section fare_amt_td">Fare Type :</td>
-                                                         <td style="text-transform:uppercase" class="border-section fare_amt_td">{{fare.REFUNDABLE}}</td>
-                                                   </tr>
+
                                                    <tr>
                                                        <td class="border-section fare_amt_td"> Base Fare</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"></i>{{fare.BASIC_ADT}}</td>
@@ -370,8 +457,8 @@
                                                        <td class="border-section fare_amt_td"> Total</td>
                                                          <td class="border-section fare_amt_td"><i class="fa fa-inr"> </i>{{fare.TOTAL_ADT}}</td>
                                                    </tr>
-                                                   <tr>
-                                                       <td class="fare_amt">Total Fare :</td>
+                                                   <tr style="background-color: whitesmoke;">
+                                                       <td class="fare_amt">Grand Total :</td>
                                                          <td class="fare_amt"><i class="fa fa-inr"> </i>{{fare.GRAND_TOTAL}}</td>
                                                    </tr>
 
@@ -487,19 +574,19 @@
                 <div class="col-md-12">
              <div class="card card-topline-aqua">
                     <div class="card-head">
-                        <header>Passanger Details</header>
+                        <header>Passanger Details  </header>
                         <div class="tools">
                             <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
                             <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
                             <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
                         </div>
                     </div>
+                 <h5> <p style="color:orange;">IMPORTANT : Enter your name as it is mentioned on your passport or any goverment approved Id </p> </h5>
 
                     <div class="card-body ">
-<h4>IMPORTANT : Enter your name as it is mentioned on your passport or any goverment approved Id</h4>
 
                                <div class="form-group row" id="emp_row_1"  >
-                                    <table class="form-group col-sm-12" border="0">
+                                    <table class="form-group col-sm-12" border="0" style="border-collapse: collapse; width: 100%;">
 
                                        <tr>
                                            <th>Employee</th>
@@ -518,29 +605,29 @@
 
                                        </tr>
                                        <tr>
-                                           <td><select id="employee_id_1" name="employee_id_1" class="form-control myselect">
+                                           <td><select id="employee_id_1" name="employee_id_1" class="form-control myselect" style="width:100%;">
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
                                          emp_gender="{{employee.gender}}" emp_date_of_birth="{{employee.date_of_birth|default:''}}"  emp_name="{{employee.employee_name}}" emp_email="{{employee.employee_email}}" emp_dob="{{employee.date_of_birth|default:''}}" emp_passport="{{employee.PassportDetails}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select></td>
-                                           <td> <select name="employee_title_1" id="employee_title_1" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                           <td > <select name="employee_title_1" id="employee_title_1" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_1" id="emp_id_1" class="form-control " placeholder="Employee Id"></td>
-                                        <td><input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_1" id="employee_email_1" class="form-control " placeholder="Email"></td>
-                                     <td> <input type="text" name="employee_fname_1" id="employee_fname_1" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_1" id="employee_lname_1" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_1" id="employee_edob_1"  placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+                                           <td ><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_1" id="emp_id_1" class="form-control " placeholder="Employee Id"></td>
+                                        <td ><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_1" id="employee_contact_1" class="form-control " placeholder="Contact No"></td>
+                                    <td ><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_1" id="employee_email_1" class="form-control " placeholder="Email"></td>
+                                     <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_1" id="employee_fname_1" placeholder="First Name" class="form-control "></td>
+                                  <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_1" id="employee_lname_1" placeholder="Last Name" class="form-control "></td>
+                                  <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_1" id="employee_edob_1"  placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
 
                                    {% if flight_class_is_international == 'I' %}
 
-                                    <td><input type="text" name="employee_passport_1" id="employee_passport_1" class="form-control" placeholder="Passport No"></td>
-                                    <td><input type="text" name="employee_pass_exp_1" id="employee_pass_exp_1" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_1" id="employee_passport_1" class="form-control" placeholder="Passport No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_1" id="employee_pass_exp_1" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date"></td>
                                     <td><select name="employee_nationality_1" id="employee_nationality_1"  class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -548,7 +635,7 @@
                                         {% endfor %}
                                     </select>
                                         </td>
-                                        <
+
                                    {% endif %}
 
                                          </tr>
@@ -558,10 +645,10 @@
                                 </div>
 
                          <div class="form-group row" id="emp_row_2"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_2" name="employee_id_2" class="form-control form-group myselect" required>
+                                     <select id="employee_id_2" name="employee_id_2" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -569,21 +656,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_2" id="employee_title_2" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_2" id="employee_title_2" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_2" id="emp_id_2" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_2" id="employee_contact_2" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_2" id="employee_email_2" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_2" id="employee_fname_2" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_2" id="employee_lname_2" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_2" id="employee_edob_2" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_2" id="emp_id_2" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_2" id="employee_contact_2" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_2" id="employee_email_2" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_2" id="employee_fname_2" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_2" id="employee_lname_2" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_2" id="employee_edob_2" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_2" id="employee_passport_2" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_2" id="employee_pass_exp_2" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_2" id="employee_passport_2" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_2" id="employee_pass_exp_2" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_2" id="employee_nationality_2" placeholder="Date Of Birth" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -599,10 +686,10 @@
 
 
                          <div class="form-group row" id="emp_row_3"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12 " style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_3" name="employee_id_3" class="form-control form-group myselect" required>
+                                     <select id="employee_id_3" name="employee_id_3" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -610,21 +697,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_3" id="employee_title_3" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_3" id="employee_title_3" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_3" id="emp_id_3" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_3" id="employee_contact_3" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_3" id="employee_email_3" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_3" id="employee_fname_3" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_3" id="employee_lname_3" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_3" id="employee_edob_3" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_3" id="emp_id_3" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_3" id="employee_contact_3" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_3" id="employee_email_3" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_3" id="employee_fname_3" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_3" id="employee_lname_3" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_3" id="employee_edob_3" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_3" id="employee_passport_3" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_3" id="employee_pass_exp_3" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_3" id="employee_passport_3" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_3" id="employee_pass_exp_3" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_3" id="employee_nationality_3" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -640,10 +727,10 @@
 
 
                          <div class="form-group row" id="emp_row_4"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_4" name="employee_id_4" class="form-control form-group myselect" required>
+                                     <select id="employee_id_4" name="employee_id_4" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -651,21 +738,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_4" id="employee_title_4" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_4" id="employee_title_4" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_4" id="emp_id_4" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_4" id="employee_contact_4" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_4" id="employee_email_4" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_4" id="employee_fname_4" placeholder="First Name" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_4" id="employee_lname_4" placeholder="Last Name" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_4" id="employee_edob_4" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_4" id="emp_id_4" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_4" id="employee_contact_4" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_4" id="employee_email_4" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_4" id="employee_fname_4" placeholder="First Name" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_4" id="employee_lname_4" placeholder="Last Name" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_4" id="employee_edob_4" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_4" id="employee_passport_4" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_4" id="employee_pass_exp_4" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_4" id="employee_passport_4" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_4" id="employee_pass_exp_4" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_4" id="employee_nationality_4" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -681,10 +768,10 @@
 
 
                          <div class="form-group row" id="emp_row_5"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_5" name="employee_id_5" class="form-control form-group myselect" required>
+                                     <select id="employee_id_5" name="employee_id_5" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -692,21 +779,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_5" id="employee_title_5" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_5" id="employee_title_5" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_5" id="emp_id_5" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_5" id="employee_contact_5" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_5" id="employee_email_5" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_5" id="employee_fname_5"  placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_5" id="employee_lname_5"  placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_5" id="employee_edob_5"  placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_5" id="emp_id_5" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_5" id="employee_contact_5" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_5" id="employee_email_5" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_5" id="employee_fname_5"  placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_5" id="employee_lname_5"  placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_5" id="employee_edob_5"  placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_5" id="employee_passport_5" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_5" id="employee_pass_exp_5" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_5" id="employee_passport_5" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_5" id="employee_pass_exp_5" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_5" id="employee_nationality_5" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -722,10 +809,10 @@
 
 
                          <div class="form-group row" id="emp_row_6"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_6" name="employee_id_6" class="form-control form-group myselect" required>
+                                     <select id="employee_id_6" name="employee_id_6" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -733,21 +820,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_6" id="employee_title_6" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_6" id="employee_title_6" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_6" id="emp_id_6" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_6" id="employee_email_6" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_6" id="employee_fname_6" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_6" id="employee_lname_6" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_6" id="employee_edob_6" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_6" id="emp_id_6" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_6" id="employee_contact_6" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_6" id="employee_email_6" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_6" id="employee_fname_6" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_6" id="employee_lname_6" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_6" id="employee_edob_6" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_6" id="employee_passport_6" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_6" id="employee_pass_exp_6" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_6" id="employee_passport_6" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_6" id="employee_pass_exp_6" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_6" id="employee_nationality_6" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -763,10 +850,10 @@
 
 
                          <div class="form-group row" id="emp_row_7"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_7" name="employee_id_7" class="form-control form-group myselect" required>
+                                     <select id="employee_id_7" name="employee_id_7" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -774,21 +861,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_7" id="employee_title_7" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_7" id="employee_title_7" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_7" id="emp_id_7" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_7" id="employee_contact_7" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_7" id="employee_email_7" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_7" id="employee_fname_7" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_7" id="employee_lname_7" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_7" id="employee_edob_7" placeholder="Date of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_7" id="emp_id_7" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_7" id="employee_contact_7" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_7" id="employee_email_7" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_7" id="employee_fname_7" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_7" id="employee_lname_7" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_7" id="employee_edob_7" placeholder="Date of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_7" id="employee_passport_7" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_7" id="employee_pass_exp_7" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_7" id="employee_passport_7" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_7" id="employee_pass_exp_7" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_7" id="employee_nationality_7" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -803,10 +890,10 @@
                                 </div>
 
                          <div class="form-group row" id="emp_row_8"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_8" name="employee_id_8" class="form-control form-group myselect" required>
+                                     <select id="employee_id_8" name="employee_id_8" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -814,21 +901,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_8" id="employee_title_8" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_8" id="employee_title_8" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_8" id="emp_id_8" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_8" id="employee_contact_8" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_8" id="employee_email_8" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_8" id="employee_fname_8" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_8" id="employee_lname_8" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_8" id="employee_edob_8" placeholder="Date Of Birth"  class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_8" id="emp_id_8" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_8" id="employee_contact_8" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_8" id="employee_email_8" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_8" id="employee_fname_8" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_8" id="employee_lname_8" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_8" id="employee_edob_8" placeholder="Date Of Birth"  class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_8" id="employee_passport_8" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_8" id="employee_pass_exp_8" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_8" id="employee_passport_8" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_8" id="employee_pass_exp_8" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_8" id="employee_nationality_8" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -844,10 +931,10 @@
 
 
                          <div class="form-group row" id="emp_row_9"  >
-                            <table class="form-group col-sm-12">
+                            <table class="form-group col-sm-12" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
                                        <tr>
                                            <td>
-                                     <select id="employee_id_9" name="employee_id_9" class="form-control form-group myselect" required>
+                                     <select id="employee_id_9" name="employee_id_9" class="form-control form-group myselect" style="width:100%;" required>
                                          <option value="">Select Employee</option>
                                         {% for employee in employees %}
                                         <option value="{{employee.id}}" emp_id="{{employee.employee_cid|default:''}}" emp_cnt="{{employee.employee_contact}}"
@@ -855,21 +942,21 @@
                                         {% endfor %}
                                     </select>
                                            </td>
-                                            <td> <select name="employee_title_9" id="employee_title_9" class="form-control myselect">
-                                        <option value="">Select Title</option>
+                                            <td> <select name="employee_title_9" id="employee_title_9" class="form-control myselect" style="width:100%;">
+                                        <option value="">--</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         </select></td>
-                                           <td><input type="text" name="emp_id_9" id="emp_id_9" class="form-control " placeholder="Employee Id"></td>
-                                           <td><input type="text" name="employee_contact_9" id="employee_contact_9" class="form-control " placeholder="Contact No"></td>
-                                    <td><input type="text" name="employee_email_9" id="employee_email_9" class="form-control " placeholder="Email"></td>
-                                      <td> <input type="text" name="employee_fname_9" id="employee_fname_9" placeholder="First Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_lname_9" id="employee_lname_9" placeholder="Last Name" class="form-control "></td>
-                                  <td> <input type="text" name="employee_edob_9" id="employee_edob_9" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
-                                     <td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="emp_id_9" id="emp_id_9" class="form-control " placeholder="Employee Id"></td>
+                                           <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_contact_9" id="employee_contact_9" class="form-control " placeholder="Contact No"></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_email_9" id="employee_email_9" class="form-control " placeholder="Email"></td>
+                                      <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_fname_9" id="employee_fname_9" placeholder="First Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_lname_9" id="employee_lname_9" placeholder="Last Name" class="form-control "></td>
+                                  <td> <input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_edob_9" id="employee_edob_9" placeholder="Date Of Birth" class="form-control datepicker1" autocomplete="off"></td>
+
                                    {% if flight_class_is_international == 'I' %}
-                                    <td><input type="text" name="employee_passport_9" id="employee_passport_9" class="form-control" placeholder="Passport No" ></td>
-                                    <td><input type="text" name="employee_pass_exp_9" id="employee_pass_exp_9" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_passport_9" id="employee_passport_9" class="form-control" placeholder="Passport No" ></td>
+                                    <td><input style="line-height: 20px; border-radius: 4px; border-color: darkgray;" type="text" name="employee_pass_exp_9" id="employee_pass_exp_9" class="form-control datepicker1" autocomplete="off" placeholder="Expiry Date" ></td>
                                     <td><select name="employee_nationality_9" id="employee_nationality_9" class="form-control myselect">
                                         <option value="">Select Nationality</option>
                                         {% for nationality in nationalities %}
@@ -979,6 +1066,23 @@ $('#flight_loader').hide();
 });
 
 $(document).ready(function() {
+
+if ($('#flight_alert').length)
+{
+ /* it exists */
+ alert('Please note change in fare, do you want to continue or cancel the booking?');
+}
+
+if ($('#onword_flight_alert').length)
+{
+ /* it exists */
+}
+
+if ($('#return_flight_alert').length)
+{
+ /* it exists */
+}
+
 
 $("form").submit(function(){
 $('#flight_loader').show();

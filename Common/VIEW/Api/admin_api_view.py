@@ -74,6 +74,7 @@ def admin_accept_taxi_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -82,7 +83,7 @@ def admin_accept_taxi_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptAdminTaxiBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptAdminTaxiBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
                     cursor.close()
@@ -107,6 +108,7 @@ def admin_reject_taxi_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -115,7 +117,7 @@ def admin_reject_taxi_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectAdminTaxiBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectAdminTaxiBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     print(emp)
                     cursor.close()
@@ -203,6 +205,7 @@ def admin_accept_bus_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -211,7 +214,7 @@ def admin_accept_bus_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptAdminBusBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptAdminBusBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
@@ -236,6 +239,7 @@ def admin_reject_bus_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -244,7 +248,7 @@ def admin_reject_bus_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectAdminBusBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectAdminBusBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
@@ -332,6 +336,7 @@ def admin_accept_train_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -340,7 +345,7 @@ def admin_accept_train_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptAdminTrainBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptAdminTrainBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
@@ -365,6 +370,7 @@ def admin_reject_train_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -373,7 +379,7 @@ def admin_reject_train_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectAdminTrainBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectAdminTrainBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
@@ -463,6 +469,7 @@ def admin_accept_hotel_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -471,7 +478,7 @@ def admin_accept_hotel_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptAdminHotelBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptAdminHotelBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
@@ -496,6 +503,7 @@ def admin_reject_hotel_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -504,7 +512,7 @@ def admin_reject_hotel_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectAdminHotelBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectAdminHotelBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}
@@ -593,6 +601,7 @@ def admin_accept_flight_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -601,7 +610,7 @@ def admin_accept_flight_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptAdminFlightBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptAdminFlightBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Accepted Successfully"}
@@ -626,6 +635,7 @@ def admin_reject_flight_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -634,7 +644,7 @@ def admin_reject_flight_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectAdminFlightBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectAdminFlightBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Bookings': emp, 'message': "Booking Rejected Successfully"}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<title>Cotrav Email</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="" href="img/favicon.png">
+ <link rel="stylesheet" type="text/css" href="http://cotrav.co/static/css/signup_template_style.css">
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  
+ <body style="-webkit-font-smoothing:antialiased; -webkit-text-size-adjust:none;     margin:0;padding:0;font-family:Montserrat;   font-size:100%; line-height:1.6; background: whitesmoke;  height: auto;">
+
+    <table style=" background: #F5F6F7;  margin:auto;margin-top:50px;border-radius:9px; -webkit-border-radius:7px;  -moz-border-radius:7px;   max-width:700px !important;     max-height:auto !important; box-shadow:0 8px 20px #e3e7ea !important;
+      -webkit-box-shadow:0 8px 20px #e3e7ea !important;  -moz-box-shadow:0 8px 20px #e3e7ea !important;box-shadow: 0 8px 20px #e3e7ea !important;  webkit-box-shadow: 0 8px 20px #e3e7ea !important;  -moz-box-shadow: 0 8px 20px #e3e7ea !important;"
+    width="100%" cellpadding="0" cellspacing="0" height="100%">
+    
+      <tbody>
+          <tr>
+          	<td bgcolor="#FFFFFF" style="  display:block !important; margin:0 auto !important; clear:both !important  width:100%; height: 100%;">
+              <img src="http://cotrav.co/static/img/signup/img/bg1.png" class="img-fluid img-responsive" style=" display: block;max-width: 100%;height: auto;">
+                <img src="http://cotrav.co/static/img/signup/img/logo.png" style=" margin-top: -163px; margin-left: 68px; width: 175px;   margin-bottom: 10px;">
+          </td>
+      </tr>
+            
+            
+          <tr>
+           <td style=" border: solid 1px gray;border-left: none; border-right: none; border-collapse: collapse;" bgcolor="#FFFFFF" width="100%">
+          		<div class="row">
+          			<div style=" text-align: center;overflow: auto;display: block;font-family:montserrat, san-serif;">
+                
+                     <h5 style="font-family: montserrat,san-serif; font-weight: 600; font-size: 18px;">Sign-Up Detail</h5><br>
+                  
+                    <div class="col-sm-6">
+                      
+                            <p style="font-family: montserrat,Regular; font-weight: 600; font-size: 12px; line-height: 35px;">  Name Of Your Company :  {{company}} </p>
+                     	    <p style="font-family: montserrat,Regular; font-weight: 600; font-size: 12px; line-height: 35px;">Location  :  {{location}} </p>
+                     	     <p style="font-family: montserrat,Regular; font-weight: 600; font-size: 12px; line-height: 35px;">Contact Person : {{cp_name}}</p>
+
+                     </div>
+
+                     
+
+                     <div class="col-sm-6">    
+                     	  
+                           <p style="font-family: montserrat,Regular; font-weight: 600; font-size: 12px; line-height: 35px;">Contact Number : {{cp_no}}</p>
+                             <p style="font-family: montserrat,Regular; font-weight: 600; font-size: 12px; line-height: 35px;">Contact Email : {{cp_email}}</p>
+                              <p style="font-family: montserrat,Regular; font-weight: 600; font-size: 12px; line-height: 35px;">Message : {{message}}</p>
+                   </div>
+          		
+          		</div>
+            </div>
+          	</td>
+          </tr>
+
+
+         
+              <tr>
+         <td  bgcolor="#FFFFFF" width="100%" height="100px">
+              <div class="row">
+                <div style=" text-align: center;overflow: auto;display: block;font-family:montserrat, san-serif;">
+                 <div class="col-sm-12">
+                    <h5 style="font-family: montserrat,san-serif; font-weight: 600; font-size: 18px;">Sign Up Successfull</h5>                    
+                     <p style="font-family: montserrat,san-serif; font-weight: 600; font-size: 14px;">Thanks vinod, </p>
+                           <p style="font-family: montserrat,Regular; font-weight: 500; font-size: 13px;">A TaxiVaxi Official would be contacting you in 24 hours to discuss business solutions for your team.
+
+                       In the meantime, would you like to go back to the portal <a href="#">Click Here</a></p>
+                   </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+
+       <tr>
+         <td style=" background-color: #006699;" bgcolor="#FFFFFF" width="100%" height="50">
+      <div class="row">
+                <div style=" color:white;font-family: Montserrat,Regular;font-size: 12px;text-align: center;">
+                
+                     <div class="col-sm-4">
+                   <img src="http://cotrav.co/static/img/signup/img/phn.png"> 011 39595267, 022 33836163
+                   </div>
+                    <div class="col-sm-4">
+                   <img src="http://cotrav.co/static/img/signup/img/33.png"> info@cotrav.co
+                   </div>
+                     <div class="col-sm-4">
+                   <img src="http://cotrav.co/static/img/signup/img/77.png"> 6/813 Main Market, Mehrauli, New Delhi 110030
+                   </div>
+                </div>
+              </div>
+         </td>
+       </tr>
+         
+      
+ </tbody>
+</table>   	
+  </body>
+</html>    		  
+		  
+
+
+        

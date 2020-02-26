@@ -121,7 +121,7 @@
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Pickup Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control time" id="pickup_time" autocomplete="off" name="pickup_time" placeholder="Pickup Time" type="text">
+                                <input class="form-control timepicker1" id="pickup_time" autocomplete="off" name="pickup_time" placeholder="Pickup Time" type="text">
                             </div>
                         </div>
 
@@ -135,7 +135,7 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Drop Time</label>
                             <div class="col-sm-7">
-                                <input class="form-control time" id="drop_time" autocomplete="off" name="drop_time" placeholder="Drop DateTime" type="text">
+                                <input class="form-control timepicker1" id="drop_time" autocomplete="off" name="drop_time" placeholder="Drop DateTime" type="text">
                             </div>
                         </div>
 
@@ -279,10 +279,18 @@
                         </div>
 
                         {% if booking.tour_type == 1 %}
+
+                        <div class="form-group row">
+                            <label class="col-sm-5 control-label">Total Kms</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" id="km" name="kms_done" placeholder="Total Kms" type="text">
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Base Rate</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="radio_rate" name="radio_rate" placeholder="Base Rate" type="text">
+                                <input class="form-control fixed" decimals="2" id="radio_rate" name="radio_rate" placeholder="Base Rate" type="text">
                             </div>
                         </div>
                         {% endif %}
@@ -291,7 +299,7 @@
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Base Rate</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="base_rate" name="base_rate" placeholder="Base Rate" type="text" value="{{booking.base_rate}}">
+                                <input class="form-control fixed" decimals="2" id="base_rate" name="base_rate" placeholder="Base Rate" type="text" value="{{booking.base_rate}}">
                             </div>
                         </div>
 
@@ -300,7 +308,7 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Extra Hour Charge</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="extra_hr_charges" name="extra_hr_charges" placeholder="Extra Hour Charge" type="text">
+                                <input class="form-control fixed" decimals="2" id="extra_hr_charges" name="extra_hr_charges" placeholder="Extra Hour Charge" type="text">
                             </div>
                         </div>
 
@@ -308,14 +316,14 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Extra Kms Charge</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="extra_km_charges" name="extra_km_charges" placeholder="Extra Kms Charge" type="text">
+                                <input class="form-control fixed" decimals="2" id="extra_km_charges" name="extra_km_charges" placeholder="Extra Kms Charge" type="text">
                             </div>
                         </div>
 
                           <div class="form-group row">
                             <label class="col-sm-5 control-label">Driver Allowance</label>
                             <div class="col-sm-7">
-                                <input class="form-control" name="driver_allowance"  id="driver_allowance" placeholder="Driver Allowance" type="text">
+                                <input class="form-control fixed" decimals="2" name="driver_allowance"  id="driver_allowance" placeholder="Driver Allowance" type="text">
                                 <input type="hidden" value="{{ booking.night_rate }}" id="night_rate">
                             </div>
                         </div>
@@ -325,7 +333,7 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Total Excluding Tax</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="total_excluding_tax" name="total_excluding_tax" placeholder="Total Excluding Tax" type="text">
+                                <input class="form-control fixed" decimals="2" id="total_excluding_tax" name="total_excluding_tax" placeholder="Total Excluding Tax" type="text">
                             </div>
                         </div>
 
@@ -346,14 +354,14 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">Others (Parking, etc.)</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="other_charges" name="other_charges" placeholder="Others (Parking, etc.)" required type="text">
+                                <input class="form-control fixed" decimals="2" id="other_charges" name="other_charges" placeholder="Others (Parking, etc.)" required type="text">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label class="col-sm-5 control-label">Total (Total + Tax + Others)</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="total" name="total" placeholder="Total (Total + Tax + Others)" type="text">
+                                <input class="form-control fixed" decimals="2" id="total" name="total" placeholder="Total (Total + Tax + Others)" type="text">
                             </div>
                         </div>
  {% endif %}
@@ -376,7 +384,7 @@
                          <div class="form-group row">
                             <label class="col-sm-5 control-label">  Sub Total</label>
                             <div class="col-sm-7">
-                                <input class="form-control" id="sub_total" name="sub_total" placeholder=" Sub Total" type="text">
+                                <input class="form-control fixed" decimals="2" id="sub_total" name="sub_total" placeholder=" Sub Total" type="text">
                             </div>
                         </div>
 

@@ -22,7 +22,7 @@ path('support',views.support, name="support"),
 
 path('testsignup',views.testsignup, name="testsignup"),
 
-path('testemail',views.testsignup, name="testsignup"),
+path('testemail',views.testemail, name="testemail"),
 
 path('voucher',views.voucher, name="voucher"),
 

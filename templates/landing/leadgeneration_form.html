@@ -30,6 +30,14 @@ ol.comments li {
 
       <div class="page-content-wrapper">
             <div class="page-content">
+
+                        <div class="row p-b-20">
+                                        <div class="col-md-6 col-sm-6 col-6">
+                                            <div class="btn-group">
+                                                 <a class="btn btn-primary" href="/agents/lead" > << Back </a>
+                                            </div>
+                                        </div>
+                        </div>
         
                 <div class="text-center">
                      <div style="font-size:14px; font-weight:bold;">
@@ -42,6 +50,8 @@ ol.comments li {
                  </div>
 
                  <form action=""  enctype="multipart/form-data" method="post" class="lead-form" >
+
+                     {% csrf_token %}
                     
                 <div class="row">
                     <div class="col-md-4">
@@ -123,7 +133,7 @@ ol.comments li {
 
                                             </div>
 
-                                            <div class="form-group row">
+                                        <div class="form-group row">
 
                                                     <label class="col-sm-4" for="{{ form.Message.Hear_About_Us }}">Referenced From:</label>
                                                     {{form.Hear_About_Us}}
@@ -179,7 +189,7 @@ ol.comments li {
 
                                             <div class="form-group row">
 
-                                                    <label class="col-sm-4" for="{{ form.Lead_Communication.Lead_Communication }}">Further Communication Channel:</label>
+                                                    <label class="col-sm-4" for="{{ form.Lead_Communication.Lead_Communication }}">Further Communication:</label>
                                                     {{ form.Lead_Communication }}
                                                     {{ form.Lead_Communication.errors }}
 
@@ -206,13 +216,16 @@ ol.comments li {
                                             <div class="form-group row">
 
                                                         <label class="col-sm-4" for="{{ form.Attachments.Attachments }}">New Document Name:</label>
-                                                        <input type="text" name="doc_name" id="doc_name" class="form-control col-sm-8">
+                                                <input type="text" name="doc_name" class="form-control col-sm-8">
 
                                             </div>
 
                                             <div class="form-group row">
 
                                                         <label class="col-sm-4" for="{{ form.Attachments.Attachments }}">Attachments:</label>
+
+
+
                                                 <input type="file" name="Attachments" id="id_Attachments">
 
                                             </div>
@@ -244,13 +257,13 @@ ol.comments li {
                                        </div>
                                        <div class="card-body ">
 
-                                           <div class="form-group row">
+                                          <div class="form-group row">
                                             <label class="col-sm-3">Comment List</label>
                                             {% if comments %}
 
                                                <ul class="col-sm-9" style="list-style:none; font-size:10px;">
                                                  {% for cmt in comments %}
-                                                   <li>{{cmt.created_by.user_name}} [{{cmt.created_at|date:"M d, Y"}}]: {{cmt.comment}}</li>
+                                                   <li>{{cmt.created_by.user_name}} [{{cmt.created_at|date:"d-m-yy h:i"}}]: {{cmt.comment}}</li>
                                                  {% endfor %}
                                                </ul>
                                             {% else %}
@@ -266,7 +279,6 @@ ol.comments li {
                                                     {{ form.Comments }}
 
                                             </div>
-
                                            <div class="form-group row">
 
                                                     <label class="col-sm-4">Send Email:</label>
@@ -289,6 +301,18 @@ ol.comments li {
 
 
 
+
+                                            <div class="form-group">
+                                                <div class="offset-md-3 col-md-9">
+                                                    <button type="submit" value="Submit" class="btn btn-info">Submit</button>
+                                                    <a class="btn btn-default" href="/agents/lead" > Cancel </a>
+
+                                                </div>
+                                            </div>
+
+
+
+
                                        </div>
 
                         </div>
@@ -301,12 +325,7 @@ ol.comments li {
         
             
 </div>
-<div class="text-center">
-    <button type="submit" value="Submit" class="btn btn-info">Submit</button>
-    <a class="btn btn-default" href="/agents/lead" > Cancel </a>
- </div>
-
-
+               
 
                 </form>
 
@@ -358,19 +377,11 @@ $.post("../lead-doc-delete/"+del,
 
 }
 
+
+
+
 </script>
-<script type="text/javascript">
-  $(function() {
-     $("input:file").change(function (){
-       var fileName = $(this).val();
-       if(fileName == ''){
-           $("input").prop('required',false);
-       }else{
-            $("input").prop('required',true);
-       }
-     });
-  });
-</script>
+
 
 
 {% endblock %}

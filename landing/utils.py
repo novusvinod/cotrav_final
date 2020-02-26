@@ -18,10 +18,14 @@ def render_to_pdf(template_src, context_dict={}):
 
 
 def get_choice():
+
     BLANK_CHOICE = (('', 'Select Agent'),)
 
     CHOICES = BLANK_CHOICE + tuple(Corporate_Agent.objects.values_list('id', 'user_name'))
 
+    #CHOICES = Corporate_Agent.objects.values('id', 'user_name')
+
+    #CHOICES = [(q) for q in CHOICESS]
 
     return CHOICES
 

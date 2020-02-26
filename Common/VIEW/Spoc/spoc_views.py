@@ -7,7 +7,7 @@ import json
 from time import sleep
 from django_global_request.middleware import get_request
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from openpyxl import Workbook
 from Common.models import Corporate_Spoc_Login_Access_Token
@@ -295,16 +295,28 @@ def reject_taxi_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        accept_id = request.POST.get('accept_id', '')
+        reject_id = request.POST.get('reject_id', '')
+        current_url = request.POST.get('current_url', '')
+        user_comment = request.POST.get('user_comment', '')
 
-        url = settings.API_BASE_URL + "spoc_reject_taxi_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        url =''
+        if accept_id == '1':
+            url = settings.API_BASE_URL + "spoc_accept_taxi_booking"
+            operation_message = "Train Booking Accepted successfully..!"
+
+        if reject_id == '1':
+            url = settings.API_BASE_URL + "spoc_reject_taxi_booking"
+            operation_message = "Train Booking Rejected successfully..!"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Taxi Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Reject Taxi Booking..!')
+            messages.error(request, 'Failed to Reject Taxi Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -355,7 +367,7 @@ def add_taxi_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Taxi Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/taxi-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -457,16 +469,28 @@ def reject_bus_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        accept_id = request.POST.get('accept_id', '')
+        reject_id = request.POST.get('reject_id', '')
+        current_url = request.POST.get('current_url', '')
+        user_comment = request.POST.get('user_comment', '')
 
-        url = settings.API_BASE_URL + "spoc_reject_bus_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        url =''
+        if accept_id == '1':
+            url = settings.API_BASE_URL + "spoc_accept_bus_booking"
+            operation_message = "Train Booking Accepted successfully..!"
+
+        if reject_id == '1':
+            url = settings.API_BASE_URL + "spoc_reject_bus_booking"
+            operation_message = "Train Booking Rejected successfully..!"
+
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Bus Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Reject Bus Booking..!')
+            messages.error(request, 'Failed to Reject Bus Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -515,7 +539,7 @@ def add_bus_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Bus Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -610,16 +634,27 @@ def reject_train_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        accept_id = request.POST.get('accept_id', '')
+        reject_id = request.POST.get('reject_id', '')
+        current_url = request.POST.get('current_url', '')
+        user_comment = request.POST.get('user_comment', '')
 
-        url = settings.API_BASE_URL + "spoc_reject_train_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        url =''
+        if accept_id == '1':
+            url = settings.API_BASE_URL + "spoc_accept_train_booking"
+            operation_message = "Train Booking Accepted successfully..!"
+
+        if reject_id == '1':
+            url = settings.API_BASE_URL + "spoc_reject_train_booking"
+            operation_message = "Train Booking Rejected successfully..!"
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Train Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Reject Train Booking..!')
+            messages.error(request, 'Failed to Reject Train Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -668,7 +703,7 @@ def add_train_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Train Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/train-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -767,16 +802,27 @@ def reject_hotel_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        accept_id = request.POST.get('accept_id', '')
+        reject_id = request.POST.get('reject_id', '')
+        current_url = request.POST.get('current_url', '')
+        user_comment = request.POST.get('user_comment', '')
 
-        url = settings.API_BASE_URL + "spoc_reject_hotel_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        url =''
+        if accept_id == '1':
+            url = settings.API_BASE_URL + "spoc_accept_hotel_booking"
+            operation_message = "Train Booking Accepted successfully..!"
+
+        if reject_id == '1':
+            url = settings.API_BASE_URL + "spoc_reject_hotel_booking"
+            operation_message = "Train Booking Rejected successfully..!"
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Hotel Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Reject Hotel Booking..!')
+            messages.error(request, 'Failed to Reject Hotel Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -835,7 +881,7 @@ def add_hotel_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Hotel Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -939,16 +985,26 @@ def reject_flight_booking(request,id):
         user_id = request.user.id
         current_url = request.POST.get('current_url', '')
         booking_id = request.POST.get('booking_id', '')
+        accept_id = request.POST.get('accept_id', '')
+        reject_id = request.POST.get('reject_id', '')
+        user_comment = request.POST.get('user_comment', '')
 
-        url = settings.API_BASE_URL + "spoc_reject_flight_booking"
-        payload = {'booking_id': booking_id,'user_id':user_id}
+        url =''
+        if accept_id == '1':
+            url = settings.API_BASE_URL + "spoc_accept_flight_booking"
+            operation_message = "Train Booking Accepted successfully..!"
+
+        if reject_id == '1':
+            url = settings.API_BASE_URL + "spoc_reject_flight_booking"
+            operation_message = "Train Booking Rejected successfully..!"
+        payload = {'booking_id': booking_id,'user_id':user_id,'user_comment':user_comment}
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
             messages.success(request, 'Flight Booking Rejected Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Fail to Reject flight Booking..!')
+            messages.error(request, 'Failed to Reject flight Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -1002,7 +1058,7 @@ def add_flight_booking(request,id):
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
 
             if booking['success'] == 1:
-                messages.success(request, 'Flight Booking Added Successfully..!')
+                messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -1195,11 +1251,14 @@ def add_flight_booking_self_conformation(request,id):
         trip_string = request.POST.get('trip_string', '')
         booking_datass = request.POST.get('booking_data', '')
         no_of_seats = request.POST.get('no_of_seats', '')
+        departure_datetime = request.POST.get('departure_datetime', '')
+        return_datetime = request.POST.get('return_datetime', '')
         flight_class_is_international = request.POST.get('flight_class_is_international', '')
         flight1 = ""
         flight2 = ""
         booking_data = {'UID':UID,'ID':ID,'TID':TID,'UID2':UID2,'ID2':ID2,'TID2':TID2,'src':src,'des':des,'dep_date':dep_date,'ret_date':ret_date,
-            'adt':adt,'chd':chd,'inf':inf,'L_OW':L_OW,'H_OW':H_OW,'T_TIME':T_TIME,'trip_string':trip_string,'flight_class_is_international':flight_class_is_international}
+            'adt':adt,'chd':chd,'inf':inf,'L_OW':L_OW,'H_OW':H_OW,'T_TIME':T_TIME,'trip_string':trip_string,'flight_class_is_international':flight_class_is_international,
+            'departure_datetime':departure_datetime,'return_datetime':return_datetime}
 
         url_tokn = settings.API_BASE_URL + "get_flight_fare_search"
         data = getDataFromAPI(login_type, access_token, url_tokn, booking_data)
@@ -1207,6 +1266,8 @@ def add_flight_booking_self_conformation(request,id):
         print(type(data))
         if data['success'] == 1:
             api_response = data['Data']
+            dayHours_onword = data['dayHours_onword']
+            dayHours_return = data['dayHours_return']
             print("SEARCH PAI RESPONSE")
 
             payload = {'corporate_id': request.user.corporate_id, 'spoc_id': request.user.id}
@@ -1230,7 +1291,10 @@ def add_flight_booking_self_conformation(request,id):
             nationality = getDataFromAPI(login_type, access_token, url_nat, payload)
             nationalities = nationality['Nationality']
 
-            return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees, 'cities_ass': cities,'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats, 'flight_class_is_international':flight_class_is_international,'nationalities':nationalities})
+            return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'departure_datetime':departure_datetime,
+            'return_datetime':return_datetime,'booking_datas': booking_data, 'flights': api_response, 'UID2': UID2, 'employees': employees,
+            'cities_ass': cities,'entities': entities, 'assessments': ass_code, 'no_of_seats':no_of_seats,'dayHours_onword':dayHours_onword,
+            'flight_class_is_international':flight_class_is_international,'nationalities':nationalities, 'dayHours_return':dayHours_return})
         else:
             return render(request, 'Company/Spoc/add_flight_booking_conformation.html', {'booking_datas': booking_data, 'flights': ''})
 
@@ -1305,13 +1369,13 @@ def add_flight_booking_self_final(request, id):
 
         payload11 = {'flightdata': flightdata, 'employee_name_1': employees_name,'UID2':UID2,'flight_class_is_international':flight_class_is_international,'emp_info_international':str(emp_info_international)}
         print("adsad")
-        print(payload11)
+        #print(payload11)
         url_save = settings.API_BASE_URL + "save_flight_booking"
         booking1 = getDataFromAPI(login_type, access_token, url_save, payload11)
         print("API BOOK")
         print(booking1)
         if not 'RESULT' in booking1['Data']:
-            messages.error(request, 'FLIGHT/FARE NOT AVAILABLE')
+            messages.error(request, 'Flight Booking Request Failed..!')
             return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/30", {'message': "Operation Successfully"})
 
         if 'BOOKINGID' in booking1['Data']['RESULT'][0]:
@@ -1337,6 +1401,7 @@ def add_flight_booking_self_final(request, id):
             #print(booking)
             if booking['success'] == 1:
                 last_booking_id = booking['last_booking_id']
+                booking_reference_no = booking['booking_reference_no']
 
                 for i in range(3):
                     url_save = settings.API_BASE_URL + "get_flight_pnr_details"
@@ -1364,18 +1429,18 @@ def add_flight_booking_self_final(request, id):
                                 sleep(5)
 
                 if not 'FLIGHT' in booking1['Data'] or 'FLIGHTOW' in booking1['Data'] :
-                    messages.error(request, 'Booking successful, your CoTrav booking id is - ' +str(last_booking_id)+ ', but pending for PNR status, please check the status under Pending for PNR tab')
+                    messages.error(request, 'Booking successful, your CoTrav booking id is - ' +str(booking_reference_no)+ ', but pending for PNR status, please check the status under Pending for PNR tab')
                     return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/30", {'message': "Operation Successfully"})
                 else:
                     if UID2:
                         if not 'apnr' in booking1['Data']['PAXOW'][0] or len(booking1['Data']['PAXOW'][0]['apnr']) == 0:
-                            messages.error(request, 'Booking successful, your CoTrav booking id is - ' + str(last_booking_id) + ', but pending for PNR status, please check the status under Pending for PNR tab')
+                            messages.error(request, 'Booking successful, your CoTrav booking id is - ' + str(booking_reference_no) + ', but pending for PNR status, please check the status under Pending for PNR tab')
                             return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/30",{'message': "Operation Successfully"})
                         else:
                             pass
                     else:
                         if not 'apnr' in booking1['Data']['PAX'][0] or len(booking1['Data']['PAX'][0]['apnr']) == 0:
-                            messages.error(request, 'Booking successful, your CoTrav booking id is - ' +str(last_booking_id)+ ', but pending for PNR status, please check the status under Pending for PNR tab')
+                            messages.error(request, 'Booking successful, your CoTrav booking id is - ' +str(booking_reference_no)+ ', but pending for PNR status, please check the status under Pending for PNR tab')
                             return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2",{'message': "Operation Successfully"})
                         else:
                             pass
@@ -4058,8 +4123,12 @@ def flight_billing_verify(request):
 
 def getDataFromAPI(login_type, access_token, url, payload):
     headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}
-    r = requests.post(url, data=payload, headers=headers)
-    api_response = json.loads(r.text)
+    try:
+        r = requests.post(url, data=payload, headers=headers, timeout=50.0)
+        api_response = json.loads(r.text)
+    except requests.Timeout as err:
+        data = {'success': 0, 'error': "Time out Error"}
+        api_response = json.loads(JsonResponse(data))
     return api_response
 
 

@@ -489,6 +489,66 @@
 					</div>
 
 
+										<div class="row">
+						<div class="col-sm-12">
+							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
+								<div class="card-head">
+									<header>Action Log: </header>
+                                     <div class="tools">
+
+										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+
+                                    </div>
+								</div>
+
+								{% for action_log in booking.ActionLogs %}
+
+
+
+								<div class="card-body row">
+
+									 <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" {% if action_log.action == 1 %} value="Booking Raised " {% else %} value="{{ action_log.status }}" {% endif %}  readonly>
+					                     <label class = "mdl-textfield__label">Action</label>
+					                  </div>
+						            </div>
+
+									<div class="col-lg-2 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ action_log.action_date }}" readonly>
+					                     <label class = "mdl-textfield__label">DateTime</label>
+					                  </div>
+						            </div>
+
+						            <div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ action_log.employee_name }}" readonly>
+					                     <label class = "mdl-textfield__label">Action By Name</label>
+					                  </div>
+						            </div>
+
+									<div class="col-lg-3 p-t-20">
+						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+					                     <input class = "mdl-textfield__input" type = "text" value="{{ action_log.name }}" readonly>
+					                     <label class = "mdl-textfield__label">User Type</label>
+					                  </div>
+						            </div>
+
+
+
+
+
+
+								</div>
+
+								{% endfor %}
+
+							</div>
+						</div>
+					</div>
+
+
                     {% endfor %}
 
 					    <div class="row">

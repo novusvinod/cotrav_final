@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.db import connection
 from Common.VIEW.Api.api_views import getUserinfoFromAccessToken, dictfetchall
-
+from Common.email_settings import AcceptBooking_Email, RejectBooking_Email
+from threading import Thread
 
 def approver_2_taxi_bookings(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -59,6 +60,7 @@ def approver_2_accept_taxi_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
 
         user_token = req_token.split()
@@ -67,10 +69,26 @@ def approver_2_accept_taxi_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptApprover_2TaxiBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptApprover_2TaxiBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = AcceptBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Taxi"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -92,6 +110,7 @@ def approver_2_reject_taxi_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -99,10 +118,26 @@ def approver_2_reject_taxi_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectApprover_2TaxiBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectApprover_2TaxiBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = RejectBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Taxi"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -174,6 +209,7 @@ def approver_2_accept_bus_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -181,10 +217,26 @@ def approver_2_accept_bus_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptApprover_2BusBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptApprover_2BusBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewBusBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllBusBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = AcceptBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Bus"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -206,6 +258,7 @@ def approver_2_reject_bus_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -213,8 +266,24 @@ def approver_2_reject_bus_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectApprover_2BusBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectApprover_2BusBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = RejectBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Bus"))
+                    thread.start()
+
                     data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     return JsonResponse(data)
                 except Exception as e:
@@ -289,6 +358,7 @@ def approver_2_accept_train_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -296,10 +366,26 @@ def approver_2_accept_train_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptApprover_2TrainBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptApprover_2TrainBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTrainBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = AcceptBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Train"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -321,6 +407,7 @@ def approver_2_reject_train_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -328,10 +415,26 @@ def approver_2_reject_train_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectApprover_2TrainBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectApprover_2TrainBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = RejectBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Train"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -407,6 +510,7 @@ def approver_2_accept_hotel_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -414,10 +518,26 @@ def approver_2_accept_hotel_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptApprover_2HotelBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptApprover_2HotelBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewHotelBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllHotelBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = AcceptBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Hotel"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -439,6 +559,7 @@ def approver_2_reject_hotel_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -446,10 +567,26 @@ def approver_2_reject_hotel_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectApprover_2HotelBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectApprover_2HotelBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = RejectBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Hotel"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -523,6 +660,7 @@ def approver_2_accept_flight_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -530,10 +668,26 @@ def approver_2_accept_flight_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('acceptApprover_2FlightBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('acceptApprover_2FlightBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Approved Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewFlightBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllFlightBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = AcceptBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Flight"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -555,6 +709,7 @@ def approver_2_reject_flight_booking(request):
         user_type = request.META['HTTP_USERTYPE']
         booking_id = request.POST.get('booking_id', '')
         user_id = request.POST.get('user_id', '')
+        user_comment = request.POST.get('user_comment', '')
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -562,10 +717,26 @@ def approver_2_reject_flight_booking(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('rejectApprover_2FlightBookings', [user_id,user_type,booking_id])
+                    cursor.callproc('rejectApprover_2FlightBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
                     data = {'success': 1, 'message': "Booking Rejected Successfully"}
                     cursor.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('viewTaxiBooking', [booking_id])
+                    emp = dictfetchall(cursor2)
+                    cursor2.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
+                    passanger = dictfetchall(cursor1)
+                    emp[0]['Passangers'] = passanger
+                    cursor1.close()
+
+                    add_booking_email = RejectBooking_Email()
+                    thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Flight"))
+                    thread.start()
+
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
