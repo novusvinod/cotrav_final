@@ -75,6 +75,15 @@ class LeadGenerationModelForm(forms.ModelForm):
     Hear_About_Us = forms.CharField(label='Hear_About_Us', max_length=255 , required=False , widget = forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"Hear_About_Us"}),)
     Comments = forms.CharField(label='Comments', max_length=255 , widget=forms.Textarea(attrs={'class': "form-control col-sm-8"}))
 
+    def __init__(self,*args, **kwargs):
+        super(LeadGenerationModelForm, self).__init__(*args, **kwargs)
+        pqr = get_choice()
+        self.fields['Assigned_Sales_Person'] = forms.CharField(max_length=255, widget=forms.Select(choices=pqr, attrs={
+            'class': "form-control col-sm-8 myselect", 'id': "sales_person"}), )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        Assigned_Sales_Person = cleaned_data.get("Assigned_Sales_Person")
 
     class Meta:
         model = Leadgeneration

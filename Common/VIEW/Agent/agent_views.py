@@ -2912,9 +2912,13 @@ def taxi_bookings(request,id):
         operators = getDataFromAPI(login_type, access_token, opr_url, payload)
         operators = operators['Operators']
 
+        opr_url = settings.API_BASE_URL + "agents"
+        get_agents = getDataFromAPI(login_type, access_token, opr_url, payload)
+        agents = get_agents['Agents']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/taxi_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies,'operators':operators})
+            return render(request, "Agent/taxi_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies,'operators':operators, 'agents':agents})
         else:
             return render(request, "Agent/taxi_bookings.html", {'': {}})
     else:
@@ -3343,9 +3347,13 @@ def bus_bookings(request,id):
         company1 = getDataFromAPI(login_type, access_token, url, payload)
         companies = company1['Corporates']
 
+        opr_url = settings.API_BASE_URL + "agents"
+        get_agents = getDataFromAPI(login_type, access_token, opr_url, payload)
+        agents = get_agents['Agents']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/bus_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
+            return render(request, "Agent/bus_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies,'agents':agents})
         else:
             return render(request, "Agent/bus_bookings.html", {'': {}})
     else:
@@ -3674,9 +3682,13 @@ def train_bookings(request,id):
         company1 = getDataFromAPI(login_type, access_token, url, payload)
         companies = company1['Corporates']
 
+        opr_url = settings.API_BASE_URL + "agents"
+        get_agents = getDataFromAPI(login_type, access_token, opr_url, payload)
+        agents = get_agents['Agents']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/train_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
+            return render(request, "Agent/train_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies,'agents':agents})
         else:
             return render(request, "Agent/train_bookings.html", {'': {}})
     else:
@@ -4092,10 +4104,14 @@ def hotel_bookings(request, id):
         payload = {'some': 'data'}
         company1 = getDataFromAPI(login_type, access_token, url, payload)
         companies = company1['Corporates']
+        
+        opr_url = settings.API_BASE_URL + "agents"
+        get_agents = getDataFromAPI(login_type, access_token, opr_url, payload)
+        agents = get_agents['Agents']
 
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/hotel_bookings.html", {'bookings': booking, 'booking_type':id,'corporates':companies})
+            return render(request, "Agent/hotel_bookings.html", {'bookings': booking, 'booking_type':id,'corporates':companies, 'agents':agents})
         else:
             return render(request, "Agent/hotel_bookings.html", {'': {}})
     else:
@@ -4350,9 +4366,13 @@ def flight_bookings(request,id):
         company1 = getDataFromAPI(login_type, access_token, url, payload)
         companies = company1['Corporates']
 
+        opr_url = settings.API_BASE_URL + "agents"
+        get_agents = getDataFromAPI(login_type, access_token, opr_url, payload)
+        agents = get_agents['Agents']
+
         if company['success'] == 1:
             booking = company['Bookings']
-            return render(request, "Agent/flight_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies})
+            return render(request, "Agent/flight_bookings.html",{'bookings': booking,'booking_type':id,'corporates':companies,'agents':agents})
         else:
             return render(request, "Agent/flight_bookings.html", {'': {}})
     else:
@@ -4433,7 +4453,7 @@ def add_flight_booking(request, id):
 
             payload = {'user_id':user_id,'user_type':login_type,'corporate_id':corporate_id,'entity_id':entity_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'usage_type':usage_type,'trip_type':trip_type,'seat_type':seat_type,'from_city':from_city,'to_city':to_city,
-                       'booking_datetime':booking_datetime+':00','departure_datetime':departure_datetime+':00','preferred_flight':preferred_flight,
+                       'booking_datetime':booking_datetime+':00','departure_datetime':departure_datetime,'preferred_flight':preferred_flight,
                        'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'billing_entity_id':billing_entity_id,
                        'is_email':is_email,'is_sms':is_sms,'assessment_code': assessment_code, 'assessment_city_id': assessment_city_id,
                        'booking_email':booking_email,'bta_code_travel_req_no':bta_code_travel_req_no}
@@ -7742,6 +7762,79 @@ def bill_create_nontax_invoice(request):
 
 
 
+def add_booking_tracking_status(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        booking_type = request.POST.get('booking_type', '')
+        user_comment = request.POST.get('user_comment', '')
+        current_url = request.POST.get('current_url', '')
+        payload = {'booking_id': booking_id, 'user_id':user_id, 'booking_type':booking_type,'user_comment':user_comment}
+        url = settings.API_BASE_URL + "add_booking_tracking_status"
+        verify = getDataFromAPI(login_type, access_token, url, payload)
+        print(verify)
+        if verify['success'] == 1:
+            messages.success(request, "Tracking Status Added Successfully..!")
+            return HttpResponseRedirect(current_url, {})
+        else:
+            messages.error(request, "Failed To Add tracking Status..!")
+            return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def add_booking_assign_to_agent(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        to_user_id = request.POST.get('to_user_id', '')
+        booking_type = request.POST.get('booking_type', '')
+        user_comment = request.POST.get('user_comment', '')
+        current_url = request.POST.get('current_url', '')
+        payload = {'booking_id': booking_id, 'user_id':user_id, 'booking_type':booking_type,'user_comment':user_comment,'to_user_id':to_user_id}
+        url = settings.API_BASE_URL + "add_booking_assign_to_agent"
+        verify = getDataFromAPI(login_type, access_token, url, payload)
+        print(verify)
+        if verify['success'] == 1:
+            messages.success(request, "Assign Agent Successfully..!")
+            return HttpResponseRedirect(current_url, {})
+        else:
+            messages.error(request, "Failed To AAssign Agent.!")
+            return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
+
+
+def change_booking_status(request):
+    if 'agent_login_type' in request.session:
+        login_type = request.session['agent_login_type']
+        access_token = request.session['agent_access_token']
+
+        booking_id = request.POST.get('booking_id', '')
+        user_id = request.POST.get('user_id', '')
+        to_user_id = request.POST.get('to_user_id', '')
+        status_id = request.POST.get('status_id', '')
+        user_comment = request.POST.get('user_comment', '')
+        current_url = request.POST.get('current_url', '')
+        payload = {'booking_id': booking_id, 'user_id':user_id, 'status_id':status_id,'user_comment':user_comment,'to_user_id':to_user_id}
+        url = settings.API_BASE_URL + "change_booking_status"
+        print(payload)
+        verify = getDataFromAPI(login_type, access_token, url, payload)
+        print(verify)
+        if verify['success'] == 1:
+            messages.success(request, "Assign Agent Successfully..!")
+            return HttpResponseRedirect(current_url, {})
+        else:
+            messages.error(request, "Failed To AAssign Agent.!")
+            return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/agents/login")
 
 def getDataFromAPI(login_type, access_token, url, payload):
     headers = {'Authorization': 'Token ' + access_token, 'usertype': login_type}

@@ -6,570 +6,504 @@
 <!-- start page content -->
 
 
- <div class="page-content-wrapper">
-                <div class="page-content">
-                 <div>
-                 <div style="font-size:14px; font-weight:bold;" align="center">
+<!--{{bookings}}-->
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+                 <div class="text-center">
+                 <div style="font-size:14px; font-weight:bold;">
                      Flight Booking Details
                      </div>
-                   </div>
+            </div>
+
+
+
+{% for booking in bookings %}
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Basic Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+							 <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+								  <tr>
+                                    <td>Reference No</td>
+                                    <td>{{ booking.reference_no }}</td>
+                                </tr>
+
+								 <tr>
+                                    <td>Usage Type</td>
+                                    <td>{{ booking.usage_type }}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>Journey Type</td>
+                                    <td>{{booking.journey_type}}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>Flight Class</td>
+                                    <td>{{booking.flight_class}}</td>
+                                </tr>
+
+
+								 <tr>
+                                    <td>From Location</td>
+                                    <td>{{ booking.from_location }}</td>
+                                </tr>
+								 <tr>
+                                    <td>To Location</td>
+                                    <td>{{ booking.to_location }}</td>
+                                </tr>
+                                 <tr>
+                                    <td>Preferred Flight</td>
+                                    <td>{{ booking.preferred_flight }}</td>
+                                </tr>
+								<tr>
+                                    <td>Departure Datetime</td>
+                                    <td>{{ booking.departure_datetime }}
+                                    </td>
+                                </tr>
+
+
+
+                                 <tr>
+                                    <td>Booking Date</td>
+                                    <td>{{ booking.booking_datetime }}</td>
+                                </tr>
+								 <tr>
+                                    <td>No Of Seats</td>
+                                    <td>{{ booking.no_of_seats }}</td>
+                                </tr>
+								<tr>
+                                    <td>Created By:</td>
+                                    <td>
+                                        {% with booking.ActionLogs|first as first_object %}
+                                            {{ first_object.employee_name }} ({{ first_object.name }})
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td>Created:</td>
+                                    <td>
+                                        {% with booking.ActionLogs|first as first_object %}
+                                            {{ first_object.action_date }}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+								<tr>
+                                    <td>Booking Reason</td>
+                                    <td>{{ booking.reason_booking }}</td>
+                                </tr>
+								 <tr>
+                                    <td>Client Status</td>
+                                    <td>{{ booking.client_status }}</td>
+                                </tr>
+								 <tr>
+                                    <td>CoTrav Status</td>
+                                    <td>{{ booking.cotrav_status }}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>Client Billing Entity</td>
+                                    <td>
+										 <select class="form-control myselect" name="taxitype_id" style="width:100%;" required>
+                                            <option value="">Select Client Billing Entity</option>
+                                           {% for entity in booking.ClientEntity %}
+                                            <option value="{{entity.id}}" {% if entity.id == booking.billing_entity_id %}  selected {%endif%}>{{entity.entity_name}}</option>
+                                            {% endfor %}
+                                        </select>
+									</td>
+                                </tr>
 
 
-                    {% for booking in bookings %}
 
-
-										{% if booking.status_client >= 5 %}
-                      <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Company Billing Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-						            <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="invlice_date" id="invlice_date" value="{{ booking.created }}" readonly>
-					                     <label class = "mdl-textfield__label">Invoice Date</label>
-					                  </div>
-						            </div>
-
-						            <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="ticket_price" id="ticket_price" value="{{ booking.ticket_price | default:0}}" readonly>
-					                     <label class = "mdl-textfield__label">Ticket Price</label>
-					                  </div>
-						            </div>
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="management_fee" id="management_fee"  value="{{ booking.management_fee | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">Management Fee</label>
-					                  </div>
-						            </div>
-
-									 <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="igst" id="igst"  value="{{ booking.management_fee_igst_rate | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">IGST (On Mgmt Fee )</label>
-					                  </div>
-						            </div>
-
-									 <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="cgst" id="cgst"  value="{{ booking.management_fee_cgst_rate | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">CGST (On Mgmt Fee)</label>
-					                  </div>
-						            </div>
-
-									 <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="sgst" id="sgst"  value="{{ booking.management_fee_sgst_rate | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">SGST (On Mgmt Fee)</label>
-					                  </div>
-						            </div>
-
-									 <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="invoice_amt"  id="invoice_amt" value="{{ booking.sub_total | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">Invoice Amount</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="client_ticket" id="client_ticket"  value="{{ booking.client_ticket | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">Client Ticket</label>
-					                  </div>
-						            </div>
-
-
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="invoice_status" id="invoice_status"  value="{{ booking.invoice_status_client | default:0 }}" readonly>
-					                     <label class = "mdl-textfield__label">Invoice Status</label>
-					                  </div>
-						            </div>
-
-
-
-								</div>
-							</div>
-						</div>
-					</div>
-{% endif %}
-
-
-
-                     <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; ">
-								<div class="card-head">
-									<header>Basic Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-						            <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="ref_no"  id = "ref_no" value="{{ booking.reference_no }}" readonly>
-					                     <label class = "mdl-textfield__label">Reference No</label>
-					                  </div>
-						            </div>
-
-						           <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "usage_type" name="usage_type" value="{{ booking.usage_type }}" readonly>
-					                     <label class = "mdl-textfield__label">Usage Type</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "journey_type" name="journey_type" value="{{ booking.journey_type }}" readonly>
-					                     <label class = "mdl-textfield__label">Journey Type</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "flight_class" name="flight_class" value="{{ booking.flight_class }}" readonly>
-					                     <label class = "mdl-textfield__label">Flight Class</label>
-					                  </div>
-                                    </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "from_location" name="from_location" value="{{ booking.from_location }}" readonly>
-					                     <label class = "mdl-textfield__label">From Location</label>
-					                  </div>
-                                    </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "to_location" name="to_location" value="{{ booking.to_location }}" readonly>
-					                     <label class = "mdl-textfield__label">To Location</label>
-					                  </div>
-                                    </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "preferred_flight" name="preferred_flight" value="{{ booking.preferred_flight }}" readonly>
-					                     <label class = "mdl-textfield__label">Preferred Flight</label>
-					                  </div>
-                                    </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "departure_datetime" name="departure_datetime" value="{{ booking.departure_datetime }}" readonly>
-					                     <label class = "mdl-textfield__label">Departure Datetime</label>
-					                  </div>
-                                    </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "booking_datetime" name="booking_datetime" value="{{ booking.booking_datetime }}" readonly>
-					                     <label class = "mdl-textfield__label">Booking Date</label>
-					                  </div>
-						            </div>
-
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "no_of_seats" name="no_of_seats"  value="{{ booking.no_of_seats }}" readonly>
-					                     <label class = "mdl-textfield__label">No Of Seats</label>
-					                  </div>
-						            </div>
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "reason_booking" name="reason_booking"  value="{{ booking.reason_booking }}" readonly>
-					                     <label class = "mdl-textfield__label">Booking Reason</label>
-					                  </div>
-						            </div>
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "client_status" name="client_status"  value="{{ booking.client_status }}" readonly>
-					                     <label class = "mdl-textfield__label">Client Status</label>
-					                  </div>
-						            </div>
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "cotrav_status" name="cotrav_status"  value="{{ booking.cotrav_status }}" readonly>
-					                     <label class = "mdl-textfield__label">CoTrav Status</label>
-					                  </div>
-						            </div>
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-
-
-                      <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>SPOC Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="spoc_name"  id = "spoc_name" value="{{ booking.user_name }}" readonly>
-					                     <label class = "mdl-textfield__label">Spoc Name</label>
-					                  </div>
-						            </div>
-
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "spoc_contact" name="spoc_contact" value="{{ booking.user_contact }}" readonly>
-					                     <label class = "mdl-textfield__label">Contact Number</label>
-					                  </div>
-						            </div>
-                                    <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "spoc_email" name="spoc_email"  value="{{ booking.email }}" readonly>
-					                     <label class = "mdl-textfield__label">Email ID</label>
-					                  </div>
-						            </div>
-
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-
-					{% if booking.flight_type  %}
-                      <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Request Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="flight_type"  id = "flight_type" value="{{ booking.flight_type }}" readonly>
-					                     <label class = "mdl-textfield__label">Flight Type</label>
-					                  </div>
-						            </div>
-
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "seat_type" name="seat_type" value="{{ booking.seat_type }}" readonly>
-					                     <label class = "mdl-textfield__label">Seat Type</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "trip_type" name="trip_type" value="{{ booking.trip_type }}" readonly>
-					                     <label class = "mdl-textfield__label">Trip Type</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "fare_type" name="fare_type" value="{{ booking.fare_type }}" readonly>
-					                     <label class = "mdl-textfield__label">Fare Type</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "meal_is_include" name="meal_is_include" value="{{ booking.meal_is_include }}" readonly>
-					                     <label class = "mdl-textfield__label">Meal Included</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "no_of_stops" name="no_of_stops" value="{{ booking.no_of_stops }}" readonly>
-					                     <label class = "mdl-textfield__label">No Of Stops</label>
-					                  </div>
-						            </div>
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-							</div>
-						</div>
-					</div>
-					{% endif %}
-
-
-
-					{% if booking.operator_name %}
-                      <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Operator Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="operator_name"  id = "operator_name" value="{{ booking.operator_name }}" readonly>
-					                     <label class = "mdl-textfield__label">Operator Name</label>
-					                  </div>
-						            </div>
-
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "operator_contact" name="operator_contact" value="{{ booking.operator_contact }}" readonly>
-					                     <label class = "mdl-textfield__label">Contact Number</label>
-					                  </div>
-						            </div>
-
-
-
-
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-							</div>
-						</div>
-					</div>
-					{% endif %}
-
-
-
-					 <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Passenger Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-
-								{% for passanger in booking.Passangers %}
-
-								<div class="card-body row">
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="employee_name{{ forloop.counter }}"  id = "employee_name{{ forloop.counter }}" value="{{ passanger.employee_name }}" readonly>
-					                     <label class = "mdl-textfield__label">Passenger Name</label>
-					                  </div>
-						            </div>
-
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "employee_email{{ forloop.counter }}" name="employee_email{{ forloop.counter }}" value="{{ passanger.employee_email }}" readonly>
-					                     <label class = "mdl-textfield__label">Email ID</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "employee_contact{{ forloop.counter }}" name="employee_contact{{ forloop.counter }}" value="{{ passanger.employee_contact }}" readonly>
-					                     <label class = "mdl-textfield__label">Contact Number</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "age{{ forloop.counter }}" name="age{{ forloop.counter }}" value="{{ passanger.age }}" readonly>
-					                     <label class = "mdl-textfield__label">Age</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "gender{{ forloop.counter }}" name="gender{{ forloop.counter }}" value="{{ passanger.gender }}" readonly>
-					                     <label class = "mdl-textfield__label">Gender</label>
-					                  </div>
-						            </div>
-
-
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-
-								{% endfor %}
-
-							</div>
-						</div>
-					</div>
-
-
-                    
-
-
-                    <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%">
-								<div class="card-head">
-									<header>Flight Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-
-								{% for flight in booking.Flights %}
-
-								<div class="card-body row">
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="flight_name{{ forloop.counter }}"  id = "flight_name{{ forloop.counter }}" value="{{ flight.flight_name }}" readonly>
-					                     <label class = "mdl-textfield__label">Flight Name {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-						            <div class="col-lg-3 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "flight_no{{ forloop.counter }}" name="flight_no{{ forloop.counter }}" value="{{ flight.flight_no }}" readonly>
-					                     <label class = "mdl-textfield__label">Flight Number {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "pnr_no{{ forloop.counter }}" name="pnr_no{{ forloop.counter }}" value="{{ flight.pnr_no }}" readonly>
-					                     <label class = "mdl-textfield__label">PNR NO {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "from_city{{ forloop.counter }}" name="from_city{{ forloop.counter }}" value="{{ flight.from_city }}" readonly>
-					                     <label class = "mdl-textfield__label">From City {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-									<div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "to_city{{ forloop.counter }}" name="to_city{{ forloop.counter }}" value="{{ flight.to_city }}" readonly>
-					                     <label class = "mdl-textfield__label">To City {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "departuredatetime{{ forloop.counter }}" name="departure_datetime{{ forloop.counter }}" value="{{ flight.departure_datetime }}" readonly>
-					                     <label class = "mdl-textfield__label">Departure Datetime {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-                                    <div class="col-lg-2 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" id = "arrival_datetime{{ forloop.counter }}" name="arrival_datetime{{ forloop.counter }}" value="{{ flight.arrival_datetime }}" readonly>
-					                     <label class = "mdl-textfield__label">Arrival Datetime {{ forloop.counter }}</label>
-					                  </div>
-						            </div>
-
-
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-
-								{% endfor %}
-
-							</div>
-						</div>
-					</div>
-
-
-                    {% endfor %}
-
-					    <div class="row">
-						<div class="col-sm-12">
-							<div class="card card-box" style="margin:10px; margin-left:3%; margin-right:3%; margin-bottom: 5%">
-								<div class="card-head">
-									<header>Comment Details: </header>
-                                     <div class="tools">
-
-										<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-
-                                    </div>
-								</div>
-								<div class="card-body row">
-						            <div class="col-lg-5 p-t-20">
-						              <div class = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-					                     <input class = "mdl-textfield__input" type = "text" name="comment"  id = "reason_booking" value="{{ booking.reason_booking }}" readonly>
-					                     <label class = "mdl-textfield__label">Comment</label>
-					                  </div>
-						            </div>
-
-
-
-
-
-
-<!--							         <div class="col-lg-12 p-t-20 text-center">-->
-<!--						              	<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink">Submit</button>-->
-<!--										<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect m-b-10 btn-default">Cancel</button>-->
-<!--						            </div>-->
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-
-
-
-
-
+							 </table>
+                        </div>
+                    </div>
                 </div>
 
 
+				 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Spoc Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+							<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+								 <tr>
+                                    <td>Employee ID</td>
+                                    <td>{{ booking.user_cid }}</td>
+                                </tr>
+
+								  <tr>
+                                    <td>Spoc Name</td>
+                                    <td>{{ booking.user_name }}</td>
+                                </tr>
+
+								 <tr>
+                                    <td>Contact</td>
+                                    <td>{{ booking.user_contact }}</td>
+                                </tr>
+								 <tr>
+                                    <td>Email Id</td>
+                                    <td>{{ booking.user_email }}</td>
+                                </tr>
+							 </table>
+                    </div>
+                </div>
             </div>
-				<div></div>
+			</div>
+
+
+             <div class="col-md-3">
+
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Assigned Flight Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+
+							<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+
+								 <tr>
+                                    <td>Assign Date | Time:</td>
+                                    <td>{{ booking.boarding_datetime }}</td>
+                                </tr>
+
+								 <tr>
+                                    <td>Flight Type: </td>
+                                    <td>{{ booking.flight_type }}</td>
+                                </tr>
+
+								 <tr>
+                                    <td>Seat Type: </td>
+                                    <td>{{ booking.seat_type }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Trip Type:</td>
+                                    <td>{{ booking.trip_type }}</td>
+                                </tr>
+
+								 <tr>
+                                    <td>Fare Type:</td>
+                                    <td>{{ booking.booking.fare_type }}</td>
+                                </tr>
+
+								 <tr>
+                                    <td>Meal Included:</td>
+                                    <td>{{ booking.booking.meal_is_include|yesno:'Yes,No' }}</td>
+                                </tr>
+
+								<tr>
+                                    <td>No Of Stops:</td>
+                                    <td>{{ booking.no_of_stops  }}</td>
+                                </tr>
+
+							 </table>
+                        </div>
+                    </div>
+                    </div>
+
+
+
+
+{% for flight in booking.Flights %}
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Flight Details {{ forloop.counter }}:</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+							<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+								{% if flight.is_return_flight == '1' %}
+                                <tr>
+                                    <td>Return Flight Name</td>
+                                    <td>{{ flight.flight_name }}</td>
+                                </tr>
+                                {% endif %}
+
+								 <tr>
+                                    <td>Flight Name</td>
+                                    <td>{{ flight.flight_name }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Flight Number</td>
+                                    <td>{{ flight.flight_no }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>PNR Number</td>
+                                    <td>{{ flight.pnr_no }}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>From City</td>
+                                    <td>{{ flight.from_city }}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>To City</td>
+                                    <td>{{ flight.to_city }}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>Departure Datetime</td>
+                                    <td>{{ flight.departure_datetime }}</td>
+                                </tr>
+
+                                 <tr>
+                                    <td>Arrival Datetime</td>
+                                    <td>{{ flight.arrival_datetime }}</td>
+                                </tr>
+
+							 </table>
+                        </div>
+
+                    </div>
+                    </div>
+{% endfor %}
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Comment Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+                        <div class="form-group row">
+							<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+								  <tr>
+                                    <td>Comment</td>
+                                    <td>{{ booking.reason_booking }}</td>
+                                </tr>
+
+							 </table>
+                        </div>
+
+                    </div>
+                    </div>
+
+
+
+
+
+            </div>
+
+
+
+            <div class="col-md-6">
+
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Passanger Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+						<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+							<tr>
+
+
+									<th>  Name  </th>
+									<th>  Email Id </th>
+									<th>  Contact  </th>
+									<th>  Age   </th>
+									<th>  Gender </th>
+							</tr>
+
+							{% for passanger in booking.Passangers %}
+								<tr>
+                                    <td>{{ passanger.employee_name|default:'' }}</td>
+								<td>{{ passanger.employee_email|default:''}}</td>
+							    <td>{{ passanger.employee_contact|default:''}}</td>
+								<td>{{ passanger.age|default:''}}</td>
+							    <td>{{ passanger.gender|default:''}}</td>
+								</tr>
+							{% endfor %}
+
+
+
+						 </table>
+
+                    </div>
+                </div>
+
+
+
+
+
+				 <div class="row">
+
+			   <div class="col-md-6">
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Operator Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+						<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+							<tr>
+								<td>Name:</td>
+                                <td>{{ booking.operator_name }}</td>
+							</tr>
+
+
+							<tr>
+								<td>Contact:</td>
+                                <td>{{ booking.operator_contact|default:'' }}</td>
+							</tr>
+
+
+
+						 </table>
+
+                    </div>
+                </div>
+
+
+
+                    <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>ActionLog Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+						<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+                            {% for log in booking.ActionLogs %}
+							<tr>
+								<td>
+                                  {% if log.action == 1%}Created By{% else %}{{log.status}}{% endif %}  [{{log.action_date}}]: {{log.employee_name}}({{log.name}})
+                                </td>
+							</tr>
+                            {% endfor %}
+						 </table>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+             {% if booking.status_cotrav >= 5 %}
+			 <div class="col-md-6">
+
+                 <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Billing Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+						<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+                            <tr>
+								<td>Ticket Price :</td>
+                                <td>{{booking.ticket_price}}</td>
+							</tr>
+                            <tr>
+								<td>Management Fee:</td>
+                                <td>{{booking.management_fee}}</td>
+							</tr>
+                            <tr>
+								<td>IGST (On Mgmt Fee ):</td>
+                                <td>{{booking.management_fee_igst_rate}}</td>
+							</tr>
+                            <tr>
+								<td>CGST (On Mgmt Fee):</td>
+                                <td>{{booking.management_fee_cgst_rate}}</td>
+							</tr>
+                            <tr>
+								<td>SGST (On Mgmt Fee):</td>
+                                <td>{{booking.management_fee_sgst_rate}}</td>
+							</tr>
+
+							<tr>
+								<td>Invoice Amount:</td>
+                                <td>{{booking.sub_total}}</td>
+							</tr>
+
+                            <tr>
+								<td>Ticket:</td>
+                                <td>{{booking.client_ticket}}</td>
+							</tr>
+
+
+							<tr>
+								<td>Cotrav Status:</td>
+                                <td>{{booking.invoice_status_cotrav}}</td>
+							</tr>
+
+                            <tr>
+								<td>Client Status:</td>
+                                <td>{{booking.invoice_status_client}}</td>
+							</tr>
+
+
+						 </table>
+
+                    </div>
+                </div>
+
+                  <div class="card">
+                    <div class="card-head card-topline-aqua">
+                        <header>Invoice ActionLog Details</header>
+                    </div>
+                    <div class="card-body no-padding height-9">
+
+						<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+                            {% for log in booking.InvoiceActionLog %}
+							<tr>
+								<td>
+                                  {{log.status_name}} [{{log.action_date}}]: {{log.employee_name}}({{log.name}})
+                                </td>
+							</tr>
+                            {% endfor %}
+						 </table>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+                     {% endif %}
+
+
+
+
+				 </div>
+
+
+        </div>
+
+
+
+
+
+
+ {% endfor %}
+
+    </div>
+</div>
+<!-- end page content -->
+
 
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>

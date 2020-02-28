@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/send_mail_to_user', api_views.send_mail_to_user),
 
     path('api/get_all_leads', api_views.get_all_leads),
+    path('api/view_lead', api_views.view_lead),
     path('api/add_lead', api_views.add_lead),
     path('api/update_lead', api_views.update_lead),
 

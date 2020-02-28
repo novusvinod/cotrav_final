@@ -11,6 +11,9 @@ urlpatterns = [
     path('agents/upload', agent_views.upload_file_getpath),
     path('agents/pdf', agent_views.generate_pdf_file),
     path('agents/cotrav-communication', agent_views.cotrav_communication),
+    path('agents/add-booking-tracking-status', agent_views.add_booking_tracking_status),
+    path('agents/add-booking-assign-to-agent', agent_views.add_booking_assign_to_agent),
+    path('agents/change-booking-status', agent_views.change_booking_status),
 
     path('agents/taxi-types',agent_views.taxi_types),
     path('agents/taxi-models',agent_views.taxi_models),

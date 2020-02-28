@@ -42,6 +42,93 @@
     </div>
 </div>
 
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_action_assign">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title-status">Enter Details To Assign Agent</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/add-booking-assign-to-agent" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="booking_id" id="booking_id_assign">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="booking_type" value="2">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <div class="modal-body">
+                <div class="row">
+                    <label class="control-label col-sm-4">Enter Comment</label>
+                    <div class="col-sm-8">
+                    <textarea class="form-control" rows="4" name="user_comment" placeholder="Enter Comment.."></textarea>
+                        </div>
+                </div>
+                    <br>
+
+                    <div class="row">
+                    <label class="control-label col-sm-4">Select Agent</label>
+                        <div class="col-sm-8">
+                    <select name="to_user_id" id="to_user_id" class="form-control myselect " required style="width:100%">
+                        <option value="">Select Agent Name</option>
+                        {% for agent in agents %}
+                            <option value="{{agent.id}}">{{agent.user_name}}</option>
+                        {% endfor %}
+                    </select>
+                            </div>
+                </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_action_tracking">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title-status">Enter Booking Current Status</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/add-booking-tracking-status" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="booking_id" id="booking_id_tracking">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="booking_type" value="2">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <div class="modal-body">
+                <div class="row">
+                    <label class="control-label col-sm-2">Enter Status</label>
+                    <textarea class="form-control col-sm-10" rows="4" name="user_comment" placeholder="Enter Status.."></textarea>
+                </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" role="dialog" id="modalDownloadTaxiReport">
   <div class="modal-dialog">
@@ -212,7 +299,8 @@
                                     <th>Operator Details</th>
                                     <th>Spoc Details</th>
                                     <th>Passenger Details</th>
-
+                                    <th>Booking Notes</th>
+                                    <th>Assign To</th>
                                     <th>Details</th>
 
                                 </tr>
@@ -267,6 +355,25 @@
                                         {% endfor %}
                                     </td>
 
+                                    <td>
+
+                                        {% for tracking in booking.TrackingStatus %}
+                                        <b>{{ tracking.user_name|default:'' }}</b> [ {{tracking.status_date}} ]: {{tracking.tracking_status}} <br/>
+                                        {% endfor %}
+                                        <a title="Add Tracking Status" style="background:cadetblue; color:white;" data-target="#model_action_tracking" data-id="{{booking.id}}"
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-comment"></i> </a>
+
+                                    </td>
+
+                                     <td>
+                                        {% if booking.assigned_by_agent_name %}
+                                        Assigned by :<b>{{booking.assigned_by_agent_name}}</b><br/>Assigned to :<b>{{booking.assigned_to_agent_name}}</b>
+                                        {% endif %}
+                                        <a title="Add Tracking Status" style="background:cadetblue; color:white;" data-target="#model_action_assign" data-id="{{booking.id}}"
+                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-user"></i> </a>
+
+                                    </td>
+
 
 
                                     <td>
@@ -294,6 +401,24 @@
 
 <script type="text/javascript">
 $(function() {
+
+  $('#model_action_assign').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('#booking_id_assign').val(id);
+
+    });
+
+  $('#model_action_tracking').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('#booking_id_tracking').val(id);
+
+    });
 
   $('#model_action').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal

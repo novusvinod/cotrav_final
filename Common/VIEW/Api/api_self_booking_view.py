@@ -14,7 +14,11 @@ def get_bus_booking_search_result(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()

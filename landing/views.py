@@ -2,7 +2,7 @@ import json
 import socket
 
 from django.shortcuts import render , redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from Common.models import Corporate
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -125,10 +125,32 @@ def support(request):
         return render(request,'cotrav_support.html')
 
 
-def error_404_view(request, exception):
+def error_404_view(request, *args, **argv):
     data = {"name": "ThePythonDjango.com"}
+    print(request.get_full_path())
+    urlll = request.get_full_path()
+    url = urlll.split("/")
+    if url[1] == 'api':
+        return JsonResponse({
+            'success': 0,
+            'message': 'api not found'
+        })
+
     return render(request, 'error_404.html', data)
 
+
+def error_500_view(request, *args, **arg):
+    data = {"name": "ThePythonDjango.com"}
+    print(request.get_full_path())
+    urlll = request.get_full_path()
+    url = urlll.split("/")
+    if url[1] == 'api':
+        return JsonResponse({
+            'success': 0,
+            'message': 'api not found'
+        })
+
+    return render(request, 'error_404.html', data)
 
 def testsignup(request):
     try:

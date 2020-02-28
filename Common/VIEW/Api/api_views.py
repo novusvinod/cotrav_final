@@ -39,7 +39,7 @@ from Common.email_settings import SignIn_OTP, AddBooking_Email, newUserAdd_Email
 from landing.cotrav_messeging import Flight
 from landing.forms import LeadGenerationModelForm, LeadUpdateForm
 from landing.leads_generation import file_upload
-from landing.models import Leadgeneration , LeadComments , LeadLog
+from landing.models import Leadgeneration, LeadComments, LeadLog, Document
 from Common.email_settings import SignupEmail,Lead_Status_Change_Email
 COTRAV_EMAILS = "balwant@taxiaxi.in,chauhanbalwant007@gmail.com"
 COTRAV_NUMBERS = "9579477262,"
@@ -115,7 +115,11 @@ def logout(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     timezone.activate(pytz.timezone("Asia/Kolkata"))
@@ -145,7 +149,11 @@ def service_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -176,7 +184,11 @@ def railway_stations(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -207,7 +219,11 @@ def bus_booking_portals(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -238,7 +254,11 @@ def companies(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -269,7 +289,11 @@ def view_company(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -335,7 +359,11 @@ def add_companies(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -415,7 +443,11 @@ def update_company(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -455,7 +487,11 @@ def delete_company(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -510,7 +546,11 @@ def add_company_rates(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -562,7 +602,11 @@ def update_company_rates(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -601,7 +645,11 @@ def delete_company_rates(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -641,7 +689,11 @@ def company_rates(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -677,7 +729,11 @@ def billing_entities(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -713,7 +769,11 @@ def view_billing_entitie(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -745,7 +805,11 @@ def corporate_management_fee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -777,7 +841,11 @@ def service_fee_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -815,7 +883,11 @@ def admins(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -853,7 +925,11 @@ def view_admin(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -889,7 +965,11 @@ def groups(request):
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -925,7 +1005,11 @@ def subgroups(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -961,7 +1045,11 @@ def spocs(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -998,7 +1086,11 @@ def employee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1045,7 +1137,11 @@ def spoc_employee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1097,7 +1193,11 @@ def corporate_package(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1133,7 +1233,11 @@ def get_assessment_code(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1169,7 +1273,11 @@ def get_assessment_city(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1199,7 +1307,11 @@ def cities(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1229,7 +1341,11 @@ def taxi_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1259,7 +1375,11 @@ def train_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1289,7 +1409,11 @@ def bus_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1319,7 +1443,11 @@ def irctc_accounts(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1349,7 +1477,11 @@ def hotel_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1379,7 +1511,11 @@ def get_airports(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1409,7 +1545,11 @@ def hotel_booking_portals(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1440,7 +1580,11 @@ def view_hotel_portal(request):
         hotel_id = request.POST.get('hotel_id', '')
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1499,7 +1643,11 @@ def add_hotel_portal(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1551,7 +1699,11 @@ def update_hotel_portal(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1582,7 +1734,11 @@ def room_types(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1619,7 +1775,11 @@ def add_corporate_management_fee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1661,7 +1821,11 @@ def update_corporate_management_fee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1698,7 +1862,11 @@ def delete_corporate_management_fee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1735,7 +1903,11 @@ def add_taxi_type(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1773,7 +1945,11 @@ def update_taxi_type(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1810,7 +1986,11 @@ def delete_taxi_type(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1850,7 +2030,11 @@ def add_taxi_model(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1888,7 +2072,11 @@ def update_taxi_model(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1925,7 +2113,11 @@ def delete_taxi_model(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -1960,7 +2152,11 @@ def taxis(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -2003,7 +2199,11 @@ def add_taxi(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -2049,7 +2249,11 @@ def update_taxi(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -2085,7 +2289,11 @@ def delete_taxi(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -2120,7 +2328,11 @@ def taxi_models(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -2181,7 +2393,11 @@ def add_billing_entity(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2245,7 +2461,11 @@ def update_billing_entity(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2297,7 +2517,11 @@ def delete_billing_entity(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2364,7 +2588,11 @@ def add_cotrav_billing_entity(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2429,7 +2657,11 @@ def update_cotrav_billing_entity(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2482,7 +2714,11 @@ def delete_cotrav_billing_entity(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2544,7 +2780,11 @@ def add_group(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2595,7 +2835,11 @@ def update_group(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2638,7 +2882,11 @@ def delete_group(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2700,7 +2948,11 @@ def add_subgroup(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2753,7 +3005,11 @@ def update_subgroup(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2797,7 +3053,11 @@ def delete_subgroup(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2876,7 +3136,11 @@ def add_group_auth(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2939,7 +3203,11 @@ def update_group_auth(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -2979,7 +3247,11 @@ def delete_group_auth(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3058,7 +3330,11 @@ def add_subgroup_auth(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3120,7 +3396,11 @@ def update_subgroup_auth(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3160,7 +3440,11 @@ def delete_subgroup_auth(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3237,7 +3521,11 @@ def add_admin(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3301,7 +3589,11 @@ def update_admin(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3343,7 +3635,11 @@ def delete_admin(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3431,7 +3727,11 @@ def add_spoc(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3505,7 +3805,11 @@ def update_spoc(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3548,7 +3852,11 @@ def delete_spoc(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3589,7 +3897,11 @@ def active_spoc(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3688,7 +4000,11 @@ def add_employee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3768,7 +4084,11 @@ def update_employee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3809,7 +4129,11 @@ def delete_employee(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3870,7 +4194,11 @@ def add_agent(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3939,7 +4267,11 @@ def update_agent(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -3981,7 +4313,11 @@ def delete_agent(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -4019,7 +4355,11 @@ def activate_agent(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -4060,7 +4400,11 @@ def view_group(request):
 
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4096,7 +4440,11 @@ def view_group_auth(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4132,7 +4480,11 @@ def view_subgroup(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4168,7 +4520,11 @@ def view_subgroup_auth(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4204,7 +4560,11 @@ def view_auth_1(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4240,7 +4600,11 @@ def view_auth_2(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4276,7 +4640,11 @@ def view_spoc(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4312,7 +4680,11 @@ def view_employee(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4359,7 +4731,11 @@ def view_agent(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4396,7 +4772,11 @@ def assessment_codes(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4465,7 +4845,11 @@ def add_assessment_codes(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4538,7 +4922,11 @@ def update_assessment_codes(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4576,7 +4964,11 @@ def delete_assessment_codes(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4615,7 +5007,11 @@ def assessment_cities(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4650,7 +5046,11 @@ def add_assessment_cities(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4690,7 +5090,11 @@ def update_assessment_cities(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4727,7 +5131,11 @@ def delete_assessment_cities(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4762,7 +5170,11 @@ def get_agents(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4795,7 +5207,11 @@ def view_agents(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4826,7 +5242,11 @@ def view_taxi_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4835,10 +5255,35 @@ def view_taxi_booking(request):
                     cursor.close()
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
+                    corporate_id = emp[0]['corporate_id']
                     print(booking_id)
                     cursor1.callproc('getAllTaxiBookingPassangers', [booking_id])
                     passanger = dictfetchall(cursor1)
                     cursor1.close()
+
+                    cursor4 = connection.cursor()
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    actions1 = dictfetchall(cursor4)
+                    emp[0]['ClientEntity'] = actions1
+                    cursor4.close()
+
+                    cursor5 = connection.cursor()
+                    cursor5.callproc('getAllCotravBillingEntities', [])
+                    actions2 = dictfetchall(cursor5)
+                    emp[0]['CotravEntity'] = actions2
+                    cursor5.close()
+
+                    cursor6 = connection.cursor()
+                    cursor6.callproc('getAllCorporateRatesDetails', [corporate_id])
+                    actions3 = dictfetchall(cursor6)
+                    emp[0]['Packages'] = actions3
+                    cursor6.close()
+
+                    cursor7 = connection.cursor()
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    actions6 = dictfetchall(cursor7)
+                    emp[0]['Employees'] = actions6
+                    cursor7.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllTaxiBookingsActionLogs', [booking_id])
@@ -4882,7 +5327,11 @@ def view_bus_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4891,10 +5340,29 @@ def view_bus_booking(request):
                     cursor.close()
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
+                    corporate_id = emp[0]['corporate_id']
                     print(booking_id)
                     cursor1.callproc('getAllBusBookingPassangers', [booking_id])
                     passanger = dictfetchall(cursor1)
                     cursor1.close()
+
+                    cursor4 = connection.cursor()
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    actions1 = dictfetchall(cursor4)
+                    emp[0]['ClientEntity'] = actions1
+                    cursor4.close()
+
+                    cursor5 = connection.cursor()
+                    cursor5.callproc('getAllCotravBillingEntities', [])
+                    actions2 = dictfetchall(cursor5)
+                    emp[0]['CotravEntity'] = actions2
+                    cursor5.close()
+
+                    cursor7 = connection.cursor()
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    actions6 = dictfetchall(cursor7)
+                    emp[0]['Employees'] = actions6
+                    cursor7.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllBusBookingsActionLogs', [booking_id])
@@ -4938,7 +5406,11 @@ def view_train_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -4947,10 +5419,29 @@ def view_train_booking(request):
                     cursor.close()
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
+                    corporate_id = emp[0]['corporate_id']
 
                     cursor1.callproc('getAllTrainBookingPassangers', [booking_id])
                     passanger = dictfetchall(cursor1)
                     cursor1.close()
+
+                    cursor4 = connection.cursor()
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    actions1 = dictfetchall(cursor4)
+                    emp[0]['ClientEntity'] = actions1
+                    cursor4.close()
+
+                    cursor5 = connection.cursor()
+                    cursor5.callproc('getAllCotravBillingEntities', [])
+                    actions2 = dictfetchall(cursor5)
+                    emp[0]['CotravEntity'] = actions2
+                    cursor5.close()
+
+                    cursor7 = connection.cursor()
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    actions6 = dictfetchall(cursor7)
+                    emp[0]['Employees'] = actions6
+                    cursor7.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllTrainBookingsActionLogs', [booking_id])
@@ -4996,7 +5487,11 @@ def view_hotel_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
 
                 try:
@@ -5007,11 +5502,30 @@ def view_hotel_booking(request):
                     cursor.close()
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
+                    corporate_id = emp[0]['corporate_id']
                     print(booking_id)
 
                     cursor1.callproc('getAllHotelBookingPassangers', [booking_id])
                     passanger = dictfetchall(cursor1)
                     cursor1.close()
+
+                    cursor4 = connection.cursor()
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    actions1 = dictfetchall(cursor4)
+                    emp[0]['ClientEntity'] = actions1
+                    cursor4.close()
+
+                    cursor5 = connection.cursor()
+                    cursor5.callproc('getAllCotravBillingEntities', [])
+                    actions2 = dictfetchall(cursor5)
+                    emp[0]['CotravEntity'] = actions2
+                    cursor5.close()
+
+                    cursor7 = connection.cursor()
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    actions6 = dictfetchall(cursor7)
+                    emp[0]['Employees'] = actions6
+                    cursor7.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllHotelBookingsActionLogs', [booking_id])
@@ -5058,7 +5572,11 @@ def view_flight_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -5067,6 +5585,7 @@ def view_flight_booking(request):
                     cursor.close()
                     cursor1 = connection.cursor()
                     booking_id = emp[0]['id']
+                    corporate_id = emp[0]['corporate_id']
 
 
                     cursor1.callproc('getAllFlightBookingPassangers', [booking_id])
@@ -5077,6 +5596,24 @@ def view_flight_booking(request):
                     cursor2.callproc('getAllFlightBookingFlights', [booking_id])
                     flights = dictfetchall(cursor2)
                     cursor2.close()
+
+                    cursor4 = connection.cursor()
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    actions1 = dictfetchall(cursor4)
+                    emp[0]['ClientEntity'] = actions1
+                    cursor4.close()
+
+                    cursor5 = connection.cursor()
+                    cursor5.callproc('getAllCotravBillingEntities', [])
+                    actions2 = dictfetchall(cursor5)
+                    emp[0]['CotravEntity'] = actions2
+                    cursor5.close()
+
+                    cursor7 = connection.cursor()
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    actions6 = dictfetchall(cursor7)
+                    emp[0]['Employees'] = actions6
+                    cursor7.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllFlightBookingsActionLogs', [booking_id])
@@ -5121,7 +5658,11 @@ def add_city_name(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5158,7 +5699,11 @@ def add_state_name(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5194,7 +5739,11 @@ def add_country_name(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5299,7 +5848,11 @@ def add_taxi_booking(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5431,7 +5984,11 @@ def add_bus_booking(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5564,7 +6121,11 @@ def add_train_booking(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5719,7 +6280,11 @@ def add_hotel_booking(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5856,7 +6421,11 @@ def add_flight_booking(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             user = {}
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 try:
@@ -5941,7 +6510,11 @@ def taxi_packages(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
             
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -5973,7 +6546,11 @@ def employee_dashboard(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6005,7 +6582,11 @@ def approver_2_dashboard(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6037,7 +6618,11 @@ def approver_1_dashboard(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6069,7 +6654,11 @@ def spoc_dashboard(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6106,7 +6695,11 @@ def admin_dashboard(request):
         print(user_token)
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6137,7 +6730,11 @@ def agent_dashboard(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6169,7 +6766,11 @@ def operator_dashboard(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6200,7 +6801,11 @@ def get_cotrav_billing_entities(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6237,7 +6842,11 @@ def corporate_management_fees(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6269,7 +6878,11 @@ def get_emp_passport_details(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6313,7 +6926,11 @@ def report_taxi_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('reportTaxiBookings', [filter_by,from_date,to_date,booking_status,company_name,user_id,user_type])
@@ -6373,7 +6990,11 @@ def report_bus_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('reportBusBookings', [filter_by,from_date,to_date,booking_status,company_name,user_id,user_type ])
@@ -6433,7 +7054,11 @@ def report_train_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('reportTrainBookings', [filter_by,from_date,to_date,booking_status,company_name,user_id,user_type ])
@@ -6494,7 +7119,11 @@ def report_flight_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('reportFlightBookings', [filter_by, from_date, to_date, booking_status, company_name,user_id,user_type])
@@ -6561,7 +7190,11 @@ def report_hotel_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 cursor = connection.cursor()
                 cursor.callproc('reportHotelBookings', [filter_by, from_date, to_date, booking_status, company_name ,user_id,user_type])
@@ -6611,7 +7244,11 @@ def get_flight_access_token(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -6642,7 +7279,11 @@ def generate_auth_token(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     url = "http://auth.ksofttechnology.com/API/AUTH"
@@ -6701,7 +7342,11 @@ def get_flight_search(request):
             user = {}
             user_token = req_token.split()
             if user_token[0] == 'Token':
-                user = getUserinfoFromAccessToken(user_token[1], user_type)
+                try:
+                    user = getUserinfoFromAccessToken(user_token[1], user_type)
+                except Exception as e:
+                    data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                    return JsonResponse(data)
                 if user:
                     try:
 
@@ -6894,7 +7539,11 @@ def get_flight_fare_search(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     url = "http://mdt.ksofttechnology.com/API/AVLT"
@@ -7248,7 +7897,11 @@ def save_flight_booking(request):
         r = ""
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     if is_mobile:
@@ -7454,7 +8107,11 @@ def get_flight_pnr_details(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     client_session = user_token[1]
@@ -7541,7 +8198,11 @@ def add_flight_booking_with_invoice(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     client_session = user_token[1]
@@ -7894,7 +8555,11 @@ def get_phr_detail_assign_booking(request):
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     client_session = user_token[1]
@@ -8228,7 +8893,11 @@ def get_nationality(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -8265,7 +8934,11 @@ def get_operator_package(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -8300,7 +8973,11 @@ def update_fcm_regid(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -8344,7 +9021,11 @@ def send_broadcast_notification(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     print("i m hererererer")
@@ -8380,7 +9061,11 @@ def send_message_to_moblies(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     print("i m hererererer")
@@ -8417,7 +9102,11 @@ def send_mail_to_user(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     print("i m hererererer")
@@ -8450,7 +9139,11 @@ def get_all_leads(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     cursor = connection.cursor()
@@ -8465,12 +9158,74 @@ def get_all_leads(request):
                         comp['LeadComments'] = passanger
                         cursor11.close()
 
+                        cursor12 = connection.cursor()
+                        cursor12.callproc('getAllLeadDocument', [lead_id])
+                        passanger1 = dictfetchall(cursor12)
+                        comp['LeadDocument'] = passanger1
+                        cursor12.close()
+
                         cursor22 = connection.cursor()
                         cursor22.callproc('getAllLeadActionLogs', [lead_id])
                         flights = dictfetchall(cursor22)
                         comp['ActionLogs'] = flights
                         cursor22.close()
 
+
+                    data = {'success': 1, 'Lead': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def view_lead(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+        lead_id = request.POST.get('lead_id', '')
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('viewLeadDetails', [lead_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    for comp in company:
+                        cursor11 = connection.cursor()
+                        cursor11.callproc('getAllLeadComments', [lead_id])
+                        passanger = dictfetchall(cursor11)
+                        comp['LeadComments'] = passanger
+                        cursor11.close()
+
+                        cursor12 = connection.cursor()
+                        cursor12.callproc('getAllLeadDocument', [lead_id])
+                        passanger1 = dictfetchall(cursor12)
+                        comp['LeadDocument'] = passanger1
+                        cursor12.close()
+
+                        cursor22 = connection.cursor()
+                        cursor22.callproc('getAllLeadActionLogs', [lead_id])
+                        flights = dictfetchall(cursor22)
+                        comp['ActionLogs'] = flights
+                        cursor22.close()
 
                     data = {'success': 1, 'Lead': company}
                     return JsonResponse(data)
@@ -8498,7 +9253,11 @@ def add_lead(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     # cursor = connection.cursor()
@@ -8599,7 +9358,11 @@ def update_lead(request):
         user_token = req_token.split()
         if user_token[0] == 'Token':
 
-            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
             if user:
                 try:
                     # cursor = connection.cursor()

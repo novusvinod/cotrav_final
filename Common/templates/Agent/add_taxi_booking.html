@@ -63,9 +63,15 @@
                                 <label class="col-sm-4" >Tour Type*</label>
                                  <select id="tour_type" name="tour_type" class="form-control col-sm-8  myselect" style="width:66%"  style="width:66%"required>
                                       <option value="">Select Tour Type </option>
-                                      <option value="1">Radio </option>
+                                     {% if user.is_super_admin == 1 or user.has_radio_booking_access == 1 %}
+                                     <option value="1">Radio </option>
+                                     {% endif %}
+                                     {% if user.is_super_admin == 1 or user.has_local_booking_access == 1 %}
                                       <option value="2">Local </option>
+                                     {% endif %}
+                                     {% if user.is_super_admin == 1 or user.has_outstation_booking_access == 1 %}
                                       <option value="3">Outstation </option>
+                                     {% endif %}
                                   </select>
                             </div>
 
