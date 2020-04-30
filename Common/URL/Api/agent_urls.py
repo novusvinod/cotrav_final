@@ -63,6 +63,7 @@ urlpatterns = [
     path('api/reject_taxi_booking', agent_api_view.reject_taxi_booking),
     path('api/assign_taxi_booking', agent_api_view.assign_taxi_booking),
 
+    path('api/add_new_dutyslip', agent_api_view.add_new_dutyslip),
     path('api/add_taxi_invoice', agent_api_view.add_taxi_invoice),
     path('api/assign_operator_taxi_boooking', agent_api_view.assign_operator_taxi_boooking),
     path('api/add_booking_tracking_status', agent_api_view.add_booking_tracking_status),
@@ -116,8 +117,51 @@ urlpatterns = [
     path('api/dashboard_sales_by_city', agent_api_view.dashboard_sales_by_city),
     path('api/dashboard_sales_by_city_for_month', agent_api_view.dashboard_sales_by_city_for_month),
     path('api/dashboard_taxable_amount_table', agent_api_view.dashboard_taxable_amount_table),
+    path('api/dashboard_hotel_bookings_summery', agent_api_view.dashboard_hotel_bookings_summery),
 
     path('api/get_all_bills', agent_api_view.get_all_bills),
     path('api/get_all_generated_bills', agent_api_view.get_all_generated_bills),
+    path('api/bill_create_nontax_invoice', agent_api_view.bill_create_nontax_invoice),
+    path('api/bill_create_final_invoice', agent_api_view.bill_create_final_invoice),
+    path('api/get_all_bill_payment_status', agent_api_view.get_all_bill_payment_status),
+
+    path('api/get_corporate_podetails', agent_api_view.get_corporate_podetails),
+    path('api/add_podetails', agent_api_view.add_podetails),
+    path('api/update_podetails', agent_api_view.update_podetails),
+    path('api/delete_podetails', agent_api_view.delete_podetails),
+
+    path('api/get_corporate_accounts', agent_api_view.get_corporate_accounts),
+    path('api/add_corporate_account', agent_api_view.add_corporate_account),
+    path('api/update_corporate_account', agent_api_view.update_corporate_account),
+    path('api/delete_corporate_account', agent_api_view.delete_corporate_account),
+
+    path('api/get_cotrav_accounts', agent_api_view.get_cotrav_accounts),
+    path('api/add_cotrav_account', agent_api_view.add_cotrav_account),
+    path('api/update_cotrav_account', agent_api_view.update_cotrav_account),
+    path('api/delete_cotrav_account', agent_api_view.delete_cotrav_account),
+
+    path('api/accept_bill', agent_api_view.accept_bill),
+    path('api/reject_bill', agent_api_view.reject_bill),
+    path('api/view_bill', agent_api_view.view_bill),
+    path('api/update_bill', agent_api_view.update_bill),
+
+    path('api/pay_bill', agent_api_view.pay_bill),
+    path('api/report_invoice', agent_api_view.report_invoice),
+    path('api/report_client_bills', agent_api_view.report_client_bills),
+
+    path('api/dashboard_search_bookings', agent_api_view.dashboard_search_bookings),
+    path('api/softdeleated_operators', agent_api_view.softdeleated_operators),
+    path('api/softdeleated_companies', agent_api_view.softdeleated_companies),
+    path('api/softdeleated_taxi', agent_api_view.softdeleated_taxies),
+    path('api/softdeleated_update', agent_api_view.update_softdeleated),
+    path('api/master-select', agent_api_view.master_select_record),
+    path('api/master-add', agent_api_view.master_add_record),
+    path('api/master-update', agent_api_view.master_update_record),
+    
+    path('api/update-passanger', agent_api_view.update_passanger_for_booking),
+    path('api/upload_new_ticket', agent_api_view.upload_new_ticket),
+
+    path('api/get_visa_services', agent_api_view.get_visa_services),
+    path('api/get_all_cotrav_visa_requests', agent_api_view.get_all_cotrav_visa_requests),
 
 ]

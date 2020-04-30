@@ -1,0 +1,242 @@
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `viewBillDetails`(IN `bill_idd` INT)
+    NO SQL
+BEGIN
+DECLARE done INT DEFAULT 0;
+
+DECLARE corporate_id , bill_number , taxi , bus , train , flight , hotel , bill_no , no_of_invoices , cotrav_billing_entity , client_billing_entity ,   billing_type INT DEFAULT 0;
+
+DECLARE tds_deducted_by_client , system_calculated_tds , igst , cgst , sgst , total_amount , is_paid , payment_status , total_gst_paid , management_fee , outstanding_pending_payment ,paid_total_amount , advance_payment , is_offline , reimbursement_voucher_id , taxable_amount , nontaxable_amount , po_id ,  cotrav_status , client_status FLOAT ;
+
+DECLARE user_id, voucher_gen_pdf, rembusment_gen_pdf, tax_invoice_gen_pdf  CHAR(255);
+
+DECLARE bill_created_date , bill_final_date DATETIME ;
+
+DECLARE cur CURSOR FOR SELECT `id`,`corporate_id`,`bill_number`,`taxi_flag`,`bus_flag`,`train_flag` ,`flight_flag`,`hotel_flag` FROM `bills` `bll` where bll.id = bill_idd ;
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+
+CREATE TEMPORARY TABLE tempBilling(
+            	id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            	booking_id INT,
+    			serviceType INT ,
+    			invoice_id INT ,
+    			booking_reference_no CHAR(255),
+    
+    			cotrav_bill_entity CHAR(255),
+    			cotrav_bill_gstno CHAR(255),
+    			cotrav_bill_panno CHAR(255),
+    			cotrav_address_1 CHAR(255),
+                cotrav_address_2 CHAR(255),
+                cotrav_address_3 CHAR(255),
+   				client_bill_entity CHAR(255),
+    			client_bill_gstno CHAR(255),
+    			client_bill_panno CHAR(255),
+    			client_bill_city CHAR(255),
+    			client_address_1 CHAR(255),
+                client_address_2 CHAR(255),
+                client_address_3 CHAR(255),
+    
+    			pickup_location CHAR(255),
+				drop_location CHAR(255),				
+    			booking_datetime DATE,
+				pickup_from_datetime CHAR(255),
+				pickup_to_datetime CHAR(255),
+				boarding_datetime CHAR(255),
+				assign_bus_type_id INT,
+    
+    			preferred_train CHAR(255), 
+    			boarding_point CHAR(255), 
+    			train_name CHAR(255) , 
+    			ticket_no INT , 
+    			pnr_no INT , 
+    			seat_no INT ,
+    
+    			from_location CHAR(255) , 
+    			to_location CHAR(255) , 
+    			departure_datetime CHAR(255) , 
+    			no_of_seats INT , 
+    			flight_type INT , 
+    			seat_type INT , 
+    			trip_type INT , 
+    			fare_type INT , 
+    			usage_type INT , 
+    			journey_type INT, 
+    			flight_class INT,
+    
+    			from_city_id INT,
+                from_area_id INT,
+                checkin_datetime CHAR(255),
+                checkout_datetime CHAR(255),
+                room_type_id INT,
+                no_of_nights INT,
+                assign_hotel_id INT,
+                assign_room_type INT,
+                is_ac_room INT,
+                total_room_price INT,
+    
+    			bill_number CHAR(255),
+    			corporate_id INT,
+    			no_of_invoices INT, 
+    			cotrav_billing_entity INT, 
+    			client_billing_entity INT, 
+    			billing_type INT, 
+    			tds_deducted_by_client INT, 
+    			system_calculated_tds INT, 
+    			igst FLOAT, 
+    			cgst FLOAT, 
+    			sgst FLOAT, 
+    			total_amount FLOAT, 
+    			is_paid INT, 
+    			payment_status INT, 
+    			total_gst_paid INT, 
+    			management_fee INT, 
+    			outstanding_pending_payment INT,
+    			paid_total_amount INT, 
+    			advance_payment INT, 
+    			is_offline INT, 
+    			reimbursement_voucher_id INT, 
+    			taxable_amount FLOAT, 
+    			nontaxable_amount FLOAT, 
+    			po_id INT, 
+    			bill_created_date CHAR(255), 
+    			bill_final_date CHAR(255), 
+    			cotrav_status INT, 
+    			client_status INT,
+voucher_gen_pdf CHAR(255), rembusment_gen_pdf CHAR(255), tax_invoice_gen_pdf CHAR(255)
+    
+    			
+    			
+            
+		);
+        
+        
+OPEN cur;
+
+read_loop: LOOP
+ 
+    FETCH cur INTO bill_no , corporate_id , bill_number ,taxi , bus  , train , flight , hotel   ; 
+    
+    
+    IF done THEN
+    
+        LEAVE read_loop;  
+        
+    END IF;
+    
+    IF taxi AND bill_no != 0 THEN
+    
+        INSERT INTO tempBilling (invoice_id , booking_id , serviceType, booking_reference_no, cotrav_bill_entity, cotrav_bill_gstno, 			cotrav_bill_panno, cotrav_address_1, cotrav_address_2, cotrav_address_3, client_bill_entity, client_bill_gstno, client_bill_panno, client_bill_city, client_address_1, client_address_2, client_address_3, pickup_location , drop_location , booking_datetime , pickup_from_datetime , pickup_to_datetime , boarding_datetime , assign_bus_type_id ,bill_number,corporate_id , no_of_invoices , cotrav_billing_entity , client_billing_entity , billing_type , tds_deducted_by_client , system_calculated_tds , igst , cgst , sgst , total_amount , is_paid , payment_status , total_gst_paid , management_fee , outstanding_pending_payment ,paid_total_amount , advance_payment , is_offline , reimbursement_voucher_id , taxable_amount , nontaxable_amount , po_id , bill_created_date , bill_final_date , cotrav_status , client_status, voucher_gen_pdf, rembusment_gen_pdf, tax_invoice_gen_pdf)
+        
+ 	SELECT a.id , a.booking_id , 1, bb.reference_no, ct.entity_name, ct.gst_id, ct.pan_no, ct.address_line_1,ct.address_line_2,ct.address_line_3, cb.entity_name, cb.gst_id, cb.pan_no, city.name, cb.address_line_1, cb.address_line_2, cb.address_line_3, bb.pickup_location , bb.drop_location , bb.booking_date , bb.pickup_datetime , bb.pickup_datetime , bb.pickup_datetime , bb.city_id, bill.bill_number, bill.corporate_id , bill.no_of_invoices , bill.cotrav_billing_entity , bill.client_billing_entity , bill.billing_type , bill.tds_deducted_by_client , bill.system_calculated_tds , bill.igst , bill.cgst , bill.sgst , bill.total_amount , bill.is_paid , bill.payment_status , bill.total_gst_paid , bill.management_fee , bill.outstanding_pending_payment ,bill.paid_total_amount , bill.advance_payment , bill.is_offline , bill.reimbursement_voucher_id , bill.taxable_amount , bill.nontaxable_amount , bill.po_id , DATE_FORMAT(bill.bill_created_date, '%d-%m-%Y') , DATE_FORMAT(bill.bill_final_date, '%d-%m-%Y') , bill.cotrav_status , bill.client_status, bill.voucher_gen_pdf, bill.rembusment_gen_pdf, bill.tax_invoice_gen_pdf
+    
+    FROM `taxi_booking_client_invoice` a 
+    LEFT JOIN taxi_bookings bb on a.booking_id = bb.id
+    LEFT JOIN bills bill ON a.bill_id = bill.id
+    LEFT JOIN cotrav_billing_entities ct ON bill.cotrav_billing_entity = ct.id
+    LEFT JOIN corporate_billing_entities cb ON bill.client_billing_entity = cb.id
+    LEFT JOIN cities city ON cb.billing_city_id = city.id
+    
+    
+    where a.bill_id = bill_no  ;
+        
+    END IF;
+    
+    
+    IF bus AND bill_no != 0 THEN
+    
+        INSERT INTO tempBilling (invoice_id , booking_id , serviceType, booking_reference_no, cotrav_bill_entity, cotrav_bill_gstno, 			cotrav_bill_panno, cotrav_address_1, cotrav_address_2, cotrav_address_3, client_bill_entity, client_bill_gstno, client_bill_panno, client_bill_city, client_address_1, client_address_2, client_address_3, pickup_location , drop_location , booking_datetime , pickup_from_datetime , pickup_to_datetime , boarding_datetime , assign_bus_type_id ,bill_number, corporate_id, no_of_invoices , cotrav_billing_entity , client_billing_entity , billing_type , tds_deducted_by_client , system_calculated_tds , igst , cgst , sgst , total_amount , is_paid , payment_status , total_gst_paid , management_fee , outstanding_pending_payment ,paid_total_amount , advance_payment , is_offline , reimbursement_voucher_id , taxable_amount , nontaxable_amount , po_id , bill_created_date , bill_final_date , cotrav_status , client_status, voucher_gen_pdf, rembusment_gen_pdf, tax_invoice_gen_pdf)
+        
+ 	SELECT a.id , a.booking_id , 4, bb.reference_no,ct.entity_name, ct.gst_id, ct.pan_no, cb.entity_name, cb.gst_id, cb.pan_no, city.name, bb.pickup_location , bb.drop_location , bb.booking_datetime , bb.pickup_from_datetime , bb.pickup_to_datetime , bb.boarding_datetime , bb.assign_bus_type_id , bill.bill_number, bill.corporate_id, bill.no_of_invoices , bill.cotrav_billing_entity , bill.client_billing_entity , bill.billing_type , bill.tds_deducted_by_client , bill.system_calculated_tds , bill.igst , bill.cgst , bill.sgst , bill.total_amount , bill.is_paid , bill.payment_status , bill.total_gst_paid , bill.management_fee , bill.outstanding_pending_payment ,bill.paid_total_amount , bill.advance_payment , bill.is_offline , bill.reimbursement_voucher_id , bill.taxable_amount , bill.nontaxable_amount , bill.po_id , DATE_FORMAT(bill.bill_created_date, '%d-%m-%Y') , DATE_FORMAT(bill.bill_final_date, '%d-%m-%Y') , bill.cotrav_status , bill.client_status, bill.voucher_gen_pdf, bill.rembusment_gen_pdf, bill.tax_invoice_gen_pdf
+    
+    FROM `bus_booking_client_invoice` a 
+    LEFT JOIN bus_bookings `bb` on a.booking_id = bb.id
+    LEFT JOIN bills `bill` ON a.bill_id = bill.id
+    LEFT JOIN cotrav_billing_entities ct ON bill.cotrav_billing_entity = ct.id
+    LEFT JOIN corporate_billing_entities cb ON bill.client_billing_entity = cb.id
+    LEFT JOIN cities city ON cb.billing_city_id = city.id
+    
+    
+    where a.bill_id = bill_no  ;
+        
+    END IF;
+    
+    
+    IF train = 1 AND bill_no != 0 THEN
+    
+     INSERT INTO tempBilling (invoice_id , booking_id , serviceType, booking_reference_no, cotrav_bill_entity, cotrav_bill_gstno, 			cotrav_bill_panno, cotrav_address_1, cotrav_address_2, cotrav_address_3, client_bill_entity, client_bill_gstno, client_bill_panno, client_bill_city, client_address_1, client_address_2, client_address_3, pickup_location , drop_location , booking_datetime , pickup_from_datetime , pickup_to_datetime , preferred_train , boarding_point , boarding_datetime , train_name , ticket_no , pnr_no , seat_no , bill_number, corporate_id, no_of_invoices , cotrav_billing_entity , client_billing_entity , billing_type , tds_deducted_by_client , system_calculated_tds , igst , cgst , sgst , total_amount , is_paid , payment_status , total_gst_paid , management_fee , outstanding_pending_payment ,paid_total_amount , advance_payment , is_offline , reimbursement_voucher_id , taxable_amount , nontaxable_amount , po_id , bill_created_date , bill_final_date , cotrav_status , client_status, voucher_gen_pdf, rembusment_gen_pdf, tax_invoice_gen_pdf )
+        
+ 	SELECT a.id , a.booking_id , 5, bb.reference_no,ct.entity_name, ct.gst_id, ct.pan_no, cb.entity_name, cb.gst_id, cb.pan_no, city.name, bb.pickup_location , bb.drop_location , bb.booking_datetime , bb.pickup_from_datetime , bb.pickup_to_datetime , bb.preferred_train , bb.boarding_point , bb.boarding_datetime , bb.train_name , bb.ticket_no , bb.pnr_no , bb.seat_no , bill.bill_number, bill.corporate_id, bill.no_of_invoices , bill.cotrav_billing_entity , bill.client_billing_entity , bill.billing_type , bill.tds_deducted_by_client , bill.system_calculated_tds , bill.igst , bill.cgst , bill.sgst , bill.total_amount , bill.is_paid , bill.payment_status , bill.total_gst_paid , bill.management_fee , bill.outstanding_pending_payment ,bill.paid_total_amount , bill.advance_payment , bill.is_offline , bill.reimbursement_voucher_id , bill.taxable_amount , bill.nontaxable_amount , bill.po_id ,DATE_FORMAT(bill.bill_created_date, '%d-%m-%Y') , DATE_FORMAT(bill.bill_final_date, '%d-%m-%Y') , bill.cotrav_status , bill.client_status, bill.voucher_gen_pdf, bill.rembusment_gen_pdf, bill.tax_invoice_gen_pdf
+    
+    
+    FROM `train_booking_client_invoice` a
+    
+    LEFT JOIN train_bookings `bb` on a.booking_id = bb.id
+    LEFT JOIN bills `bill` ON a.bill_id = bill.id
+    LEFT JOIN cotrav_billing_entities ct ON bill.cotrav_billing_entity = ct.id
+    LEFT JOIN corporate_billing_entities cb ON bill.client_billing_entity = cb.id
+    LEFT JOIN cities city ON cb.billing_city_id = city.id
+    
+    
+    where a.bill_id = bill_no  ;
+    
+    END IF;
+    
+    
+    IF flight = 1 AND bill_no != 0 THEN
+    
+    INSERT INTO tempBilling (invoice_id , booking_id , serviceType , booking_reference_no,cotrav_bill_entity, cotrav_bill_gstno, 			cotrav_bill_panno, cotrav_address_1, cotrav_address_2, cotrav_address_3, client_bill_entity, client_bill_gstno, client_bill_panno, client_bill_city, client_address_1, client_address_2, client_address_3, from_location , to_location , booking_datetime , departure_datetime , no_of_seats , flight_type , seat_type , trip_type , fare_type , ticket_no , usage_type , journey_type , flight_class , bill_number, corporate_id, no_of_invoices , cotrav_billing_entity , client_billing_entity , billing_type , tds_deducted_by_client , system_calculated_tds , igst , cgst , sgst , total_amount , is_paid , payment_status , total_gst_paid , management_fee , outstanding_pending_payment ,paid_total_amount , advance_payment , is_offline , reimbursement_voucher_id , taxable_amount , nontaxable_amount , po_id , bill_created_date , bill_final_date , cotrav_status , client_status, voucher_gen_pdf, rembusment_gen_pdf, tax_invoice_gen_pdf )
+        
+ 	SELECT a.id , a.booking_id , 6 ,bb.reference_no,ct.entity_name, ct.gst_id, ct.pan_no, cb.entity_name, cb.gst_id, cb.pan_no, city.name, bb.from_location , bb.to_location , bb.booking_datetime , bb.departure_datetime , bb.no_of_seats , bb.flight_type , bb.seat_type , bb.trip_type , bb.fare_type , bb.ticket_no , bb.usage_type , bb.journey_type , bb.flight_class , bill.bill_number, bill.corporate_id, bill.no_of_invoices , bill.cotrav_billing_entity , bill.client_billing_entity , bill.billing_type , bill.tds_deducted_by_client , bill.system_calculated_tds , bill.igst , bill.cgst , bill.sgst , bill.total_amount , bill.is_paid , bill.payment_status , bill.total_gst_paid , bill.management_fee , bill.outstanding_pending_payment ,bill.paid_total_amount , bill.advance_payment , bill.is_offline , bill.reimbursement_voucher_id , bill.taxable_amount , bill.nontaxable_amount , bill.po_id ,  DATE_FORMAT(bill.bill_created_date, '%d-%m-%Y') , DATE_FORMAT(bill.bill_final_date, '%d-%m-%Y') , bill.cotrav_status , bill.client_status, bill.voucher_gen_pdf, bill.rembusment_gen_pdf, bill.tax_invoice_gen_pdf
+    
+   FROM `flight_booking_client_invoice` a 
+   LEFT JOIN flight_bookings `bb` on a.booking_id = bb.id
+   LEFT JOIN bills `bill` ON a.bill_id = bill.id
+   LEFT JOIN cotrav_billing_entities ct ON bill.cotrav_billing_entity = ct.id
+    LEFT JOIN corporate_billing_entities cb ON bill.client_billing_entity = cb.id
+    LEFT JOIN cities city ON cb.billing_city_id = city.id
+   
+   
+   where a.bill_id = bill_no  ;
+   
+    END IF;
+    
+    
+    IF hotel = 1 AND bill_no != 0 THEN
+    
+     INSERT INTO tempBilling (invoice_id , booking_id , serviceType, booking_reference_no, cotrav_bill_entity, cotrav_bill_gstno, 			cotrav_bill_panno, cotrav_address_1, cotrav_address_2, cotrav_address_3, client_bill_entity, client_bill_gstno, client_bill_panno, client_bill_city, client_address_1, client_address_2, client_address_3, from_city_id ,from_area_id , booking_datetime ,checkin_datetime ,checkout_datetime ,
+room_type_id ,no_of_nights ,assign_hotel_id ,assign_room_type ,
+is_ac_room ,total_room_price, bill_number, corporate_id , no_of_invoices , cotrav_billing_entity , client_billing_entity , billing_type , tds_deducted_by_client , system_calculated_tds , igst , cgst , sgst , total_amount , is_paid , payment_status , total_gst_paid , management_fee , outstanding_pending_payment ,paid_total_amount , advance_payment , is_offline , reimbursement_voucher_id , taxable_amount , nontaxable_amount , po_id , bill_created_date , bill_final_date , cotrav_status , client_status, voucher_gen_pdf, rembusment_gen_pdf, tax_invoice_gen_pdf )
+        
+ 	SELECT a.id , a.booking_id , 7 ,bb.reference_no,ct.entity_name, ct.gst_id, ct.pan_no, cb.entity_name, cb.gst_id, cb.pan_no, city.name, bb.from_city_id , bb.from_area_id , bb.booking_datetime , bb.checkin_datetime , bb.checkout_datetime , bb.room_type_id , bb.no_of_nights , bb.assign_hotel_id ,bb.assign_room_type ,
+bb.is_ac_room ,bb.total_room_price , bill.bill_number, bill.corporate_id, bill.no_of_invoices , bill.cotrav_billing_entity , bill.client_billing_entity , bill.billing_type , bill.tds_deducted_by_client , bill.system_calculated_tds , bill.igst , bill.cgst , bill.sgst , bill.total_amount , bill.is_paid , bill.payment_status , bill.total_gst_paid , bill.management_fee , bill.outstanding_pending_payment ,bill.paid_total_amount , bill.advance_payment , bill.is_offline , bill.reimbursement_voucher_id , bill.taxable_amount , bill.nontaxable_amount , bill.po_id ,DATE_FORMAT(bill.bill_created_date, '%d-%m-%Y') , DATE_FORMAT(bill.bill_final_date, '%d-%m-%Y'), bill.cotrav_status , bill.client_status, bill.voucher_gen_pdf, bill.rembusment_gen_pdf, bill.tax_invoice_gen_pdf
+    
+    
+    FROM `hotel_booking_client_invoice` a 
+    LEFT JOIN hotel_bookings `bb` on a.booking_id = bb.id
+    LEFT JOIN bills `bill` ON a.bill_id = bill.id
+    LEFT JOIN cotrav_billing_entities ct ON bill.cotrav_billing_entity = ct.id
+    LEFT JOIN corporate_billing_entities cb ON bill.client_billing_entity = cb.id
+    LEFT JOIN cities city ON cb.billing_city_id = city.id
+   
+    
+    where a.bill_id = bill_no  ;
+    
+    END IF;
+    
+   
+    
+END LOOP;
+
+
+
+CLOSE cur;
+
+
+SELECT * FROM tempBilling ;
+
+
+DROP TEMPORARY TABLE tempBilling;
+END$$
+DELIMITER ;

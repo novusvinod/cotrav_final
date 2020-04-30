@@ -176,9 +176,9 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Booking Date</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+                                    <th>Booking Date/Time</th>
+                                    <th>Booking Id</th>
                                     <th>Assessment Code</th>
                                     <th>From City</th>
                                     <th>To City</th>
@@ -202,7 +202,7 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.booking_datetime }}</td>
                                      <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.assessment_code }}</td>

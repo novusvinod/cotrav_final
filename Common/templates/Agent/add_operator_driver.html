@@ -20,7 +20,7 @@
    </div>
 
 
- <form method="post" action="/agents/add-operator-driver/0">
+ <form method="post" action="/agents/add-operator-driver/0" id="model_serialize_update">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
      <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
@@ -180,10 +180,31 @@
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
 
-<script type="text/javascript">
- $(function() {
+<script>
+$( document ).ready(function() {
 
- });
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
 </script>
 
 {% endblock %}

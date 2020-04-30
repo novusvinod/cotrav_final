@@ -1,4 +1,4 @@
-
+ {% load static %}
 
 
 
@@ -63,7 +63,7 @@ h4,
 h5,
 h6 {
     font-family: Poppins,sans-serif;
-    font-weight: 300;
+    font-weight: 500;
 }
 h1 {
     font-size: 36px !important;
@@ -101,8 +101,8 @@ h6.block {
     padding-bottom: 10px
 }
 .h4, .h5, .h6, h4, h5, h6 {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: -5px;
+    margin-bottom: -12px;
 }
 .alert,
 .badge,
@@ -3049,7 +3049,7 @@ span.notify {
 }
 .control-label {
     margin-top: 1px;
-    font-weight: 400
+    font-weight: 500
 }
 .control-label .required,
 .form-group .required {
@@ -3058,7 +3058,7 @@ span.notify {
     padding-left: 2px
 }
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 .form-inline input {
     margin-bottom: 0!important
@@ -3185,14 +3185,14 @@ span.notify {
 .form-control {
     display: block;
     width: 100%;
-    padding: 6px 12px;
+    padding: 3px 6px;
     font-size: 11px;
     line-height: 1.42857143;
     color: #555;
     background-color: #fff;
     background-image: none;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 2px;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
@@ -5115,7 +5115,7 @@ ul.activity-list .activity-desk h5 a {
     margin-right: 5px
 }
 .table thead tr th {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600
 }
 .table-advance {
@@ -6357,14 +6357,14 @@ fieldset[disabled] .btn.purple:not(.btn-outline):hover {
 *************************************************************/
 
 label {
-    font-weight: 400
+    font-weight: 500
 }
 .label {
     text-shadow: none!important;
     color: #fff;
     font-family: "Poppins", Helvetica, Arial, sans-serif;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 500;
     padding: 8px 15px;
     background: #1ebdcc;
     line-height: 1;
@@ -7424,16 +7424,16 @@ nav-tabs>li {
     background-color: #389af0;
 }
 .info-box {
-    min-height: 100px;
+    min-height: 60px;
     width: 100%;
     box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
     -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 25px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 15px;
 }
 .info-box small {
-    font-size: 14px;
+    font-size: 10px;
 }
 .info-box .progress {
     background: rgba(0, 0, 0, .2);
@@ -7448,11 +7448,11 @@ nav-tabs>li {
 }
 .info-box-icon {
     float: left;
-    height: 70px;
-    width: 70px;
+    height: 40px;
+    width: 40px;
     text-align: center;
-    font-size: 30px;
-    line-height: 74px;
+    font-size: 0px;
+    line-height: 63px;
     background: rgba(0, 0, 0, .2);
     border-radius: 100%}
 .info-box-icon.push-bottom {
@@ -7461,16 +7461,16 @@ nav-tabs>li {
 .info-box-icon>img {
     max-width: 100%}
 .info-box-content {
-    padding: 10px 10px 10px 0;
-    margin-left: 90px;
+    padding: 3px 0px 0px 0;
+    margin-left: 54px;
 }
 .info-box-number {
     font-weight: 300;
-    font-size: 21px;
+    font-size: 14px;
 }
 .info-box-text, .progress-description {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -8582,7 +8582,7 @@ span.notificationtime {
 }
 
 .model_custom_style h4 {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 
 ..model_custom_style label{
@@ -8632,9 +8632,40 @@ font-weight: 500;
     padding-bottom: 40px;
     margin-top: -60px;
     font-weight: 600;
-    color:#3366cc;
+    color:#20bf7a;
+    text-transform: capitalize;
+    /*border: solid 1px #20bf7a;*/
 
 }
+
+#large-div-text {
+  padding: 5px;
+  border-top: 2px solid #f4f4f4;
+  position: relative;
+  margin-top: -12px;
+}
+
+#why {
+  text-align: center;
+  position: relative;
+  z-index: 1000;
+  width: 250px;
+  margin: 0 auto;
+    font-size: 12px;
+    background-color: #f4f4f4;
+    border: 2px solid #f4f4f4;
+    border-radius: 25px;
+    color: gray;
+}
+
+.payment_refund{
+border: 1px solid #20bf7a;
+    padding: 1px 10px 1px 10px;
+    background-color: aliceblue;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
 .border-section{
     border-bottom:1px solid #dee2e6
 }
@@ -8846,16 +8877,17 @@ font-size: 18px;
 
 }
 .fli_bac{
-    width: 81%;
-    background-color: #3366cc;
+   width: 100%;
+   background-color: #8bb1de;
     border-radius: 3px;
     color: white;
     font-family: Montserrat;
     font-size: 15px;
     line-height: 38px;
-    padding-left: 24px;
-    margin-left: -1px;
-    margin-top: 12px;
+    margin-top: -8px;
+    /* margin-top: 12px; */
+    font-weight: 600;
+    text-align: center;
 }
 .pull-right_fli{
 float: right;
@@ -8893,17 +8925,7 @@ margin-right: 17px;
     margin-top: -10px;
 
 }
-.fli_bac{
-  width: 80%;
-    background-color: #e0e0e0;
-    border-radius: 3px;
-    color: black;
-    font-family: Montserrat;
-    font-size: 15px;
-    line-height: 38px;
-    padding-left: 24px;
-    margin-top: 12px;
-}
+
 
 .pull-right_fli{
 float: right;
@@ -9177,7 +9199,6 @@ margin-right: 17px;
 }
 .md_fli_fnt{
     font-size: 12px;
-    font-family: Montserrat;
     font-weight: 500;
 }
 .fli_mar{
@@ -9193,4 +9214,15 @@ margin-right: 17px;
     margin-top: -9px;
 }
 
+.tets{
+color:read
+}
+
+.fltLogo {
+    background-image: url('../../assets/img/flight_icon.png');
+    background-repeat: no-repeat;
+    height: 16px;
+    margin: auto;
+    width: 15px;
+}
 

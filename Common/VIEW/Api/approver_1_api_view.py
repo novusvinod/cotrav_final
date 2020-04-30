@@ -99,6 +99,7 @@ def approver_1_accept_taxi_booking(request):
 
                     return JsonResponse(data)
                 except Exception as e:
+
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
                     return JsonResponse(data)
             else:
@@ -240,7 +241,7 @@ def approver_1_accept_bus_booking(request):
                     cursor = connection.cursor()
                     cursor.callproc('acceptApprover_1BusBookings', [user_id,user_type,booking_id,user_comment])
                     emp = dictfetchall(cursor)
-                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+                    print(emp)
                     cursor.close()
                     cursor2 = connection.cursor()
                     cursor2.callproc('viewBusBooking', [booking_id])
@@ -252,12 +253,18 @@ def approver_1_accept_bus_booking(request):
                     passanger = dictfetchall(cursor1)
                     emp[0]['Passangers'] = passanger
                     cursor1.close()
+                    print("i m hererererere")
 
                     add_booking_email = AcceptBooking_Email()
                     thread = Thread(target=add_booking_email.send_email_sms_ntf, args=(emp, "Bus"))
                     thread.start()
+
+                    data = {'success': 1, 'message': "Booking Approved Successfully"}
+
                     return JsonResponse(data)
                 except Exception as e:
+                    print("exception")
+                    print(e)
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
                     return JsonResponse(data)
             else:

@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from openpyxl import Workbook
+
+from Common.VIEW.Agent.agent_views import upload_visa_doc_get_path
 from Common.models import Corporate_Spoc_Login_Access_Token
 from landing.cotrav_messeging import Excelexport
 from django.http import HttpResponse
@@ -186,8 +188,8 @@ def company_employees(request, id):
         login_type = request.session['spoc_login_type']
         access_token = request.session['spoc_access_token']
 
-        url = settings.API_BASE_URL + "employees"
-        payload = {'corporate_id': id}
+        url = settings.API_BASE_URL + "spoc_employee"
+        payload = {'corporate_id': id, 'spoc_id': request.user.id}
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             employees = company['Employees']
@@ -350,6 +352,14 @@ def add_taxi_booking(request,id):
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
 
+            if tour_type == 1 or tour_type == '1':
+                url_add_city = settings.API_BASE_URL + "add_city_name"
+                pickup_details = [x.strip() for x in pickup_city.split(',')]
+                city_data = {'login_type': login_type, 'access_token': access_token, 'city_name': pickup_details[0], 'state_id': '1'}
+                city_id = getDataFromAPI(login_type, access_token, url_add_city, city_data)
+                for conty_id in city_id['id']:
+                    actual_city_id = conty_id['id']
+
             employees = []
             no_of_emp = int(no_of_seats) + 1
             for i in range(1,no_of_emp):
@@ -364,10 +374,14 @@ def add_taxi_booking(request,id):
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_taxi_booking"
+            print(url_taxi_booking)
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
-
+            print(booking)
             if booking['success'] == 1:
                 messages.success(request, str(booking['message']))
+                return HttpResponseRedirect("/Corporate/Spoc/taxi-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed To Add Taxi Booking')
                 return HttpResponseRedirect("/Corporate/Spoc/taxi-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -400,10 +414,10 @@ def add_taxi_booking(request,id):
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
             cities = cities['AssCity']
 
-            # url_city1 = settings.API_BASE_URL + "cities"
-            # cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
-            # citiess = cities1['Cities']
-            citiess = ""
+            url_city1 = settings.API_BASE_URL + "city_by_package"
+            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            citiess = cities1['Cities']
+            print(citiess)
 
             url_access = settings.API_BASE_URL + "view_company"
             data = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -511,11 +525,15 @@ def add_bus_booking(request,id):
             from_location = request.POST.get('from', '')
             to_location = request.POST.get('to', '')
             bus_type = request.POST.get('bus_type', '')
+            bus_type2 = request.POST.get('bus_type2', '')
+            bus_type3 = request.POST.get('bus_type3', '')
             booking_datetime = request.POST.get('booking_datetime', '')
             journey_datetime = request.POST.get('journey_datetime', '')
             journey_datetime_to = request.POST.get('journey_datetime_to', '')
             entity_id = request.POST.get('entity_id', '')
             preferred_bus = request.POST.get('preferred_bus', '')
+            preferred_board_point = request.POST.get('preferred_board_point', '')
+            preferred_drop_point = request.POST.get('preferred_drop_point', '')
             assessment_code = request.POST.get('assessment_code', '')
             assessment_city_id = request.POST.get('assessment_city_id', '')
 
@@ -532,7 +550,8 @@ def add_bus_booking(request,id):
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
                        'bus_type':bus_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime+':00','entity_id':entity_id,
                        'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,
-                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to+':00'}
+                       'is_sms':1,'is_email':1,'journey_datetime_to':journey_datetime_to+':00','preferred_board_point':preferred_board_point,
+                       'preferred_drop_point':preferred_drop_point,'bus_type2':bus_type2,'bus_type3':bus_type3}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_bus_booking"
@@ -540,6 +559,9 @@ def add_bus_booking(request,id):
 
             if booking['success'] == 1:
                 messages.success(request, str(booking['message']))
+                return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed To Add Taxi Booking')
                 return HttpResponseRedirect("/Corporate/Spoc/bus-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -704,6 +726,9 @@ def add_train_booking(request,id):
 
             if booking['success'] == 1:
                 messages.success(request, str(booking['message']))
+                return HttpResponseRedirect("/Corporate/Spoc/train-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed To Add Taxi Booking')
                 return HttpResponseRedirect("/Corporate/Spoc/train-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
@@ -883,6 +908,9 @@ def add_hotel_booking(request,id):
             if booking['success'] == 1:
                 messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed To Add Taxi Booking')
+                return HttpResponseRedirect("/Corporate/Spoc/hotel-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -1060,6 +1088,9 @@ def add_flight_booking(request,id):
             if booking['success'] == 1:
                 messages.success(request, str(booking['message']))
                 return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed To Add Taxi Booking')
+                return HttpResponseRedirect("/Corporate/Spoc/flight-bookings/2", {'message': "Operation Successfully"})
         else:
             return HttpResponseRedirect("/login")
     else:
@@ -1095,9 +1126,13 @@ def add_flight_booking(request,id):
             data = getDataFromAPI(login_type, access_token, url_access, payload)
             access = data['Corporates']
 
+            url_access = settings.API_BASE_URL + "get_airports"
+            data = getDataFromAPI(login_type, access_token, url_access, payload)
+            airports = data['Airports']
+
             if id:
                 return render(request, 'Company/Spoc/add_flight_booking.html', {'employees':employees,'cities':cities,'entities':entities,
-                            'assessments':ass_code,'cities_ass':cities_ass, 'corp_access':access})
+                            'assessments':ass_code,'cities_ass':cities_ass, 'corp_access':access,'airports':airports})
             else:
                 return render(request, 'Company/Spoc/add_flight_booking.html', {})
         else:
@@ -4117,6 +4152,204 @@ def flight_billing_verify(request):
                 return HttpResponseRedirect(current_url, {})
             else:
                 return HttpResponseRedirect(current_url, {})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def get_all_cotrav_visa_requests(request):
+    if 'spoc_login_type' in request.session:
+        login_type = request.session['spoc_login_type']
+        access_token = request.session['spoc_access_token']
+        if request.method == 'POST':
+            pass
+        else:
+            url = settings.API_BASE_URL+"get_all_cotrav_visa_requests"
+            payload = {'some': 'data'}
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            if company['success'] == 1:
+                corporates_data = company['Visa']
+                return render(request,"Company/Spoc/visa_requests.html",{'visa_services':corporates_data})
+            else:
+                return render(request,"Company/Spoc/visa_requests.html",{'visa_services':{}})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def add_visa_requests(request):
+    if 'spoc_login_type' in request.session:
+        login_type = request.session['spoc_login_type']
+        access_token = request.session['spoc_access_token']
+        if request.method == 'POST':
+            current_url = request.POST.get('current_url')
+            request_type = request.POST.get('request_type')
+            visa_request_type = request.POST.get('visa_request_type')
+            corporate_id = request.POST.get('corporate_id')
+            spoc_id = request.POST.get('spoc_id')
+            group_id = request.POST.get('group_id')
+            subgroup_id = request.POST.get('subgroup_id')
+            country_id = request.POST.get('country_id')
+            visa_type = request.POST.get('visa_type')
+            visa_duration = request.POST.get('visa_duration')
+            purpose_of_trip = request.POST.get('purpose_of_trip')
+            if purpose_of_trip == 'Other':
+                purpose_of_trip = request.POST.get('purpose_of_trip_txt')
+            current_country_id = request.POST.get('current_country_id')
+            current_state_id = request.POST.get('current_state_id')
+            consulate_office_id = request.POST.get('consulate_office_id')
+            no_of_employees = request.POST.get('no_of_employees')
+            employee_email_1 = request.POST.get('employee_email_1')
+            no_of_family_member = request.POST.get('no_of_family_member')
+            application_form_link = request.POST.get('application_form_link')
+
+            employee_name_1 = request.POST.getlist('employee_id')
+
+            emp_no_of_document = request.POST.getlist('emp_no_of_document')
+            emp_document = request.POST.getlist('emp_document')
+            emp_document_txt = request.POST.getlist('emp_document_txt')
+
+            family_members_name = request.POST.getlist('family_members_name')
+            family_members_relationship = request.POST.getlist('family_members_relationship')
+            empf_no_of_document = request.POST.getlist('empf_no_of_document')
+            empf_document = request.POST.getlist('empf_document')
+            empf_document_path = request.POST.getlist('empf_document_path')
+
+            employee_application_form = []
+            employee_docs = []
+            employeef_application_form = []
+            employeef_docs = []
+
+            final_emp_no = int(no_of_employees) + 1
+            final_no_of_family = int(no_of_family_member) + 1
+            if request.FILES:
+                if not request_type == 'Family':
+                    for i in range(1, final_emp_no):
+                        file_up = request.FILES['emp_application_form_'+str(i)]
+                        booking_email1 = upload_visa_doc_get_path(file_up)
+                        employee_application_form.append(booking_email1)
+                        val_i = i - 1
+                        finl_emp_no_of_document = int(emp_no_of_document[val_i])+1
+                        print("finl_emp_no_of_document")
+                        print(finl_emp_no_of_document)
+                        for ii in range(1, finl_emp_no_of_document):
+                            file_up11 = request.FILES['emp_document_path_' + str(i)+"_"+str(ii)]
+                            employee_docs11 = upload_visa_doc_get_path(file_up11)
+                            employee_docs.append(employee_docs11)
+                            print("in second loop")
+                else:
+                    for i in range(1, final_no_of_family):
+                        file_up = request.FILES['empf_application_form_' + str(i)]
+                        booking_email1 = upload_visa_doc_get_path(file_up)
+                        employeef_application_form.append(booking_email1)
+                        finl_emp_no_of_document = int(empf_no_of_document[i]) + 1
+                        for ii in range(1, finl_emp_no_of_document):
+                            file_up11 = request.FILES['empf_document_path_' + str(i) + "_" + str(ii)]
+                            employee_docs11 = upload_visa_doc_get_path(file_up11)
+                            employeef_docs.append(employee_docs11)
+
+            payload = {'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id':group_id, 'subgroup_id':subgroup_id, 'country_id':country_id, 'visa_type':visa_type,
+             'purpose_of_trip':purpose_of_trip, 'current_country_id':current_country_id, 'current_state_id':current_state_id, 'consulate_office_id':consulate_office_id,
+             'no_of_employees':no_of_employees, 'employee_ids':employee_name_1, 'employee_email_1':employee_email_1, 'request_type':request_type,
+            'visa_request_type':visa_request_type, 'visa_duration':visa_duration,'no_of_family_member':no_of_family_member,'application_form_link':application_form_link,
+            'emp_no_of_document':emp_no_of_document, 'emp_document':emp_document, 'emp_document_txt':emp_document_txt,'family_members_name':family_members_name,
+            'family_members_relationship':family_members_relationship,'empf_no_of_document':empf_no_of_document,'empf_document':empf_document,'empf_document_path':empf_document_path,
+            'employee_application_form':employee_application_form,'employee_docs':employee_docs,'employeef_application_form':employeef_application_form,'employeef_docs':employeef_docs           }
+            print(payload)
+            url_cities1 = settings.API_BASE_URL + "add_visa_requests1"
+            company = getDataFromAPI(login_type, access_token, url_cities1, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, 'Visa Service Added Successfully..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed to Add Visa Service ..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+
+        else:
+            payload = {'some': 'data', 'spoc_id':request.user.id}
+
+            url_cities1 = settings.API_BASE_URL + "get_country_provided_by_cotrav"
+            taxies11 = getDataFromAPI(login_type, access_token, url_cities1, payload)
+            Country ={}
+            if taxies11['success'] == 1:
+                Country = taxies11['Country']
+            else:
+                Country = {}
+
+
+            url_emp = settings.API_BASE_URL + "spoc_employee"
+            company_emp = getDataFromAPI(login_type, access_token, url_emp, payload)
+            employees = company_emp['Employees']
+    
+            return render(request,"Company/Spoc/add_visa_request.html",{'countrys':Country, 'employees':employees})
+
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def view_visa_requests(request, id):
+    if 'spoc_login_type' in request.session:
+        login_type = request.session['spoc_login_type']
+        access_token = request.session['spoc_access_token']
+        if request.method == 'POST':
+            current_url = request.POST.get('current_url')
+            request_type = request.POST.get('request_type')
+            visa_request_type = request.POST.get('visa_request_type')
+            corporate_id = request.POST.get('corporate_id')
+            spoc_id = request.POST.get('spoc_id')
+            group_id = request.POST.get('group_id')
+            subgroup_id = request.POST.get('subgroup_id')
+            country_id = request.POST.get('country_id')
+            visa_type = request.POST.get('visa_type')
+            purpose_of_trip = request.POST.get('purpose_of_trip')
+            current_country_id = request.POST.get('current_country_id')
+            current_state_id = request.POST.get('current_state_id')
+            consulate_office_id = request.POST.get('consulate_office_id')
+            no_of_employees = request.POST.get('no_of_employees')
+            employee_email_1 = request.POST.get('employee_email_1')
+            employee_name_1 = request.POST.get('employee_name_1')
+
+            payload = {'corporate_id': corporate_id, 'spoc_id': spoc_id, 'group_id': group_id,
+                       'subgroup_id': subgroup_id, 'country_id': country_id, 'visa_type': visa_type,
+                       'purpose_of_trip': purpose_of_trip, 'current_country_id': current_country_id,
+                       'current_state_id': current_state_id, 'consulate_office_id': consulate_office_id,
+                       'no_of_employees': no_of_employees, 'employee_name_1': employee_name_1,
+                       'employee_email_1': employee_email_1,'visa_request_type':visa_request_type,'request_type':request_type}
+
+            url_cities1 = settings.API_BASE_URL + "add_visa_requests"
+            company = getDataFromAPI(login_type, access_token, url_cities1, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, 'Visa Service Added Successfully..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
+            else:
+                messages.error(request, 'Failed to Add Visa Service ..!')
+                return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
+
+        else:
+            payload = {'some': 'data', 'spoc_id': request.user.id, 'visa_id':id}
+
+            url_cities1 = settings.API_BASE_URL + "view_visa_request"
+            taxies11sad = getDataFromAPI(login_type, access_token, url_cities1, payload)
+            visas = taxies11sad['Visa']
+
+            url_cities1 = settings.API_BASE_URL + "get_countries"
+            taxies11 = getDataFromAPI(login_type, access_token, url_cities1, payload)
+            Country = taxies11['Country']
+
+            url_cities111 = settings.API_BASE_URL + "get_states"
+            taxies1ds1 = getDataFromAPI(login_type, access_token, url_cities111, payload)
+            states = taxies1ds1['State']
+
+            url_city = settings.API_BASE_URL + "cities"
+            cities = getDataFromAPI(login_type, access_token, url_city, payload)
+            cities = cities['Cities']
+
+            url_emp = settings.API_BASE_URL + "spoc_employee"
+            company_emp = getDataFromAPI(login_type, access_token, url_emp, payload)
+            employees = company_emp['Employees']
+
+            return render(request, "Company/Spoc/view_visa_request.html", {'visas':visas,'countrys': Country, 'states': states, 'cities': cities, 'employees': employees})
+
     else:
         return HttpResponseRedirect("/login")
 

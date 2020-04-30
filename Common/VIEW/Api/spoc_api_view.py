@@ -1,7 +1,7 @@
 from datetime import datetime
 import sys
 from threading import Thread
-
+import datetime
 from django.http import JsonResponse
 from django.db import connection
 from Common.VIEW.Api.api_views import getUserinfoFromAccessToken, dictfetchall
@@ -1348,4 +1348,117 @@ def spoc_revise_flight_bookings(request):
     else:
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
 
+        return JsonResponse(data)
+
+
+def spoc_dashboard_bookings_for_six_months(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        month = int(request.POST.get('month', ''))
+        year = int(request.POST.get('year', ''))
+        print("month and year")
+        print(month)
+        print(year)
+        #dt_date = datetime.datetime(year, month, 25)
+        dt_date = datetime.datetime.strptime(str(25)+"-"+str(month)+'-'+str(year), '%d-%m-%Y')
+
+        print(dt_date)
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getBookingsForPrevSixMonths', [dt_date, 1, 4, user.corporate_id , user.id ])
+                    taxi = dictfetchall(cursor)
+                    cursor.close()
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getBookingsForPrevSixMonths', [dt_date, 2, 4, user.corporate_id , user.id ])
+                    bus = dictfetchall(cursor)
+                    cursor.close()
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getBookingsForPrevSixMonths', [dt_date, 3, 4, user.corporate_id , user.id ])
+                    train = dictfetchall(cursor)
+                    cursor.close()
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getBookingsForPrevSixMonths', [dt_date, 4, 4, user.corporate_id , user.id ])
+                    flight = dictfetchall(cursor)
+                    cursor.close()
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getBookingsForPrevSixMonths', [dt_date, 5, 4, user.corporate_id , user.id ])
+                    hotel = dictfetchall(cursor)
+                    cursor.close()
+
+                    print(taxi)
+                    print(bus)
+                    print(train)
+                    print(flight)
+                    print(hotel)
+
+                    # emp = {'taxi':43,'bus':73,'train':86,'flight':62,'hotel':77}
+                    data = {'success': 1, 'Sales': [taxi, bus, train, flight, hotel]}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def spoc_dashboard_bookings_by_month(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        month = request.POST.get('month', '')
+        year = request.POST.get('year', '')
+        print("month and year")
+        print(month)
+        print(year)
+
+        flag_taxi = 1
+        flag_bus = 1
+        flag_train = 1
+        flag_flight = 1
+        flag_hotel = 1
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getDashboardBookingsByMonth', [year, month, 4, user.corporate_id , user.id , flag_taxi , flag_bus , flag_train , flag_flight , flag_hotel ])
+                    emp = dictfetchall(cursor)
+                    cursor.close()
+                    print('### sales data ###')
+                    print(emp)
+                    # emp = {'taxi':43,'bus':73,'train':86,'flight':62,'hotel':77}
+                    data = {'success': 1, 'Sales': emp}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)

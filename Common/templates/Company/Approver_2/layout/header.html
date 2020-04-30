@@ -143,6 +143,18 @@
 	<script src="{% static 'assets/plugins/material-datetimepicker/bootstrap-material-datetimepicker.js' %}"></script>
 	<script src="{% static 'assets/plugins/material-datetimepicker/datetimepicker.js' %}"></script>
     <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" ></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js" ></script>
+
+<script>
+  $(document).ready(function() {
+    var table = $('#example1').DataTable( {
+        responsive: true,
+         'ordering': false
+    } );
+    new $.fn.dataTable.FixedHeader( table );
+} );
+</script>
 <script>
 
         $(function () {
@@ -175,12 +187,6 @@
    });
     </script>
  <script>
-        $(document).ready(function() {
-            $('#example1').DataTable({
-            'ordering': false
-            });
-        } );
-
 
          function setNavigation() {
                 var path = window.location.pathname;

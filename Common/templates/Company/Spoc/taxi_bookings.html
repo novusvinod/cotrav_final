@@ -96,11 +96,10 @@
                 <input type="hidden" name="accept_id" id="accept_id">
                 <input type="hidden" name="reject_id" id="reject_id">
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-                <label>Are you sure you want to Reject Booking</label>
+                <label>Are you sure you want to Cancel Booking</label>
                 <div class="row">
                     <label class="control-label col-sm-2">Comment</label>
                     <textarea class="form-control col-sm-10" id="user_comment" rows="4" name="user_comment" placeholder="Comment.."></textarea>
-                </div>
                 </div>
 
                 <div class="modal-footer">
@@ -192,23 +191,20 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+                                    <th>Booking Id</th>
+                                    <th>Tour Type</th>
                                     <th>City</th>
-                                    <th>Booking Date</th>
-                                    <th>Pickup Datetime</th>
+                                    <th>Booking Date/Time</th>
+                                    <th>Pickup Date/Time</th>
                                     <th>Pickup Location</th>
                                     <th>Drop Location</th>
-                                    <th>Tour Type</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
-                                    <th>Reject</th>
-                                    <th>Operator Details</th>
                                     <th>Taxi/Driver Details</th>
                                     <th>Spoc Details</th>
-
                                     <th>Passenger Details</th>
-
+                                    <th>Cancel</th>
                                     <th>Details</th>
 
                                 </tr>
@@ -216,13 +212,8 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}}) </td>
-                                    <td>{{ booking.city_name }}</td>
-                                    <td>{{ booking.booking_date}}</td>
-                                    <td>{{ booking.pickup_datetime }}</td>
-                                    <td>{{ booking.pickup_location }}</td>
-                                    <td>{{ booking.drop_location }}</td>
                                     {% if booking.tour_type == 1 %}
                                     <td>Radio</td>
                                     {% elif booking.tour_type == 2 %}
@@ -230,6 +221,13 @@
                                     {% else %}
                                     <td>Outstation</td>
                                     {% endif %}
+
+                                    <td>{{ booking.city_name }}</td>
+                                    <td>{{ booking.booking_date}}</td>
+                                    <td>{{ booking.pickup_datetime }}</td>
+                                    <td>{{ booking.pickup_location }}</td>
+                                    <td>{{ booking.drop_location }}</td>
+
 
 
 
@@ -239,21 +237,7 @@
                                             ({{ booking.cotrav_agent_name|default:'' }})
                                         {% endif %}
                                     </td>
-                                    <td style="display: inline-flex;">
-                                        {% if booking.status_cotrav == 1 %}
-                                         <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>
 
-                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i></a>
-                                    {% endif %}
-                                    </td>
-
-                                    {% if booking.operator_name %}
-                                    <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
-                                    {% else %}
-                                    <td></td>
-                                    {% endif %}
 
 
                                     {% if booking.driver_name %}
@@ -268,6 +252,16 @@
                                         {% for passanger in booking.Passangers %}
                                         {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
                                         {% endfor %}
+                                    </td>
+
+                                    <td style="display: inline-flex;">
+                                        {% if booking.status_cotrav == 1 %}
+<!--                                         <a title="Accept Booking" style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"-->
+<!--                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>-->
+
+                                        <a title="Cancel Booking" style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i></a>
+                                    {% endif %}
                                     </td>
 
                                     <td>

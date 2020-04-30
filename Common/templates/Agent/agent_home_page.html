@@ -11,13 +11,84 @@
 
             <div class="page-content-wrapper">
                 <div class="page-content">
+                    <div class="row state-overview">
+                      <div class="col-lg-2">
+                        <div class="info-box bg-b-purple">
+                            <span class="info-box-icon"><i class="material-icons">person</i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text" >Total Lead</span>
+                              <span class="info-box-number">{{Dashboard.lead_count}}</span>
+                            </div>
+                          </div>
+                      </div>
+
+                         <div class="col-lg-2">
+                        <div class="info-box bg-b-blue">
+                            <span class="info-box-icon"><i class="material-icons">info</i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text">Lead - Assign Pending</span>
+                              <span class="info-box-number">{{Dashboard.lead_pending_count}}</span>
+                            </div>
+                          </div>
+                      </div>
+
+                         <div class="col-lg-2">
+                        <div class="info-box bg-b-green">
+                            <span class="info-box-icon"><i class="material-icons">alarm_on</i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text">Total Lead Assign </span>
+                              <span class="info-box-number">{{Dashboard.assign_lead_count}}</span>
+                            </div>
+                          </div>
+                      </div>
+
+
+                        <div class="col-lg-2">
+                        <div class="info-box bg-b-green">
+                            <span class="info-box-icon"><i class="material-icons">local_atm</i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text">Total You Converted</span>
+                              <span class="info-box-number">{{Dashboard.lead_converted_user_count}}</span>
+                            </div>
+                          </div>
+                      </div>
+
+
+
+                        <div class="col-lg-2">
+                        <div class="info-box bg-b-black">
+                            <span class="info-box-icon"><i class="material-icons">new_releases</i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text">Converted Leads</span>
+                              <span class="info-box-number">{{Dashboard.lead_converted_count}}</span>
+                            </div>
+                          </div>
+                      </div>
+
+                        <div class="col-lg-2">
+                        <div class="info-box bg-b-yellow">
+                            <span class="info-box-icon"><i class="material-icons">report</i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text">Leads Lost</span>
+                              <span class="info-box-number">{{Dashboard.lead_lost_count}}</span>
+                            </div>
+                          </div>
+                      </div>
+
+
+
+                </div>
+
+
+
+
 
                  <div class="row">
 
                         <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>Unassigned Bookings {{un_taxi_booking_count}}</header>
+                                    <header>Unassigned Bookings </header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -55,7 +126,7 @@
 					   <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>Taxi Unbilled Amount</header>
+                                    <header>Unbilled Amount</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -74,7 +145,7 @@
 					   <div class="col-md-3">
                             <div class="card card-topline-lightblue">
                                 <div class="card-head">
-                                    <header>Taxi Unpaid Amount</header>
+                                    <header>Unpaid Amount</header>
                                     <div class="tools">
                                         <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
 	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -92,26 +163,10 @@
 
                     </div>
 
+
+            {% if agent_user_type == 101 or agent_user_type == 102  %}
+
                     <div class="row">
-
-                     <!--   <div class="col-md-3">
-                            <div class="card card-topline-lightblue">
-                                <div class="card-head">
-                                    <header>Unassigned Bookings </header>
-                                    <div class="tools">
-                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
-                                    </div>
-                                </div>
-                                <div class="card-body ">
-                                    <div class="row">
-                                         <canvas id="canvasTaxiBookingsBar" height="200"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
 
 					   <div class="col-md-6">
 
@@ -196,7 +251,7 @@
 
                                      <div class="tools" id="result-graph-container2">
 
-                                        <select name="month" id="month2">
+                                       <!-- <select name="month" id="month2">
                                             <option value="1">Jan</option>
                                             <option value="2">Feb</option>
                                             <option value="3">Mar</option>
@@ -223,7 +278,7 @@
                                             <option value="2018">2018</option>
                                             <option value="2019">2019</option>
                                             <option value="2020" selected >2020</option>
-                                        </select>
+                                        </select> -->
 
 
 
@@ -478,21 +533,86 @@
                         </div>
 
 
+                    </div>
+
+             {% endif %}
 
 
+             {% if agent_user_type == 103 %}
 
+                    <div class="row">
 
+                        <div class="col-md-6">
+
+                            <div class="card card-topline-lightblue">
+                                <div class="card-head">
+                                    <header>Hotel Bookings</header>
+                                    <div class="tools">
+                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+	                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+                                    </div>
+                                </div>
+                                <div class="card-body " >
+                                    <div class="row">
+                                       <!-- <div class="tools" id="result-graph-container11">
+
+                                        <select name="month" id="month11">
+                                            <option value="1">Jan</option>
+                                            <option value="2">Feb</option>
+                                            <option value="3">Mar</option>
+                                            <option value="4">Apr</option>
+                                            <option value="5">May</option>
+                                            <option value="6">Jun</option>
+                                            <option value="7">Jul</option>
+                                            <option value="8">Aug</option>
+                                            <option value="9">Sep</option>
+                                            <option value="10">Oct</option>
+                                            <option value="11">Nov</option>
+                                            <option value="12">Dec</option>
+                                        </select>
+
+                                        <select name="year" id="year11">
+                                            <option value="2010">2010</option>
+                                            <option value="2011">2011</option>
+                                            <option value="2012">2012</option>
+                                            <option value="2013">2013</option>
+                                            <option value="2014">2014</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020" selected >2020</option>
+                                        </select>
+
+                                        </div> -->
+
+                                        <canvas id="hotel-bookings" ></canvas>
+                                        <!--<canvas id="chartjs_bar2"></canvas>-->
+                                       <!-- <div class="tools">
+                                        <span onclick="prev()"><i class="fa fa-arrow-circle-left fa-3x" ></i></span>
+                                        <span onclick="next()"><i class="fa fa-arrow-circle-right fa-3x" ></i></span>
+
+                                        <input type="hidden" name="yr" id="yr11" value="2019">
+                                        <input type="hidden" name="mnt" id="mnt11" value="7">
+
+                                        </div> -->
+
+                                    </div>
+                                </div>
+                            </div>
+
+                       </div>
 
 
                     </div>
 
 
 
+              {% endif %}
 
 
-
-
-                </div>
             </div>
             <!-- end page content -->
 
@@ -502,9 +622,35 @@
     <script src="{% static 'assets/plugins/chart-js/Chart.bundle.js' %}" ></script>
     <script src="{% static 'assets/plugins/chart-js/utils.js' %}" ></script>
 
+
+
 {% else %}
     <p>Welcome, new user. Please log in.<a href="/login">Login</a> </p>
 {% endif %}
+
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
+
+<script>
+
+  var pickup_location = document.getElementById('pickup_location1');
+  var autocomplete = new google.maps.places.Autocomplete(pickup_location);
+
+   var city2 = document.getElementById('city2');
+   var autocomplete = new google.maps.places.Autocomplete(city2);
+
+   var city3 = document.getElementById('city3');
+   var autocomplete = new google.maps.places.Autocomplete(city3);
+
+   var city4 = document.getElementById('city4');
+   var autocomplete = new google.maps.places.Autocomplete(city4);
+
+   var city5 = document.getElementById('city5');
+   var autocomplete = new google.maps.places.Autocomplete(city5);
+
+</script>
+
+
 
 <script>
 
@@ -550,7 +696,7 @@
 	  var data = {
 		labels: ["Taxi","Bus","Train","Hotel","Flight"],
 		datasets: [{
-		  data: [{{Dashboard.un_taxi_booking_count}},{{Dashboard.un_bus_booking_count}},{{Dashboard.un_train_booking_count}},{{Dashboard.un_hotel_booking_count}},{{Dashboard.un_flight_booking_count}}],
+		  data: [{{Dashboard.taxi_unbilled_amount}},{{Dashboard.bus_unbilled_amount}},{{Dashboard.train_unbilled_amount}},{{Dashboard.hotel_unbilled_amount}},{{Dashboard.flight_unbilled_amount}}],
 		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
 		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
 
@@ -569,7 +715,7 @@
 	  var data = {
 		labels: ["Taxi","Bus","Train","Hotel","Flight"],
 		datasets: [{
-		  data: [{{Dashboard.un_taxi_booking_count}},{{Dashboard.un_bus_booking_count}},{{Dashboard.un_train_booking_count}},{{Dashboard.un_hotel_booking_count}},{{Dashboard.un_flight_booking_count}}],
+		  data: [{{Dashboard.taxi_unpaid_amount}},{{Dashboard.bus_unpaid_amount}},{{Dashboard.train_unpaid_amount}},{{Dashboard.hotel_unpaid_amount}},{{Dashboard.flight_unpaid_amount}}],
 		  backgroundColor: ["#455C73","#9B59B6","#BDC3C7","#26B99A","#3498DB"],
 		  hoverBackgroundColor: ["#34495E","#B370CF","#CFD4D8","#36CAAB","#49A9EA"]
 
@@ -661,11 +807,38 @@
 
 
 
-
-
-
-
 </script>
+
+
+<script>
+// Attach a submit handler to the form
+$( "#TaxiSearchFormmm" ).submit(function( event ) {
+
+  // Stop form from submitting normally
+  event.preventDefault();
+
+  // Get some values from elements on the page:
+  var $form = $( this ),
+    booking_id = $form.find( "input[name='booking_id']" ).val(),
+    pickup_location = $form.find( "input[name='pickup_location']" ).val(),
+    pickup_date = $form.find( "input[name='pickup_date']" ).val(),
+    spoc_id = $form.find( "input[name='spoc_id']" ).val(),
+    operator_name = $form.find( "input[name='operator_name']" ).val(),
+    crn_no = $form.find( "input[name='crn_no']" ).val(),
+
+    url = $form.attr( "action" );
+
+  // Send the data using post
+  var posting = $.post( url, { booking_id: booking_id , pickup_location: pickup_location , pickup_date: pickup_date , spoc_id: spoc_id , operator_name: operator_name , crn_no: crn_no } );
+
+  // Put the results in a div
+  posting.done(function( data ) {
+    var content = $( data ).find( "#content" );
+    $( "#result" ).empty().append( content );
+  });
+});
+</script>
+
 
 
 
@@ -827,7 +1000,7 @@ $.post(var_url,{'month':month,'year':year},
 
 function getDate(){
 
-alert();
+
     var today = new Date();
 
 document.getElementById("to_date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
@@ -1002,7 +1175,7 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
     var year = parseInt($("#year :selected").val());
 
     var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-     var color = Chart.helpers.color;
+    var color = Chart.helpers.color;
 
      month = MONTHS[mnt-1];
 
@@ -1021,36 +1194,29 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
              borderColor: window.chartColors.red,
              borderWidth: 1,
              data: [taxi_y[0],bus_y[0],train_y[0],flight_y[0],hotel_y[0]],
-             city_data: [taxi_x[0],taxi_x[1],taxi_x[2],taxi_x[3],taxi_x[4]]
+             city_data: [taxi_x[0],bus_x[0],train_x[0],flight_x[0],hotel_x[0]]
          }, {
              label: label2,
              backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
              borderColor: window.chartColors.blue,
              borderWidth: 1,
              data: [taxi_y[1],bus_y[1],train_y[1],flight_y[1],hotel_y[1]],
-             city_data: [bus_x[0],bus_x[1],bus_x[2],bus_x[3],bus_x[4]]
+             city_data: [taxi_x[1],bus_x[1],train_x[1],flight_x[1],hotel_x[1]]
          },{
              label: label3,
              backgroundColor: color(window.chartColors.orange).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.blue,
+             borderColor: window.chartColors.orange,
              borderWidth: 1,
              data: [taxi_y[2],bus_y[2],train_y[2],flight_y[2],hotel_y[2]],
-             city_data: [train_x[0],train_x[1],train_x[2],train_x[3],train_x[4]]
+             city_data: [taxi_x[2],bus_x[2],train_x[2],flight_x[2],hotel_x[2]]
          },{
              label: label4,
              backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
              borderColor: window.chartColors.pink,
              borderWidth: 1,
              data: [taxi_y[3],bus_y[3],train_y[3],flight_y[3],hotel_y[3]],
-             city_data: [flight_x[0],flight_x[1],flight_x[2],flight_x[3],flight_x[4]]
-         },{
-             label: label5,
-             backgroundColor: color(window.chartColors.pink).alpha(0.5).rgbString(),
-             borderColor: window.chartColors.pink,
-             borderWidth: 1,
-             data: [taxi_y[4],bus_y[4],train_y[4],flight_y[4],hotel_y[4]],
-             city_data: [hotel_x[0],hotel_x[1],hotel_x[2],hotel_x[3],hotel_x[4]]
-         }
+             city_data: [taxi_x[3],bus_x[3],train_x[3],flight_x[3],hotel_x[3]]
+         },
 
          ]
 
@@ -1063,7 +1229,7 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
          var ctx22 = document.getElementById("graph-by-city").getContext("2d");
 
          window.myBar22 = new Chart(ctx22, {
-            type: 'bar',
+            type: 'horizontalBar',
 
              data: barChartData22,
              options: {
@@ -1073,7 +1239,6 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
              "animation": {
                             "duration": 1,
                             "onComplete": function() {
-
 
                                                         var chartInstance = this.chart,
                                                         ctx = chartInstance.ctx;
@@ -1087,23 +1252,25 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
                                                         //ctx.rotate(Math.PI*2/(i*6));
 
                             this.data.datasets.forEach(function(dataset, i) {
+
                                                               var meta = chartInstance.controller.getDatasetMeta(i);
-                                                              city_index = 0;
 
                                                               meta.data.forEach(function(bar, index) {
+
                                                                 var data = dataset.data[index];
+                                                                console.log("bar print");
+                                                                console.log(bar._index);
 
                                                                 //var lbl = data.datasets[tooltipItem.index].city_data;
                                                                 var lbl = dataset.city_data;
                                                                 console.log("city dataset issss");
                                                                 console.log(lbl);
-                                                                var lbl_cityname = lbl[city_index];
+                                                                var lbl_cityname = lbl[bar._index];
                                                                 console.log("city name isss");
                                                                 console.log(lbl_cityname);
 
                                                                 //ctx.fillText( lbl_cityname , bar._model.x, height - ((height - bar._model.y) / 2));
-                                                               //ctx.fillText(lbl_cityname, bar._model.x + 15, bar._model.y);
-
+                                                               ctx.fillText(lbl_cityname, bar._model.x + 20, bar._model.y + 5);
 
 
                                                               });
@@ -1111,32 +1278,56 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
                                                           }
                                                         },
                                                         legend: {
-                                                           position: 'top',
+                                                           "position" : 'top',
                                                           "display": false
                                                         },
                                                         tooltips: {
                                                           "enabled": true
                                                         },
 
-                legend: {
-            display: false,
-        },
+
                 scales: {
+
+                       xAxes: [ {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Total Sales In Lacs'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ],
+
                            yAxes: [{
+                        categoryPercentage : 1,
+			            barPercentage: 0.6,
+
              scaleLabel: {
                         display: true,
-                        labelString: 'Total Sales In Lacs'
-                                    },
+                        labelString: 'Service Types',
+
+                        },
+
 
 
 		}]
                         },
+
+
+
                  tooltips: {
+
+                 enabled: false,
+
             callbacks: {
                 label: function(tooltipItem, data) {
                     var label = data.datasets[tooltipItem.datasetIndex].label || '';
                     var lbl = data.datasets[tooltipItem.index].city_data;
-                    var lbl_cityname = lbl[tooltipItem.datasetIndex];
+                    var lbl_cityname = lbl[tooltipItem.index];
                     if (label) {
                         label += ': ';
                     }
@@ -1147,9 +1338,7 @@ function ChartByCity(taxi_x,taxi_y,bus_x,bus_y,train_x,train_y,flight_x,flight_y
             }
         },
                  responsive: true,
-                 legend: {
-                     position: 'top',
-                 },
+
                  title: {
                      display: true,
                      text: title_text
@@ -1502,7 +1691,8 @@ function next(){
     {
         document.getElementById("mnt").value = 1;
         document.getElementById("yr").value = v_yr + 1 ;
-        v_month = 1
+        v_month = 1;
+        v_yr = v_yr + 1 ;
     }else{
         document.getElementById("mnt").value = v_month+1;
         v_month = v_month+1;
@@ -1525,6 +1715,7 @@ function prev(){
         document.getElementById("mnt").value = 12;
         document.getElementById("yr").value = v_yr - 1;
         v_month = 12;
+        v_yr = v_yr -1 ;
     }else{
 
         document.getElementById("mnt").value = v_month-1;
@@ -1539,6 +1730,26 @@ function prev(){
 
 function callMonthWiseSummery(yr,mnt)
     {
+
+      var today = new Date();
+
+ curr_yr = parseInt(today.getFullYear()) ;
+ curr_month = parseInt(today.getMonth() + 1) ;
+
+ if( (yr == curr_yr) && (mnt == curr_month) )
+ {
+   //document.getElementById("next").disabled = true;
+
+   $('#next').hide();
+
+ }else{
+
+ //document.getElementById("next").disabled = false;
+
+ $('#next').show();
+
+ }
+
 
         var_url = '/api/'+'dashboard_sales_for_six_months'
     $.ajaxSetup({
@@ -1577,6 +1788,7 @@ $.post(var_url,{'year':yr,'month':mnt},
         train_ar.push(chk);
         flight_ar.push(chk);
         hotel_ar.push(chk);
+
         for(i=1;i<=5;i++)
         {
             if(chk == 1)
@@ -1948,6 +2160,10 @@ ar = slice2(MONTHS,6,mnth);
                         },
                  responsive: true,
 
+                  legend: {
+                     position: 'top',
+                 },
+
                  title: {
                      display: true,
                      text: 'Six Months Sales Summary'
@@ -1961,6 +2177,9 @@ ar = slice2(MONTHS,6,mnth);
 
     $(document).ready(function() {
 
+
+    {% if agent_user_type == 101 or agent_user_type == 102 %}
+
     var d = new Date();
 
     var date = d.getDate();
@@ -1970,35 +2189,47 @@ ar = slice2(MONTHS,6,mnth);
     v_yr = parseInt(year);
     v_month = parseInt(month);
 
-    document.getElementById("yr").value = v_yr;
-    document.getElementById("mnt").value = v_month;
+     document.getElementById("yr").value = v_yr;
+     document.getElementById("mnt").value = v_month;
+
+     document.getElementById("yr-3").value = v_yr;
+     document.getElementById("mnt-3").value = v_month;
+
+    //city_wise_summery();
+
+     var today_date = new Date();
+
+     var six_month_back = moment().subtract(180, 'days').calendar();
+
+     var date2 = new Date(six_month_back);
+
+    today_date_value = today_date.getFullYear()  + '-' + ('0' + (today_date.getMonth() + 1)).slice(-2) + '-' + ('0' + today_date.getDate()).slice(-2) ;
+
+    date3 = date2.getFullYear()  + '-' + ('0' + (date2.getMonth() + 1)).slice(-2) + '-' + ('0' + date2.getDate()).slice(-2) ;
+
+    var from_date = date3;
+
+    var to_date = today_date_value;
+
+    document.getElementById("to_date").defaultValue = to_date;
+    document.getElementById("from_date").defaultValue = from_date;
+
 
     callMonthWiseSummery(v_yr,v_month);
 
     callMonthWiseBookingsSummery(v_yr,v_month);
 
-    //city_wise_summery();
-
     callChartByCity();
 
-     var today_date = new Date();
-
- var six_month_back = moment().subtract(180, 'days').calendar();
-
- var date2 = new Date(six_month_back);
-
-today_date_value =    today_date.getFullYear()  + '-' + ('0' + (today_date.getMonth() + 1)).slice(-2) + '-' + ('0' + today_date.getDate()).slice(-2) ;
-
-date3 = date2.getFullYear()  + '-' + ('0' + (date2.getMonth() + 1)).slice(-2) + '-' + ('0' + date2.getDate()).slice(-2) ;
-
- var from_date = date3;
-
- var to_date = today_date_value;
-
-document.getElementById("to_date").defaultValue = to_date;
-document.getElementById("from_date").defaultValue = from_date;
-
     callTaxAmountTable(from_date,to_date);
+
+    {% endif %}
+
+    {% if agent_user_type == 103 %}
+
+        hotelBookingsSummery();
+
+    {% endif %}
 
 
 
@@ -2410,8 +2641,6 @@ ar = slice2(MONTHS,6,mnth);
                                                           "enabled": true
                                                         },
 
-
-
                 scales: {
                             yAxes: [{
                         scaleLabel: {
@@ -2678,6 +2907,8 @@ callTaxAmountTable(f_date,t_date);
 
 }
 
+
+
 function callTaxAmountTable(frm_date,too_date){
 
 
@@ -2710,12 +2941,6 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
 
         for (k=0;k<data['Tax'].length;k++)
         {
-            console.log("tax amount print");
-            console.log(k);
-            console.log(data['Tax'][k][0].igst);
-            console.log(data['Tax'][k][0].cgst);
-            console.log(data['Tax'][k][0].sgst);
-
             var pre_tax_amt = 0;
             var igst_amt = 0;
             var cgst_amt = 0;
@@ -2727,10 +2952,12 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
             var partial_paid_amt = 0;
 
 
-
-            switch(k){
+            		switch(k){
 
             case 0:
+
+             if (nullCheck(data['Tax'][k][0]))
+            {
 
                 pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
                 igst_amt = nullCheck(data['Tax'][k][0].igst);
@@ -2738,6 +2965,17 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
                 sgst_amt = nullCheck(data['Tax'][k][0].sgst);
                 others_amt = nullCheck(data['Tax'][k][0].other_charge);
                 total_amt = nullCheck(data['Tax'][k][0].total);
+
+            }else{
+
+                 pre_tax_amt = 0;
+                igst_amt = 0;
+                cgst_amt = 0;
+                sgst_amt = 0;
+                others_amt = 0;
+                total_amt = 0;
+
+            }
 
 
                table_row_str = '<th scope="row">Taxi</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
@@ -2750,6 +2988,10 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
 
             case 1:
 
+
+                  if (nullCheck(data['Tax'][k][0]))
+            {
+
                 pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
                 igst_amt = nullCheck(data['Tax'][k][0].igst);
                 cgst_amt = nullCheck(data['Tax'][k][0].cgst);
@@ -2757,6 +2999,16 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
                 others_amt = nullCheck(data['Tax'][k][0].other_charge);
                 total_amt = nullCheck(data['Tax'][k][0].total);
 
+            }else{
+
+                 pre_tax_amt = 0;
+                igst_amt = 0;
+                cgst_amt = 0;
+                sgst_amt = 0;
+                others_amt = 0;
+                total_amt = 0;
+
+            }
 
 
                 table_row_str = '<th scope="row">Bus</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
@@ -2768,6 +3020,9 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
 
             case 2:
 
+                 if (nullCheck(data['Tax'][k][0]))
+            {
+
                 pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
                 igst_amt = nullCheck(data['Tax'][k][0].igst);
                 cgst_amt = nullCheck(data['Tax'][k][0].cgst);
@@ -2775,6 +3030,16 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
                 others_amt = nullCheck(data['Tax'][k][0].other_charge);
                 total_amt = nullCheck(data['Tax'][k][0].total);
 
+            }else{
+
+                 pre_tax_amt = 0;
+                igst_amt = 0;
+                cgst_amt = 0;
+                sgst_amt = 0;
+                others_amt = 0;
+                total_amt = 0;
+
+            }
 
 
                table_row_str = '<th scope="row">Train</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
@@ -2787,6 +3052,10 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
 
             case 3:
 
+
+                  if (nullCheck(data['Tax'][k][0]))
+            {
+
                 pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
                 igst_amt = nullCheck(data['Tax'][k][0].igst);
                 cgst_amt = nullCheck(data['Tax'][k][0].cgst);
@@ -2794,6 +3063,16 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
                 others_amt = nullCheck(data['Tax'][k][0].other_charge);
                 total_amt = nullCheck(data['Tax'][k][0].total);
 
+            }else{
+
+                 pre_tax_amt = 0;
+                igst_amt = 0;
+                cgst_amt = 0;
+                sgst_amt = 0;
+                others_amt = 0;
+                total_amt = 0;
+
+            }
 
 
                table_row_str = '<th scope="row">Flight</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
@@ -2806,6 +3085,10 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
 
             case 4:
 
+
+                  if (nullCheck(data['Tax'][k][0]))
+            {
+
                 pre_tax_amt = nullCheck(data['Tax'][k][0].pre_tax_amount);
                 igst_amt = nullCheck(data['Tax'][k][0].igst);
                 cgst_amt = nullCheck(data['Tax'][k][0].cgst);
@@ -2813,7 +3096,16 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
                 others_amt = nullCheck(data['Tax'][k][0].other_charge);
                 total_amt = nullCheck(data['Tax'][k][0].total);
 
+            }else{
 
+                 pre_tax_amt = 0;
+                igst_amt = 0;
+                cgst_amt = 0;
+                sgst_amt = 0;
+                others_amt = 0;
+                total_amt = 0;
+
+            }
 
 
                table_row_str = '<th scope="row">Hotel</th><td>'+ pre_tax_amt + '</td><td>'+ igst_amt + '</td><td>' + cgst_amt +'</td><td>' + sgst_amt + '</td></td>' +
@@ -2835,6 +3127,127 @@ $.post(var_url,{'from_date':from_date,'to_date':to_date},
        });
 
 }
+
+
+
+</script>
+
+
+
+
+<script>
+
+/* js for hotel bookings chart */
+
+    function hotelBookingsSummery(yr,mnt)
+    {
+
+        var_url = '/api/'+'dashboard_hotel_bookings_summery'
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+        $.post(var_url,{ },
+      function(data)
+      {
+
+        data_x1 = 0 + '-' + data['Hotel'][0].x1 ;
+        data_x2 = data['Hotel'][0].x1 + ' - ' + data['Hotel'][0].x2 ;
+        data_x3 = data['Hotel'][0].x2 + ' - ' + data['Hotel'][0].x3 ;
+        data_x4 = data['Hotel'][0].x3 + ' - ' + data['Hotel'][0].x4 ;
+        data_x5 = data['Hotel'][0].x4 + ' - ' + data['Hotel'][0].x5 ;
+        data_x6 = data['Hotel'][0].x5 + ' - ' + data['Hotel'][0].x6 ;
+
+
+        ar_x = [ data_x1 , data_x2 , data_x3 , data_x4 , data_x5 , data_x6 ];
+
+        ar_y = [data['Hotel'][0].y1 , data['Hotel'][0].y2 , data['Hotel'][0].y3 , data['Hotel'][0].y4 , data['Hotel'][0].y5 , data['Hotel'][0].y6 ];
+
+        //alert(data);
+
+        //alert(data['Hotel'][0].x1);
+
+        //console.log(data);
+
+        console.log(ar_x);
+
+        console.log(ar_y);
+
+        hotel_bookings_summery( ar_x , ar_y )
+
+      });
+
+
+    }
+
+
+
+    function hotel_bookings_summery( ar_x , ar_y ) {
+
+         var hotel_summenry = document.getElementById("hotel-bookings").getContext('2d');
+        var myChart = new Chart(hotel_summenry, {
+        type: 'bar',
+        data: {
+        labels: ar_x ,
+        datasets: [{
+        label: '# of Bookings',
+        data: ar_y ,
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+        }]
+        },
+        options: {
+       scales: {
+                          yAxes: [{
+                           scaleLabel: {
+                        display: true,
+                        labelString: 'Total Number Of Bookings'
+                                    },
+                            display: true,
+                            gridLines: {
+                              display: true
+                            },
+
+                          }],
+                          xAxes: [{
+                            scaleLabel: {
+                        display: true,
+                        labelString: 'Room Price Range'
+                                    },
+                            gridLines: {
+                              display: true
+                            },
+                            ticks: {
+                              beginAtZero: true
+                            }
+                          }]
+                        },
+
+
+        }
+        });
+
+
+         }
 
 
 

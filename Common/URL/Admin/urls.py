@@ -97,4 +97,18 @@ urlpatterns = [
     path('Corporate/Admin/flight-billing/verify', admin_views.flight_billing_verify),
     path('Corporate/Admin/hotel-billing/verify', admin_views.hotel_billing_verify),
 
+
+    path('Corporate/Admin/bill/<int:id>', admin_views.get_all_generated_bills),
+    path('Corporate/Admin/BankAccounts', admin_views.corporate_bank_accounts),
+    path('Corporate/Admin/add-corporate-accounts/<int:id>', admin_views.add_company_accounts),
+    path('Corporate/Admin/accept-bill', admin_views.accept_bill),
+
+    path('Corporate/Admin/booking-search', admin_views.dashboard_search_admin_api_call),
+    path('Corporate/Admin/reports/invoice', admin_views.reports_invoice,name='report-invoice'),
+    path('Corporate/Admin/reports/client-billing', admin_views.reports_client_billing),
+    path('Corporate/Admin/reports/download-client-billing', admin_views.download_client_bill_reports),
+    path('Corporate/Admin/reports/download-invoice-report', admin_views.download_invoice_reports),
+
+
+
 ]

@@ -237,7 +237,7 @@
             <td>
             <select class="form-control myselect" name="booking_status" id="booking_status" style="width:100%">
                 <option value="0" >All</option>
-                <option value="1" {% if booking_type == 1 %} selected {% endif %} >Today\'s Unassigned Bookings</option>
+                <option value="1" {% if booking_type == 1 %} selected {% endif %} >Today\'s Assigned Bookings</option>
                 <option value="2" {% if booking_type == 2 %} selected {% endif %} >Active Taxi Bookings (Unassigned)</option>
                 <option value="3" {% if booking_type == 3 %} selected {% endif %} >Active Taxi Bookings (Assigned)</option>
                 <option value="4" {% if booking_type == 4 %} selected {% endif %} >Archived Bookings(Assigned)</option>
@@ -359,11 +359,11 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+                                    <th>Booking Id</th>
                                     <th>City</th>
                                     <th>Booking Date</th>
-                                    <th>Pickup Datetime</th>
+                                    <th>Pickup Date/Time/Time</th>
                                     <th>Pickup Location</th>
                                     <th>Drop Location</th>
                                     <th>Tour Type</th>
@@ -386,7 +386,7 @@
 
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.city_name }}</td>
                                     <td>{{ booking.booking_date}}</td>
@@ -409,7 +409,7 @@
                                             ({{ booking.cotrav_agent_name|default:'' }})
                                         {% endif %}
                                     <td style="display: inline-flex;">
-                                        {% if booking.status_cotrav == 1 %}
+                                        {% if booking.status_cotrav == 1 or booking_type == 6 %}
                                      <a title="Accept Booking" style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
                                     {% endif %}
@@ -532,10 +532,12 @@ $(function() {
     modal.find('#booking_id').val(id);
 
     if(reject_id == 1){
+        modal.find('#accept_id').val('');
         modal.find('#reject_id').val(1);
         modal.find('#user_comment').prop('required',true);
     }
     if(accept_id == 1){
+        modal.find('#reject_id').val('');
         modal.find('#accept_id').val(1);
         modal.find('#user_comment').prop('required',false);
     }

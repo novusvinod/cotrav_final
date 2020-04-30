@@ -30,6 +30,7 @@ def logout_action(request):
     else:
         return redirect("/login")
 
+
 def homepage(request):
 
     if 'admin_login_type' in request.session:
@@ -40,7 +41,7 @@ def homepage(request):
         print("Admin Home Page ")
         print(user_type)
         print(access_token)
-        payload = {'admin_id':request.user.id, 'corporate_id':request.user.id}
+        payload = {'admin_id':request.user.id, 'corporate_id':request.user.corporate_id}
         url = settings.API_BASE_URL + "admin_dashboard"
 
         data = getDataFromAPI(user_type, access_token, url, payload)
@@ -1292,6 +1293,14 @@ def add_taxi_booking(request,id):
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = request.POST.get('no_of_seats', '')
 
+            if tour_type == 1 or tour_type == '1':
+                url_add_city = settings.API_BASE_URL + "add_city_name"
+                pickup_details = [x.strip() for x in pickup_city.split(',')]
+                city_data = {'login_type': login_type, 'access_token': access_token, 'city_name': pickup_details[0], 'state_id': '1'}
+                city_id = getDataFromAPI(login_type, access_token, url_add_city, city_data)
+                for conty_id in city_id['id']:
+                    actual_city_id = conty_id['id']
+
             employees = []
             no_of_emp = int(no_of_seats) + 1
             for i in range(1,no_of_emp):
@@ -1345,10 +1354,9 @@ def add_taxi_booking(request,id):
             cities = getDataFromAPI(login_type, access_token, url_city, payload)
             cities = cities['AssCity']
 
-            # url_city1 = settings.API_BASE_URL + "cities"
-            # cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
-            # citiess = cities1['Cities']
-            citiess = ""
+            url_city1 = settings.API_BASE_URL + "city_by_package"
+            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            citiess = cities1['Cities']
 
             url_access = settings.API_BASE_URL + "view_company"
             data = getDataFromAPI(login_type, access_token, url_access, payload)
@@ -1478,11 +1486,15 @@ def add_bus_booking(request,id):
             from_location = request.POST.get('from', '')
             to_location = request.POST.get('to', '')
             bus_type = request.POST.get('bus_type', '')
+            bus_type2 = request.POST.get('bus_type2', '')
+            bus_type3 = request.POST.get('bus_type3', '')
             booking_datetime = request.POST.get('booking_datetime', '')
             journey_datetime = request.POST.get('journey_datetime', '')
             journey_datetime_to = request.POST.get('journey_datetime_to', '')
             entity_id = request.POST.get('entity_id', '')
             preferred_bus = request.POST.get('preferred_bus', '')
+            preferred_board_point = request.POST.get('preferred_board_point', '')
+            preferred_drop_point = request.POST.get('preferred_drop_point', '')
             assessment_code = request.POST.get('assessment_code', '')
             assessment_city_id = request.POST.get('assessment_city_id', '')
 
@@ -1498,7 +1510,8 @@ def add_bus_booking(request,id):
             payload = {'login_type':login_type,'user_id':user_id,'access_token':access_token,'corporate_id': corporate_id,'spoc_id':spoc_id,'group_id':group_id,
                        'subgroup_id':subgroup_id,'from':from_location,'to':to_location,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
                        'bus_type':bus_type,'booking_datetime':booking_datetime,'journey_datetime':journey_datetime+':00','journey_datetime_to':journey_datetime_to+':00','entity_id':entity_id,
-                       'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'is_sms':1,'is_email':1}
+                       'preferred_bus':preferred_bus,'reason_booking':reason_booking,'no_of_seats':no_of_seats,'employees':employees,'is_sms':1,'is_email':1,
+                       'preferred_board_point':preferred_board_point, 'preferred_drop_point':preferred_drop_point,'bus_type2':bus_type2,'bus_type3':bus_type3}
             print(payload)
 
             url_taxi_booking = settings.API_BASE_URL + "add_bus_booking"
@@ -2153,9 +2166,13 @@ def add_flight_booking(request,id):
             spoc = getDataFromAPI(login_type, access_token, url_spoc, payload)
             spocs = spoc['Spocs']
 
+            url_access = settings.API_BASE_URL + "get_airports"
+            data = getDataFromAPI(login_type, access_token, url_access, payload)
+            airports = data['Airports']
+
             if id:
                 return render(request, 'Company/Admin/add_flight_booking.html', {'employees':employees,'entities':entities,
-                            'assessments':ass_code,'cities_ass':cities_ass, 'corp_access':access,'spocs':spocs})
+                            'assessments':ass_code,'cities_ass':cities_ass, 'corp_access':access,'spocs':spocs,'airports':airports})
             else:
                 return render(request, 'Company/Admin/add_flight_booking.html', {})
         else:
@@ -5246,9 +5263,822 @@ def flight_billing_verify(request):
         return HttpResponseRedirect("/login")
 
 
+def accept_bill(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+
+        if request.method == 'POST':
+            booking_id = request.POST.get('booking_id', '')
+            user_id = request.POST.get('user_id', '')
+            accept_id = request.POST.get('accept_id', '')
+            reject_id = request.POST.get('reject_id', '')
+            current_url = request.POST.get('current_url', '')
+            user_comment = request.POST.get('user_comment', '')
+
+            url = ""
+            operation_message = ""
+            if accept_id == '1':
+                url = settings.API_BASE_URL + "admin_accept_bill"
+                operation_message="Bill Accepted successfully..!"
+
+            if reject_id == '1':
+                url = settings.API_BASE_URL + "admin_reject_bill"
+                operation_message="Bill Rejected successfully..!"
+
+            payload = {'booking_id': booking_id,'user_id':user_id,'user_type':login_type,'user_comment':user_comment}
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            print(company)
+            if company['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect(current_url, {})
+            else:
+                messages.error(request, 'Failed to Accept Bill..!')
+                return HttpResponseRedirect(current_url, {})
+        else:
+            return HttpResponseRedirect("/Corporate/Admin/bill/2")
+    else:
+        return HttpResponseRedirect("/login")
+
+def get_all_generated_bills(request, id):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        payload = {'bill_type': id}
+        url = settings.API_BASE_URL + "get_all_generated_bills"
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        companies = company['Bill']
+        return render(request, 'Company/Admin/bills_geterated.html', {'bills': companies, 'bill_type':id})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def corporate_bank_accounts(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        payload = {'corporate_id': request.user.corporate_id}
+        url = settings.API_BASE_URL + "get_corporate_accounts"
+        company = getDataFromAPI(login_type, access_token, url, payload)
+        print(company)
+        pos = ''
+        companies = ''
+        if company['success'] == 1:
+            pos = company['Accounts']
+        else:
+            pos = ''
+
+        return render(request, 'Company/Admin/corporate_accounts.html', {'accounts': pos})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def add_company_accounts(request, id):
+    if request.method == 'POST':
+        request = get_request()
+        user_id = request.POST.get('user_id', '')
+
+        if 'admin_login_type' in request.session:
+            login_type = request.session['admin_login_type']
+            access_token = request.session['admin_access_token']
+
+            current_url = request.POST.get('current_url', '')
+            corporate_id = request.POST.get('corporate_id', '')
+            bank_name = request.POST.get('bank_name')
+            bank_branch = request.POST.get('bank_branch', '')
+            acoount_no = request.POST.get('acoount_no', '')
+            acoount_holder_name = request.POST.get('acoount_holder_name', '')
+            ifsc_code = request.POST.get('ifsc_code', '')
+            micr_code = request.POST.get('micr_code', '')
+
+            account_id = request.POST.get('account_id')
+
+            delete_id = request.POST.get('delete_id')
+
+            payload = {'corporate_id': corporate_id, 'user_id': user_id, 'login_type': login_type,
+                       'access_token': access_token, 'bank_name': bank_name, 'bank_branch': bank_branch, 'acoount_no': acoount_no, 'acoount_holder_name': acoount_holder_name,
+                       'ifsc_code': ifsc_code,'micr_code':micr_code,  'account_id': account_id, 'is_delete': delete_id, }
+
+            url = ""
+            if account_id:
+                url = settings.API_BASE_URL + "update_corporate_account"
+                operation_message = "Company Account Updated Successfully..!"
+                if delete_id == '1':
+                    url = settings.API_BASE_URL + "delete_corporate_account"
+                    operation_message = "Company Account Deleted Successfully..!"
+            else:
+                url = settings.API_BASE_URL + "add_corporate_account"
+                operation_message = "Company Account Added Successfully..!"
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+
+            if company['success'] == 1:
+                messages.success(request, operation_message)
+                return HttpResponseRedirect(current_url, {'message': "Added Successfully"})
+            else:
+                messages.error(request, company['message'])
+                return HttpResponseRedirect(current_url, {'message': "Record Not Added"})
+        else:
+            return HttpResponseRedirect("/agents/login")
+
+
+def dashboard_search_admin_api_call(request):
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+        serveType = int(request.POST.get('serveType', ''))
+
+        corp_id = request.user.corporate_id
+
+        booking_type = int(request.POST.get('booking_type', ''))
+
+        bookings_from_date = request.POST.get('bookings_from_date', '')
+
+        bookings_to_date = request.POST.get('bookings_to_date', '')
+
+        booking_id = ""
+        pickup_location = ""
+        pickup_date1 = ""
+        pickup_date2 = ""
+        pickup_date3 = ""
+        pickup_date4 = ""
+        spoc_id = ""
+        operator_name = ""
+
+        city = ""
+        pnr_no = ""
+        ass_code = ""
+
+        checkin_date = ""
+        voucher_no = ""
+        hotel_name = ""
+
+        search_serve_url = ""
+
+        whereClause = "b.corporate_id = '" + str(corp_id) + "' "
+
+        if serveType == 1:
+            booking_id = request.POST.get('booking_id', '')
+            pickup_location = request.POST.get('pickup_location', '')
+            pickup_date1 = request.POST.get('pickup_date1', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            operator_name = request.POST.get('operator_name', '')
+            current_url = request.POST.get('current_url', '')
+
+        if serveType == 2:
+            booking_id = request.POST.get('booking_id', '')
+            pickup_date2 = request.POST.get('pickup_date2', '')
+            city = request.POST.get('city', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            pnr_no = request.POST.get('pnr_no', '')
+            ass_code = request.POST.get('ass_code', '')
+            current_url = request.POST.get('current_url', '')
+
+        if serveType == 3:
+            booking_id = request.POST.get('booking_id', '')
+            pickup_date3 = request.POST.get('pickup_date3', '')
+            city = request.POST.get('city', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            pnr_no = request.POST.get('pnr_no', '')
+            ass_code = request.POST.get('ass_code', '')
+            current_url = request.POST.get('current_url', '')
+
+        if serveType == 4:
+            booking_id = request.POST.get('booking_id', '')
+            pickup_date4 = request.POST.get('pickup_date4', '')
+            city = request.POST.get('city', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            pnr_no = request.POST.get('pnr_no', '')
+            ass_code = request.POST.get('ass_code', '')
+            current_url = request.POST.get('current_url', '')
+            search_serve_url = 'Agent/flight_bookings.html'
+        if serveType == 5:
+            booking_id = request.POST.get('booking_id', '')
+            checkin_date = request.POST.get('checkin_date', '')
+            city = request.POST.get('city', '')
+            spoc_id = request.POST.get('spoc_id', '')
+            ass_code = request.POST.get('ass_code', '')
+            voucher_no = request.POST.get('voucher_no', '')
+            hotel_name = request.POST.get('hotel_name', '')
+            current_url = request.POST.get('current_url', '')
+
+        if (bookings_from_date and bookings_to_date):
+            bookings_from_date = bookings_from_date + ' 00:00:00'
+            bookings_to_date = bookings_to_date + ' 00:00:00'
+
+            bookings_from_date_object = datetime.strptime(bookings_from_date, '%d-%m-%Y %H:%M:%S')
+            bookings_to_date_object = datetime.strptime(bookings_to_date, '%d-%m-%Y %H:%M:%S')
+
+            bookings_from_date = bookings_from_date_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            bookings_to_date = bookings_to_date_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            print(bookings_from_date)
+
+            print(bookings_to_date)
+
+            if serveType == 1:
+                whereClause = whereClause + "AND " + "b.booking_date BETWEEN CAST('" + bookings_from_date + "' AS DATE) AND CAST('" + bookings_to_date + "' AS DATE) "
+            else:
+                whereClause = whereClause + "AND " + "b.booking_datetime BETWEEN CAST('" + bookings_from_date + "' AS DATE) AND CAST('" + bookings_to_date + "' AS DATE) "
+
+        if pickup_location:
+            whereClause = whereClause + "AND " + "b.pickup_location LIKE '%" + pickup_location + "%' "
+
+        if pickup_date1:
+            pickup_date1 = pickup_date1 + ' 00:00:00'
+            pickup_date1_object = datetime.strptime(pickup_date1, '%d-%m-%Y %H:%M:%S')
+            pickup_date1 = pickup_date1_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            whereClause = whereClause + "AND " + "DATE(b.pickup_datetime) = CAST('" + pickup_date1 + "' AS DATE) "
+
+        if pickup_date2:
+            pickup_date2 = pickup_date2 + ' 00:00:00'
+            pickup_date2_object = datetime.strptime(pickup_date2, '%d-%m-%Y %H:%M:%S')
+            pickup_date2 = pickup_date2_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            whereClause = whereClause + "AND " + "DATE(b.pickup_from_datetime) = CAST('" + pickup_date2 + "' AS DATE) "
+
+        if pickup_date3:
+            pickup_date3 = pickup_date3 + ' 00:00:00'
+            pickup_date3_object = datetime.strptime(pickup_date3, '%d-%m-%Y %H:%M:%S')
+            pickup_date3 = pickup_date3_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            whereClause = whereClause + "AND " + "DATE(b.pickup_from_datetime) = CAST('" + pickup_date3 + "' AS DATE) "
+
+        if pickup_date4:
+            pickup_date4 = pickup_date4 + ' 00:00:00'
+            pickup_date4_object = datetime.strptime(pickup_date4, '%d-%m-%Y %H:%M:%S')
+            pickup_date4 = pickup_date4_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            whereClause = whereClause + "AND " + "DATE(b.departure_datetime) = CAST('" + pickup_date4 + "' AS DATE) "
+
+        if spoc_id:
+            whereClause = whereClause + "AND " + "b.spoc_id = '" + spoc_id + "' "
+
+        if operator_name:
+            whereClause = whereClause
+
+        if city:
+            whereClause = whereClause + "AND " + "b.pickup_location LIKE '%" + city + "%' "
+
+        if pnr_no:
+            whereClause = whereClause + "AND " + "b.pnr_no = '" + pnr_no + "' "
+
+        if ass_code:
+            whereClause = whereClause + "AND " + "b.assessment_code = '" + ass_code + "' "
+
+        if checkin_date:
+            checkin_date = checkin_date + ' 00:00:00'
+            checkin_date_object = datetime.strptime(checkin_date, '%d-%m-%Y %H:%M:%S')
+            checkin_date = checkin_date_object.strftime("%Y-%m-%d (%H:%M:%S.%f)")
+
+            whereClause = whereClause + "AND " + "DATE(b.checkin_datetime) = CAST('" + checkin_date + "' AS DATE) "
+
+        if voucher_no:
+            whereClause = whereClause + "AND " + "b.voucher_no = '" + voucher_no + "' "
+
+        if hotel_name:
+            whereClause = whereClause + "AND " + "ht.name LIKE '%" + hotel_name + "%' "
+
+        if booking_id:
+            whereClause = "b.reference_no = '" + booking_id + "' "
+
+        search_serve_url = "Company/Admin/dashboard_search_admin_result.html"
+
+        payload = {'whereClause': whereClause, 'serveType': serveType, 'booking_type': booking_type}
+        url = settings.API_BASE_URL + "dashboard_search_admin_bookings"
+        print(payload)
+        verify = getDataFromAPI(login_type, access_token, url, payload)
+        print(verify)
+        if verify['success'] == 1:
+            messages.success(request, "Search Result..!")
+            return render(request, search_serve_url, {'bookings': verify['Result'], 'serveType': serveType})
+
+        else:
+            messages.error(request, "Sory for error...!")
+            return HttpResponse("error")
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def reports_invoice(request):
+    if 'admin_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['admin_login_type']
+            access_token = request.session['admin_access_token']
+
+            corporate_id = request.POST.get('corporate_id', '')
+            if not corporate_id:
+                corporate_id = 0
+
+            service_type = request.POST.get('service_type', '')
+            invoice_type = request.POST.get('invoice_type', '')
+            date_type = request.POST.get('date_type', '')
+            from_date = request.POST.get('from_date', '')
+            to_date = request.POST.get('to_date', '')
+
+            payload = {'corporate_id': int(corporate_id), 'service_type': service_type, 'invoice_type': invoice_type,
+                       'date_type': date_type, 'from_date': from_date, 'to_date': to_date}
+            print(payload)
+            url = settings.API_BASE_URL + "companies"
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            if company['success'] == 1:
+                companies = company['Corporates']
+            else:
+                companies = {}
+
+            payload = {'corporate_id': int(corporate_id), 'service_type': service_type,
+                       'date_type': date_type, 'from_date': from_date, 'to_date': to_date}
+
+            print("payload")
+
+            print(payload)
+
+            url = settings.API_BASE_URL + "admin_report_invoice"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print("Billl")
+            #print(operator)
+            if operator['success'] == 1:
+                operator = operator['Reports']
+            else:
+                operator = {}
+
+            return render(request, 'Company/Admin/reports_invoice.html',
+                          {'Reports': operator, 'companies': companies, 'data': payload})
+        else:
+            login_type = request.session['admin_login_type']
+            access_token = request.session['admin_access_token']
+            payload = {'': id}
+
+            url = settings.API_BASE_URL + "companies"
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            if company['success'] == 1:
+                companies = company['Corporates']
+            else:
+                companies = {}
+
+            url = settings.API_BASE_URL + "get_all_bills"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print("Billl")
+            print(operator)
+            if operator['success'] == 1:
+                operator = operator['Bill']
+            else:
+                operator = {}
+            return render(request, 'Company/Admin/reports_invoice.html', {'bills': operator, 'companies': companies})
+    else:
+        return HttpResponseRedirect("/login")
 
 
 
+def reports_client_billing(request):
+    if 'admin_login_type' in request.session:
+        if request.method == 'POST':
+            login_type = request.session['admin_login_type']
+            access_token = request.session['admin_access_token']
+
+            corporate_id = request.POST.get('corporate_id', '')
+            if not corporate_id:
+                corporate_id = 0
+            service_type = request.POST.get('service_type', '')
+            invoice_type = request.POST.get('invoice_type', '')
+            bill_status = request.POST.get('bill_status', '')
+            from_date = request.POST.get('from_date', '')
+            to_date = request.POST.get('to_date', '')
+            payload = {'corporate_id': int(corporate_id), 'service_type': service_type, 'invoice_type': invoice_type,
+                       'bill_status': bill_status, 'from_date': from_date, 'to_date': to_date}
+            print(payload)
+            url = settings.API_BASE_URL + "companies"
+
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            if company['success'] == 1:
+                companies = company['Corporates']
+            else:
+                companies = {}
+
+            url = settings.API_BASE_URL + "admin_report_client_bills"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print("Billl")
+            print(operator)
+            if operator['success'] == 1:
+                operator = operator['Bill']
+            else:
+                operator = {}
+
+            return render(request, 'Company/Admin/reports_client_billing.html',
+                          {'bills': operator, 'companies': companies, 'data': payload})
+        else:
+            login_type = request.session['admin_login_type']
+            access_token = request.session['admin_access_token']
+            payload = {'': id}
+
+            url = settings.API_BASE_URL + "companies"
+            company = getDataFromAPI(login_type, access_token, url, payload)
+            if company['success'] == 1:
+                companies = company['Corporates']
+            else:
+                companies = {}
+
+            url = settings.API_BASE_URL + "get_all_bills"
+            operator = getDataFromAPI(login_type, access_token, url, payload)
+            print("Billl")
+            print(operator)
+            if operator['success'] == 1:
+                operator = operator['Bill']
+            else:
+                operator = {}
+            return render(request, 'Company/Admin/reports_client_billing.html', {'bills': operator, 'companies': companies})
+    else:
+        return HttpResponseRedirect("/login")
+
+
+def download_invoice_reports(request):
+
+    request = get_request()
+
+    booking = ''
+
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+
+        corporate_id = request.POST.get('corporate_id', '')
+        if not corporate_id:
+            corporate_id = 0
+        service_type = int(request.POST.get('service_type', ''))
+        date_type = request.POST.get('date_type', '')
+        from_date = request.POST.get('from_date', '')
+        to_date = request.POST.get('to_date', '')
+
+        service_text = ""
+
+        if service_type == 1:
+
+            service_text = "taxi"
+
+        elif service_type == 2:
+
+            service_text = "bus"
+
+        elif service_type == 3:
+
+            service_text = "train"
+
+        elif service_type == 4:
+
+            service_text = "flight"
+
+        elif service_type == 5:
+
+            service_text = "hotel"
+
+        else:
+
+            service_text = "all"
+
+
+
+        payload = {'corporate_id': int(corporate_id), 'service_type': service_type,'date_type': date_type, 'from_date': from_date, 'to_date': to_date}
+        print(payload)
+        url = settings.API_BASE_URL + "admin_report_invoice"
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Reports']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=report_invoice_'+ service_text +'_'+ from_date +'_'+ to_date + '.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Invoice Reports'
+
+    # Define the titles for columns
+
+    columns = [
+            "Sr.No",
+            "reference_no",
+            "assessment_code",
+             "assessment_city_id",
+            "pickup_location",
+            "drop_location",
+            "spoc_id",
+            "user_name",
+            "user_contact",
+            "booking_datetime",
+            "boarding_datetime",
+            "boarding_point",
+            "portal_used",
+            "operator_name",
+            "operator_contact",
+            "ticket_no",
+            "pnr_no",
+            "assign_bus_type_id",
+            "ticket_price",
+            "management_fee",
+            "tax_on_management_fee",
+            "tax_on_management_fee_percentage",
+            "sub_total",
+            "vi_ticket_price",
+            "vender_commission",
+
+            "vender_commission",
+            "invoice_status",
+    ]
+
+
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+
+        if service_type == 1:
+            bk['booking_datetime'] = bk['booking_date']
+            bk['boarding_datetime'] = ''
+            bk['boarding_point'] = ''
+            bk['portal_used'] = ''
+            bk['ticket_no'] = ''
+            bk['pnr_no'] = ''
+            bk['assign_bus_type_id'] = ''
+            bk['ticket_price'] = ''
+
+        if service_type == 3:
+            bk['vi_ticket_price'] = ''
+            bk['vender_commission'] = ''
+            bk['invoice_status'] = ''
+
+        if service_type == 4:
+            bk['assessment_city_id'] = ''
+            bk['pickup_location'] = bk['from_location']
+            bk['drop_location'] = bk['to_location']
+            bk['boarding_datetime'] = ''
+            bk['boarding_point'] = ''
+            bk['portal_used'] = ''
+            bk['operator_name'] = ''
+            bk['operator_contact'] = ''
+            bk['pnr_no'] = ''
+            bk['assign_bus_type_id'] = ''
+
+        if service_type == 5:
+            bk['pickup_location'] = ''
+            bk['drop_location'] = ''
+            bk['boarding_datetime'] = ''
+            bk['boarding_point'] = ''
+            bk['ticket_no'] = ''
+            bk['pnr_no'] = ''
+            bk['assign_bus_type_id'] = ''
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['reference_no'],
+            bk['assessment_code'],
+            bk['assessment_city_id'],
+            bk['pickup_location'],
+            bk['drop_location'],
+            bk['spoc_id'],
+            bk['user_name'],
+            bk['user_contact'],
+            bk['booking_datetime'],
+            bk['boarding_datetime'],
+            bk['boarding_point'],
+            bk['portal_used'],
+            bk['operator_name'],
+            bk['operator_contact'],
+            bk['ticket_no'],
+            bk['pnr_no'],
+            bk['assign_bus_type_id'],
+            bk['ticket_price'],
+            bk['management_fee'],
+            bk['tax_on_management_fee'],
+            bk['tax_on_management_fee_percentage'],
+            bk['sub_total'],
+            bk['vi_ticket_price'],
+
+
+            bk['vender_commission'],
+
+            bk['vender_commission'],
+            bk['invoice_status'],
+
+        ]
+
+
+
+
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
+
+
+
+def download_client_bill_reports(request):
+
+    request = get_request()
+
+    booking = ''
+
+    if 'admin_login_type' in request.session:
+        login_type = request.session['admin_login_type']
+        access_token = request.session['admin_access_token']
+
+        corporate_id = request.POST.get('corporate_id', '')
+        if not corporate_id:
+            corporate_id = 0
+        service_type = int(request.POST.get('service_type', ''))
+        bill_status = int(request.POST.get('bill_status', ''))
+        from_date = request.POST.get('from_date', '')
+        to_date = request.POST.get('to_date', '')
+
+        service_text = ""
+
+        if service_type == 1:
+
+            service_text = "taxi"
+
+        elif service_type == 2:
+
+            service_text = "bus"
+
+        elif service_type == 3:
+
+            service_text = "train"
+
+        elif service_type == 4:
+
+            service_text = "flight"
+
+        elif service_type == 5:
+
+            service_text = "hotel"
+
+        else:
+
+            service_text = "all"
+
+
+        if bill_status == 1 :
+
+            bill_text = "Unpaid"
+
+        elif bill_status == 2 :
+
+            bill_text = "partial"
+
+        elif bill_status == 3:
+
+            bill_text = "paid"
+
+        else:
+            bill_text = "All"
+
+
+        payload = {'corporate_id': int(corporate_id), 'service_type': service_type,'bill_status': bill_status, 'from_date': from_date, 'to_date': to_date}
+        print(payload)
+        url = settings.API_BASE_URL + "admin_report_client_bills"
+        company = getDataFromAPI(login_type, access_token, url, payload)
+
+        if company['success'] == 1:
+            booking = company['Bill']
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=report_client_bills_'+ service_text +'_'+ from_date +'_'+ to_date + '_' + bill_text +'.xlsx'.format(
+        date=datetime.now().strftime('%Y-%m-%d'),
+    )
+    workbook = Workbook()
+
+    # Get active worksheet/tab
+    worksheet = workbook.active
+    worksheet.title = 'Client Bill Reports'
+
+    # Define the titles for columns
+
+    columns = [
+        "Sr.No",
+        "CorporatemName ",
+        "Bill Number",
+        "No Of Invoices",
+        "Cotrav Billing Entity",
+        "Client  Billing Entity ",
+        "Billing Type",
+        "TDS  Deducted  By Client",
+        "System  Calculated TDS",
+        "IGST",
+        "CGST",
+        "SGST",
+        "Total Amount",
+        "Is Paid",
+        "Payment Status",
+        "Total GST Paid",
+        "Management Fee",
+        "Outstanding Pending Payment",
+        "Paid Total Amount",
+        "Balance Total Amount",
+        "Advance Payment",
+        "Is Offline",
+        "Reimbursement Voucher",
+        "ID Taxable Amount",
+        "Nontaxable Amount",
+        "PO Id",
+        "Bill Created Date",
+        "Bill Final Date",
+        "User Comment",
+        "Cotrav Status",
+        "Client Status",
+    ]
+
+
+
+    row_num = 1
+
+    # Assign the titles for each cell of the header
+    for col_num, column_title in enumerate(columns, 1):
+        cell = worksheet.cell(row=row_num, column=col_num)
+        cell.value = column_title
+
+    # Iterate through all movies
+    is_deleted = ""
+    tour_type = ''
+    for bk in booking:
+        row_num += 1
+
+        # Define the data for each cell in the row
+        row = [
+
+            row_num - 1,
+            bk['corporate_id'],
+            bk['bill_number'],
+            bk['no_of_invoices'],
+            bk['cotrav_billing_entity'],
+            bk['client_billing_entity'],
+            bk['billing_type'],
+            bk['tds_deducted_by_client'],
+            bk['system_calculated_tds'],
+            bk['igst'],
+            bk['cgst'],
+
+            bk['sgst'],
+            bk['total_amount'],
+            bk['is_paid'],
+
+            bk['payment_status'],
+            bk['total_gst_paid'],
+            bk['management_fee'],
+            bk['outstanding_pending_payment'],
+
+            bk['paid_total_amount'],
+            bk['balance_total_amount'],
+            bk['advance_payment'],
+
+            bk['is_offline'],
+            bk['reimbursement_voucher_id'],
+            bk['taxable_amount'],
+            bk['nontaxable_amount'],
+            bk['po_id'],
+            bk['bill_created_date'],
+            bk['bill_final_date'],
+            bk['user_comment'],
+            bk['cotrav_status'],
+            bk['client_status'],
+
+        ]
+
+
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+
+    return response
 
 
 

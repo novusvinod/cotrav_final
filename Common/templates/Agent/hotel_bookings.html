@@ -292,11 +292,11 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+                                    <th>Booking Id</th>
                                     <th>City</th>
                                     <th>Area</th>
-                                    <th>Booking DateTime</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Check-In Date</th>
                                     <th>Check-Out Date</th>
                                     <th>Assessment Code</th>
@@ -316,7 +316,7 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.from_city_name }}</td>
                                     <td>{{ booking.from_area_id_name}}</td>
@@ -336,7 +336,7 @@
                                     </td>
 
                                      <td style="display: inline-flex;">
-                                        {% if booking.status_cotrav == 1 %}
+                                        {% if booking.status_cotrav == 1 or booking_type == 6 %}
                                     <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
                                     {% endif %}
@@ -443,10 +443,12 @@ $(function() {
     modal.find('#booking_id').val(id);
 
     if(reject_id == 1){
+        modal.find('#accept_id').val('');
         modal.find('#reject_id').val(1);
         modal.find('#user_comment').prop('required',true);
     }
     if(accept_id == 1){
+        modal.find('#reject_id').val('');
         modal.find('#accept_id').val(1);
         modal.find('#user_comment').prop('required',false);
     }

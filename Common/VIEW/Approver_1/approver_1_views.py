@@ -166,8 +166,9 @@ def company_spocs(request, id):
         login_type = request.session['approves_1_login_type']
         access_token = request.session['approves_1_access_token']
 
-        url = settings.API_BASE_URL + "spocs"
-        payload = {'corporate_id': id}
+        url = settings.API_BASE_URL + "auth1_spocs"
+        payload = {'corporate_id': id, 'subgroup_id': request.user.subgroup_id}
+        print(payload)
         company = getDataFromAPI(login_type, access_token, url, payload)
         if company['success'] == 1:
             spocs = company['Spocs']
@@ -303,10 +304,10 @@ def accept_taxi_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            messages.success(request, 'Taxi Booking Accepted Successfully..!')
+            messages.success(request, 'Taxi Booking Approved Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Failed To Accept Taxi Booking..!')
+            messages.error(request, 'Failed To Approve Taxi Booking..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -397,10 +398,10 @@ def accept_bus_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            messages.success(request, 'Bus Booking Accepted Successfully..!')
+            messages.success(request, 'Bus Booking Approved Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Failed To Accept Bus Booking..!')
+            messages.error(request, 'Failed To Approve Bus Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -491,10 +492,10 @@ def accept_train_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            messages.success(request, 'Train Booking Accepted Successfully..!')
+            messages.success(request, 'Train Booking Approved Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Failed to Accept Train Booking..!')
+            messages.error(request, 'Failed to Approve Train Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -585,10 +586,10 @@ def accept_hotel_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            messages.success(request, 'Hotel Booking Accepted Successfully..!')
+            messages.success(request, 'Hotel Booking Approved Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Failed To Accept Hotel Booking..!')
+            messages.error(request, 'Failed To Approve Hotel Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')
@@ -678,10 +679,10 @@ def accept_flight_booking(request,id):
         company = getDataFromAPI(login_type, access_token, url, payload)
 
         if company['success'] == 1:
-            messages.success(request, 'Flight Booking Accepted Successfully..!')
+            messages.success(request, 'Flight Booking Approved Successfully..!')
             return HttpResponseRedirect(current_url, {'message': "Operation Successfully"})
         else:
-            messages.error(request, 'Failed to Accept Flight Booking..!')
+            messages.error(request, 'Failed to Approve Flight Booking..!')
             return HttpResponseRedirect(current_url,{'message': "Operation Fails"})
     else:
         return redirect('/login')

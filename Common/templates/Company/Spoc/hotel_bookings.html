@@ -98,7 +98,7 @@
                 <input type="hidden" name="accept_id" id="accept_id">
                 <input type="hidden" name="reject_id" id="reject_id">
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-                <label>Are you sure you want to Reject Booking</label>
+                <label>Are you sure you want to Cancel Booking</label>
                 <div class="row">
                     <label class="control-label col-sm-2">Comment</label>
                     <textarea class="form-control col-sm-10" id="user_comment" rows="4" name="user_comment" placeholder="Comment.."></textarea>
@@ -194,21 +194,21 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                   <th>ID</th>
-                                     <th>Reference No</th>
+<!--                                   <th>ID</th>-->
+                                     <th>Booking Id</th>
                                     <th>City</th>
                                     <th>Area</th>
-                                    <th>Booking DateTime</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Check-In Date</th>
                                     <th>Check-Out Date</th>
-                                    <th>Assessment Code</th>
-                                     <th>Preferred Hotel</th>
+
+
                                      <th>Client Status</th>
                                     <th>CoTrav Status</th>
-                                    <th>Action</th>
                                     <th>Hotels Details</th>
                                     <th>SPOC Details</th>
                                     <th>Passenger Details</th>
+                                    <th>Action</th>
                                     <th>Details</th>
 
                                 </tr>
@@ -216,15 +216,13 @@
                                 <tbody>
                                                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.from_city_id }}</td>
                                     <td>{{ booking.from_area_id}}</td>
                                     <td>{{ booking.booking_datetime}}</td>
                                     <td>{{ booking.checkin_datetime }}</td>
                                     <td>{{ booking.checkout_datetime }}</td>
-                                    <td>{{ booking.assessment_code }}</td>
-                                    <td>{{ booking.preferred_hotel }}</td>
 
                                     <td>{{ booking.client_status }}</td>
                                     <td>{{ booking.cotrav_status }}
@@ -233,15 +231,7 @@
                                         {% endif %}
                                     </td>
 
-                                    <td style="display: inline-flex;">
-                                        {% if booking.status_cotrav == 1 %}
-                                         <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>
 
-                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i></a>
-                                    {% endif %}
-                                    </td>
 
                                     {% if booking.operator_name %}
                                     <td>{{ booking.operator_name|default:'' }}<br/>({{ booking.operator_contact|default:'' }})</td>
@@ -259,7 +249,15 @@
                                         {% endfor %}
                                     </td>
 
+                                    <td style="display: inline-flex;">
+                                        {% if booking.status_cotrav == 1 %}
+<!--                                         <a title="Accept Booking" style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"-->
+<!--                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>-->
 
+                                        <a title="Cancel Booking" style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i></a>
+                                    {% endif %}
+                                    </td>
 
                                     <td>
                                         <a href="/Corporate/Spoc/view-hotel-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i class="fa fa-search"></i> </a>

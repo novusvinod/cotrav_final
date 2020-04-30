@@ -86,26 +86,10 @@
 
 
                                         <div class="form-group row">
-                                                <label class="col-sm-4">Room type (Priority 1)</label>
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority1" id="room_type_priority1"  required>
-                                                    <option value="">Select Room Type</option>
-                                                    {% for room_type in room_types %}
-                                                        <option value="{{room_type.id}}">{{room_type.name}}</option>
-                                                    {% endfor %}
-                                                </select>
-
-                                        </div>
-
-                                        <div class="form-group row">
-                                                <label class="col-sm-4">Room type (Priority 2)</label>
-
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority2" id="room_type_priority2" >
-                                                <option value="">Select Room Type</option>
-                                                    {% for room_type in room_types %}
-                                                <option value="{{room_type.id}}">{{room_type.name}}</option>
-                                                {% endfor %}
-                                                </select>
-
+                                                <label class="col-sm-4">Price Range</label>
+                                                <input type="number" class="form-control col-sm-3" name="room_type_priority1" value="1000">
+                                                <label class="col-sm-2">To</label>
+                                                <input type="number" class="form-control col-sm-3" name="room_type_priority2" value="2000">
                                         </div>
 
                                         <div class="form-group row">

@@ -32,6 +32,7 @@
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/theme-color.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/res.css' %}" rel="stylesheet" type="text/css" />
 	<!-- favicon -->
     <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}" />
 
@@ -114,7 +115,43 @@
         .html("arrow_drop_down");
 
 </script>
+<script>
 
+    $(document).ready(function() {
+
+     $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+
+    corporate_id = 0;
+
+ var_url_spoc = '/api/'+'spocs'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Spocs']);
+       //alert(JSON.stringify(data));
+       if(data['Spocs'].length != 0){
+        spocs = data['Spocs'];
+        $('.search_spoc_id').append($("<option value=''>Select Spoc</option>"));
+         for (var i=0;i<spocs.length;i++) {
+            $('.search_spoc_id').append($("<option value='"+spocs[i].id + " '>"+spocs[i].user_name+"</option>"));
+
+         }
+       }else{
+
+       }
+       });
+
+ } );
+
+
+</script>
     <!-- start footer -->
     <div class="page-footer">
         <div class="page-footer-inner"> 2019
@@ -171,25 +208,30 @@
 
     <script src="{% static 'assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
 
+
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" ></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js" ></script>
+
 <script>
-var myInputs = document.querySelectorAll('.fixed');
-myInputs.forEach(function(elem) {
- elem.addEventListener("input", function() {
-   var dec = elem.getAttribute('decimals');
-   var regex = new RegExp("(\\.\\d{" + dec + "})\\d+", "g");
-   elem.value = elem.value.replace(regex, '$1');
- });
-});
+  $(document).ready(function() {
+    var table = $('#example1').DataTable( {
+        responsive: true,
+        'ordering': false
+    } );
+
+} );
 </script>
-     <script>
-        $(document).ready(function() {
-            $('#example1').DataTable({
-            'ordering': false
-            });
-        } );
-
-
-    </script>   
+<!--    new $.fn.dataTable.FixedHeader( table );-->
+<!--<script>-->
+<!--var myInputs = document.querySelectorAll('.fixed');-->
+<!--myInputs.forEach(function(elem) {-->
+<!-- elem.addEventListener("input", function() {-->
+<!--   var dec = elem.getAttribute('decimals');-->
+<!--   var regex = new RegExp("(\\.\\d{" + dec + "})\\d+", "g");-->
+<!--   elem.value = elem.value.replace(regex, '$1');-->
+<!-- });-->
+<!--});-->
+<!--</script>-->
 <script>
 
         $(function () {

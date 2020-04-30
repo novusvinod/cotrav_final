@@ -5115,7 +5115,7 @@ ul.activity-list .activity-desk h5 a {
     margin-right: 5px
 }
 .table thead tr th {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600
 }
 .table-advance {
@@ -7424,16 +7424,16 @@ nav-tabs>li {
     background-color: #389af0;
 }
 .info-box {
-    min-height: 100px;
+    min-height: 60px;
     width: 100%;
     box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
     -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 25px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 15px;
 }
 .info-box small {
-    font-size: 14px;
+    font-size: 10px;
 }
 .info-box .progress {
     background: rgba(0, 0, 0, .2);
@@ -7448,11 +7448,11 @@ nav-tabs>li {
 }
 .info-box-icon {
     float: left;
-    height: 70px;
-    width: 70px;
+    height: 40px;
+    width: 40px;
     text-align: center;
-    font-size: 30px;
-    line-height: 74px;
+    font-size: 0px;
+    line-height: 63px;
     background: rgba(0, 0, 0, .2);
     border-radius: 100%}
 .info-box-icon.push-bottom {
@@ -7461,16 +7461,16 @@ nav-tabs>li {
 .info-box-icon>img {
     max-width: 100%}
 .info-box-content {
-    padding: 10px 10px 10px 0;
-    margin-left: 90px;
+    padding: 3px 0px 0px 0;
+    margin-left: 54px;
 }
 .info-box-number {
     font-weight: 300;
-    font-size: 21px;
+    font-size: 14px;
 }
 .info-box-text, .progress-description {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

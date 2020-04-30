@@ -67,12 +67,25 @@ date{% extends 'Company/Employee/layout/header.html' %}
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >From City*</label>
-                                 <input type="text" class="form-control col-sm-8" name="from_city" id="pickup_location" placeholder="From City" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="from_city" id="pickup_location" placeholder="From City" required>-->
+                                  <select class="form-control col-sm-8 myselect" name="from_city" >
+                                            <option value="">Select From City</option>-->
+                                            {% for airport in airports %}
+                                            <option value="{{airport.city_name}} ({{airport.code}})">{{airport.city_name}}, {{airport.country_name}} ({{airport.code}})</option>
+                                            {% endfor %}
+                                   </select>
+
                             </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >To City*</label>
-                                 <input type="text" class="form-control col-sm-8" name="to_city" id="drop_location" placeholder="To City" required>
+<!--                                 <input type="text" class="form-control col-sm-8" name="to_city" id="drop_location" placeholder="To City" required>-->
+                                  <select class="form-control col-sm-8 myselect" name="to_city" >
+                                            <option value="">Select To City</option>-->
+                                            {% for airport in airports %}
+                                            <option value="{{airport.city_name}} ({{airport.code}})">{{airport.city_name}}, {{airport.country_name}} ({{airport.code}})</option>
+                                            {% endfor %}
+                                   </select>
                             </div>
 
 

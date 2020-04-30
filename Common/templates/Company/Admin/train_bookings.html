@@ -89,7 +89,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-            <form action="/Corporate/Admin/reject-flight-booking/0" method="post" enctype="multipart/form-data" id="form_id">
+            <form action="/Corporate/Admin/reject-train-booking/0" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="booking_id" id="booking_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="accept_id" id="accept_id">
@@ -223,11 +223,11 @@
                              <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+                                    <th>Booking Id</th>
                                     <th>From</th>
                                     <th>To</th>
-                                    <th>Booking DateTime</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Boarding Point</th>
                                     <th>Date of Journey</th>
                                     <th>Train Type</th>
@@ -243,7 +243,7 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location}}</td>

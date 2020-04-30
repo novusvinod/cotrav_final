@@ -16,13 +16,98 @@
          </div>
 
 
-                    {% for corporate in companys %}
+{% for corporate in companys %}
+
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_add_new_group">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="delete_label" class="modal-title-status">Are You Want To Delete Document ? </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/delete-company-document" method="post" enctype="multipart/form-data" id="form_id">
+                <input type="hidden" name="document_id" id="document_id">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button id="delete_btn" type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+  <!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_add_new_group1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="delete_label" class="modal-title-status">Add New Document Form </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form method="post" action="/agents/add-company-document" enctype="multipart/form-data">
+                <input type="hidden" name="corporate_id" value="{{corporate.id}}">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+
+                  <div class="form-group row">
+                    <label class="col-sm-5 control-label">Name</label>
+                    <div class="col-sm-7">
+                       <input type="text" class="form-control" name="document_name" placeholder="Document Name">
+                    </div>
+                 </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-5 control-label">Description</label>
+                    <div class="col-sm-7">
+                       <input type="text" class="form-control" name="document_desc" placeholder="Document Description">
+                    </div>
+                 </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-5 control-label">Document</label>
+                    <div class="col-sm-7">
+                       <input type="file" class="form-control" name="document" placeholder="Document Name">
+                    </div>
+                 </div>
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button id="delete_btn1" type="submit" class="btn btn-primary">Add Document</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
  <form method="post" action="/agents/edit-company/{{corporate.id }}">
       {% csrf_token %}
      <input type="hidden" name="user_id" value="{{user.id}}">
      <input type="hidden" name="corporate_id" value="{{corporate.id}}" >
       <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
                     <div class="row">
+
+
                         <div class="col-md-4 col-sm-4">
                             <div class="card card-topline-aqua">
                                 <div class="card-head">
@@ -37,30 +122,54 @@
                                 </div>
                                 <div class="card-body " id="bar-parent">
 
-                                          <div class="form-group">
-                                            <label for="simpleFormEmail">Corporate Name</label>
-                                            <input type="text" class="form-control" id="simpleFormEmail" name="corporate_name" placeholder="Corporate Name" value="{{ corporate.corporate_name }}">
+                                          <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Corporate Name</label>
+                                            <input type="text" class="col-sm-8 form-control" id="simpleFormEmail" name="corporate_name" placeholder="Corporate Name" value="{{ corporate.corporate_name }}">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="simpleFormEmail">Corporate Code</label>
-                                            <input type="text" class="form-control" name="corporate_code"  placeholder="Corporate Code" value="{{ corporate.corporate_code }}">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Corporate Code</label>
+                                            <input type="text" class="col-sm-8 form-control" name="corporate_code"  placeholder="Corporate Code" value="{{ corporate.corporate_code }}">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="simpleFormEmail">Contact Name</label>
-                                            <input type="text" class="form-control" name="contact_person_name" placeholder="Contact Name" value="{{ corporate.contact_person_name }}">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Contact Name</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_person_name" placeholder="Contact Name" value="{{ corporate.contact_person_name }}">
                                         </div>
 
-                                         <div class="form-group">
-                                            <label for="simpleFormEmail">Contact No</label>
-                                            <input type="number" class="form-control" name="contact_person_no" placeholder="Contact No" value="{{ corporate.contact_person_no|default:'' }}">
+                                         <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Contact No</label>
+                                            <input type="number" class="col-sm-8 form-control" name="contact_person_no" placeholder="Contact No" value="{{ corporate.contact_person_no|default:'' }}">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="simpleFormEmail">Contact Email</label>
-                                            <input type="email" class="form-control" name="contact_person_email" placeholder="Enter email address" value="{{ corporate.contact_person_email|default:'' }}">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Contact Email</label>
+                                            <input type="email" class="col-sm-8 form-control" name="contact_person_email" placeholder="Enter email address" value="{{ corporate.contact_person_email|default:'' }}">
                                         </div>
+
+                                    <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Address Line 1</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_address_line1" placeholder="Address Line 1" value="{{ corporate.contact_address_line1|default:'' }}">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Address Line 2</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_address_line2" placeholder="Address Line 2" value="{{ corporate.contact_address_line2|default:'' }}">
+                                        </div>
+
+                                     <div class="form-group row">
+                                            <label class="col-sm-4" for="simpleFormEmail">Address Line 3</label>
+                                            <input type="text" class="col-sm-8 form-control" name="contact_address_line3" placeholder="Address Line 3" value="{{ corporate.contact_address_line3|default:'' }}">
+                                        </div>
+
+
+                                    <div class="form-group row">
+                                                <label class="col-sm-4"  for="simpleFormEmail">TDS on Management Fee Only</label>
+                                              <select class="col-sm-8 form-control" name="tds_on_management_fee_only">
+	                                                <option value="1" {% if corporate.tds_on_management_fee_only == 1 %} selected {% endif %}>Yes</option>
+	                                                <option value="0" {% if corporate.tds_on_management_fee_only == 0 %} selected {% endif %}>No</option>
+	                                            </select>
+                                            </div>
 
                                      <div class="form-group row">
                                                 <label class="col-sm-4"  for="simpleFormEmail">Has Billing Spoc Approval Level</label>
@@ -257,14 +366,63 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-4"></div>
+
+
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="card card-topline-aqua">
+                                <div class="card-head">
+                                    <header>Company Documents </header>
+                                    <a title="add New Employee" class="btn btn-info btn-xs" data-target="#model_add_new_group1" data-toggle="modal" href="#">
+                                                <i class="fa fa-plus "></i> Add New Document </a>
+                                </div>
+                                <div class="card-body">
+
+
+                                    <table id="example1" class="display full-width table-striped" width="100%" border="0">
+                                        <tr>
+                                            <th>Sr.</th>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Download</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        {% for doc in corporate.Documents %}
+                                        <tr>
+                                            <td>{{ doc.id}}</td>
+                                            <td>{{doc.document_name}}</td>
+                                            <td>{{doc.document_desc}}</td>
+                                            <td> <a href="{{doc.document}}" download >Download</a></td>
+                                            <td>
+                                            <a class="btn btn-tbl-delete btn-xs" data-target="#model_add_new_group"
+                                                       data-id="{{doc.id}}" data-delete_id="1" data-toggle="modal" href="#">
+                                                        <i class="fa fa-trash-o "></i>
+                                                    </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </table>
+
+
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+
+
                 <div class="col-sm-4">
                     <div class="text-center">
                         <input type="submit" value="Submit" class="btn btn-info">
                         <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
                     </div>
                 </div>
-                <div class="col-sm-4"></div>
+
                     </div>
  </form>
                      {% endfor %}
@@ -300,5 +458,20 @@
   });
  });
 </script>
+<script type="text/javascript">
+$(function() {
 
+  $('#model_add_new_group').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+    var modal = $(this);
+    modal.find('#document_id').val(id);
+
+    });
+
+});
+
+
+
+</script>
 {% endblock %}

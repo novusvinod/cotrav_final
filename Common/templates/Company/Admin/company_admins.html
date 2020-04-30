@@ -5,6 +5,34 @@
 
 {% if user %}
 <!-- start page content -->
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="model_add_new_group1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="delete_label1" class="modal-title-status">Are You Want To Delete Admin ? </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/Corporate/Admin/add-company-admins/{{user.corporate_id}}" method="post" enctype="multipart/form-data" id="form_id">
+                <input type="hidden" name="admin_id" id="company_id">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="delete_id" value="1">
+                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-danger" data-dismiss="modal" value="Cancel">
+                    <input id="delete_btn1" type="submit" class="btn btn-primary" value="Delete">
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- The Modal -->
 <div class="modal fade model_custom_style" id="model_add_new_group" role="dialog">
@@ -17,7 +45,7 @@
                 <button class="close" data-dismiss="modal" type="button">&times;</button>
             </div>
 
-            <form action="/Corporate/Admin/add-company-admins/{{user.corporate_id}}" enctype="multipart/form-data" method="post">
+            <form action="/Corporate/Admin/add-company-admins/{{user.corporate_id}}" enctype="multipart/form-data" method="post" id="model_serialize_update">
 
                 <input id="set_admin_id" name="admin_id" type="hidden">
                 <input name="user_id" type="hidden" value="{{user.id}}">
@@ -180,8 +208,9 @@
                         <label class="col-sm-5 control-label">Has Billing Access?</label>
                         <div class="col-sm-7">
                             <select class="form-control" name="has_billing_access" id="has_billing_access">
-                                <option value="0">No</option>
                                 <option value="1">Yes</option>
+                                <option value="0">No</option>
+
                             </select>
                         </div>
                     </div>
@@ -244,7 +273,7 @@
                                    <table id="example1" class="display full-width table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+<!--                                                <th>ID</th>-->
                                                 <th>Operator Name</th>
                                                 <th>Admin Email</th>
                                                 <th>Admin Name</th>
@@ -256,7 +285,7 @@
                                             <tbody>
                                         {% for admin in admins %}
                                             <tr>
-                                                <td>{{ admin.id }}</td>
+<!--                                                <td>{{ admin.id }}</td>-->
                                                 <td>{{ admin.corporate_name }}</td>
                                                 <td>{{ admin.email }}</td>
                                                 <td>{{ admin.name }}</td>
@@ -273,13 +302,7 @@
                                            data-is_send_sms="{{admin.is_send_sms}}" data-has_billing_access="{{admin.has_billing_access}}">
                                             <i class="fa fa-pencil"></i>
                                         </a>
-                                        <a class="btn btn-tbl-delete btn-xs" data-delete_id="1" data-id="{{admin.id}}" data-name="{{admin.name}}" data-email="{{admin.email}}"
-                                        data-contact_no="{{admin.contact_no}}" data-cid="{{admin.cid}}" data-is_reverse_logistics="{{admin.is_reverse_logistics}}"
-                                        data-is_local="{{admin.is_local}}" data-is_water_bottles="{{admin.is_water_bottles}}" data-is_radio="{{admin.is_radio}}"
-                                        data-is_hotel="{{admin.is_hotel}}" data-is_outstation="{{admin.is_outstation}}" data-is_bus="{{admin.is_bus}}"
-                                        data-is_train="{{admin.is_train}}" data-is_flight="{{admin.is_flight}}" data-is_meal="{{admin.is_meal}}"
-                                           data-target="#model_add_new_group" data-toggle="modal" href="#" data-is_send_email="{{admin.is_send_email}}"
-                                           data-is_send_sms="{{admin.is_send_sms}}" data-has_billing_access="{{admin.has_billing_access}}">
+                                        <a  href="#" data-toggle="modal" class="btn btn-tbl-delete btn-xs" data-target="#model_add_new_group1"  data-id="{{admin.id}}">
                                             <i class="fa fa-trash-o "></i>
                                         </a>
 
@@ -435,5 +458,46 @@ $(function() {
 });
 
 </script>
+<script>
+    $( document ).ready(function() {
+
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
+
+<script type="text/javascript">
+$(function() {
+
+  $('#model_add_new_group1').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id'); // Extract info from data-* attributes
+    var modal = $(this);
+    modal.find('#company_id').val(id);
+
+    });
+
+});
+</script>
+
 
 {% endblock %}

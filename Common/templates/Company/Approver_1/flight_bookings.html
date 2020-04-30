@@ -26,7 +26,7 @@
             <td>
             <select class="form-control myselect" name="filter_by" id="filter_by" style="width:100%">
                 <option value="0">All</option>
-                <option value="1">Booking Date</option>
+                <option value="1">Booking Date/Time</option>
                 <option value="2">Service Date</option>
               </select>
             </td>
@@ -97,7 +97,7 @@
 
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
-                <label>Are You Sure You Want to Accept Booking</label>
+                <label>Are You Sure You Want to Approve Booking</label>
                 <div class="modal-body">
                 <div class="row">
                     <label class="control-label col-sm-2">Comment</label>
@@ -217,12 +217,13 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Booking Date</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+
+                                    <th>Booking Id</th>
                                     <th>Assessment Code</th>
                                     <th>From City</th>
                                     <th>To City</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Departure Date</th>
                                     <th>Usage Type</th>
                                     <th>Seat Type</th>
@@ -243,12 +244,13 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
-                                    <td>{{ booking.booking_datetime }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
+
                                      <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.assessment_code }}</td>
                                      <td>{{ booking.from_location }}</td>
                                     <td>{{ booking.to_location}}</td>
+                                    <td>{{ booking.booking_datetime }}</td>
                                      <td>{{ booking.departure_datetime }}</td>
                                      <td>{{ booking.usage_type }}</td>
                                      <td>{{ booking.seat_type }}</td>
@@ -270,7 +272,7 @@
                                     {% if booking.status_cotrav > 1 %}
                                             ({{ booking.cotrav_agent_name|default:'' }})</td>
                                         {% endif %}
-                                    </td>
+
 
 
                                       <td>
@@ -281,19 +283,19 @@
 
                                     {% if booking.status_client == 1 %}
                                     <td style="display: inline-flex;">
-                                        <a style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                        <a title="Approve Booking" style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
-                                        </a>
-                                         <a data-target="#model_action1" data-id="{{booking.id}}" data-reject_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-trash-o "></i> </a>
+
+                                         <a title="Reject Booking" data-target="#model_action1" data-id="{{booking.id}}" data-reject_id="1"
+                                           data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i> </a>
                                     </td>
                                     {% else %}
                                      <td>
                                         {% now "d-m-Y H:m" as current_datetime %}
                                         {% if booking.departure_datetime >= current_datetime and booking_type|stringformat:"s" == "5" %}
-                                            <a style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
+                                            <a title="Approve Booking" style="background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs">  <i class="fa fa-check"></i> </a>
-                                        </a>
+
                                         {% endif %}
 
                                     </td>

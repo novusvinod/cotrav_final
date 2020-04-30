@@ -19,7 +19,7 @@
                      </div>
             </div>
 
-        <form method="post" action="/agents/add-spoc/0">
+        <form method="post" action="/agents/add-spoc/0" id="model_serialize_update">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
  <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
@@ -405,7 +405,7 @@
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
                     <div class="text-center">
-                        <input type="submit" value="Submit" class="btn btn-info">
+                        <input type="submit" disabled="" value="Submit" class="btn btn-info">
                         <a href="{{request.META.HTTP_REFERER}}" class="btn btn-default">  Cancel  </a>
                     </div>
                 </div>
@@ -423,11 +423,33 @@
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
+<script>
+$( document ).ready(function() {
 
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
 <script type="text/javascript">
- $(function() {
-
- });
 $("#corporate_id").change(function(){
 
   $('#spoc_id').empty();

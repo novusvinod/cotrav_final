@@ -66,4 +66,8 @@ urlpatterns = [
     path('Corporate/Spoc/train-billing/verify', spoc_views.train_billing_verify),
     path('Corporate/Spoc/flight-billing/verify', spoc_views.flight_billing_verify),
     path('Corporate/Spoc/hotel-billing/verify', spoc_views.hotel_billing_verify),
+
+    path('Corporate/Spoc/cotrav-visa', spoc_views.get_all_cotrav_visa_requests),
+    path('Corporate/Spoc/add-new-visa-request', spoc_views.add_visa_requests),
+    path('Corporate/Spoc/view-visa-request/<int:id>', spoc_views.view_visa_requests),
 ]

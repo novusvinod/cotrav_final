@@ -1,11 +1,28 @@
 <html>
-<head>
-<style>
+{% load humanize %}
+<title>Flight Voucher1</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+
+
+ <head>
+     <style>
+
+@font-face {
+   font-family: Montserrat Medium;
+   src: url('http://cotrav.co/static/fonts/Montserrat-Medium.ttf');
+}
+
+body {
+
+font-family: Montserrat Medium;
+}
+
 @page {
 size: a4 portrait;
 
-font-family:Montserrat;
- background: whitesmoke;
+
 
 
 @frame header_frame { /* Static Frame */
@@ -26,8 +43,7 @@ font-family:Montserrat;
 
 
 @frame content_frame { /* Content Frame */
-left: 50pt; width: 512pt; top: 115pt; height: 632pt;
-
+left: 39pt; width: 512pt; top: 90pt; height: 632pt;
 
 }
 
@@ -37,7 +53,7 @@ left: 50pt; width: 512pt; top: 115pt; height: 632pt;
 position: fixed;
   bottom: 0pt;
   left: 0;
-  top: 726pt;
+  top: 760pt;
 
 }
 
@@ -61,339 +77,468 @@ position: fixed;
 
 }
 
- body{
-      font-family: Montserrat;
 
-    }
+h1{
+  font-size: 12px;
+font-weight: 900;
+}
 
 
-    .container{
-     width: 70%;
-      background-color: white;
-      margin-left:200px;
+h2{
+  font-size: 10px;
+}
 
-    }
-    .logo{
-      margin-top: -163px;
-       margin-left: 68px;
-        width: 175px;
-         margin-bottom: 100px;
-    }
-    h5 {
-   font-family: montserrat,san-serif;
-   font-weight: 600;
-   font-size: 19px;
-    }
+p{
+  font-size: 9px;
+  font-weight: 900;
 
-       h6{
-   font-family: montserrat,san-serif;
-   font-weight: 600;
-   font-size: 17px;
-    }
-     h4{
-   font-family: montserrat,san-serif;
-   font-weight: 600;
-   font-size: 20px;
-    }
-    p{
-       font-family: 'Montserrat',Regular;
-   font-weight: 600;
-   font-size: 15px;
-    }
+}
+#header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+
+}
+#footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+ }
+
+.custom-page-start {
+    margin-top: 100px;
+}
+
   .p-1{
      font-size: 13px;
   }
-  .border{
-    border: solid 1px gray;
-  }
+
 .sec{
   text-align: center;
 }
 .section{
   text-decoration-line: underline;
+  line-height: 0px;
 }
-
+.border-left{
+  border-left: solid 1px gray;
+}
 .section2{
-  line-height: 35px;
+  line-height: 20px;
+}
+table{
+  overflow-wrap: break-word;
+word-break: break-all;
+font-family: Montserrat;
 }
 td{
-  font-size: 16px;
+  font-size: 9px;
+  font-family: 'Montserrat';
+font-weight: 400;
+overflow-wrap: break-word;
+word-break: break-all;
 }
 .footer{
-  height: 153px;
+  height: 140px;
 }
 .img1{
   margin-top: -94px;
-    margin-bottom: 37px;
-}
-.BAI{
+    margin-bottom: 20px;
+  }
 
-    margin-bottom: -45px;
-    margin-top: -58px;
-    color: white;
-      font-family: montserrat,san-serif;
-      line-height: 2px;
-      font-size: 17px;
-      text-align: center;}
 
-.agent{
-  margin-top: 45px;
-    font-size: 12px;
-    color: white;
-    font-family: montserrat,san-serif;
-    padding-top: 12px;
-    text-align: center;
-}
-.fligh-head{
-  line-height: 3px;
-}
 .flight_section{
       padding-left: 46px;
     margin-bottom: -8px;
     font-size: 15px;
-    font-family: montserrat,san-serif;
+
     font-weight: 600;
 
 }
 .f1{
-  font-size: 16px;
-    font-family: montserrat,san-serif;
+  font-size: 9px;
+
     font-weight: 600;
 }
 .section-f1{
-  font-size: 16px;
-    font-family: montserrat,san-serif;
+  font-size: 9px;
+
     font-weight: 600;
 }
 .section-f2{
-  font-size: 13px;
+  font-size: 9px;
   font-family: montserrat,Regular;
   font-weight: 500;
 }
-.arow{
 
-  margin-right: 25px;
-  margin-top: 12px
-}
+table {
 
-.fare-section{
-  font-size: 13px;
-  font-weight: 500;
-    font-family: montserrat;
+ vertical-align: middle;
 
 }
-.fare-section1{
-  font-size: 16px;
+table td, table th {
+    border:none;
+     padding: 1px;
+
 
 }
+th{
+  font-size: 11px;
+
+}
+
 span{
-font-size: 13px;
-font-weight: 600;
+font-size: 9px;
+font-weight: 500;
 text-align: center;
 }
 .plane{
-      width: 10px;
+      width: 9px;
+
+
 }
 .plane_detail{
-  font-size: 12px;
+  font-size: 9px;
   text-align: center;
 
 }
 
 .plane_detail_1{
-  font-size: 12px;
+  font-size: 9px;
   text-align: center;
    font-weight: 600;
 }
 .f-span{
   margin-left: 81px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+
+}
+.total_sec{
+font-family: 'Montserrat';
+    font-size: 17px;
+    font-weight: 500;
+    position: relative;
+    right: 18%;
+    padding: 15px;
+}
+.border_bott{
+  border-bottom: 1px solid gray;
 }
 
-
-
 </style>
-<head>
+</head>
+
 <body>
-<div id="header_content">
-
-  <img src="../static/img/voucher/img/bg1.png">
-
-</div>
-<div id="logo_content">
-    <img src="../static/img/voucher/img/logo.png" class="logo">
-
+  <div id="header_content">
+ <img src="http://cotrav.co/static/img/voucher/img/bg1_flight.png">
 </div>
 
-<div id="footer_content">
-    <img src="../static/img/voucher/img/bg2.png">
 
-</div>
-<div id="bus_logo">
-    <img src="../static/img/voucher/img/flight.png">
+  <div id="footer_content">
+     <img src="http://cotrav.co/static/img/voucher/img/bg2_flight.png">
 </div>
 
- <div id="ftr_content" >BAI INFOSOLUTION PVT LTD  <pdf:pagenumber>
-of <pdf:pagecount>
-      <br> <small style="font-weight: 500;font-size: 13px;">AGENT CONTACT : 0987654321</small>
- </div>
+  <div class='header'></div>
+    <div class='footer'></div>
 
-<table  align="center" width="100%" >
-  <tbody>
-  <tr>
-    <td class="fligh-head border-bottom" align="center">
-    <h5> PNR/Booking Ref : {{reference_no}}  </h5>
-     <p> Your Booking is Confirmed </p><br><br>
 
-  </td>
+
+<table  width="100%" >
+
+   <tr>
+
+   <td  align="center" >  <h1 > PNR/Booking Ref :
+       {% for pass in Flights %}
+          {% if forloop.first %}
+            {{pass.pnr_no}}
+          {% endif %}
+          {% endfor %} <small>Your Booking is Confirmed</small> </h1>  </td>
+    
    </tr>
+
+
+ </table>
+ <br/>
+
+
+  <table  width="100%" style="border-top: solid 1px gray;">
+
+    <tr>
+
+   <td align="center">  <h3>  <img src="http://cotrav.co/static/img/voucher/img/plane.jpg" class="plane"> &nbsp;&nbsp; Departing Flight . {{departure_datetime}} . {{no_of_stops|default:'Non'}} Stop <br>Check in/ Bag Drop closes
+       {% for pass in Flights %}
+          {% if forloop.first %}
+            {{pass.departure_datetime}}
+          {% endif %}
+          {% endfor %} </h3>  </td>
+
+   </tr>
+ </table>
+ <br/>
+
+
+
 
   {% for flight in Flights %}
 
-  <table  width="100%">
 
-    <tr>
+  {% if flight.is_return_flight == '0' %}
+  {% if journey_type == 'Round Trip' %}
+  <h1 align="center" style=" line-height: 0px;font-family: 'Montserrat';font-weight: 400;">OnWords Flight Details </h1>
+  {% endif %}
+
+<table width="100%" >
+
       <tr>
-      <p class="plane_detail_1">  <img src="../static/img/voucher/img/plane.png" class="plane"> Departing Flight . {{departure_datetime}} . 1 Stop </p>
+        
+      
+       <td align="center"  colspan="8"  style="font-size: 13px; font-family: 'Montserrat'; font-weight: 500;">
 
-          <p class="plane_detail">Check in/ Bag Drop closes 03:55</p>
-      </tr>
-     <td class="f1"><br/>
-      <img src="../static/img/voucher/img/flight_indigo.png" class="flight_section"> {{flight.flight_name}}  <br> <span class="f-span">{{flight.flight_no}}({{flight.flight.pnr_no}})<span> <br>
+           <img height="30" width="30" src="http://cotrav.co/static/email_template_images/airline_logos/{{flight.flight_name}}.png" >
 
-      </td>
+           <span style="font-size:9px;">&nbsp; &nbsp;{{flight.flight_name}}</span>
+           <br/>
+          <span style="color:#383838">
+              &nbsp; &nbsp;
+              {% if flight.flight_name == 'SpiceJet' %}
+           SG
+           {% endif %}
+           {% if flight.flight_name == 'IndiGo' %}
+           6E
+           {% endif %}
+           {% if flight.flight_name == 'AirIndia' %}
+           AI
+           {% endif %}
+           {% if flight.flight_name == 'AirAsia' %}
+           I5
+           {% endif %}
+           {% if flight.flight_name == 'GoAir' %}
+           G8
+           {% endif %}
 
+           {% if flight.flight_name == 'Vistara' %}
+           UK
+           {% endif %}
 
-     <td>
-     <p class="section-f1"> {{flight.from_city}}</p>
-    <p class="section-f2">Pune International Airport<br> {{flight.departure_datetime}}
-    </p>
+           {{flight.flight_no}} </span> </td>
+    
+      <td  colspan="8"><h2> {{flight.from_city}}</h2><p style="font-weight: normal; color:#383838;">{{flight.from_city}} Airport<br> {{flight.departure_datetime}} <br>
+      </p></td>
 
-     </td>
+          
+          <td  colspan="8">  <img src="http://cotrav.co/static/img/voucher/img/arow.png" style="width: 60px;">
+         <p style="font-weight: normal;font-size: 11px; color:#383838;"> {{departure_datetime}} <br>
+           {% if forloop.counter0 == 0 %}
+             {{DURATION_0}}
+             {% endif %}
+             {% if forloop.counter0 == 1 %}
+             {{DURATION_1}}
+             {% endif %}
+             {% if forloop.counter0 == 2 %}
+             {{DURATION_2}}
+             {% endif %}
+             {% if forloop.counter0 == 3 %}
+             {{DURATION_3}}
+             {% endif %}
+              </p></td>
 
-      <td class="align">
-
-       <img src="../static/img/voucher/img/arow.png" class="arow">
-         <p class="section-f2 Ar-1"> 25-10-2019 <br>
-           (1h 50m)
-</p>
-
-     </td>
-
-     <td>
-     <p class="section-f1">  {{flight.to_city}}</p>
-       <p class="section-f2">Indira Gandhi <br> {{flight.arrival_datetime}}
-
-     </td>
-
-   </tr>
-
-
-</table>
-
-{% endfor %}
-
-
-
-   <table align="center" width="100%" class="section2 border-bottom">
-
-    <tr>
-      <h6 align="center" class="section">Passenger Details</h6>
-    </tr>
-    <tr>
-    {% for pasg in Passangers %}
-     <td align="center">
-         Passenger Name : {{pasg.employee_name}}<br>
-         Gender : {{pasg.gender}}<br>
-         Age : {{pasg.age}}
-
-     </td>
-      {% endfor %}
-   </tr>
-
-
-</table>
-
-
-
-  <table  width="100%" >
-
-     <tr>
-      <h6 align="center"  class="section">Fare Summary</h6>
+    
+      <td colspan="8"><h2>{{flight.to_city}}</h2><p style="font-weight: normal; color:#383838;">{{flight.to_city}} Airport<br> {{flight.arrival_datetime}} <br></p></td>
+   
      </tr>
+</table>
 
+<br/>
+
+  {% if no_of_stops == 1 %}
+  {% if forloop.first %}
+<table  width="100%" >
     <tr>
-      <td  align="center" class="fare-section"><br>
-      Airfare Charges(INR)<br>
-      6,700
-      </td>
-
-        <td   align="center" class="fare-section"><br>
-     ASF(INR)<br>
-      107.00
-      </td>
-  </tr>
+   <td align="center">  <p style="padding: 5px; font-family: 'Montserrat';font-weight: normal;">  {{DELAY_1}} layover at {{flight.to_city}} Change of aircraft<br>Bag Drop closes {{flight.arrival_datetime}} </p>  </td>
+   </tr>
+ </table>
+  {% endif  %}
+{% endif  %}
 
 
-     <tr>
-      <td align="center" class="fare-section"><br>
-     IGST for Uttar Pradesh(INR)<br>
-      365.00s
-      </td>
+    {% if no_of_stops == 2 %}
+<table  width="100%" >
+    <tr>
+   <td align="center">  <p style="padding: 5px; font-family: 'Montserrat';font-weight: normal;">  {{DELAY_2}} layover at {{flight.to_city}} Change of aircraft<br>Bag Drop closes {{flight.arrival_datetime}} </p>  </td>
+   </tr>
+ </table>
+{% endif  %}
 
-        <td align="center" class="fare-section"><br>
-     User Development Fee(INR)<br>
-      185.00
-      </td>
-  </tr>
+      {% if no_of_stops == 3 %}
+<table  width="100%" >
+    <tr>
+   <td align="center">  <p style="padding: 5px; font-family: 'Montserrat';font-weight: normal;">  {{DELAY_2}} layover at {{flight.to_city}} Change of aircraft<br>Bag Drop closes {{flight.arrival_datetime}} </p>  </td>
+   </tr>
+ </table>
+{% endif  %}
+<!--If return flight-->
+ {% else %}
 
-   <tr>
-      <td ><br>
-     Total Fare(INR)<br>
-     7,406.00
-      </td>
+  {% if journey_type == 'Round Trip' %}
+  <h1 align="center" style=" line-height: 0px;font-family: 'Montserrat';font-weight: 400;">Return Flight Details </h1>
+
+  {% endif %}
+
+  <table width="100%" >
+
+      <tr>
 
 
-  </tr>
+       <td align="center"  colspan="8"  style="font-size: 13px; font-family: 'Montserrat'; font-weight: 500;">
+
+           <img height="30" width="30" src="http://cotrav.co/static/email_template_images/airline_logos/{% if flight.flight_name == 'Spice Jet' %}SG{% else %}{{flight.flight_name}}{% endif %}.png" >
+
+           <span style="font-size:9px;">&nbsp; &nbsp;{{flight.flight_name}}</span>
+           <br/>
+          <span style="color:#383838">
+              &nbsp; &nbsp;
+              {% if flight.flight_name == 'Spice Jet' %}
+           SG
+           {% endif %}
+           {% if flight.flight_name == 'IndiGo' %}
+           6E
+           {% endif %}
+           {% if flight.flight_name == 'Air India' %}
+           AI
+           {% endif %}
+           {% if flight.flight_name == 'AirAsia' %}
+           I5
+           {% endif %}
+           {% if flight.flight_name == 'GoAir' %}
+           G8
+           {% endif %}
+
+           {% if flight.flight_name == 'Vistara' %}
+           UK
+           {% endif %}
+
+           {{flight.flight_no}} </span> </td>
+
+      <td  colspan="8"><h2> {{flight.from_city}}</h2><p style="font-weight: normal; color:#383838;">{{flight.from_city}} Airport<br> {{flight.departure_datetime}} <br>
+      </p></td>
 
 
+          <td  colspan="8">  <img src="http://cotrav.co/static/img/voucher/img/arow.png" style="width: 60px;">
+         <p style="font-weight: normal;font-size: 11px; color:#383838;"> {{departure_datetime}} <br>
+           {% if forloop.counter0 == 0 %}
+             {{DURATION_0}}
+             {% endif %}
+             {% if forloop.counter0 == 1 %}
+             {{DURATION_1}}
+             {% endif %}
+             {% if forloop.counter0 == 2 %}
+             {{DURATION_2}}
+             {% endif %}
+             {% if forloop.counter0 == 3 %}
+             {{DURATION_3}}
+             {% endif %}
+              </p></td>
+
+
+      <td colspan="8"><h2>{{flight.to_city}}</h2><p style="font-weight: normal; color:#383838;">{{flight.to_city}} Airport<br> {{flight.arrival_datetime}} <br></p></td>
+
+     </tr>
+</table>
+
+<br/>
+
+  {% if no_of_stops == 1 %}
+  {% if forloop.first %}
+<table  width="100%" >
+    <tr>
+   <td align="center">  <p style="padding: 5px; font-family: 'Montserrat';font-weight: normal;">  {{DELAY_1}} layover at {{flight.to_city}} Change of aircraft<br>Bag Drop closes {{flight.arrival_datetime}} </p>  </td>
+   </tr>
+ </table>
+  {% endif  %}
+{% endif  %}
+
+
+    {% if no_of_stops == 2 %}
+<table  width="100%" >
+    <tr>
+   <td align="center">  <p style="padding: 5px; font-family: 'Montserrat';font-weight: normal;">  {{DELAY_2}} layover at {{flight.to_city}} Change of aircraft<br>Bag Drop closes {{flight.arrival_datetime}} </p>  </td>
+   </tr>
+ </table>
+{% endif  %}
+
+      {% if no_of_stops == 3 %}
+<table  width="100%" >
+    <tr>
+   <td align="center">  <p style="padding: 5px; font-family: 'Montserrat';font-weight: normal;">  {{DELAY_2}} layover at {{flight.to_city}} Change of aircraft<br>Bag Drop closes {{flight.arrival_datetime}} </p>  </td>
+   </tr>
+ </table>
+{% endif  %}
+
+<!--end if return flight-->
+{% endif  %}
+  {% endfor %}
+
+
+
+
+<h1 align="center" style=" line-height: 0px;font-family: 'Montserrat';font-weight: 400;">Passenger Details </h1>
+<table width="100%"  style="border-bottom: solid 1px gray;">
+
+      <tr>
+   {% for pasg in Passangers %}
+        <td align="center" colspan="12" ><strong>Passenger Name : </strong> <span style="color:#383838;"> {% if pasg.gender == 'Male'%}Mr.{% endif %} {% if pasg.gender == 'Female'%}Ms.{% endif %}
+
+            {{pasg.employee_name}}
+
+            {% if pasg.employee_ticket_no %}
+            ({{pasg.employee_ticket_no}})
+            {% endif %}
+             </span></td>
+{% endfor %}
+      </tr>
+</table>
+
+  <h1 align="center" style=" line-height: 0px;font-family: 'Montserrat';font-weight: 400;">Fare Summary</h1>
+<table width="100%"  style="border-bottom: solid 1px gray;">
+
+    <tr style="color:#383838;">
+   
+        <td align="center" colspan="12" ><strong>Airfare Charges(INR) : </strong><br>{{ticket_price|floatformat:2|intcomma}}</td>
+           <td align="center" colspan="12" ><strong>ASF(INR)  : </strong><br>10.00</td>
+            <td align="center" colspan="12" ><strong>GST(INR) : </strong><br>18.00</td>
+             <td align="center" colspan="12" ><strong>User Development Fee(INR)  : </strong><br>185.00</td>
+             <td align="center" colspan="12" ><strong>Total Fare(INR)  : </strong><br>23,666.00</td>
+
+
+      </tr>
 
 </table>
 
+  <h1 align="center" style=" line-height: 0px;font-family: 'Montserrat';font-weight: 400;">GST Information</h1>
+  <table width="100%"  style="border-bottom: solid 1px gray;">
 
-   <table  width="100%" class="border-bottom"><br>
+    <tr style="color:#383838;">
+   
+        <td align="center" colspan="12" >GST Company Name : BAI INFOSOLUTIONS PRIVATE LIMITED     ( GST Number : 07AAGCB3556P1Z7)</td>
+          
+    
 
-     <tr>
-      <h6 align="center"  class="section">GST Information</h6>
-    </tr>
+      </tr>
+</table>
 
-    <tr>
-      <td  align="center" class="fare-section">
-     GST Company Name : BAI INFOSOLUTIONS PRIVATE LIMITED<br>
-   GST Number : 07AAGCB3556P1Z7
-      </td>
-  </tr>
-
-
-  </table>
 
  <table  width="100%">
 
-<tr>
+<tr style="color:#383838;">
     <td  align="center" >
   Interglobe Aviation ltd.(IndiGo), Global Business Park, Gurgaon, Haryana, India. Call +91 9910383838 or +91 124 6613838
 </td>
    </tr>
 </table>
-
-
-
-  </tbody>
-</table>
-
-
-
 
 </body>
 </html>

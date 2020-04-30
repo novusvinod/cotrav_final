@@ -1,0 +1,198 @@
+url: api/agent_taxi_bookings
+parameter : booking_type, page_no
+
+booking_type : 
+1 Today's Booking
+2 Active Bookings(Unassigned)
+3 Active Bookings(Assigned)
+4 Archived Bookings(Unassigned)
+5 Archived Bookings(Assigned)
+6 Cancelled/Rejected Bookings
+7 Operator Issue Bookings
+
+url: api/agent_bus_bookings
+url: api/agent_train_bookings
+url: api/agent_hotel_bookings
+url: api/agent_flight_bookings
+
+parameter : booking_type, page_no
+booking_type : 
+1 Today's Booking
+2 Active Bookings(Unassigned)
+3 Active Bookings(Assigned)
+4 Archived Bookings(Unassigned)
+5 Archived Bookings(Assigned)
+6 Cancelled/Rejected Bookings
+
+
+ACCEPT BOOOKING
+
+url : api/accept_taxi_booking
+url : api/accept_bus_booking
+url : api/accept_train_booking
+url : api/accept_hotel_booking
+url : api/accept_flight_booking
+
+parameter : booking_id, user_id(agent id), 
+
+
+REJECT BOOKING
+url : api/reject_taxi_booking
+url : api/reject_bus_booking
+url : api/reject_train_booking
+url : api/reject_hotel_booking
+url : api/reject_flight_booking
+parameter : booking_id, user_id, user_comment
+
+
+VIEW BOOKING
+url : api/view_taxi_booking
+url : api/view_bus_booking
+url : api/view_train_booking
+url : api/view_hotel_booking
+url : api/view_flight_booking
+parameter : booking_id
+
+ADD BOOKING
+
+url : api/add_taxi_booking
+url : api/edit_taxi_booking
+parameter:
+bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+booking_email = request.POST.get('booking_email', '') attechment
+corporate_id =   call api : api/companies 
+entity_id =  call api : api/billing_entities parameter: corporate_id
+spoc_id =  call api : api/api/spocs parameter: corporate_id
+group_id =  spoc group id
+subgroup_id =  spoc subgroup id
+tour_type = option : radio, local, outstation
+pickup_city = call api : api/cities
+pickup_location 
+drop_location = 
+pickup_datetime = 
+booking_datetime = %d-%m-%Y %H:%M:%S
+pickup_datetime =  '%d-%m-%Y %H:%M:%S')
+taxi_type =  call api : api/taxi_types
+package_id = call api: api/corporate_package parameter:corporate_id,city_id,taxi_type,tour_type
+no_of_days =  only outstation
+assessment_code =  code_id api call : api/assessment_codes parameter:corporate_id
+assessment_city_id =  city_id call api/assessment_cities parameter:corporate_id
+is_sms = 
+is_email = 
+reason_booking = 
+no_of_seats =  eg. 1,2,3, select no of employee
+employees =  array
+
+
+url : api/add_bus_booking
+url : api/edit_bus_booking
+parameter:
+bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+booking_email = request.POST.get('booking_email', '') attechment
+corporate_id =   call api : api/companies 
+entity_id =  call api : api/billing_entities parameter: corporate_id
+spoc_id =  call api : api/api/spocs parameter: corporate_id
+group_id =  spoc group id
+subgroup_id =  spoc subgroup idn
+bus_type = call api : api/bus_types
+from =
+to = 
+journey_datetime = 
+booking_datetime = %d-%m-%Y %H:%M:%S
+journey_datetime_to =  '%d-%m-%Y %H:%M:%S')
+assessment_code =  code_id api call : api/assessment_codes parameter:corporate_id
+assessment_city_id =  city_id call api/assessment_cities parameter:corporate_id
+is_sms = 
+is_email = 
+reason_booking = 
+no_of_seats =  eg. 1,2,3, select no of employee
+employees =  array
+preferred_bus
+
+
+url : api/add_train_booking
+url : api/add_edit_booking
+parameter:
+bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+booking_email = request.POST.get('booking_email', '') attechment
+corporate_id =   call api : api/companies 
+entity_id =  call api : api/billing_entities parameter: corporate_id
+spoc_id =  call api : api/api/spocs parameter: corporate_id
+group_id =  spoc group id
+subgroup_id =  spoc subgroup idn
+train_type = call api : api/train_types
+from = call api/railway_stations
+to = call api/railway_stations
+journey_datetime = 
+booking_datetime = %d-%m-%Y %H:%M:%S
+journey_datetime_to =  '%d-%m-%Y %H:%M:%S')
+assessment_code =  code_id api call : api/assessment_codes parameter:corporate_id
+assessment_city_id =  city_id call api/assessment_cities parameter:corporate_id
+is_sms = 
+is_email = 
+reason_booking = 
+no_of_seats =  eg. 1,2,3, select no of employee
+employees =  array
+preferred_train = 
+
+
+url : api/add_hotel_booking
+url : api/add_edit_booking
+parameter:
+bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+booking_email = request.POST.get('booking_email', '') attechment
+corporate_id =   call api : api/companies 
+billing_entity_id =  call api : api/billing_entities parameter: corporate_id
+spoc_id =  call api : api/api/spocs parameter: corporate_id
+group_id =  spoc group id
+subgroup_id =  spoc subgroup idn
+bucket_priority_1 = call api : api/room_types
+bucket_priority_1 = call api : api/room_types
+room_type_id = call api : api/hotel_types
+from_city_id = call api/cities
+from_area_id = call api/cities
+booking_datetime = %d-%m-%Y %H:%M:%S
+checkin_datetime =  '%d-%m-%Y %H:%M:%S')
+checkout_datetime =  '%d-%m-%Y %H:%M:%S')
+assessment_code =  code_id api call : api/assessment_codes parameter:corporate_id
+assessment_city_id =  city_id call api/assessment_cities parameter:corporate_id
+is_sms = 
+is_email = 
+reason_booking = 
+no_of_seats =  eg. 1,2,3, select no of employee
+employees =  array
+preferred_area = 
+preferred_hotel =
+
+
+url : api/add_flight_booking
+url : api/add_edit_booking
+parameter:
+vendor_booking = 
+bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+booking_email = request.POST.get('booking_email', '') attechment
+corporate_id =   call api : api/companies 
+billing_entity_id =  call api : api/billing_entities parameter: corporate_id
+spoc_id =  call api : api/api/spocs parameter: corporate_id
+group_id =  spoc group id
+subgroup_id =  spoc subgroup idn
+usage_type = Flight, Web Checkin
+trip_type = One Way, Round Trip
+seat_type = Economy, Premium Economy, Business
+from_city = call api/cities
+to_city = call api/cities
+booking_datetime = %d-%m-%Y %H:%M:%S
+departure_datetime =  %d-%m-%Y
+assessment_code =  code_id api call : api/assessment_codes parameter:corporate_id
+assessment_city_id =  city_id call api/assessment_cities parameter:corporate_id
+is_sms = 
+is_email = 
+reason_booking = 
+no_of_seats =  eg. 1,2,3, select no of employee
+employees =  array
+preferred_flight = 
+
+
+
+
+

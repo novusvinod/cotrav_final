@@ -17,7 +17,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <form action="/agents/add-cotrav-billing-entity/0" method="post" enctype="multipart/form-data">
+            <form action="/agents/add-cotrav-billing-entity/0" method="post" enctype="multipart/form-data" id="model_serialize_update">
                 <input type="hidden" name="entity_id" id="entity_id">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="delete_id" id="delete_id">
@@ -150,7 +150,7 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
+<!--                                    <th>ID</th>-->
 
                                     <th>Entity name</th>
                                     <th>Billing City</th>
@@ -169,7 +169,7 @@
                                 <tbody>
                                 {% for be in billing_entities %}
                                 <tr>
-                                    <td>{{ be.id }}</td>
+<!--                                    <td>{{ be.id }}</td>-->
 
                                     <td>{{ be.entity_name }}</td>
                                     <td>{{ be.billing_city }}</td>
@@ -352,7 +352,32 @@ $(function() {
 });
 
 </script>
+<script>
+$( document ).ready(function() {
 
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
 {% endblock %}
 
 

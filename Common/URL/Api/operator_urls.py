@@ -10,4 +10,11 @@ urlpatterns = [
 
     path('api/operator_reject_taxi_booking', operator_api_view.operator_reject_taxi_bookings),
 
+    path('api/driver_taxi_bookings', operator_api_view.driver_taxi_bookings),
+
+    path('api/started_from_garage', operator_api_view.started_from_garage),
+    path('api/arrived_at_pickup', operator_api_view.arrived_at_pickup),
+    path('api/started_from_pickup', operator_api_view.started_from_pickup),
+    path('api/arrived_at_drop', operator_api_view.arrived_at_drop),
+
 ]

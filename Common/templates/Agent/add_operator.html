@@ -19,7 +19,7 @@
          </div>
    </div>
 
- <form method="post" action="/agents/add-operator/0">
+ <form method="post" action="/agents/add-operator/0" id="model_serialize_update">
       {% csrf_token %}
      <input type="hidden" class="col-sm-8 form-control" name="cotrav_agent_id"  value="{{user.id }}">
  <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
@@ -43,38 +43,6 @@
 				                        </ul>
                                 </div>
                                 <div class="card-body " id="bar-parent">
-
-
-                                         <div class="form-group row">
-                                                <label class="col-sm-4" for="simpleFormEmail">Operator Type</label>
-                                             {% if operators %}
-                                            {% for operator in operators %}
-	                                                 <select class="col-sm-8 form-control  myselect" style="width:66%"  name="type" id="service_type" required>
-	                                                <option value="1" {% if operator.service_type_id == 1 %} selected {%endif%}>Radio</option>
-                                                    <option value="2" {% if operator.service_type_id == 2 %} selected {%endif%}>Local</option>
-                                                    <option value="3" {% if operator.service_type_id == 3 %} selected {%endif%}>Outstation</option>
-	                                                <option value="4" {% if operator.service_type_id == 4 %} selected {%endif%}>Bus</option>
-                                                    <option value="5" {% if operator.service_type_id == 5 %} selected {%endif%}>Train</option>
-                                                    <option value="6" {% if operator.service_type_id == 6 %} selected {%endif%}>Hotel</option>
-                                                    <option value="7" {% if operator.service_type_id == 7 %} selected {%endif%}>Flight</option>
-                                                    <option value="8" {% if operator.service_type_id == 8 %} selected {%endif%}>Meal</option>
-	                                            </select>
-                                            {% endfor %}
-                                              {% else %}
-
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="type" id="service_type" required>
-	                                                <option value="1">Radio</option>
-                                                    <option value="2">Local</option>
-                                                    <option value="3">Outstation</option>
-	                                                <option value="4">Bus</option>
-                                                    <option value="5">Train</option>
-                                                    <option value="6">Hotel</option>
-                                                    <option value="7">Flight</option>
-                                                    <option value="8">Meal</option>
-
-	                                            </select>
-                                             {% endif %}
-                                            </div>
 
                                           <div class="form-group row">
                                             <label class="col-sm-4" for="simpleFormEmail">Login User Name</label>
@@ -256,6 +224,197 @@
                         </div>
 
 
+                                        <div class="col-md-4 col-sm-4">
+                    <div class="card card-topline-aqua">
+                        <div class="card-head">
+                            <header>Service Details</header>
+                            <button id="panel-button1"
+                                    class="mdl-button mdl-js-button mdl-button--icon pull-right"
+                                    data-upgraded=",MaterialButton">
+                                <i class="material-icons">more_vert</i>
+                            </button>
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                                data-mdl-for="panel-button2">
+                                <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
+                                <li class="mdl-menu__item"><i class="material-icons">print</i>Another action</li>
+                                <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body " id="bar-parent1">
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Radio Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control " name="is_radio">
+                                        <option value="1">Yes</option>
+                                        {% if operators %}
+                                        {% for operator in operators %}
+                                            <option value="0" {% if operator.is_radio == 0 %} selected {%endif%}>No</option>
+                                        {% endfor %}
+                                        {% else %}
+                                            <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Local Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_local">
+                                        <option value="1">Yes</option>
+                                        {% if operators %}
+                                        {% for operator in operators %}
+                                        <option value="0" {% if operator.is_local == 0 %} selected {%endif%}>No</option>
+                                        {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Outstation Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_outstation">
+                                        <option value="1">Yes</option>
+                                        {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_outstation == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Bus Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_bus">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_bus == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Train Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_train">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_train == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Hotel Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_hotel">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_hotel == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Flight Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_flight">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_flight == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Meal Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_meal">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_meal == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Water Bottles Bookings</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_water_bottles">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_water_bottles == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Reverse Logistics</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_reverse_logistics">
+                                        <option value="1">Yes</option>
+                                         {% if operators %}
+                                        {% for operator in operators %}
+                                         <option value="0" {% if operator.is_reverse_logistics == 0 %} selected {%endif%}>No</option>
+                                         {% endfor %}
+                                        {% else %}
+                                         <option value="0">No</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
 
                     </div>
 
@@ -314,5 +473,30 @@ $('#service_type').on('change', function (e) {
 
 
 </script>
+<script>
+$( document ).ready(function() {
 
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
 {% endblock %}

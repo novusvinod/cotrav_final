@@ -2,8 +2,225 @@
 
 {% block content %}
 
-{% if user.status %}
-			<!-- start page content -->
+{% load static %}
+
+{% if user %}
+
+<style>
+
+.disableClick{
+    pointer-events: none;
+}
+
+.js-select2{
+width: 100%;
+
+}
+
+</style>
+
+
+<!-- start page content -->
+<!-- The Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="add_employee_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4  class="modal-title-status">Add Employee Details </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/agents/add-employee/0" method="post" id="modal_add_employee" enctype="multipart/form-data" >
+
+
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <input type="hidden" name="modal_add_employee" value="1">
+
+
+                <div class="form-group row">
+
+                <label class="col-sm-5 control-label">Select Company</label>
+                <div class="col-sm-7">
+                <select class="form-control myselect" style="width:100%;" name="corporate_id" id="corporate_id2"  required>
+	                                                <option value="">Select Company</option>
+                                                        {% for company in companies %}
+                                                        <option value="{{company.id}}">{{company.corporate_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+                </div>
+                </div>
+
+
+
+
+                <div class="form-group row">
+
+                <label class="col-sm-5 control-label">Select Spoc</label>
+                <div class="col-sm-7">
+                <select class="form-control myselect" style="width:100%;" name="spoc_id" id="spoc_id2" required>
+	                                                <option value="">Select Spoc</option>
+                                                        {% for spoc in spocs %}
+                                                        <option value="{{spoc.id}}">{{spoc.user_name}}</option>
+                                                        {% endfor %}
+	                                         </select>
+                </div>
+                </div>
+
+
+
+                <div class="form-group row">
+                    <label class="col-sm-5 control-label">Billing Entity</label>
+                    <div class="col-sm-7">
+                    <select class="form-control myselect" style="width:100%;" name="billing_entity_id" id="billing_entity_id2"  required>
+	                                                 <option value="">Select Billing Entity</option>
+                                                        {% for entity in entitys %}
+                                                        <option value="{{entity.id}}">{{entity.entity_name}}</option>
+                                                        {% endfor %}
+                    </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Core Employee ID</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="core_employee_id" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Employee Name</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="employee_name" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Employee Email</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="employee_email" required>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Employee Contact</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="employee_contact" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Date Of Birth</label>
+                    <div class="col-sm-7">
+                        <input class = "form-control datepicker1" type="text" name="date_of_birth" required >
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Home City</label>
+                    <div class="col-sm-7">
+                        <input class = "form-control" type="text" name="home_city" required >
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- The update Modal -->
+<div class="modal fade model_custom_style" role="dialog" id="update_employee_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4  class="modal-title-status">Update Employee Details </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <form action="/api/update-passanger" method="post" id="modal_update_employee" enctype="multipart/form-data" >
+
+
+                <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
+
+                <input type="hidden" name="employee_id" id="employee_id" value="">
+
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Core Employee ID</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="core_employee_id" name="core_employee_id" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Employee Name</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="employee_name" name="employee_name" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Employee Email</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="employee_email" name="employee_email" required>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Employee Contact</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="employee_contact" name="employee_contact" required>
+                    </div>
+                </div>
+
+               <!-- <div class="form-group row">
+                     <label class="col-sm-5 control-label">Date Of Birth</label>
+                    <div class="col-sm-7">
+                        <input class = "form-control date" type="text" id="date_of_birth" name="date_of_birth" required >
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                     <label class="col-sm-5 control-label">Home City</label>
+                    <div class="col-sm-7">
+                        <input class = "form-control" type="text" id="home_city" name="home_city" required >
+                    </div>
+                </div> -->
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 {% include 'cotrav_alert_message.html' %}
 <div class="page-content-wrapper">
     <div class="page-content">
@@ -109,20 +326,10 @@
                                         
                                         
                                         <div class="form-group row">
-                                                <label class="col-sm-4">Room type (Priority 1)</label>
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority1" id="room_type_priority1"  required>
-
-                                                </select>
-                                            
-                                        </div>
-
-                                        <div class="form-group row">
-                                                <label class="col-sm-4">Room type (Priority 2)</label>
-    
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority2" id="room_type_priority2"  required>
-
-                                                </select>
-                                            
+                                                <label class="col-sm-4">Price Range</label>
+                                                <input type="number" class="form-control col-sm-3" name="room_type_priority1" value="1000">
+                                                <label class="col-sm-2">To</label>
+                                                <input type="number" class="form-control col-sm-3" name="room_type_priority2" value="2000">
                                         </div>
 
                                         <div class="form-group row">
@@ -142,7 +349,7 @@
                                         
                                         <div class="form-group row">
 
-                                                <label class="col-sm-4">Booking Date</label>
+                                                <label class="col-sm-4">Booking Date/Time</label>
                                                 <input type="text" class="col-sm-8 form-control datetimepicker1" id="booking_datetime" autocomplete="off" name="booking_datetime">
         
                                         </div>
@@ -209,6 +416,8 @@
                                         <div class="card card-topline-aqua">
                                                <div class="card-head">
                                                    <header>SPOC and Passanger Details</header>
+                                                   <a title="add New Employee" class="btn btn-info btn-xs disableClick" data-target="#add_employee_modal" id="add_new_employee_btn" data-toggle="modal" href="#">
+                                                <i class="fa fa-plus "></i> Add New Employee </a>
                                                    <div class="tools">
                                                        <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
                                                        <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
@@ -243,10 +452,10 @@
                                         <option value="{{employee.id}}" emp_id="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
-                                    <input type="text" name="emp_id_1" id="emp_id_1" class="form-control col-sm-2" placeholder="Employee Id">
-                                   <input type="text" name="employee_name_1" id="employee_name_1" class="form-control col-sm-2" placeholder="Name">
-                                    <input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control col-sm-2" placeholder="Contact No">
-                                    <input type="text" name="employee_email_1" id="employee_email_1" class="form-control col-sm-2" placeholder="Email">
+                                    <input type="text" name="emp_id_1" id="emp_id_1" class="form-control emp-edit col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_1" id="employee_name_1" class="form-control emp-edit col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_1" id="employee_contact_1" class="form-control emp-edit col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_1" id="employee_email_1" class="form-control emp-edit col-sm-2" placeholder="Email">
                                 </div>
 
                               <div class="form-group row" id="emp_row_2">
@@ -256,10 +465,10 @@
                                         <option value="{{employee.id}}" >{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
-                                   <input type="text" name="emp_id_2" id="emp_id_2" class="form-control col-sm-2" placeholder="Employee Id">
-                                   <input type="text" name="employee_name_2" id="employee_name_2" class="form-control col-sm-2" placeholder="Name">
-                                    <input type="text" name="employee_contact_2" id="employee_contact_2" class="form-control col-sm-2" placeholder="Contact No">
-                                    <input type="text" name="employee_email_2" id="employee_email_2" class="form-control col-sm-2" placeholder="Email">
+                                   <input type="text" name="emp_id_2" id="emp_id_2" class="form-control emp-edit col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_2" id="employee_name_2" class="form-control emp-edit col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_2" id="employee_contact_2" class="form-control emp-edit col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_2" id="employee_email_2" class="form-control emp-edit col-sm-2" placeholder="Email">
                                 </div>
 
                               <div class="form-group row"  id="emp_row_3">
@@ -269,10 +478,10 @@
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
-                                   <input type="text" name="emp_id_3" id="emp_id_3" class="form-control col-sm-2" placeholder="Employee Id">
-                                   <input type="text" name="employee_name_3" id="employee_name_3" class="form-control col-sm-2" placeholder="Name">
-                                    <input type="text" name="employee_contact_3" id="employee_contact_3" class="form-control col-sm-2" placeholder="Contact No">
-                                    <input type="text" name="employee_email_3" id="employee_email_3" class="form-control col-sm-2" placeholder="Email">
+                                   <input type="text" name="emp_id_3" id="emp_id_3" class="form-control emp-edit col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_3" id="employee_name_3" class="form-control emp-edit col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_3" id="employee_contact_3" class="form-control emp-edit col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_3" id="employee_email_3" class="form-control emp-edit col-sm-2" placeholder="Email">
                                 </div>
 
                               <div class="form-group row"  id="emp_row_4" >
@@ -282,10 +491,10 @@
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
-                                   <input type="text" name="emp_id_4" id="emp_id_4" class="form-control col-sm-2" placeholder="Employee Id">
-                                   <input type="text" name="employee_name_4" id="employee_name_4" class="form-control col-sm-2" placeholder="Name">
-                                    <input type="text" name="employee_contact_4" id="employee_contact_4" class="form-control col-sm-2" placeholder="Contact No">
-                                    <input type="text" name="employee_email_4" id="employee_email_4" class="form-control col-sm-2" placeholder="Email">
+                                   <input type="text" name="emp_id_4" id="emp_id_4" class="form-control emp-edit col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_4" id="employee_name_4" class="form-control emp-edit col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_4" id="employee_contact_4" class="form-control emp-edit col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_4" id="employee_email_4" class="form-control emp-edit col-sm-2" placeholder="Email">
                                 </div>
 
                                <div class="form-group row"  id="emp_row_5" >
@@ -295,10 +504,10 @@
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
-                                    <input type="text" name="emp_id_5" id="emp_id_5" class="form-control col-sm-2" placeholder="Employee Id">
-                                   <input type="text" name="employee_name_5" id="employee_name_5" class="form-control col-sm-2" placeholder="Name">
-                                    <input type="text" name="employee_contact_5" id="employee_contact_5" class="form-control col-sm-2" placeholder="Contact No">
-                                    <input type="text" name="employee_email_5" id="employee_email_5" class="form-control col-sm-2" placeholder="Email">
+                                    <input type="text" name="emp_id_5" id="emp_id_5" class="form-control emp-edit col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_5" id="employee_name_5" class="form-control emp-edit col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_5" id="employee_contact_5" class="form-control emp-edit col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_5" id="employee_email_5" class="form-control emp-edit col-sm-2" placeholder="Email">
                                 </div>
 
                                <div class="form-group row"  id="emp_row_6" >
@@ -308,11 +517,19 @@
                                         <option value="{{employee.id}}">{{employee.employee_name}}/{{employee.employee_cid}}</option>
                                         {% endfor %}
                                     </select>
-                                    <input type="text" name="emp_id_6" id="emp_id_6" class="form-control col-sm-2" placeholder="Employee Id">
-                                   <input type="text" name="employee_name_6" id="employee_name_6" class="form-control col-sm-2" placeholder="Name">
-                                    <input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control col-sm-2" placeholder="Contact No">
-                                    <input type="text" name="employee_email_6" id="employee_email_6" class="form-control col-sm-2" placeholder="Email">
+                                    <input type="text" name="emp_id_6" id="emp_id_6" class="form-control emp-edit col-sm-2" placeholder="Employee Id">
+                                   <input type="text" name="employee_name_6" id="employee_name_6" class="form-control emp-edit col-sm-2" placeholder="Name">
+                                    <input type="text" name="employee_contact_6" id="employee_contact_6" class="form-control emp-edit col-sm-2" placeholder="Contact No">
+                                    <input type="text" name="employee_email_6" id="employee_email_6" class="form-control emp-edit col-sm-2" placeholder="Email">
                                 </div>
+
+
+
+
+
+                              <input type="hidden" name="emp_no_ref" id="emp_no_ref" value="" >
+
+
                            
                                                      </div>
                            
@@ -338,7 +555,7 @@
 
 <!-- end page content -->
 
-
+<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;z-index:100000;"><img src="{% static 'assets/img/ajax-loader.gif' %}" width="64" height="64" /><br>Loading..</div>
 
 
 {% else %}
@@ -769,6 +986,404 @@ $("#check_in_date,#check_out_date").change(function()
 				$("#no_of_nights").val(1);
 			}
 		});
+</script>
+
+
+<script type="text/javascript">
+$('.emp-edit').on('click',function(e) {
+
+ str_id = e.target.id;
+
+ var emp_no = str_id.charAt(str_id.length-1);
+
+ $('#emp_no_ref').val(emp_no);
+
+ employee_id = 'employee_id_'+emp_no;
+
+ var emp = document.getElementById(employee_id).value;
+
+if (emp == '') {
+
+    //alert("Please select a employee first");
+    document.getElementById(employee_id).focus();
+    //$(this).focus();
+        // break
+        return false;
+
+}else{
+
+    $('#update_employee_modal').modal();
+}
+
+
+});
+
+
+</script>
+
+
+<script type="text/javascript">
+$(function() {
+
+  $('#update_employee_modal').on('show.bs.modal', function (event) {
+    /*var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id');
+    var coreid = button.data('coreid');
+    var name = button.data('name');
+    var email = button.data('email');
+    var contact = button.data('contact');*/
+
+    emp_no = $('#emp_no_ref').val();
+
+    employee_id = 'employee_id_'+emp_no;
+    emp_id = document.getElementById(employee_id);
+
+    employee_core_id = 'emp_id_'+emp_no;
+    emp_core_id = document.getElementById(employee_core_id);
+
+    employee_name = 'employee_name_'+emp_no;
+    emp_name = document.getElementById(employee_name);
+
+    employee_email = 'employee_email_'+emp_no;
+    emp_email = document.getElementById(employee_email);
+
+    employee_contact = 'employee_contact_'+emp_no;
+    emp_contact = document.getElementById(employee_contact);
+
+    var id = emp_id.value;
+    var coreid = emp_core_id.value;
+    var name = emp_name.value;
+    var email = emp_email.value;
+    var contact = emp_contact.value;
+
+
+    var modal = $(this);
+    modal.find('#core_employee_id').val('');
+    modal.find('#employee_name').val('');
+    modal.find('#employee_email').val('');
+    modal.find('#employee_contact').val('');
+    modal.find('#employee_id').val('');
+
+    modal.find('#core_employee_id').val(coreid);
+    modal.find('#employee_name').val(name);
+    modal.find('#employee_email').val(email);
+    modal.find('#employee_contact').val(contact);
+
+
+    modal.find('#employee_id').val(id);
+
+
+
+
+    });
+
+});
+
+
+
+</script>
+
+<script>
+
+
+$("#modal_add_employee").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(), // serializes the form's elements.
+           beforeSend: function(){
+                $("#wait").css("display", "block");
+            },
+            complete: function(){
+                $("#wait").css("display", "none");
+            },
+           success: function(data)
+           {
+
+
+              if (data == "1")
+              {
+
+                $("#add_employee_modal").modal("hide");
+
+                $('#sel').val(1);
+
+               spoc_change(1);
+
+               alert("employee added successfully");
+
+              }else{
+
+              alert("error in data insert");
+
+              }
+
+
+
+           }
+         });
+
+});
+
+
+$("#modal_update_employee").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(), // serializes the form's elements.
+           beforeSend: function(){
+                $("#wait").css("display", "block");
+            },
+            complete: function(){
+                $("#wait").css("display", "none");
+            },
+           success: function(data)
+           {
+             //alert(data);
+
+             emp_core_id = data['employee'][0].employee_id
+             emp_name = data['employee'][0].name
+             emp_email = data['employee'][0].email
+             emp_contact = data['employee'][0].contact
+
+             //alert(emp_name);
+
+             $("#update_employee_modal").modal("hide");
+
+             emp_no = $('#emp_no_ref').val();
+
+           employee_id = '#employee_id_'+emp_no;
+           // document.getElementById(employee_id).val(emp_core_id) ;
+
+           $( "#employee_id_1 option:selected" ).text(emp_name);
+
+           //alert($( "#employee_id_1 option:selected" ).text());
+
+           //document.getElementById("employee_id_1").text = "newTextForApple";
+
+           //alert(aaa);
+
+            employee_core_id = 'emp_id_'+emp_no;
+            e_core_id = document.getElementById(employee_core_id);
+            e_core_id.value = emp_core_id;
+
+            employee_name = 'employee_name_'+emp_no;
+            e_name = document.getElementById(employee_name);
+            e_name.value = emp_name
+
+            employee_email = 'employee_email_'+emp_no;
+            e_email = document.getElementById(employee_email);
+            e_email.value = emp_email
+
+            employee_contact = 'employee_contact_'+emp_no;
+            e_contact = document.getElementById(employee_contact);
+            e_contact.value = emp_contact;
+
+           }
+         });
+
+});
+
+
+
+
+$("#corporate_id2").change(function(){
+
+  $('#spoc_id2').empty();
+  $('#billing_entity_id2').empty();
+
+   var corporate_id =  $(this).val();
+
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+//   For Entity
+var_url = '/api/'+'billing_entities'
+     $.post(var_url,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Entitys']);
+       if(data['Entitys'].length != 0){
+        entities = data['Entitys']
+        $('#billing_entity_id2').append($("<option value=''>Select Entity</option>"));
+         for (var i=0;i<entities.length;i++) {
+            $('#billing_entity_id2').append($("<option value='"+entities[i].id+"'>"+entities[i].entity_name+"</option>"));
+         }
+       }else{
+        alert('No Entity Available')
+       }
+       });
+
+//       For SPOC
+
+
+    var_url_spoc = '/api/'+'spocs'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Spocs']);
+       if(data['Spocs'].length != 0){
+        spocs = data['Spocs']
+        $('#spoc_id2').append($("<option value=''>Select Spoc</option>"));
+         for (var i=0;i<spocs.length;i++) {
+            $('#spoc_id2').append($("<option value='"+spocs[i].id+"'>"+spocs[i].user_name+"</option>"));
+
+         }
+       }else{
+        alert('No SPOC Available')
+       }
+       });
+
+
+    var_url_spoc = '/api/'+'employees'
+     $.post(var_url_spoc,{ corporate_id: corporate_id },
+      function(data)
+      {
+       //alert(data['Employees']);
+       if(data['Employees'].length != 0){
+        spocs = data['Employees']
+        $('#assistant_id').append($("<option value=''>Select Employee</option>"));
+         for (var i=0;i<spocs.length;i++) {
+            $('#assistant_id').append($("<option value='"+spocs[i].id+"'>"+spocs[i].employee_name+"</option>"));
+
+         }
+       }else{
+        alert('No Employee Available')
+       }
+       });
+
+
+
+});
+
+
+
+$("#spoc_id").change(spoc_change);
+
+function spoc_change(flag){
+
+    var spoc_idd =  $("#spoc_id").val();
+    var spoc_id = spoc_idd.split(",");
+
+    //alert("spoc event");
+
+   var element = document.getElementById("add_new_employee_btn");
+   element.classList.remove("disableClick");
+
+
+    $.ajaxSetup({
+            headers:{
+                'Authorization': "Token {{request.session.agent_access_token}}",
+                'usertype': 10
+            }
+
+        });
+
+        //       For Employees
+
+
+    var_url_spoc_employee = '/api/'+'spoc_employee'
+     $.post(var_url_spoc_employee,{ spoc_id: spoc_id[0] },
+      function(data)
+      {
+
+      //alert(data);
+
+       if(data['Employees'].length != 0){
+        employee = data['Employees'];
+
+        if (flag != 1 )
+        {
+
+            $('#employee_id_1').empty();
+            $('#employee_id_2').empty();
+            $('#employee_id_3').empty();
+            $('#employee_id_4').empty();
+            $('#employee_id_5').empty();
+            $('#employee_id_6').empty();
+
+
+
+        $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
+        $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
+
+         for (var i=0;i<employee.length;i++) {
+
+            $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_2').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_3').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_4').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_5').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+            $('#employee_id_6').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+
+         }
+
+
+         }else{
+
+            emp_no = $('#no_of_seats').val();
+
+            //alert(emp_no);
+
+            $('#employee_id_1').append($("<option value=''>Select Employee</option>"));
+            $('#employee_id_2').append($("<option value=''>Select Employee</option>"));
+            $('#employee_id_3').append($("<option value=''>Select Employee</option>"));
+            $('#employee_id_4').append($("<option value=''>Select Employee</option>"));
+            $('#employee_id_5').append($("<option value=''>Select Employee</option>"));
+            $('#employee_id_6').append($("<option value=''>Select Employee</option>"));
+
+
+             for (var i=0;i<employee.length;i++) {
+
+             //$(selected_id).append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+                $('#employee_id_1').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+                $('#employee_id_2').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+                $('#employee_id_3').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+                $('#employee_id_4').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+                $('#employee_id_5').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+                $('#employee_id_6').append($("<option value='"+employee[i].id+"' emp_id='"+employee[i].employee_cid+"' emp_cnt='"+employee[i].employee_contact+"' emp_name='"+employee[i].employee_name+"' emp_email='"+employee[i].employee_email+"' >"+employee[i].employee_name+"</option>"));
+
+              }
+
+         }
+
+       var emp_len = data['Employees'].length;
+       for (var i=emp_len+1;i<7;i++) {
+       var valueToCompare = $("#no_of_seats option[value='"+i+"']").text();
+            if(valueToCompare == i) {
+                $("#no_of_seats option[value='"+i+"']").attr("disabled", "disabled");
+            }
+       }
+
+       }else{
+        alert('No Employees Available');
+       }
+       });
+
+
+
+}
+
+
+
 </script>
 
 

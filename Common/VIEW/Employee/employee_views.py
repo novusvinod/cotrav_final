@@ -343,6 +343,14 @@ def add_taxi_booking(request,id):
             reason_booking = request.POST.get('reason_booking', '')
             no_of_seats = 1
 
+            if tour_type == 1 or tour_type == '1':
+                url_add_city = settings.API_BASE_URL + "add_city_name"
+                pickup_details = [x.strip() for x in pickup_city.split(',')]
+                city_data = {'login_type': login_type, 'access_token': access_token, 'city_name': pickup_details[0], 'state_id': '1'}
+                city_id = getDataFromAPI(login_type, access_token, url_add_city, city_data)
+                for conty_id in city_id['id']:
+                    actual_city_id = conty_id['id']
+
             employees = []
             no_of_emp = int(no_of_seats) + 1
             for i in range(1,no_of_emp):
@@ -379,10 +387,9 @@ def add_taxi_booking(request,id):
             company_emp = json.loads(r.text)
             employees = company_emp['Employees']
 
-            # url_city1 = settings.API_BASE_URL + "cities"
-            # cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
-            # citiess = cities1['Cities']
-            citiess = ""
+            url_city1 = settings.API_BASE_URL + "cities"
+            cities1 = getDataFromAPI(login_type, access_token, url_city1, payload)
+            citiess = cities1['Cities']
 
             url_taxi = settings.API_BASE_URL + "taxi_types"
             taxies = getDataFromAPI(login_type, access_token, url_taxi, payload)
@@ -501,11 +508,15 @@ def add_bus_booking(request,id):
             from_location = request.POST.get('from', '')
             to_location = request.POST.get('to', '')
             bus_type = request.POST.get('bus_type', '')
+            bus_type2 = request.POST.get('bus_type2', '')
+            bus_type3 = request.POST.get('bus_type3', '')
             booking_datetime = request.POST.get('booking_datetime', '')
             journey_datetime = request.POST.get('journey_datetime', '')
             journey_datetime_to = request.POST.get('journey_datetime_to', '')
             entity_id = request.POST.get('entity_id', '')
             preferred_bus = request.POST.get('preferred_bus', '')
+            preferred_board_point = request.POST.get('preferred_board_point', '')
+            preferred_drop_point = request.POST.get('preferred_drop_point', '')
             assessment_code = request.POST.get('assessment_code', '')
             assessment_city_id = request.POST.get('assessment_city_id', '')
 
@@ -524,7 +535,8 @@ def add_bus_booking(request,id):
                        'bus_type': bus_type, 'booking_datetime': booking_datetime, 'journey_datetime': journey_datetime+':00','journey_datetime_to':journey_datetime_to+':00',
                        'entity_id': entity_id,'assessment_code':assessment_code,'assessment_city_id':assessment_city_id,
                        'preferred_bus': preferred_bus, 'reason_booking': reason_booking, 'no_of_seats': no_of_seats,
-                       'employees': employees,'is_sms':1,'is_email':1}
+                       'employees': employees,'is_sms':1,'is_email':1,'preferred_board_point':preferred_board_point,
+                       'preferred_drop_point':preferred_drop_point,'bus_type2':bus_type2,'bus_type3':bus_type3}
 
             url_taxi_booking = settings.API_BASE_URL + "add_bus_booking"
             booking = getDataFromAPI(login_type, access_token, url_taxi_booking, payload)
@@ -1049,8 +1061,13 @@ def add_flight_booking(request,id):
             data = getDataFromAPI(login_type, access_token, url_access, payload)
             access = data['Corporates']
 
+            url_access = settings.API_BASE_URL + "get_airports"
+            data = getDataFromAPI(login_type, access_token, url_access, payload)
+            airports = data['Airports']
+
             if id:
-                return render(request, 'Company/Employee/add_flight_booking.html', {'cities_ass':cities_ass,'assessments':ass_code, 'corp_access':access})
+                return render(request, 'Company/Employee/add_flight_booking.html', {'cities_ass':cities_ass,'assessments':ass_code, 'corp_access':access,
+                'airports':airports})
             else:
                 return render(request, 'Company/Employee/add_flight_booking.html', {})
         else:

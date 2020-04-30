@@ -1,9 +1,14 @@
 import json
 import socket
 
+from django.db import connection
 from django.shortcuts import render , redirect
 from django.http import HttpResponse, JsonResponse
-from Common.models import Corporate
+from django.conf import settings
+from django.utils.timesince import timesince
+
+from Common.VIEW.Agent.agent_views import dictfetchall, getDataFromAPI
+from Common.models import Corporate, Corporate_Agent
 
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
@@ -13,9 +18,11 @@ from landing.forms import LeadGenerationModelForm
 from landing.models import Leadgeneration, LeadComments, LeadLog
 from django.contrib import messages
 from landing.utils import render_to_pdf
-from Common.email_settings import SignupEmail
+from Common.email_settings import SignIn_OTP
 
 from threading import Thread, activeCount
+COTRAV_EMAILS = list(Corporate_Agent.objects.filter(is_super_admin=1).exclude(email='').values_list('email', flat=True))
+COTRAV_NUMBERS = Corporate_Agent.objects.filter(is_super_admin=1).exclude(contact_no='').values_list('contact_no', flat=True)
 
 
 # Create your views here.
@@ -124,6 +131,23 @@ def contact(request):
 def support(request):
         return render(request,'cotrav_support.html')
 
+def cab(request):
+    return render(request, 'cab_booking.html')
+
+def hotel(request):
+    return render(request, 'hotel_booking.html')
+
+def mice(request):
+    return render(request, 'mice.html')
+
+def ticketing(request):
+    return render(request, 'ticketing_booking.html')
+
+def travel(request):
+    return render(request, 'travel_reimbursement.html')
+
+def visa(request):
+    return render(request, 'visa_services.html')
 
 def error_404_view(request, *args, **argv):
     data = {"name": "ThePythonDjango.com"}
@@ -161,22 +185,20 @@ def testsignup(request):
 
 
 def testemail(request):
-    corporate_name = "taxivaxi"
-    contact_person_name = "vinod"
-    contact_person_no = "9765420456"
-    contact_person_email = "sanketongmel@gmail.com"
-    corporate_location = "pune"
-    message = "testing cotrav"
-    signup = SignupEmail(corporate_name,corporate_location,contact_person_name,contact_person_no,contact_person_email,message)
-    thread = Thread(target=signup.send_email, args=())
-    resp1 = thread.start()
-    #resp1 = signup.send_test_email()
-
-    # sm = BookingEmail(params)
-    # thread = Thread(target=sm.send_email2, args=())
-    # thread.start()
-
-
+    email_to = "balwant@taxivaxi.in"
+    subject = "Test"
+    body = "Hiii"
+    resp1 = 1
+    try:
+        signup = SignIn_OTP()
+        print(COTRAV_EMAILS)
+        print(type(COTRAV_EMAILS))
+        resp1 = signup.send_email(COTRAV_EMAILS,subject,body)
+        print(resp1)
+    except Exception as e:
+        print("exception")
+        print(e)
+        print("duplicate entry")
     return HttpResponse(resp1)
 
 
@@ -204,11 +226,79 @@ def export_movies_to_xlsx(request):
 
 
 def pdf_render_test(request):
-    voucher = {'name':'sanket'}
-    pdf = render_to_pdf('filght_test_voucher.html', voucher)
+    # payload = {'bill_id': 106}
+    # url = settings.API_BASE_URL + "view_bill"
+    # company = getDataFromAPI("10", "W6UC9UJJ63BT1XSQ9ZXSKEWVCF90WME8I9YWP9106V1688GZZ0ZINGQEY33C", url, payload)
+    # print(company['Bill'][0])
+    # voucher = {'bill_datas':company['Bill'][0]}
+    # pdf = render_to_pdf('pdf_voucher_template/bill_template/bill_single_invoice.html', voucher)
 
     #return render(request,'train_email_temp.html')
 
+    # cursor2 = connection.cursor()
+    # cursor2.callproc('viewFlightBooking', [220])
+    # emp = dictfetchall(cursor2)
+    # cursor2.close()
+    #
+    # cursor1 = connection.cursor()
+    # cursor1.callproc('getAllFlightBookingPassangers', [220])
+    # passanger = dictfetchall(cursor1)
+    # emp[0]['Passangers'] = passanger
+    # cursor1.close()
+    #
+    # cursor3 = connection.cursor()
+    # cursor3.callproc('getAllFlightBookingFlights', [220])
+    # flights = dictfetchall(cursor3)
+    # cursor3.close()
+    #
+    # emp[0]['Flights'] = flights
+    #
+    # DEP_DATE_0 = ''
+    # for i, f in enumerate(flights):
+    #     print(f)
+    #
+    #     ARRV_DATE_i = f['arrival_datetime']
+    #     DEP_DATE_i = f['departure_datetime']
+    #     adDate = datetime.strptime(str(DEP_DATE_i), "%d-%m-%Y %H:%M")
+    #     ddDate = datetime.strptime(str(ARRV_DATE_i), "%d-%m-%Y %H:%M")
+    #     dayHours_onword_i = timesince(adDate, ddDate)
+    #     if i == 0:
+    #         DEP_DATE_0 = f['arrival_datetime']
+    #     if i == 1 or i == 2 or i == 3:
+    #         ii = i - 1
+    #         adDate = datetime.strptime(str(DEP_DATE_0), "%d-%m-%Y %H:%M")
+    #         ddDate = datetime.strptime(str(DEP_DATE_i), "%d-%m-%Y %H:%M")
+    #         emp[0]['DELAY_' + str(i)] = timesince(adDate, ddDate)
+    #         DEP_DATE_0 = f['arrival_datetime']
+    #     emp[0]['DURATION_' + str(i)] = dayHours_onword_i
+
+
+    cursor2 = connection.cursor()
+    cursor2.callproc('viewBusBooking', [120])
+    emp = dictfetchall(cursor2)
+    cursor2.close()
+
+    cursor1 = connection.cursor()
+    cursor1.callproc('getAllBusBookingPassangers', [120])
+    passanger = dictfetchall(cursor1)
+    emp[0]['Passangers'] = passanger
+    cursor1.close()
+    print(emp[0])
+    #
+    # cursor2 = connection.cursor()
+    # cursor2.callproc('viewHotelBooking', [106])
+    # emp = dictfetchall(cursor2)
+    # cursor2.close()
+    #
+    # cursor1 = connection.cursor()
+    # cursor1.callproc('getAllHotelBookingPassangers', [106])
+    # passanger = dictfetchall(cursor1)
+    # emp[0]['Passangers'] = passanger
+    # cursor1.close()
+
+    print(emp[0])
+
+    pdf = render_to_pdf('pdf_voucher_template/bus_voucher.html', emp[0])
     return HttpResponse(pdf, content_type='application/pdf')
 
 

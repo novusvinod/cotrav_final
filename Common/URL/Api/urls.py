@@ -38,7 +38,13 @@ urlpatterns = [
     path('api/view_lead', api_views.view_lead),
     path('api/add_lead', api_views.add_lead),
     path('api/update_lead', api_views.update_lead),
+    path('api/delete_lead', api_views.delete_lead),
+    path('api/delete_lead_document', api_views.delete_lead_document),
 
+    path('api/get_countries', api_views.get_countries),
+    path('api/get_states', api_views.get_states),
+    path('api/get_cities', api_views.get_cities),
+    path('api/city_by_package', api_views.city_by_package),
     path('api/cities', api_views.cities),
     path('api/add_city_name', api_views.add_city_name),
     path('api/add_state_name', api_views.add_state_name),
@@ -95,6 +101,8 @@ urlpatterns = [
     path('api/add_company', api_views.add_companies),
     path('api/update_company', api_views.update_company),
     path('api/delete_company', api_views.delete_company),
+    path('api/add_company_document', api_views.add_company_document),
+    path('api/delete_company_document', api_views.delete_company_document),
 
     path('api/company_rates', api_views.company_rates),
     path('api/add_company_rates', api_views.add_company_rates),
@@ -112,6 +120,8 @@ urlpatterns = [
     path('api/spocs', api_views.spocs),
     path('api/employees', api_views.employee),
     path('api/spoc_employee', api_views.spoc_employee),
+    path('api/auth1_spocs', api_views.auth1_spocs),
+    path('api/auth2_spocs', api_views.auth2_spocs),
 
     path('api/add_billing_entity', api_views.add_billing_entity),
     path('api/update_billing_entity', api_views.update_billing_entity),
@@ -182,10 +192,15 @@ urlpatterns = [
     path('api/view_flight_booking', api_views.view_flight_booking),
 
     path('api/add_taxi_booking', api_views.add_taxi_booking),
+    path('api/edit_taxi_booking', api_views.edit_taxi_booking),
+    path('api/edit_bus_booking', api_views.edit_bus_booking),
     path('api/add_bus_booking', api_views.add_bus_booking),
     path('api/add_train_booking', api_views.add_train_booking),
+    path('api/edit_train_booking', api_views.edit_train_booking),
     path('api/add_hotel_booking', api_views.add_hotel_booking),
+    path('api/edit_hotel_booking', api_views.edit_hotel_booking),
     path('api/add_flight_booking', api_views.add_flight_booking),
+    path('api/edit_flight_booking', api_views.edit_flight_booking),
 
     ################ MIS API ######################
     path('api/report_taxi_booking', api_views.report_taxi_booking),
@@ -193,7 +208,6 @@ urlpatterns = [
     path('api/report_train_booking', api_views.report_train_booking),
     path('api/report_flight_booking', api_views.report_flight_booking),
     path('api/report_hotel_booking', api_views.report_hotel_booking),
-
 
     path('api/generate_auth_token', api_views.generate_auth_token),
     path('api/get_flight_access_token', api_views.get_flight_access_token),
@@ -205,9 +219,18 @@ urlpatterns = [
     path('api/cancel_flight_booking_passengers', api_views.get_flight_pnr_details),
     path('api/add_flight_booking_with_invoice', api_views.add_flight_booking_with_invoice),
 
-
     path('api/get_emp_passport_details', api_views.get_emp_passport_details),
     path('api/get_phr_detail_assign_booking', api_views.get_phr_detail_assign_booking),
+    path('api/get_corporate_management_tax', api_views.corporate_management_tax),
+    path('api/get_po_number_by_corporate', api_views.get_po_number_by_corporate),
 
+    path('api/get_country_provided_by_cotrav', api_views.get_country_provided_by_cotrav),
+    path('api/get_visa_type_by_country', api_views.get_visa_type_by_country),
+    path('api/get_request_visa_type_by_country', api_views.get_request_visa_type_by_country),
+    path('api/get_consulate_office_by_country', api_views.get_consulate_office_by_country),
+    path('api/get_instruction_and_link', api_views.get_instruction_and_link),
+
+    path('api/add_visa_requests', api_views.add_visa_requests),
+    path('api/view_visa_request', api_views.view_visa_request),
 
 ]

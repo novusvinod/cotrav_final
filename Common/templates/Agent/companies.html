@@ -93,6 +93,19 @@
 	                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
                                     </div>
                                 </div>
+
+                                  <div class="card-body ">
+                        <div class = "mdl-tabs mdl-js-tabs">
+                           <div class = "mdl-tabs__tab-bar tab-left-side">
+
+                              <a href = "/agents/companies" class = "mdl-tabs__tab is-active ">Active Companies</a>
+                              <a href = "/agents/softdeleated/companies/1" class = "mdl-tabs__tab ">Inactive Companies</a>
+
+                           </div>
+                        </div>
+                    </div>
+
+
                                 <div class="card-body ">
 
 
@@ -111,6 +124,7 @@
                                                 <th>Person Name</th>
                                                 <th>Person No</th>
                                                 <th>Person Email</th>
+                                                <th>Address</th>
                                                 <th>Setting</th>
                                                 <th >Action</th>
                                             </tr>
@@ -124,6 +138,8 @@
                                                 <td>{{ company.contact_person_name }}</td>
                                                 <td>{{ company.contact_person_no }}</td>
                                                 <td>{{ company.contact_person_email }}</td>
+                                                <td>{{ company.contact_address_line1|default:'' }}{{ company.contact_address_line2|default:'' }}
+                                                {{ company.contact_address_line3|default:'' }}</td>
 
                                                 <td>
                                                    <a class="btn btn-tbl-edit btn-xs" data-target="#model_setting_popup" data-toggle="modal" href="#">
@@ -175,9 +191,6 @@ $(function() {
     });
 
 });
-
-
-
 </script>
 
 

@@ -12,7 +12,6 @@ sts = (
     ('Lead Created','Lead Created'),
     ('Assigned','Assigned'),
     ('In-Process','In-Process'),
-    ('Converted','Converted'),
     ('Closed-Win','Closed-Win'),
     ('Closed-Lost','Closed-Lost'),
 )
@@ -63,8 +62,10 @@ class LeadGenerationModelForm(forms.ModelForm):
     Company_Name = forms.CharField(label='Company_Name', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Name"}))
     Contact_Number = forms.CharField(label='Contact_Number', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Number"}))
     Contact_Email = forms.EmailField(label='Contact_Email', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Email"}))
-    Company_Location = forms.CharField(label='Company_Location', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location"}))
-    Contact_Address = forms.CharField(label='Contact_Address', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
+    Company_Location = forms.CharField(label='Company_Location', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location",'placeholder':"Company Location"}))
+    Contact_Address = forms.CharField(label='Contact_Address', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Address Line 1"}))
+    Contact_Address_Line2 = forms.CharField(label='Contact_Address_Line2', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Address Line 2"}))
+    Contact_Address_Line3 = forms.CharField(label='Contact_Address_Line2', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Address Line 3"}))
     Company_Website = forms.CharField(label='Company_Website', max_length=255 , required=False , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
     Message = forms.CharField(label='Message', max_length=255 , widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
     Assigned_Sales_Person = forms.CharField(max_length=255 ,widget = forms.Select( choices=abc,attrs={'class': "form-control col-sm-8 myselect",'id':"sales_person"}),)
@@ -98,7 +99,9 @@ class LeadUpdateForm(forms.ModelForm):
     Contact_Number = forms.CharField(label='Contact_Number', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Number"}))
     Contact_Email = forms.EmailField(label='Contact_Email', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Email"}))
     Company_Location = forms.CharField(label='Company_Location', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'id':"company_location"}))
-    Contact_Address = forms.CharField(label='Contact_Address', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Contact Address"}))
+    Contact_Address = forms.CharField(label='Contact_Address', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Address Line 1"}))
+    Contact_Address_Line2 = forms.CharField(label='Contact_Address_Line2', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8", 'placeholder': "Address Line 2"}))
+    Contact_Address_Line3 = forms.CharField(label='Contact_Address_Line2', max_length=255, required=False, widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder': "Address Line 3"}))
     Company_Website = forms.CharField(label='Company_Website', max_length=255, required=False,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Company Website"}))
     Message = forms.CharField(label='Message', max_length=255,widget=forms.TextInput(attrs={'class': "form-control col-sm-8",'placeholder':"Message"}))
     #Assigned_Sales_Person = forms.ModelChoiceField()

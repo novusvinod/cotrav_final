@@ -23,6 +23,8 @@ urlpatterns = [
     path('agents/add-company', agent_views.add_company),
     path('agents/edit-company/<int:id>', agent_views.edit_company),
     path('agents/delete-company/<int:id>', agent_views.delete_company),
+    path('agents/add-company-document', agent_views.add_company_document),
+    path('agents/delete-company-document', agent_views.delete_company_document),
 
     path('agents/company-operation-management', agent_views.company_operation_management),
     path('agents/company-relationship-manager', agent_views.company_relationship_manager),
@@ -91,12 +93,20 @@ urlpatterns = [
 
     path('agents/assign-operator-taxi-booking', agent_views.assign_operator_taxi_boooking),
 
+    path('agents/edit-taxi-booking/<int:id>', agent_views.edit_taxi_booking),
+    path('agents/edit-bus-booking/<int:id>', agent_views.edit_bus_booking),
+    path('agents/edit-train-booking/<int:id>', agent_views.edit_train_booking),
+    path('agents/edit-hotel-booking/<int:id>', agent_views.edit_hotel_booking),
+    path('agents/edit-flight-booking/<int:id>', agent_views.edit_flight_booking),
+
     path('agents/taxi-bookings/<int:id>', agent_views.taxi_bookings),
     path('agents/add-taxi-booking/<int:id>', agent_views.add_taxi_booking),
     path('agents/view-taxi-booking/<int:id>', agent_views.view_taxi_booking),
     path('agents/accept-taxi-booking', agent_views.accept_taxi_booking),
     path('agents/assign-taxi-booking/<int:id>', agent_views.assign_taxi_booking),
     path('agents/add-taxi-invoice/<int:id>', agent_views.add_taxi_invoice),
+    path('agents/add-new-dutyslip', agent_views.add_new_dutyslip),
+    path('agents/add-new-employee', agent_views.add_new_employee),
 
     path('agents/bus-bookings/<int:id>', agent_views.bus_bookings),
     path('agents/add-bus-booking/<int:id>', agent_views.add_bus_booking),
@@ -165,8 +175,41 @@ urlpatterns = [
     path('agents/bill-create', agent_views.bill_create),
     path('agents/bill-create-nontax-invoice', agent_views.bill_create_nontax_invoice),
     path('agents/bill-nontax-invoice/<int:id>', agent_views.get_all_generated_bills),
-    path('agents/bill-tax-invoice', agent_views.hotel_billing),
+    path('agents/bill-tax-invoice/<int:id>', agent_views.get_all_bill_payment_status),
     path('agents/bill-offline', agent_views.hotel_billing),
     path('agents/bill-report', agent_views.hotel_billing),
+    path('agents/corporate-podetails', agent_views.corporate_podetails),
+    path('agents/add-corporate-podetail/<int:id>', agent_views.add_company_podetail),
+    path('agents/corporate-accounts', agent_views.corporate_accounts),
+    path('agents/cotrav-accounts', agent_views.cotrav_accounts),
+    path('agents/add-corporate-accounts/<int:id>', agent_views.add_company_accounts),
+    path('agents/add-cotrav-accounts/<int:id>', agent_views.add_cotrav_accounts),
+
+    path('agents/pay-bill', agent_views.pay_bill),
+    path('agents/accept-bill', agent_views.accept_bill),
+    path('agents/generate-final-bill', agent_views.generate_final_bill),
+    path('agents/edit-bill-detail/<int:id>', agent_views.edit_bill_detail),
+
+    path('agents/booking-search', agent_views.dashboard_search_api_call),
+    path('agents/softdeleated/operator/<int:id>', agent_views.softdeleated_operators),
+    path('agents/softdeleated/companies/<int:id>', agent_views.softdeleated_companies),
+    path('agents/softdeleated/taxi/<int:id>', agent_views.softdeleated_taxies),
+    path('agents/softdeleated_update', agent_views.update_softdeleated),
+
+    path('agents/master/select/<int:id>', agent_views.master_select),
+    path('agents/master/add', agent_views.add_master),
+    path('agents/master/update/<int:id>', agent_views.update_master),
+
+    path('agents/reports/invoice', agent_views.reports_invoice,name='report-invoice'),
+    path('agents/reports/client-billing', agent_views.reports_client_billing),
+    path('agents/reports/operator-billing', agent_views.reports_operator_billing),
+    path('agents/reports/download-client-billing', agent_views.download_client_bill_reports),
+    path('agents/reports/download-invoice-report', agent_views.download_invoice_reports),
+
+    path('agents/upload-client-ticket', agent_views.upload_client_ticket),
+    path('agents/cotrav-visa', agent_views.get_all_cotrav_visa_requests),
+    path('agents/add-new-visa-request', agent_views.add_new_visa_request),
+
+
 
 ]

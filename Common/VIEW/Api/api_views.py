@@ -31,16 +31,19 @@ from Common.models import Corporate_Approves_1_Login_Access_Token
 from Common.models import Corporate_Approves_2_Login_Access_Token
 from Common.models import Corporate_Agent_Login_Access_Token
 from Common.models import Operator_Login_Access_Token
+from Common.models import Operator_Driver_Access_Token
+from Common.models import Operator_Driver
 
 from django.contrib.auth.hashers import check_password
 import string
 import random
 from Common.email_settings import SignIn_OTP, AddBooking_Email, newUserAdd_Email, Assign_Booking_Email, FCM, SignupEmail
-from landing.cotrav_messeging import Flight
+from landing.cotrav_messeging import Flight, TaxCalc
 from landing.forms import LeadGenerationModelForm, LeadUpdateForm
 from landing.leads_generation import file_upload
 from landing.models import Leadgeneration, LeadComments, LeadLog, Document
 from Common.email_settings import SignupEmail,Lead_Status_Change_Email
+
 COTRAV_EMAILS = "balwant@taxiaxi.in,chauhanbalwant007@gmail.com"
 COTRAV_NUMBERS = "9579477262,"
 
@@ -49,6 +52,10 @@ def login(request):
     user_name = request.POST.get('user_name', '')
     user_password = request.POST.get('user_password', '')
     user_type = request.POST.get('user_type', '')
+
+    if user_type == '8':
+        user_name = request.POST.get('mobile_no', '')
+        user_password = "taxi123"
 
     is_mobile = request.POST.get('is_mobile', '')
     if is_mobile == '1':
@@ -61,21 +68,33 @@ def login(request):
         cursor.callproc('getLoginDetails', [user_name,user_type])
         user = dictfetchall(cursor)
         print(user)
-        print("user infoofofofoffoo")
-        print(user[0]['is_deleted'])
-        print("user infoofofofoffoo")
+        print(user_name)
+        print(user_type)
+
         if user:
             if not user[0]['is_deleted']:
-                password = check_password(user_password, user[0]['password'])
+                if user_type == '8':
+                    password = "dsdsfdsfsdf"
+                else:
+                    password = check_password(user_password, user[0]['password'])
+
                 if password:
                     gen_access_token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
                     generate_otp = ''.join(random.choice(string.digits) for _ in range(6))
-                    add_otp = SignIn_OTP()
-                    email_subject = "Cotrav - Verify Your Email"
-                    email_body = "Dear User,<br><br>" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
-                    thread = Thread(target=add_otp.send_email, args=(user_name, email_subject, email_body))
-                    thread.start()
                     resp1 = 1
+                    if user_type == '8':
+                        opt_message =  "Dear User,\n\n" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. \n\nRgrds,\nCoTrav."
+                        fcm = FCM()
+                        thread = Thread(target=fcm.send_message_to_moblies, args=(user_name, opt_message))
+                        thread.start()
+                        resp1 = 1
+                    else:
+                        add_otp = SignIn_OTP()
+                        email_subject = "Cotrav - Verify Your Email"
+                        email_body = "Dear User,<br><br>" + generate_otp + " is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
+                        thread = Thread(target=add_otp.send_email, args=(user_name, email_subject, email_body))
+                        thread.start()
+                        resp1 = 1
 
                     if resp1:
                         if user_type == '1':
@@ -89,6 +108,9 @@ def login(request):
                             insert_data = Corporate_Spoc_Login_Access_Token.objects.create(spoc_id=user[0]['id'],access_token=gen_access_token,user_agent=user_info)
                         elif user_type == '6':
                             insert_data = Corporate_Employee_Login_Access_Token.objects.create(employee_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+                        elif user_type == '8':
+                            insert_data = Operator_Driver_Access_Token.objects.create(driver_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
+
                         elif user_type == '10':
                             insert_data = Corporate_Agent_Login_Access_Token.objects.create(agent_id=user[0]['id'], access_token=gen_access_token, user_agent=user_info)
 
@@ -262,7 +284,7 @@ def companies(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateDetails', [])
+                    cursor.callproc('getAllCorporateDetails', [user.id])
                     company = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Corporates': company}
@@ -300,6 +322,13 @@ def view_company(request):
                     cursor.callproc('viewCorporateDetails', [corporate_id])
                     company = dictfetchall(cursor)
                     cursor.close()
+
+                    cursor1 = connection.cursor()
+                    cursor1.callproc('getAllCorporateDocumnets', [corporate_id])
+                    passanger = dictfetchall(cursor1)
+                    company[0]['Documents'] = passanger
+                    cursor1.close()
+
                     data = {'success': 1, 'Corporates': company}
                     return JsonResponse(data)
                 except Exception as e:
@@ -349,6 +378,7 @@ def add_companies(request):
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
         has_self_booking_access = request.POST.get('has_self_booking_access', '')
         will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
+        tds_on_management_fee_only = request.POST.get('tds_on_management_fee_only', '')
         is_spoc = request.POST.get('is_spoc', '')
         is_send_email = request.POST.get('is_send_email', '')
         is_send_sms = request.POST.get('is_send_sms', '')
@@ -370,7 +400,7 @@ def add_companies(request):
                     cursor.callproc('create_corporate_with_basic_details',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,bill_corporate_name,address_line_1,
                       address_line_2,address_line_3,gst_id,has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local,is_outstation, is_bus,
                        is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,is_spoc,password,cotrav_agent_id,user_type,
-                    billing_city_id,has_self_booking_access,will_do_realtime_payment,has_billing_admin_level,is_send_email,is_send_sms])
+                    billing_city_id,has_self_booking_access,will_do_realtime_payment,has_billing_admin_level,is_send_email,is_send_sms,tds_on_management_fee_only])
                     company = dictfetchall(cursor)
                     print(company)
                     cursor.close()
@@ -433,6 +463,7 @@ def update_company(request):
         is_reverse_logistics = request.POST.get('is_reverse_logistics', '')
         has_self_booking_access = request.POST.get('has_self_booking_access', '')
         will_do_realtime_payment = request.POST.get('will_do_realtime_payment', '')
+        tds_on_management_fee_only = request.POST.get('tds_on_management_fee_only', '')
 
         user_id = request.POST.get('user_id', '')
         corporate_id = request.POST.get('corporate_id', '')
@@ -454,7 +485,7 @@ def update_company(request):
                     cursor.callproc('updateCorporate',[corporate_name, corporate_code,contact_person_name,contact_person_no,contact_person_email,
                       has_billing_spoc_level,has_auth_level,no_of_auth_level,has_assessment_codes,is_radio,is_local, is_outstation, is_bus,
                        is_train, is_hotel, is_meal, is_flight,is_water_bottles,  is_reverse_logistics,corporate_id,user_id,user_type,
-                        has_self_booking_access,will_do_realtime_payment,has_billing_admin_level,is_send_email,is_send_sms])
+                        has_self_booking_access,will_do_realtime_payment,has_billing_admin_level,is_send_email,is_send_sms,tds_on_management_fee_only])
                     company = dictfetchall(cursor)
                     cursor.close()
                     company = dictfetchall(cursor)
@@ -518,6 +549,93 @@ def delete_company(request):
         return JsonResponse(data)
 
 
+def add_company_document(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        corporate_id = request.POST.get('corporate_id', '')
+        user_id = request.POST.get('user_id', '')
+        document_name = request.POST.get('document_name', '')
+        document_desc = request.POST.get('document_desc', '')
+        document = request.POST.get('document', '')
+        
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('addCorporateDocument',[corporate_id,user_id,user_type, document_name, document_desc, document])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    company = dictfetchall(cursor)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        data = {'success': 1, 'message': "Corporate Document Added Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def delete_company_document(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        document_id = request.POST.get('document_id', '')
+        user_id = request.POST.get('user_id', '')
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('deleteCorporateDocument',[document_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    company = dictfetchall(cursor)
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        data = {'success': 1, 'message': "Corporate Document Added Successfully"}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def add_company_rates(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -536,6 +654,8 @@ def add_company_rates(request):
         hour_rate = request.POST.get('hour_rate', '')
         base_rate = request.POST.get('base_rate', '')
         night_rate = request.POST.get('night_rate', '')
+        night_start = request.POST.get('night_start', '')
+        night_end = request.POST.get('night_end', '')
 
         rate_id = request.POST.get('rate_id')
 
@@ -555,7 +675,7 @@ def add_company_rates(request):
                 try:
                     cursor = connection.cursor()
                     cursor.callproc('addCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
-                                                        night_rate,user_id,user_type,rate_id])
+                                                        night_rate,user_id,user_type,rate_id,night_start,night_end])
                     company = dictfetchall(cursor)
                     print(company)
                     cursor.close()
@@ -597,6 +717,8 @@ def update_company_rates(request):
         hour_rate = request.POST.get('hour_rate', '')
         base_rate = request.POST.get('base_rate', '')
         night_rate = request.POST.get('night_rate', '')
+        night_start = request.POST.get('night_start', '')
+        night_end = request.POST.get('night_end', '')
 
         rate_id = request.POST.get('rate_id')
         user_token = req_token.split()
@@ -611,7 +733,7 @@ def update_company_rates(request):
                 try:
                     cursor = connection.cursor()
                     cursor.callproc('updateCorporateRate',[corporate_id,package_name,city_id,taxi_type,tour_type,kms,hours,km_rate,hour_rate,base_rate,
-                                                        night_rate,user_id,user_type,rate_id])
+                                                        night_rate,user_id,user_type,rate_id,night_start,night_end])
                     company = dictfetchall(cursor)
                     cursor.close()
                     company = dictfetchall(cursor)
@@ -697,7 +819,7 @@ def company_rates(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateRatesDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateRatesDetails', [corporate_id, user.id, user_type])
                     corporate_rates = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Corporate_Retes': corporate_rates}
@@ -737,7 +859,7 @@ def billing_entities(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id, user.id, user_type])
                     entity = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Entitys': entity}
@@ -891,7 +1013,7 @@ def admins(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateAdminsDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateAdminsDetails', [corporate_id, user.id, user_type])
                     admin = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Admins': admin}
@@ -973,7 +1095,7 @@ def groups(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateGroupsDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateGroupsDetails', [corporate_id, user.id, user_type])
                     group = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Groups': group}
@@ -1013,7 +1135,7 @@ def subgroups(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateSubgroupsDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateSubgroupsDetails', [corporate_id,user.id,user_type])
                     subgroup = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Subgroups': subgroup}
@@ -1053,7 +1175,7 @@ def spocs(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateSpocsDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateSpocsDetails', [corporate_id,user.id,user_type])
                     spoc = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Spocs': spoc}
@@ -1071,6 +1193,85 @@ def spocs(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
+
+def auth2_spocs(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('group_id', '')
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateGroupAuthSpocsDetails', [group_id])
+                    spoc = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Spocs': spoc}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def auth1_spocs(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        group_id = request.POST.get('subgroup_id', '')
+        if group_id:
+            group_id = group_id
+        else:
+            group_id = '0'
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCorporateSubGroupAuthSpocsDetails', [group_id])
+                    spoc = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Spocs': spoc}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 
 def employee(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
@@ -1094,7 +1295,7 @@ def employee(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    cursor.callproc('getAllCorporateEmployeesDetails', [corporate_id,user.id,user_type])
                     employee = dictfetchall(cursor)
                     cursor.close()
                     for e in employee:
@@ -1285,6 +1486,40 @@ def get_assessment_city(request):
                     cities = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'AssCity': cities}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def city_by_package(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getCityByPackageCity', [])
+                    cities = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Cities': cities}
                     return JsonResponse(data)
                 except Exception as e:
                     data = {'success': 0, 'error': getattr(e, 'message', str(e))}
@@ -2554,7 +2789,6 @@ def add_cotrav_billing_entity(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
         user_type = request.META['HTTP_USERTYPE']
-        corporate_id = request.POST.get('corporate_id', '')
 
         user_id = request.POST.get('user_id', '')
         entity_name = request.POST.get('entity_name', '')
@@ -2570,11 +2804,6 @@ def add_cotrav_billing_entity(request):
 
         entity_id = request.POST.get('entity_id')
         is_delete = request.POST.get('is_delete')
-
-        if corporate_id:
-            corporate_id = corporate_id
-        else:
-            corporate_id = '0'
 
         if entity_id:
             entity_id = entity_id
@@ -4014,6 +4243,7 @@ def add_employee(request):
                     billing_entity_id,corporate_id,password,username,reporting_manager,employee_band])
 
                     company = dictfetchall(cursor)
+                    print(company)
                     if company:
                         data = {'success': 0, 'message': company}
                     else:
@@ -4780,8 +5010,10 @@ def assessment_codes(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id])
+                    cursor.callproc('getAllCorporateAssessmentCodes', [corporate_id, user.id, user_type])
                     agent = dictfetchall(cursor)
+                    print("dsafsafasfasf COCOCC")
+                    print(agent)
                     data = {'success': 1, 'Codes': agent}
                     cursor.close()
                     return JsonResponse(data)
@@ -5015,7 +5247,7 @@ def assessment_cities(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('getAllCorporateAssessmentCities', [corporate_id])
+                    cursor.callproc('getAllCorporateAssessmentCities', [corporate_id, user.id, user_type])
                     agent = dictfetchall(cursor)
                     data = {'success': 1, 'Cities': agent}
                     cursor.close()
@@ -5262,7 +5494,7 @@ def view_taxi_booking(request):
                     cursor1.close()
 
                     cursor4 = connection.cursor()
-                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id, user.id, user_type])
                     actions1 = dictfetchall(cursor4)
                     emp[0]['ClientEntity'] = actions1
                     cursor4.close()
@@ -5274,21 +5506,45 @@ def view_taxi_booking(request):
                     cursor5.close()
 
                     cursor6 = connection.cursor()
-                    cursor6.callproc('getAllCorporateRatesDetails', [corporate_id])
+                    cursor6.callproc('getAllCorporateRatesDetails', [corporate_id, user.id, user_type])
                     actions3 = dictfetchall(cursor6)
                     emp[0]['Packages'] = actions3
                     cursor6.close()
 
                     cursor7 = connection.cursor()
-                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id, user.id, user_type])
                     actions6 = dictfetchall(cursor7)
                     emp[0]['Employees'] = actions6
                     cursor7.close()
+
+                    cursor8 = connection.cursor()
+                    cursor8.callproc('getAllCorporateSpocsDetails', [corporate_id, user.id, user_type])
+                    actions63 = dictfetchall(cursor8)
+                    emp[0]['Spocs'] = actions63
+                    cursor8.close()
+
+                    cursor9 = connection.cursor()
+                    cursor9.callproc('getAllCorporateAssessmentCities', [corporate_id, user.id, user_type])
+                    actions62 = dictfetchall(cursor9)
+                    emp[0]['AssCities'] = actions62
+                    cursor9.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllCorporateAssessmentCodes', [corporate_id, user.id, user_type])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['AssCodes'] = actions61
+                    cursor81.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllTaxiBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('getAllTrackingStatusByBookingID', [1, booking_id])
+                    flights = dictfetchall(cursor2)
+                    emp[0]['TrackingStatus'] = flights
+                    cursor2.close()
 
                     if emp[0]['is_invoice']:
                         cursor2 = connection.cursor()
@@ -5347,7 +5603,7 @@ def view_bus_booking(request):
                     cursor1.close()
 
                     cursor4 = connection.cursor()
-                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id, user.id, user_type])
                     actions1 = dictfetchall(cursor4)
                     emp[0]['ClientEntity'] = actions1
                     cursor4.close()
@@ -5359,15 +5615,39 @@ def view_bus_booking(request):
                     cursor5.close()
 
                     cursor7 = connection.cursor()
-                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id, user.id, user_type])
                     actions6 = dictfetchall(cursor7)
                     emp[0]['Employees'] = actions6
                     cursor7.close()
+
+                    cursor8 = connection.cursor()
+                    cursor8.callproc('getAllCorporateSpocsDetails', [corporate_id, user.id, user_type])
+                    actions63 = dictfetchall(cursor8)
+                    emp[0]['Spocs'] = actions63
+                    cursor8.close()
+
+                    cursor9 = connection.cursor()
+                    cursor9.callproc('getAllCorporateAssessmentCities', [corporate_id, user.id, user_type])
+                    actions62 = dictfetchall(cursor9)
+                    emp[0]['AssCities'] = actions62
+                    cursor9.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllCorporateAssessmentCodes', [corporate_id, user.id, user_type])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['AssCodes'] = actions61
+                    cursor81.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllBusBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('getAllTrackingStatusByBookingID', [2, booking_id])
+                    flights = dictfetchall(cursor2)
+                    emp[0]['TrackingStatus'] = flights
+                    cursor2.close()
 
                     if emp[0]['is_invoice']:
                         cursor2 = connection.cursor()
@@ -5426,7 +5706,7 @@ def view_train_booking(request):
                     cursor1.close()
 
                     cursor4 = connection.cursor()
-                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id, user.id, user_type])
                     actions1 = dictfetchall(cursor4)
                     emp[0]['ClientEntity'] = actions1
                     cursor4.close()
@@ -5438,15 +5718,51 @@ def view_train_booking(request):
                     cursor5.close()
 
                     cursor7 = connection.cursor()
-                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id, user.id, user_type])
                     actions6 = dictfetchall(cursor7)
                     emp[0]['Employees'] = actions6
                     cursor7.close()
+
+                    cursor8 = connection.cursor()
+                    cursor8.callproc('getAllCorporateSpocsDetails', [corporate_id, user.id, user_type])
+                    actions63 = dictfetchall(cursor8)
+                    emp[0]['Spocs'] = actions63
+                    cursor8.close()
+
+                    cursor9 = connection.cursor()
+                    cursor9.callproc('getAllCorporateAssessmentCities', [corporate_id, user.id, user_type])
+                    actions62 = dictfetchall(cursor9)
+                    emp[0]['AssCities'] = actions62
+                    cursor9.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllCorporateAssessmentCodes', [corporate_id, user.id, user_type])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['AssCodes'] = actions61
+                    cursor81.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllTrainTypes', [])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['TrainTypes'] = actions61
+                    cursor81.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllRailwayStations', [])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['Stations'] = actions61
+                    cursor81.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllTrainBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('getAllTrackingStatusByBookingID', [3, booking_id])
+                    flights = dictfetchall(cursor2)
+                    emp[0]['TrackingStatus'] = flights
+                    cursor2.close()
 
                     if emp[0]['is_invoice']:
                         cursor2 = connection.cursor()
@@ -5510,7 +5826,7 @@ def view_hotel_booking(request):
                     cursor1.close()
 
                     cursor4 = connection.cursor()
-                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id, user.id, user_type])
                     actions1 = dictfetchall(cursor4)
                     emp[0]['ClientEntity'] = actions1
                     cursor4.close()
@@ -5522,10 +5838,59 @@ def view_hotel_booking(request):
                     cursor5.close()
 
                     cursor7 = connection.cursor()
-                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id, user.id, user_type])
                     actions6 = dictfetchall(cursor7)
                     emp[0]['Employees'] = actions6
                     cursor7.close()
+
+                    cursor8 = connection.cursor()
+                    cursor8.callproc('getAllCorporateSpocsDetails', [corporate_id, user.id, user_type])
+                    actions63 = dictfetchall(cursor8)
+                    emp[0]['Spocs'] = actions63
+                    cursor8.close()
+
+                    cursor9 = connection.cursor()
+                    cursor9.callproc('getAllCorporateAssessmentCities', [corporate_id, user.id, user_type])
+                    actions62 = dictfetchall(cursor9)
+                    emp[0]['AssCities'] = actions62
+                    cursor9.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllCorporateAssessmentCodes', [corporate_id, user.id, user_type])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['AssCodes'] = actions61
+                    cursor81.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllCity', [])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['cities'] = actions61
+                    cursor81.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllRoomTypes', [])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['RoomTypes'] = actions61
+                    cursor81.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllRoomTypes', [])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['Buckets'] = actions61
+                    cursor81.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllHotelTypes', [])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['RoomTypes'] = actions61
+                    cursor81.close()
+
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('getAllTrackingStatusByBookingID', [4, booking_id])
+                    flights = dictfetchall(cursor2)
+                    emp[0]['TrackingStatus'] = flights
+                    cursor2.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllHotelBookingsActionLogs', [booking_id])
@@ -5598,7 +5963,7 @@ def view_flight_booking(request):
                     cursor2.close()
 
                     cursor4 = connection.cursor()
-                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id])
+                    cursor4.callproc('getAllCorporateBillingEntitiesDetails', [corporate_id, user.id, user_type])
                     actions1 = dictfetchall(cursor4)
                     emp[0]['ClientEntity'] = actions1
                     cursor4.close()
@@ -5610,15 +5975,39 @@ def view_flight_booking(request):
                     cursor5.close()
 
                     cursor7 = connection.cursor()
-                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id])
+                    cursor7.callproc('getAllCorporateEmployeesDetails', [corporate_id, user.id, user_type])
                     actions6 = dictfetchall(cursor7)
                     emp[0]['Employees'] = actions6
                     cursor7.close()
+
+                    cursor8 = connection.cursor()
+                    cursor8.callproc('getAllCorporateSpocsDetails', [corporate_id, user.id, user_type])
+                    actions63 = dictfetchall(cursor8)
+                    emp[0]['Spocs'] = actions63
+                    cursor8.close()
+
+                    cursor9 = connection.cursor()
+                    cursor9.callproc('getAllCorporateAssessmentCities', [corporate_id, user.id, user_type])
+                    actions62 = dictfetchall(cursor9)
+                    emp[0]['AssCities'] = actions62
+                    cursor9.close()
+
+                    cursor81 = connection.cursor()
+                    cursor81.callproc('getAllCorporateAssessmentCodes', [corporate_id, user.id, user_type])
+                    actions61 = dictfetchall(cursor81)
+                    emp[0]['AssCodes'] = actions61
+                    cursor81.close()
 
                     cursor3 = connection.cursor()
                     cursor3.callproc('getAllFlightBookingsActionLogs', [booking_id])
                     actions = dictfetchall(cursor3)
                     cursor3.close()
+
+                    cursor2 = connection.cursor()
+                    cursor2.callproc('getAllTrackingStatusByBookingID', [5, booking_id])
+                    flights22 = dictfetchall(cursor2)
+                    emp[0]['TrackingStatus'] = flights22
+                    cursor2.close()
 
                     if emp[0]['is_invoice']:
                         cursor2 = connection.cursor()
@@ -5782,7 +6171,7 @@ def add_taxi_booking(request):
         spoc_id = request.POST.get('spoc_id', '')
         group_id = request.POST.get('group_id', '')
         subgroup_id = request.POST.get('subgroup_id', '')
-
+        print("i m in api")
         tour_type = request.POST.get('tour_type', '')
         pickup_city = request.POST.get('pickup_city', '')
         pickup_location = request.POST.get('pickup_location', '')
@@ -5861,6 +6250,7 @@ def add_taxi_booking(request):
                     taxi_type,package_id,no_of_days,reason_booking,no_of_seats,assessment_code,assessment_city_id,employees,booking_datetime,
                     booking_email,'@last_booking_id','@booking_reference_no',bta_code_travel_req_no])
                     booking_id = dictfetchall(cursor)
+                    print(booking_id)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
                     else:
@@ -5893,7 +6283,7 @@ def add_taxi_booking(request):
                         cursor3.close()
 
                         fcm = FCM()
-                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Taxi"))
+                        thread = Thread(target=fcm.send_notification_add, args=(emp, approvers, "Taxi"))
                         thread.start()
 
                         add_booking_email = AddBooking_Email()
@@ -5907,6 +6297,94 @@ def add_taxi_booking(request):
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Taxi")
 
                         data = {'success': 1, 'message': "Taxi Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
+                        return JsonResponse(data)
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': e}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def edit_taxi_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        booking_email = request.POST.get('booking_email', '')
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+        booking_id = request.POST.get('booking_id', '')
+        tour_type = request.POST.get('tour_type', '')
+        current_city_id = request.POST.get('current_city_id', '')
+        taxi_type = request.POST.get('taxi_type', '')
+        no_of_days = request.POST.get('no_of_days', '')
+        pickup_location = request.POST.get('pickup_location', '')
+        drop_location = request.POST.get('drop_location', '')
+        pickup_datetime = request.POST.get('pickup_datetime', '')
+        pickup_datetime = datetime.strptime(pickup_datetime, '%d-%m-%Y %H:%M:%S')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+        rate_id = request.POST.get('rate_id', '')
+        reason_booking = request.POST.get('reason_booking', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        if booking_email:
+            pass
+        else:
+            booking_email=''
+
+        if taxi_type:
+            taxi_type = taxi_type
+        else:
+            taxi_type = 0
+
+        if rate_id:
+            rate_id = rate_id
+        else:
+            rate_id = 0
+
+        if no_of_days:
+            no_of_days = no_of_days
+        else:
+            no_of_days = 0
+
+        no_of_seats = request.POST.get('no_of_seats', '')
+
+        employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateTaxiBooking', [booking_id,booking_email,tour_type,current_city_id,taxi_type,no_of_days,pickup_location,drop_location,
+                    pickup_datetime,billing_entity_id,cotrav_billing_entity,rate_id,no_of_seats,reason_booking,assessment_code,assessment_city_id,spoc_id,
+                    group_id,subgroup_id,employees,user_id,user_type])
+                    booking_id = dictfetchall(cursor)
+                    if booking_id:
+                        data = {'success': 0, 'message': booking_id}
+                    else:
+                        data = {'success': 1, 'message': "Taxi Booking Updated Successfully..! "}
                         return JsonResponse(data)
                     return JsonResponse(data)
                 except Exception as e:
@@ -5942,6 +6420,8 @@ def add_bus_booking(request):
         from_location = request.POST.get('from', '')
         to_location = request.POST.get('to', '')
         bus_type = request.POST.get('bus_type', '')
+        bus_type2 = request.POST.get('bus_type2', '')
+        bus_type3 = request.POST.get('bus_type3', '')
         booking_datetime = request.POST.get('booking_datetime', '')
         if booking_datetime:
             booking_datetime = datetime.strptime(booking_datetime, '%d-%m-%Y %H:%M:%S')
@@ -5956,6 +6436,8 @@ def add_bus_booking(request):
         journey_datetime_to = datetime.strptime(journey_datetime_to, '%d-%m-%Y %H:%M:%S')
         entity_id = request.POST.get('entity_id', '')
         preferred_bus = request.POST.get('preferred_bus', '')
+        preferred_board_point = request.POST.get('preferred_board_point', '')
+        preferred_drop_point = request.POST.get('preferred_drop_point', '')
         assessment_code = request.POST.get('assessment_code', '')
         assessment_city_id = request.POST.get('assessment_city_id', '')
         is_email = request.POST.get('is_email', '')
@@ -5994,8 +6476,9 @@ def add_bus_booking(request):
                 try:
                     booking_reference_no = ''
                     cursor.callproc('addBusBooking', [user_type,user_id,corporate_id,spoc_id,group_id,subgroup_id,from_location,
-                    to_location,bus_type,bus_type,bus_type,booking_datetime,journey_datetime,entity_id,preferred_bus,reason_booking,no_of_seats,
-                    assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no',bta_code_travel_req_no])
+                    to_location,bus_type,bus_type2,bus_type3,booking_datetime,journey_datetime,entity_id,preferred_bus,reason_booking,no_of_seats,
+                    assessment_code,assessment_city_id,employees,booking_email,journey_datetime_to,'@last_booking_id','@booking_reference_no',
+                    bta_code_travel_req_no,preferred_board_point,preferred_drop_point])
                     booking_id = dictfetchall(cursor)
                     if booking_id:
                         data = {'success': 0, 'message': booking_id}
@@ -6029,7 +6512,7 @@ def add_bus_booking(request):
                         cursor3.close()
 
                         fcm = FCM()
-                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Bus"))
+                        thread = Thread(target=fcm.send_notification_add, args=(emp, approvers, "Bus"))
                         thread.start()
 
                         add_booking_email = AddBooking_Email()
@@ -6049,6 +6532,81 @@ def add_bus_booking(request):
                 except Exception as e:
                     print(e)
                     data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def edit_bus_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        booking_id = request.POST.get('booking_id', '')
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+        booking_email = request.POST.get('booking_email', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        from_location = request.POST.get('from', '')
+        to_location = request.POST.get('to', '')
+        bus_type = request.POST.get('bus_type', '')
+        bus_type2 = request.POST.get('bus_type2', '')
+        journey_datetime = request.POST.get('journey_datetime', '')
+        journey_datetime = datetime.strptime(journey_datetime, '%d-%m-%Y %H:%M:%S')
+        journey_datetime_to = request.POST.get('journey_datetime_to', '')
+        journey_datetime_to = datetime.strptime(journey_datetime_to, '%d-%m-%Y %H:%M:%S')
+
+        preferred_bus = request.POST.get('preferred_bus', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+        cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+
+        if booking_email:
+            pass
+        else:
+            booking_email=''
+
+        no_of_seats = request.POST.get('no_of_seats', '')
+        reason_booking = request.POST.get('reason_booking', '')
+
+        employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateBusBooking', [booking_id,bta_code_travel_req_no,booking_email,from_location,to_location,bus_type,
+                    journey_datetime,journey_datetime_to,preferred_bus,billing_entity_id,cotrav_billing_entity,no_of_seats,reason_booking,assessment_code,assessment_city_id,spoc_id,
+                    group_id,subgroup_id,employees,user_id,user_type,bus_type2])
+                    booking_id = dictfetchall(cursor)
+                    if booking_id:
+                        data = {'success': 0, 'message': booking_id}
+                    else:
+                        data = {'success': 1, 'message': "Bus Booking Updated Successfully..! "}
+                        return JsonResponse(data)
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': e}
                     return JsonResponse(data)
 
             else:
@@ -6167,7 +6725,7 @@ def add_train_booking(request):
                         cursor3.close()
 
                         fcm = FCM()
-                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Train"))
+                        thread = Thread(target=fcm.send_notification_add, args=(emp, approvers, "Train"))
                         thread.start()
 
                         add_booking_email = AddBooking_Email()
@@ -6180,28 +6738,89 @@ def add_train_booking(request):
                             thread.start()
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Train")
 
+                        cursor.close()
 
-                    cursor.close()
-                    for id in booking_id:
-                        for e in employees:
-                            try:
-                                cursor = connection.cursor()
-                                cursor.callproc('addEmployeeTrainBooking',[id['id'],e])
-                                booking_id = dictfetchall(cursor)
-
-                                cursor.close()
-                                data = {'success': 1, 'message': "Train Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
-                                return JsonResponse(data)
-                            except Exception as e:
-                                data = {'success': 0, 'error': getattr(e, 'message', str(e))}
-                                return JsonResponse(data)
-                    else:
-                        data = {'success': 1, 'message': "Insert Success"}
+                        data = {'success': 1, 'message': "Train Booking Added Successfully..! Your Booking ID is : " + str(booking_reference_no), 'booking_reference_no': booking_reference_no}
                         return JsonResponse(data)
 
                 except Exception as e:
                     print(e)
                     data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def edit_train_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+
+        booking_id = request.POST.get('booking_id', '')
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+        booking_email = request.POST.get('booking_email', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        from_location = request.POST.get('from', '')
+        to_location = request.POST.get('to', '')
+        bus_type = request.POST.get('train_type_priority_1', '')
+        bus_type2 = request.POST.get('train_type_priority_2', '')
+        journey_datetime = request.POST.get('journey_datetime', '')
+        journey_datetime = datetime.strptime(journey_datetime, '%d-%m-%Y %H:%M:%S')
+        journey_datetime_to = request.POST.get('journey_datetime_to', '')
+        journey_datetime_to = datetime.strptime(journey_datetime_to, '%d-%m-%Y %H:%M:%S')
+
+        preferred_bus = request.POST.get('preferred_bus', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+        cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+
+        if booking_email:
+            pass
+        else:
+            booking_email=''
+
+        no_of_seats = request.POST.get('no_of_seats', '')
+        reason_booking = request.POST.get('reason_booking', '')
+
+        employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    cursor.callproc('updateTrainBooking', [booking_id,bta_code_travel_req_no,booking_email,from_location,to_location,bus_type,
+                    journey_datetime,journey_datetime_to,preferred_bus,billing_entity_id,cotrav_billing_entity,no_of_seats,reason_booking,assessment_code,assessment_city_id,spoc_id,
+                    group_id,subgroup_id,employees,user_id,user_type,bus_type2])
+                    booking_id = dictfetchall(cursor)
+                    if booking_id:
+                        data = {'success': 0, 'message': booking_id}
+                    else:
+                        data = {'success': 1, 'message': "Train Booking Updated Successfully..! "}
+                        return JsonResponse(data)
+                    return JsonResponse(data)
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': e}
                     return JsonResponse(data)
 
             else:
@@ -6325,7 +6944,7 @@ def add_hotel_booking(request):
                         cursor3.close()
 
                         fcm = FCM()
-                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Hotel"))
+                        thread = Thread(target=fcm.send_notification_add, args=(emp, approvers, "Hotel"))
                         thread.start()
 
                         add_booking_email = AddBooking_Email()
@@ -6338,7 +6957,101 @@ def add_hotel_booking(request):
                             thread.start()
                             #resp1 = add_booking_email.send_taxi_msg(emp, approvers, "Hotel")
 
-                    data = {'success': 1, 'message': "Train Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
+                    data = {'success': 1, 'message': "Hotel Booking Added Successfully..! Your Booking ID is : "+str(booking_reference_no),'booking_reference_no':booking_reference_no}
+                    return JsonResponse(data)
+
+                except Exception as e:
+                    print("EXCEPTION")
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def edit_hotel_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id', '')
+        booking_email = request.POST.get('booking_email', '')
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        booking_id = request.POST.get('booking_id', '')
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+        bucket_priority_1 = request.POST.get('bucket_priority_1', '')
+        bucket_priority_2 = request.POST.get('bucket_priority_2', '')
+        hotel_type = request.POST.get('hotel_type', '')
+        from_city_id = request.POST.get('from_city_id', '')
+        from_area_id = request.POST.get('from_area_id', '')
+        preferred_area_name = request.POST.get('preferred_area_name', '')
+
+
+        checkin_datetime = request.POST.get('checkin_datetime', '')
+        checkin_datetime = datetime.strptime(checkin_datetime, '%d-%m-%Y %H:%M:%S')
+        checkout_datetime = request.POST.get('checkout_datetime', '')
+        checkout_datetime = datetime.strptime(checkout_datetime, '%d-%m-%Y %H:%M:%S')
+        no_of_nights = 1
+
+        preferred_hotel = request.POST.get('preferred_hotel', '')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+        cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+
+
+        if booking_email:
+            pass
+        else:
+            booking_email = ''
+
+        if assessment_code:
+            pass
+        else:
+            assessment_code = 0
+
+        if assessment_city_id:
+            pass
+        else:
+            assessment_city_id = 0
+
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+
+        employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    booking_reference_no = ''
+                    cursor.callproc('updateHotelBooking',[booking_id,bta_code_travel_req_no,booking_email,from_city_id,from_area_id,preferred_area_name,
+                    checkin_datetime,checkout_datetime,preferred_hotel,billing_entity_id,cotrav_billing_entity,no_of_seats,reason_booking,assessment_code,assessment_city_id,spoc_id,
+                    group_id,subgroup_id,employees,user_id,user_type,bucket_priority_1,bucket_priority_2,hotel_type])
+                    booking_id = dictfetchall(cursor)
+                    if booking_id:
+                        data = {'success': 0, 'message': booking_id}
+                    else:
+                        pass
+                    data = {'success': 1, 'message': "Hotel Booking Updated Successfully..!"}
                     return JsonResponse(data)
 
                 except Exception as e:
@@ -6390,6 +7103,10 @@ def add_flight_booking(request):
         departure_datetime = request.POST.get('departure_datetime', '')
         departure_datetime = datetime.strptime(departure_datetime, '%d-%m-%Y')
 
+        return_datetime = request.POST.get('return_datetime', '')
+        if return_datetime:
+            return_datetime = datetime.strptime(return_datetime, '%d-%m-%Y')
+
         preferred_flight= request.POST.get('preferred_flight','')
         billing_entity_id = request.POST.get('billing_entity_id', '')
         assessment_code = request.POST.get('assessment_code', '')
@@ -6432,7 +7149,7 @@ def add_flight_booking(request):
                     last_booking_id = ''
                     cursor.callproc('addFlightBooking', [usage_type,journey_type,flight_class,from_location,to_location,booking_datetime,departure_datetime,
                     preferred_flight,assessment_code,no_of_seats,group_id,subgroup_id,spoc_id,corporate_id,billing_entity_id,reason_booking,user_id,
-                    user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking,'@booking_reference_no',bta_code_travel_req_no])
+                    user_type,employees,booking_email,assessment_city_id,'@last_booking_id',vendor_booking,'@booking_reference_no',bta_code_travel_req_no,return_datetime])
                     booking_id = dictfetchall(cursor)
                     print(booking_id)
                     if booking_id:
@@ -6467,7 +7184,7 @@ def add_flight_booking(request):
                         cursor3.close()
 
                         fcm = FCM()
-                        thread = Thread(target=fcm.send_notification, args=(emp, approvers, "Flight"))
+                        thread = Thread(target=fcm.send_notification_add, args=(emp, approvers, "Flight"))
                         thread.start()
 
                         add_booking_email = AddBooking_Email()
@@ -6499,6 +7216,97 @@ def add_flight_booking(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
+
+def edit_flight_booking(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id', '')
+        booking_id = request.POST.get('booking_id', '')
+        bta_code_travel_req_no = request.POST.get('bta_code_travel_req_no', '')
+        booking_email = request.POST.get('booking_email', '')
+        usage_type = request.POST.get('usage_type', '')
+        journey_type = request.POST.get('trip_type', '')
+        flight_class = request.POST.get('seat_type', '')
+        from_location = request.POST.get('from_city', '')
+        to_location = request.POST.get('to_city', '')
+        preferred_flight = request.POST.get('preferred_flight', '')
+        assessment_code = request.POST.get('assessment_code', '')
+        billing_entity_id = request.POST.get('billing_entity_id', '')
+        reason_booking = request.POST.get('reason_booking', '')
+        no_of_seats = request.POST.get('no_of_seats', '')
+        assessment_city_id = request.POST.get('assessment_city_id', '')
+        cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+
+        spoc_id = request.POST.get('spoc_id', '')
+        group_id = request.POST.get('group_id', '')
+        subgroup_id = request.POST.get('subgroup_id', '')
+
+        departure_datetime = request.POST.get('departure_datetime', '')
+        return_datetime = request.POST.get('return_datetime', '')
+        departure_datetime = datetime.strptime(departure_datetime, '%d-%m-%Y')
+        if return_datetime:
+            return_datetime = datetime.strptime(return_datetime, '%d-%m-%Y')
+
+
+        if booking_email:
+            pass
+        else:
+            booking_email=''
+
+        if assessment_code:
+            pass
+        else:
+            assessment_code=0
+
+        if assessment_city_id:
+            pass
+        else:
+            assessment_city_id=0
+
+        employees = request.POST.getlist('employees', '')
+        employees = ",".join(employees)
+        print(employees)
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+            user = {}
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                cursor = connection.cursor()
+                try:
+                    last_booking_id = ''
+                    cursor.callproc('updateFlightBooking', [booking_id,bta_code_travel_req_no,booking_email,usage_type,journey_type,flight_class,from_location,to_location,departure_datetime,
+                    preferred_flight,assessment_code,no_of_seats,reason_booking,assessment_city_id,spoc_id,group_id,subgroup_id,employees,user_id, user_type,billing_entity_id,return_datetime])
+                    booking_id = dictfetchall(cursor)
+                    print(booking_id)
+                    if booking_id:
+                        data = {'success': 0, 'message': booking_id}
+                    else:
+                        pass
+                    cursor.close()
+                    data = {'success': 1, 'message': "Flight Booking Updated Successfully..!"}
+                    return JsonResponse(data)
+
+                except Exception as e:
+                    print(e)
+                    data = {'success': 0, 'message': "Error in Data Insert"}
+                    return JsonResponse(data)
+
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
 ########## sanket added this #########
 
 
@@ -6738,7 +7546,7 @@ def agent_dashboard(request):
             if user:
                 try:
                     cursor = connection.cursor()
-                    cursor.callproc('agentsHomePage', [])
+                    cursor.callproc('agentsHomePage', [user.id])
                     company = dictfetchall(cursor)
                     cursor.close()
                     data = {'success': 1, 'Dashboard': company}
@@ -6922,7 +7730,13 @@ def report_taxi_booking(request):
             to_date = datetime.strptime(to_date, '%d-%m-%Y')
         booking_status = request.POST.get('booking_status', '')
         company_name = request.POST.get('company_name', '')
-
+        print(filter_by)
+        print(from_date)
+        print(to_date)
+        print(booking_status)
+        print(company_name)
+        print(user_id)
+        print(user_type)
         user = {}
         user_token = req_token.split()
         if user_token[0] == 'Token':
@@ -6955,6 +7769,7 @@ def report_taxi_booking(request):
                     except Exception as e:
                         data = {'success': 0, 'error': getattr(e, 'message', str(e))}
                         return JsonResponse(data)
+                print(emp)
                 data = {'success': 1, 'Bookings': emp}
                 return JsonResponse(data)
 
@@ -8920,6 +9735,119 @@ def get_nationality(request):
         return JsonResponse(data)
 
 
+def get_countries(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCountry', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'Country': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_states(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        country_id = request.POST.get('country_id', '')
+        if not country_id:
+            country_id =0
+        
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllState', [country_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'State': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_cities(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user = {}
+        state_id = request.POST.get('state_id', '')
+        if not state_id:
+            state_id =0
+
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getAllCities', [state_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'City': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def get_operator_package(request):
     if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
         req_token = request.META['HTTP_AUTHORIZATION']
@@ -9117,7 +10045,7 @@ def send_mail_to_user(request):
                     data = {'success': 1, 'message': "Mail Send Successfully..!"}
                     return JsonResponse(data)
                 except Exception as e:
-                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    data = {'success': 0, 'message': getattr(e, 'message', str(e))}
                     return JsonResponse(data)
             else:
                 data = {'success': 0, 'error': "User Information Not Found"}
@@ -9416,7 +10344,120 @@ def update_lead(request):
         data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
         return JsonResponse(data)
 
-    
+
+def delete_lead(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+        lead_id = request.POST.get('lead_id', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    lead = get_object_or_404(Leadgeneration, pk=lead_id)
+                    lead.delete()
+                    data = {'success': 1, 'message': 'Lead Deleted Successfully..!'}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def delete_lead_document(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        user_id = request.POST.get('user_id', '')
+        lead_id = request.POST.get('lead_doc_id', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    lead = get_object_or_404(Document, pk=lead_id)
+                    lead.delete()
+                    data = {'success': 1, 'message': 'Lead Deleted Successfully..!'}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_po_number_by_corporate(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+        corporate_id = request.POST.get('corporate_id', '')
+
+        if not corporate_id:
+            corporate_id = 0
+        print("corporate id")
+        print(corporate_id)
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            try:
+                user = getUserinfoFromAccessToken(user_token[1], user_type)
+            except Exception as e:
+                data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+                return JsonResponse(data)
+            if user:
+                try:
+                    cursor = connection.cursor()
+                    cursor.callproc('getallCorporatePODetails', [corporate_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    data = {'success': 1, 'PO_NUMBERS': company}
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
 def getUserinfoFromAccessToken(user_token=None, user_type=None):
     try:
         user = {}
@@ -9437,6 +10478,8 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
             user = Corporate_Agent_Login_Access_Token.objects.get(access_token=user_token)
         elif user_type == '7':
             user = Operator_Login_Access_Token.objects.get(access_token=user_token)
+        elif user_type == '8':
+            user = Operator_Driver_Access_Token.objects.get(access_token=user_token)
 
         timezone.activate(pytz.timezone("Asia/Kolkata"))
         present = timezone.localtime(timezone.now())
@@ -9460,6 +10503,9 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
             elif user_type == '7':
                 print(user)
                 user_info = Operator_Login.objects.get(id=user.operator_id)
+            elif user_type == '8':
+                print(user)
+                user_info = Operator_Driver.objects.get(id=user.driver_id)
             else:
                 return None
 
@@ -9470,6 +10516,404 @@ def getUserinfoFromAccessToken(user_token=None, user_type=None):
         return None
 
 
+def corporate_management_tax(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        corporate_id = request.POST.get('corporate_id', '')
+        service_type = request.POST.get('service_type', '')
+        cotrav_billing_entity = request.POST.get('cotrav_billing_entity', '')
+        corporate_billing_entity = request.POST.get('corporate_billing_entity', '')
+        ticket_price = request.POST.get('ticket_price', '')
+
+        no_of_passanger = request.POST.get('no_of_passanger', '')
+        oper_ticket_price = request.POST.get('oper_ticket_price', '')
+        oper_cotrav_billing_entity = request.POST.get('oper_cotrav_billing_entity', '')
+        oper_billing_entity = request.POST.get('oper_billing_entity', '')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    tx = TaxCalc( corporateid= corporate_id , service_type= service_type , cotrav_billing_entity= cotrav_billing_entity ,
+                                 corporate_billing_entity= corporate_billing_entity , ticket_price= ticket_price , no_of_passanger= no_of_passanger , oper_ticket_price= oper_ticket_price , oper_cotrav_billing_entity= oper_cotrav_billing_entity , oper_billing_entity= oper_billing_entity )
+
+                    txx = tx.taxOnManagement()
+
+                    if(service_type == 6):
+                        txxx = tx.hotel_gst()
+                    else:
+                        txxx = tx.gst()
+
+
+                    total_billing_amount = tx.total_billing_amount()
+
+                    operator_calc = tx.oper_tax_calc()
+
+                    details = tx.detailTax()
+
+                    print(details)
+
+                    #details_json = json.dumps(details)
+
+                    data = {'success': 1, 'Tax': details}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_country_provided_by_cotrav(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getCountryProvidedbyCotrav', [])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+
+                    data = {'success': 1, 'Country': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_visa_type_by_country(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        country_id = request.POST.get('country_id')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getVisaTypebyCountry', [country_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+
+                    data = {'success': 1, 'Visa': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+    
+
+def get_request_visa_type_by_country(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        country_id = request.POST.get('country_id')
+        visa_type = request.POST.get('visa_type')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getVisaRequestTypebyCountry', [country_id,visa_type])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+
+                    data = {'success': 1, 'Visa': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_consulate_office_by_country(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        country_id = request.POST.get('country_id')
+        visa_type = request.POST.get('visa_type')
+        visa_request_type = request.POST.get('visa_request_type')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getConsulateOfficebyCountry', [country_id,visa_type,visa_request_type])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+
+                    data = {'success': 1, 'Visa': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def get_instruction_and_link(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        country_id = request.POST.get('country_id')
+        visa_type = request.POST.get('visa_type')
+        visa_request_type = request.POST.get('visa_request_type')
+        consulate_office_id = request.POST.get('consulate_office_id')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('getInstructionAndLink', [country_id,visa_type,visa_request_type,consulate_office_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+
+                    data = {'success': 1, 'Visa': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def add_visa_requests(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        user_id = request.POST.get('user_id')
+        corporate_id = request.POST.get('corporate_id')
+        request_type = request.POST.get('request_type')
+        visa_request_type = request.POST.get('visa_request_type')
+        spoc_id = request.POST.get('spoc_id')
+        group_id = request.POST.get('group_id')
+        subgroup_id = request.POST.get('subgroup_id')
+        country_id = request.POST.get('country_id')
+        visa_type = request.POST.get('visa_type')
+        visa_duration = request.POST.get('visa_duration')
+        purpose_of_trip = request.POST.get('purpose_of_trip')
+        current_country_id = request.POST.get('current_country_id')
+        current_state_id = request.POST.get('current_state_id')
+        consulate_office_id = request.POST.get('consulate_office_id')
+        no_of_employees = request.POST.get('no_of_employees')
+        no_of_family_member = request.POST.get('no_of_family_member')
+        application_form_link = request.POST.get('application_form_link')
+
+        employee_ids = request.POST.getlist('employee_ids')
+        emp_no_of_document = request.POST.getlist('emp_no_of_document')
+        emp_document = request.POST.getlist('emp_document')
+        emp_document_txt = request.POST.getlist('emp_document_txt')
+
+        family_members_name = request.POST.getlist('family_members_name')
+        family_members_relationship = request.POST.getlist('family_members_relationship')
+        empf_no_of_document = request.POST.getlist('empf_no_of_document')
+        empf_document = request.POST.getlist('empf_document')
+        empf_document_path = request.POST.getlist('empf_document_path')
+
+        employee_application_form = request.POST.getlist('employee_application_form')
+        employee_docs = request.POST.getlist('employee_docs')
+        employeef_application_form = request.POST.getlist('employeef_application_form')
+        employeef_docs = request.POST.getlist('employeef_docs')
+
+       
+        user = {}
+        last_booking_id = 0
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('addNewVisaRequestDetails', [corporate_id,spoc_id,group_id,subgroup_id,country_id,visa_type,purpose_of_trip,current_country_id,
+                    current_state_id,consulate_office_id,no_of_employees,request_type,visa_request_type,visa_duration,no_of_family_member,application_form_link,user_id,user_type,'@last_request_id'])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+                    
+                    if company:
+                        data = {'success': 0, 'message': company}
+                    else:
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT @last_request_id")
+                        last_booking_id = cursor1.fetchone()[0]
+                        print(last_booking_id)
+                        cursor1.close()
+
+                    final_emp_no = int(no_of_employees)+1
+                    final_no_of_family = int(no_of_family_member)+1
+                    for i in range(1, final_emp_no):
+                        finl_emp_no_of_document = int(emp_no_of_document[i]) + 1
+                        cursor2 = connection.cursor()
+                        val_i = i - 1
+                        cursor2.callproc('addVisaRequestEmployee', [last_booking_id, employee_ids[val_i], 'Application Form', employee_application_form[val_i]])
+                        company = dictfetchall(cursor2)
+                        cursor2.close()
+                        for ii in range(1, finl_emp_no_of_document):
+                            val_ii = ii - 1
+                            if emp_document[val_ii] == 'Other':
+                                emp_document[val_ii] = emp_document_txt[val_ii]
+                            cursor3 = connection.cursor()
+                            cursor3.callproc('addVisaRequestEmployee',[last_booking_id, employee_ids[val_i], emp_document[val_ii], employeef_docs[val_ii]])
+                            company = dictfetchall(cursor3)
+                            print("insert employeee")
+                            print(company)
+                            cursor3.close()
+
+
+                    data = {'success': 1, 'Visa': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+def view_visa_request(request):
+    if 'AUTHORIZATION' in request.headers and 'USERTYPE' in request.headers:
+        req_token = request.META['HTTP_AUTHORIZATION']
+        user_type = request.META['HTTP_USERTYPE']
+
+        visa_id = request.POST.get('visa_id')
+
+        user = {}
+        user_token = req_token.split()
+        if user_token[0] == 'Token':
+
+            user = getUserinfoFromAccessToken(user_token[1], user_type)
+            if user:
+                try:
+
+                    cursor = connection.cursor()
+                    cursor.callproc('viewVisadDetails', [visa_id])
+                    company = dictfetchall(cursor)
+                    cursor.close()
+
+                    data = {'success': 1, 'Visa': company}
+
+                    return JsonResponse(data)
+                except Exception as e:
+                    data = {'success': 0, 'error': getattr(e, 'message', str(e))}
+                    return JsonResponse(data)
+            else:
+                data = {'success': 0, 'error': "User Information Not Found"}
+                return JsonResponse(data)
+        else:
+            data = {'success': 0, 'Corporates': "Token Not Found"}
+            return JsonResponse(data)
+    else:
+        data = {'success': 0, 'error': "Missing Parameter Value Try Again..."}
+        return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
     desc = cursor.description
@@ -9477,3 +10921,4 @@ def dictfetchall(cursor):
             dict(zip([col[0] for col in desc], row))
             for row in cursor.fetchall()
     ]
+

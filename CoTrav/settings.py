@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'g#gtui399&t+up!=938cgm507xh69!^2&#ofa+c!-mi1snqjyv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','cotrav.co','206.189.205.225']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static"),
@@ -53,8 +53,8 @@ REST_FRAMEWORK = {
 }
 
 
-API_BASE_URL = "http://localhost:8000/api/"
-HOST_BASE_PATH = "http://cotrav.co/"
+API_BASE_URL = "https://cotrav.co/api/"
+HOST_BASE_PATH = "https://cotrav.co/"
 
 ###########################################################
 
@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'Common',
     'landing',
     'django_global_request',
+    'django.contrib.humanize',
     'rest_framework'
 ]
 
@@ -115,9 +116,9 @@ WSGI_APPLICATION = 'CoTrav.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cotrav',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'cotrav_cotrav',
+        'USER': 'cotrav_cotravco',
+        'PASSWORD': 'W~0O26W^#5m9',
         'HOST': 'localhost',
         'PORT': '3306'
     }
@@ -177,5 +178,36 @@ EMAIL_HOST_USER = 'cotrav@taxivaxi.in'
 EMAIL_HOST_PASSWORD = 'Creative12@'
 EMAIL_USE_TLS = True
 
+X_FRAME_OPTIONS = 'ALLOW-FROM http://cotrav.co/'
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+'applogfile': {
+        'level':'DEBUG',
+        'class':'logging.handlers.RotatingFileHandler',
+        'filename': os.path.join(BASE_DIR, 'cotrav_log_file.log'),
+        'maxBytes': 1024*1024*15, # 15MB
+        'backupCount': 10,
+    },
+    }
+}

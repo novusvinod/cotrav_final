@@ -22,7 +22,7 @@
             <input type="hidden" name="spoc_id" value="{{user.id}}">
             <input type="hidden" name="group_id" value="{{user.group_id}}">
             <input type="hidden" name="subgroup_id" value="{{user.subgroup_id}}">
-            <input type="text" name="no_of_nights" id="no_of_nights">
+            <input type="hidden" name="no_of_nights" id="no_of_nights">
       <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
 
         <div class="row">
@@ -51,9 +51,9 @@
                                             </div>
 
                                             <div class="form-group row">
-                                                    <label class="col-sm-4" >City Area</label>
+                                                    <label class="col-sm-4" >City</label>
                                                     <select class="col-sm-8 form-control  myselect" style="width:66%"  name="city_area" id="city_area"  required>
-                                                        <option value="">Select City Area</option>
+                                                        <option value="">Select City</option>
                                                        {% for city in cities %}
                                                             <option value="{{city.id}}">{{city.city_name}}</option>
                                                         {% endfor %}
@@ -75,37 +75,21 @@
 
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check In DateTime</label>
-                                                <input type="text" class="col-sm-8 form-control datetimepicker1" autocomplete="off" name="check_in_date" id="check_in_date" placeholder="Check In DateTime">
+                                                <input type="text" class="col-sm-8 form-control check_in_date datetimepicker1" autocomplete="off" name="check_in_date" id="check_in_date" placeholder="Check In DateTime">
                                         </div>
     
                                         <div class="form-group row">
                                                 <label class="col-sm-4">Check Out DateTime</label>
-                                                <input type="text" class="col-sm-8 form-control datetimepicker2"  autocomplete="off" name="check_out_date" id="check_out_date" placeholder="Check Out DateTime">
+                                                <input type="text" class="col-sm-8 form-control check_out_date datetimepicker2"  autocomplete="off" name="check_out_date" id="check_out_date" placeholder="Check Out DateTime">
                                         </div>
 
                                         
                                         
-                                        <div class="form-group row">
-                                                <label class="col-sm-4">Room type (Priority 1)</label>
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority1" id="room_type_priority1"  required>
-                                                    <option value="">Select Room Type</option>
-                                                    {% for room_type in room_types %}
-                                                        <option value="{{room_type.id}}">{{room_type.name}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            
-                                        </div>
-
-                                        <div class="form-group row">
-                                                <label class="col-sm-4">Room type (Priority 2)</label>
-    
-                                                <select class="col-sm-8 form-control  myselect" style="width:66%"  name="room_type_priority2" id="room_type_priority2"  required>
-                                                <option value="">Select Room Type</option>
-                                                    {% for room_type in room_types %}
-                                                <option value="{{room_type.id}}">{{room_type.name}}</option>
-                                                {% endfor %}
-                                                </select>
-                                            
+                                       <div class="form-group row">
+                                                <label class="col-sm-4">Price Range</label>
+                                                <input type="number" class="form-control col-sm-3" name="room_type_priority1" value="1000">
+                                                <label class="col-sm-2">To</label>
+                                                <input type="number" class="form-control col-sm-3" name="room_type_priority2" value="2000">
                                         </div>
 
                                         <div class="form-group row">
@@ -437,17 +421,12 @@ $(".no_of_seats").change(function()
     	}
     });
 
-$("#check_out_date").datepicker({
-    onSelect: function(dateText) {
-        console.log("Selected date: " + dateText + "; input's current value: " + this.value);
-    }
-});
 
-$("#check_in_date").change(function()
+$(".check_in_date,.check_out_date").change(function()
 		{
 		alert('i m herer');
-			var ddStr =  $("#check_in_date").val();
-			var adStr =  $("#check_out_date").val();
+			var ddStr =  $(".check_in_date").val();
+			var adStr =  $(".check_out_date").val();
 
 			var dd = ddStr.replace(" ", "T");
 			var ddTime = Date.parse(ddStr);

@@ -31,4 +31,7 @@ urlpatterns = [
     path('api/spoc_verify_flight_bookings', spoc_api_view.spoc_verify_flight_bookings),
     path('api/spoc_revise_flight_bookings', spoc_api_view.spoc_revise_flight_bookings),
 
+    path('api/spoc_dashboard_bookings_for_six_months', spoc_api_view.spoc_dashboard_bookings_for_six_months),
+    path('api/spoc_dashboard_bookings_by_month', spoc_api_view.spoc_dashboard_bookings_by_month),
+
 ]

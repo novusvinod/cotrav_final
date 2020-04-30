@@ -33,4 +33,18 @@ urlpatterns = [
     path('api/admin_verify_flight_bookings', admin_api_view.admin_verify_flight_bookings),
     path('api/admin_revise_flight_bookings', admin_api_view.admin_revise_flight_bookings),
 
+    path('api/admin_dashboard_sales_by_month', admin_api_view.admin_dashboard_sales_by_month),
+    path('api/admin_dashboard_bookings_by_month', admin_api_view.admin_dashboard_bookings_by_month),
+    path('api/admin_dashboard_sales_for_six_months', admin_api_view.admin_dashboard_sales_for_six_months),
+    path('api/admin_dashboard_bookings_for_six_months', admin_api_view.admin_dashboard_bookings_for_six_months),
+    path('api/admin_dashboard_sales_by_city', admin_api_view.admin_dashboard_sales_by_city),
+    path('api/admin_dashboard_sales_by_city_for_month', admin_api_view.admin_dashboard_sales_by_city_for_month),
+    path('api/admin_dashboard_taxable_amount_table', admin_api_view.admin_dashboard_taxable_amount_table),
+
+    path('api/admin_accept_bill', admin_api_view.accept_bill),
+    path('api/admin_reject_bill', admin_api_view.reject_bill),
+    path('api/dashboard_search_admin_bookings', admin_api_view.dashboard_search_admin_bookings),
+    path('api/admin_report_invoice', admin_api_view.admin_report_invoice),
+    path('api/admin_report_client_bills', admin_api_view.admin_report_client_bills),
+
 ]

@@ -1,0 +1,1 @@
+[21-Apr-2020 04:59:12 UTC] PHP Deprecated:  __autoload() is deprecated, use spl_autoload_register() instead in /home/cotrav/public_html/landing_style/static/bat/phpmailer/PHPMailerAutoload.php on line 45

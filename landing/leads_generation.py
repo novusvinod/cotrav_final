@@ -1,5 +1,7 @@
 import random
 import string
+from threading import Thread
+
 import requests
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
@@ -42,7 +44,7 @@ from django.core.files.storage import default_storage
 
 
 from landing.models import Document
-from Common.email_settings import SignupEmail,Lead_Status_Change_Email
+from Common.email_settings import SignupEmail,Lead_Status_Change_Email,Lead_Email_To_Company_assign_agent
 
 from landing.utils import get_choice
 
@@ -72,21 +74,23 @@ def my_handler(sender, instance , created , **kwargs):
     contact_person_name = instance.Contact_Name
     contact_person_no = instance.Contact_Number
     contact_person_email = instance.Contact_Email
+    message = instance.Message
 
     if(created) :
         print ("create call")
-        message = "New Lead Generated with id " + str(instance.id) + " and status Lead Created "
-        signup = SignupEmail(corporate_name, corporate_location, contact_person_name, contact_person_no,
-                             contact_person_email, message)
-        resp1 = signup.send_email()
+        #message = ""
+        signup = SignupEmail(corporate_name, corporate_location, contact_person_name, contact_person_no, contact_person_email, message)
+        #resp1 = signup.send_email()
+        thread = Thread(target=signup.send_email, args=())
+        thread.start()
 
-        print(resp1)
     else:
         print("update call")
         print(instance.id)
         ag_id = instance.Assigned_Sales_Person
         ag_email = Corporate_Agent.objects.get(id=ag_id).email
         ag_name = Corporate_Agent.objects.get(id=ag_id).user_name
+        ag_no = Corporate_Agent.objects.get(id=ag_id).contact_no
         message = ""
         if instance.Status == "Closed-Win":
             try:
@@ -101,6 +105,9 @@ def my_handler(sender, instance , created , **kwargs):
                 contact_person_name = instance.Contact_Name
                 contact_person_no = instance.Contact_Number
                 contact_person_email = instance.Contact_Email
+                contact_address_line1 = instance.Contact_Address
+                contact_address_line2 = instance.Contact_Address_Line2
+                contact_address_line3 = instance.Contact_Address_Line3
 
                 company = Corporate()
 
@@ -110,6 +117,9 @@ def my_handler(sender, instance , created , **kwargs):
                 company.contact_person_name = contact_person_name
                 company.contact_person_no = contact_person_no
                 company.contact_person_email = contact_person_email
+                company.contact_address_line1 = contact_address_line1
+                company.contact_address_line2 = contact_address_line2
+                company.contact_address_line3 = contact_address_line3
                 company.has_auth_level = 0
                 company.no_of_auth_level = 0
                 company.has_assessment_codes = 0
@@ -132,7 +142,7 @@ def my_handler(sender, instance , created , **kwargs):
                 login_type = request.session['agent_login_type']
                 access_token = request.session['agent_access_token']
                 access_token_auth = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(60))
-                password = make_password("taxi123")
+                password = "taxi123"
                 payload = {'corporate_id': company.pk, 'user_id': request.user.id, 'login_type': login_type,
                            'access_token': access_token, 'name': contact_person_name, 'email': contact_person_email, 'cid': '',
                            'contact_no': contact_person_no,
@@ -141,21 +151,46 @@ def my_handler(sender, instance , created , **kwargs):
                            'is_water_bottles': 1, 'is_reverse_logistics': 1,
                            'access_token_auth': access_token_auth,'password': password}
                 url = settings.API_BASE_URL + "add_admin"
-                company = getDataFromAPI(login_type, access_token, url, payload)
+                company111 = getDataFromAPI(login_type, access_token, url, payload)
 
+                payload1 = {'corporate_id':company.pk, 'rm_level_1_id':ag_id, 'is_active':1}
+                url2 = settings.API_BASE_URL + "add_relationship_managements"
+                company1111 = getDataFromAPI(login_type, access_token, url2, payload1)
+
+                message = "Congratulation on converting your lead to Closed-Win. Your diligence, self-motivation as well as dedication to always go the extra mile in order to achieve the best possible results is really admirable. Thank you for your hard work and effort."
                 print("Lead is converted to new company after closed-win status")
 
-                message = "Lead with Company Name " + str(instance.Company_Name) + " is converted to new Corporate in Corporate database after Leads closed-win status"
+                signup1 = Lead_Status_Change_Email(message, "", ag_email, ag_name, instance.Company_Name, instance.Contact_Name, instance.Contact_Email,
+                 instance.Contact_Number, instance.Company_Location)
+                resp1 = signup1.send_email()
+                print("in mail send fun")
+                print(resp1)
+
+        elif instance.Status == "Closed-Lost":
+            message = "Sorry to loose you, We will miss you, let me know if we could be of any help in future. CoTrav Team"
+            signup1 = Lead_Status_Change_Email(message, "", ag_email, ag_name, instance.Company_Name,
+                                               instance.Contact_Name, instance.Contact_Email,
+                                               instance.Contact_Number, instance.Company_Location)
+            resp1 = signup1.send_email_lost()
 
         elif instance.Status == "Assigned":
-            message = " <br> Company Name: " + str(
-            instance.Company_Name) + "<br> Customer Name:  " + instance.Contact_Name + "<br> Contact Email : " + instance.Contact_Email + " <br>  Contact Number : " + instance.Contact_Number + " Kindly take it further. "
+            message = "New Lead has been assigned to your queue"
             # message = "Lead with id " + str(instance.id) + " is updated and assigned to agent " + ag_email
-        else:
-            message = ""
-            message = " <br> Company Name: "+instance.Company_Name+"<br> Customer Name:  "+ instance.Contact_Name +"<br> Contact Email : "+ instance.Contact_Email +" <br>  Contact Number : "+ instance.Contact_Number +"<br><br> Kindly take it further. "
             status = instance.Status
-            signup = Lead_Status_Change_Email(message,status,ag_email,ag_name)
+            signup = Lead_Status_Change_Email(message, status, ag_email, ag_name, instance.Company_Name,
+                                              instance.Contact_Name, instance.Contact_Email, instance.Contact_Number,
+                                              instance.Company_Location)
+            resp1 = signup.send_email()
+            message1 = "A Relationship Manager from Cotrav Team has been assigned to you to solve all your queries. Please find the details below."
+            signup1 = Lead_Email_To_Company_assign_agent(message1, ag_email, ag_name, ag_no, instance.Contact_Name, instance.Contact_Email, instance.Contact_Number)
+            resp1 = signup1.send_email()
+
+            print("in mail send fun")
+            print(resp1)
+        else:
+            message = "Lead Status Changed "
+            status = instance.Status
+            signup = Lead_Status_Change_Email(message,status,ag_email,ag_name,instance.Company_Name,instance.Contact_Name,instance.Contact_Email,instance.Contact_Number,instance.Company_Location)
             resp1 = signup.send_email()
             print("in mail send fun")
             print(resp1)
@@ -331,15 +366,24 @@ def lead_assigned(request, template_name='landing/leadgeneration_list.html'):
     if request.method=='POST':
         lead_id = request.POST.get('lead_id', '')
         agent_id = request.POST.get('agent_id', '')
+        ag_name = request.POST.get('ag_name', '')
         agent_email = request.POST.get('agent_email', '')
+        contact_no = request.POST.get('contact_no', '')
         Contact_Name = request.POST.get('Contact_Name', '')
         Company_Name = request.POST.get('Company_Name', '')
         Contact_Number = request.POST.get('Contact_Number', '')
         Contact_Email = request.POST.get('Contact_Email', '')
-        message = " <br> Company Name: "+Company_Name+"<br> Customer Name:  "+Contact_Name+"<br> Contact Email : "+Contact_Number+" <br>  Contact Number : "+Contact_Email+"<br><br> Kindly take it further. "
+        Company_Location = request.POST.get('Company_Location', '')
+        message = "New Lead has been assigned to your queue"
         Leadgeneration.objects.filter(pk=lead_id).update(Assigned_Sales_Person=agent_id,Status='Assigned')
-        signup = Lead_Status_Change_Email(message, 'Assigned', agent_email, "User")
+        signup = Lead_Status_Change_Email(message, 'Assigned', agent_email, "User",Company_Name,Contact_Name,Contact_Email,Contact_Number,Company_Location)
         resp1 = signup.send_email()
+
+        message1 = "Your Lead has been assigned to cotrav agent."
+        signup1 = Lead_Email_To_Company_assign_agent(message1, agent_email, ag_name, contact_no, Contact_Name, Contact_Email, Contact_Number)
+        resp2 = signup1.send_email()
+
+
         return redirect('lead-list')
     return render(request, template_name, {})
 

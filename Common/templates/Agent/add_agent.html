@@ -16,14 +16,14 @@
          {% endif %}
          </div>
    </div>
-        <form method="post" action="/agents/add-agent/0">
+        <form method="post" action="/agents/add-agent/0" id="model_serialize_update">
              <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
 
             {% if agent %}
             {% for agent in agent %}
-            <input type="hidden" class="col-sm-8 form-control" name="agent_id" value="{{agent.id }}">
+            <input type="hidden" class="col-sm-8 form-control" name="agents_id" value="{{agent.id }}">
             {% endfor %}
             {% endif %}
             <div class="row">
@@ -89,22 +89,78 @@
                                   {% endif %}
                             </div>
 
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Super Admin</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_super_admin">
+
+                                        {% if agent %}
+                                        {% for agent in agent %}
+                                         <option value="0" {% if agent.is_super_admin == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.is_super_admin == 1 %} selected {%endif%}>Yes</option>
+                                         {% endfor %}
+                                        {% else %}
+                                        <option value="0">No</option>
+                                         <option value="1">Yes</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Relationship Manager</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_relationship_manager">
+
+                                        {% if agent %}
+                                        {% for agent in agent %}
+                                         <option value="0" {% if agent.is_relationship_manager == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.is_relationship_manager == 1 %} selected {%endif%}>Yes</option>
+                                         {% endfor %}
+                                        {% else %}
+                                        <option value="0">No</option>
+                                         <option value="1">Yes</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Operation Manager</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="is_operation_manager">
+
+                                        {% if agent %}
+                                        {% for agent in agent %}
+                                         <option value="0" {% if agent.is_operation_manager == 0 %} selected {%endif%}>No</option>
+                                         <option value="1" {% if agent.is_operation_manager == 1 %} selected {%endif%}>Yes</option>
+                                         {% endfor %}
+                                        {% else %}
+                                        <option value="0">No</option>
+                                         <option value="1">Yes</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>
                 </div>
 
 
-                 <div class="col-md-4 col-sm-4">
+
+
+
+                <div class="col-md-4">
                     <div class="card card-topline-aqua">
                         <div class="card-head">
-                            <header>Billing Access Details</header>
-
+                            <header>Access Details</header>
 
                         </div>
-                        <div class="card-body " >
+                        <div class="card-body " id="bar-parent1">
 
-                             <div class="form-group row">
+                              <div class="form-group row">
                                 <label class="col-sm-4 control-label">Billing Access</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="has_billing_access">
@@ -162,77 +218,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 control-label">Super Admin</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_super_admin">
-
-                                        {% if agent %}
-                                        {% for agent in agent %}
-                                         <option value="0" {% if agent.is_super_admin == 0 %} selected {%endif%}>No</option>
-                                         <option value="1" {% if agent.is_super_admin == 1 %} selected {%endif%}>Yes</option>
-                                         {% endfor %}
-                                        {% else %}
-                                        <option value="0">No</option>
-                                         <option value="1">Yes</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 control-label">Relationship Manager</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_relationship_manager">
-
-                                        {% if agent %}
-                                        {% for agent in agent %}
-                                         <option value="0" {% if agent.is_relationship_manager == 0 %} selected {%endif%}>No</option>
-                                         <option value="1" {% if agent.is_relationship_manager == 1 %} selected {%endif%}>Yes</option>
-                                         {% endfor %}
-                                        {% else %}
-                                        <option value="0">No</option>
-                                         <option value="1">Yes</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 control-label">Operation Manager</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="is_operation_manager">
-
-                                        {% if agent %}
-                                        {% for agent in agent %}
-                                         <option value="0" {% if agent.is_operation_manager == 0 %} selected {%endif%}>No</option>
-                                         <option value="1" {% if agent.is_operation_manager == 1 %} selected {%endif%}>Yes</option>
-                                         {% endfor %}
-                                        {% else %}
-                                        <option value="0">No</option>
-                                         <option value="1">Yes</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <div class="col-md-4">
-                    <div class="card card-topline-aqua">
-                        <div class="card-head">
-                            <header>Access Details</header>
-
-                        </div>
-                        <div class="card-body " id="bar-parent1">
 
                             <div class="form-group row">
                                 <label class="col-sm-4 control-label">Radio Bookings</label>
@@ -455,7 +440,32 @@
 {% else %}
 <p>Welcome, new user. Please log in.<a href="/login">Login</a></p>
 {% endif %}
+<script>
+$( document ).ready(function() {
 
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
 
 
 {% endblock %}

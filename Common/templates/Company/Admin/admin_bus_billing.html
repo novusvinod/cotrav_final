@@ -132,10 +132,13 @@
                                     <th>Verify </th>
 
                                   {% endif %}
-                                    <th>Reference No</th>
+                                    <th>Booking Id</th>
+
+
+
                                     <th>Company Name</th>
                                     <th>Billing Entity</th>
-                                    <th>Booking Date</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Boarding Point</th>
                                     <th>Booking Date/Time</th>
                                     <th>Pickup City</th>
@@ -159,14 +162,10 @@
                                     {% if billing_type == 16 %}
                                     <th>Revise requested by</th>
                                     <th>Revise Reason</th>
-                                    <th>Cotrav Agent Comment</th>
-                                    <th>Cotrav Agent revise date</th>
-                                    <th>Cotrav Agent revise by</th>
+
                                     {% endif %}
 
-                                  {% if billing_type == 16 %}
-                                    <th>Comments</th>
-                                  {% endif %}
+
                                     <th>Details</th>
                                 </tr>
 
@@ -186,6 +185,10 @@
                                     {% endif %}
 
                                     <td>{{ booking.reference_no|default:'' }}</td>
+
+
+
+
                                     <td>{{ booking.corporate_name }}</td>
                                     <td>{{ booking.entity_name }}</td>
                                     <td>{{ booking.booking_datetime|default:'' }}</td>
@@ -214,7 +217,7 @@
                                     <td>
                                         {% for invoice_log in booking.InvoiceActionLog %}
                                             {% if invoice_log.user_type == 10 and invoice_log.action == 1 %}
-                                                {{ invoice_log.created }}
+                                                {{ invoice_log.action_date }}
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -246,7 +249,7 @@
 
                                      {% if billing_type == 16 %}
                                     <td>{% for invoice_log in booking.InvoiceActionLog %}
-                                            {% if invoice_log.action == 3 %}
+                                            {% if forloop.last %}
                                                 {{ invoice_log.employee_name }}<br/> ({{invoice_log.name}})
                                             {% endif %}
                                         {% endfor %}
@@ -254,41 +257,17 @@
 
                                     <td>
                                         {% for invoice_log in booking.InvoiceActionLog %}
-                                            {% if invoice_log.action == 3 %}
+                                           {% if forloop.last %}
                                                 {{ invoice_log.invoice_comment }}
                                             {% endif %}
                                         {% endfor %}
 
                                     </td>
 
-                                    <td>{% for invoice_log in booking.InvoiceActionLog %}
-                                            {% if invoice_log.user_type == 10 and invoice_log.action == 3 %}
-                                                {{ invoice_log.invoice_comment }}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                    <td>{% for invoice_log in booking.InvoiceActionLog %}
-                                            {% if invoice_log.user_type == 10 and invoice_log.action == 3 %}
-                                                {{ invoice_log.action_date }}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                    <td>{% for invoice_log in booking.InvoiceActionLog %}
-                                            {% if invoice_log.user_type == 10 and invoice_log.action == 3 %}
-                                                {{ invoice_log.employee_name }}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                    {% endif %}
-
-                                    {% if billing_type == 16 %}
-
-                                    <td>
-                                        <textarea name="invoice_comments" id="comment_{{ booking.id }}" ></textarea>
-                                        <p id="error_{{ booking.id }}"></p>
-                                    </td>
 
                                     {% endif %}
+
+
 
                                     <td>
                                         <a title="Booking Details" href="/Corporate/Admin/view-bus-booking/{{ booking.id }}" class="btn btn-tbl-edit btn-xs" style="background:#6288b1;"> <i  class="fa fa-search"></i> </a>
@@ -425,7 +404,7 @@ for(var i=0 ; i < checkedBoxes.length ; i++ )
         var invoice_ids = '<input type="hidden" name="invoice_ids" value="' + val_invoice_ids + '">';
         var booking_ids = '<input type="hidden" name="booking_ids" value="' + val + '">';
 
-        form_str = '<div class="form-group row"><label class="col-sm-5 control-label">Booking Reference No -'+ ref_no +'</label><div class="col-sm-7">' +
+        form_str = '<div class="form-group row"><label class="col-sm-5 control-label">Booking Booking Id -'+ ref_no +'</label><div class="col-sm-7">' +
         '<textarea class="form-control" name="invoice_comments" required id="comment_' + val + '" ></textarea></div></div>';
 
         $buttonDiv.append(form_str);

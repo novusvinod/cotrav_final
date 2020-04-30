@@ -20,7 +20,7 @@
                      </div>
 
 
-        <form method="post" action="/agents/add-employee/0">
+        <form method="post" action="/agents/add-employee/0" id="model_serialize_update">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
 
@@ -344,6 +344,7 @@
                                     <option value=" " >Select Reporting Manager</option>
                                     {% if employee %}
                                     {% for employe in employee %}
+                                    {{employe.reporting_manager}}
                                     {% for employee in employeess %}
                                             <option value="{{employee.id}}" {% if employe.reporting_manager == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
                                             {% endfor %}
@@ -571,5 +572,30 @@ var_url = '/api/'+'billing_entities'
 
 });
 </script>
+<script>
+$( document ).ready(function() {
 
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
 {% endblock %}

@@ -8,6 +8,8 @@ def one_month_from_today():
     return d1 + timedelta(days=30)
 
 
+
+
 class Corporate_Login(models.Model):
     name = models.CharField(default=True,max_length=200)
     email = models.CharField(default=True,max_length=200)
@@ -53,6 +55,7 @@ class Corporate_Agent(models.Model):
     emp_id = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     password = models.CharField(max_length=100)
+    contact_no = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
     last_login = models.DateTimeField(max_length=100)
     has_radio_booking_access = models.CharField(max_length=100)
@@ -168,6 +171,7 @@ class Corporate_Approves_1_Login(models.Model):
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
     corporate_id = models.CharField(default=True, max_length=10)
+    subgroup_id = models.CharField(default=True, max_length=10)
     is_radio = models.BooleanField()
     is_local = models.BooleanField()
     is_outstation = models.BooleanField()
@@ -206,6 +210,7 @@ class Corporate_Approves_2_Login(models.Model):
     password = models.CharField(max_length=100)
     last_login = models.DateTimeField(max_length=100)
     corporate_id = models.CharField(default=True, max_length=10)
+    group_id = models.CharField(default=True, max_length=10)
     is_radio = models.BooleanField()
     is_local = models.BooleanField()
     is_outstation = models.BooleanField()
@@ -245,6 +250,9 @@ class Corporate(models.Model):
     contact_person_name = models.CharField(max_length=100)
     contact_person_no = models.CharField(max_length=100)
     contact_person_email = models.EmailField(max_length=100)
+    contact_address_line1 = models.EmailField(max_length=100)
+    contact_address_line2 = models.EmailField(max_length=100)
+    contact_address_line3 = models.EmailField(max_length=100)
     has_auth_level = models.BooleanField()
     has_assessment_codes = models.BooleanField()
     is_radio = models.BooleanField()
@@ -292,7 +300,6 @@ class Corporate_Employee_Login_Access_Token(models.Model):
 
     class Meta:
         db_table = "corporate_employee_access_token"
-
 
 class Corporate_Approves_1_Login_Access_Token(models.Model):
     subgroup_authenticater_id = models.CharField(default=True, max_length=10)
@@ -356,3 +363,36 @@ class Operator_Login_Access_Token(models.Model):
 
     class Meta:
         db_table = "operator_login_access_tokens"
+
+
+class Operator_Driver(models.Model):
+    driver_name = models.CharField(max_length=200)
+    driver_contact = models.CharField(max_length=200)
+    password = models.CharField(max_length=100)
+    driver_email = models.CharField(max_length=100)
+    licence_no = models.CharField(max_length=100)
+    last_login = models.DateTimeField(max_length=100)
+    class Meta:
+        db_table = "operator_drivers"
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+
+class Operator_Driver_Access_Token(models.Model):
+    driver_id = models.CharField(default=True, max_length=10)
+    access_token = models.CharField(default=True,max_length=200)
+    expiry_date = models.DateTimeField(max_length=100)
+    user_agent = models.CharField(default=True, max_length=200)
+
+    class Meta:
+        db_table = "operator_driver_access_tokens"

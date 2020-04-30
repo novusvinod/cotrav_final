@@ -48,16 +48,19 @@
                             </div>
 
 
-                            <div class="form-group row">
+                           <div class="form-group row" id="current_city_id_row">
                                 <label class="col-sm-4" >Pickup City*</label>
-                                 <select id="current_city_id" name="current_city_id" class="form-control col-sm-8  myselect" style="width:66%"  required>
+                                 <select id="current_city_id" name="current_city_id" class="form-control col-sm-8 myselect" style="width:66%">
                                       <option value="">Select City </option>
-                                        {% for cities in citiess %}
-                                         <option value="{{cities.id}}">{{cities.city_name}}</option>
+                                        {% for citie in citiess %}
+                                         <option value="{{citie.id}}">{{citie.city_name}}</option>
                                         {% endfor %}
                                   </select>
-<!--                                 <input type="text" class="form-control col-sm-8" name="pickup_city" id="pickup_city" placeholder="Pickup City" required>-->
-<!--                                <input type="hidden" name="current_city_id" id="current_city_id">-->
+                            </div>
+
+                        <div class="form-group row" id="pickup_city_row">
+                                <label class="col-sm-4" >Pickup City*</label>
+                                 <input type="text" class="form-control col-sm-8" name="pickup_city" id="pickup_city" placeholder="Pickup City">
                             </div>
 
                                  <div class="form-group row" id="tr_taxi_type">
@@ -89,11 +92,11 @@
 
                               <div class="form-group row">
                                 <label class="col-sm-4" >Drop Location*</label>
-                                 <input type="text" class="form-control col-sm-8" name="drop_location" id="drop_location" placeholder="Drop Location" required>
+                                 <input type="text" class="form-control col-sm-8" name="drop_location" id="drop_location" placeholder="Drop Location">
                             </div>
 
                               <div class="form-group row">
-                                <label class="col-sm-4" >Pickup DateTime*</label>
+                                <label class="col-sm-4" >Pickup Date/Time*</label>
                                  <input type="text" class="form-control col-sm-8 datetimepicker1" autocomplete="off" name="pickup_datetime" placeholder="Pickup Date/Time" required>
                             </div>
 
@@ -294,73 +297,34 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>
 
 <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCstbhex4F6X2-AXz3B1sR1oRvxssE3sc&libraries=places"></script>-->
-
-
  <script>
-      var input = document.getElementById('pickup_city');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-
-      google.maps.event.addListener(autocomplete, 'place_changed', function() {
-
-      var search_str = $("#pickup_city").val();
-
-      var_url = '/api/'+'get_city_id'
-
-      //var_url = 'http://localhost:8000/api/testpath'
-
-    $.ajaxSetup({
-            headers:{
-                'Authorization': "Token {{request.session.access_token}}",
-                'usertype': {{request.session.login_type}}
-            }
-
-        });
-
-     $.post(var_url,{ search_string: search_str },
-      function(data)
-      {
-       var city_id = data['city_id'][0]['id'];
-       $('#current_city_id').val(city_id);
-
-       });
-
-});
 
   var pickup_location = document.getElementById('pickup_location');
-      var autocomplete = new google.maps.places.Autocomplete(pickup_location);
+  var autocomplete = new google.maps.places.Autocomplete(pickup_location);
 
-       var drop_location = document.getElementById('drop_location');
-      var autocomplete = new google.maps.places.Autocomplete(drop_location);
+   var drop_location = document.getElementById('drop_location');
+   var autocomplete = new google.maps.places.Autocomplete(drop_location);
 
-    </script>
+</script>
+
+ <script>
+    function initialize() {
+      var options = {
+        types: ['(cities)'],
+        componentRestrictions: {
+          country: "in"
+        }
+      };
+
+      var input = document.getElementById('pickup_city');
+      var autocomplete = new google.maps.places.Autocomplete(input, options);
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+
 
 <script type="text/javascript">
-$(window).on("load", function () {
-var_url = '/api/'+'cities'
-    $.ajaxSetup({
-            headers:{
-                'Authorization': "Token {{request.session.spoc_access_token}}",
-                'usertype': 4
-            }
-
-        });
-
-     $.post(var_url,{},
-      function(data)
-      {
-       //alert(data['Cities']);
-       if(data['Cities'].length != 0){
-        entities = data['Cities'];
-        $('#current_city_id').append($("<option value=''>Select Billing Entity</option>"));
-         for (var i=0;i<entities.length;i++) {
-            $('#current_city_id').append($("<option value='"+entities[i].id+"'>"+entities[i].city_name+"</option>"));
-         }
-       }else{
-        alert('No Entity Available')
-       }
-       });
-
-});
 
 $( document ).ready(function() {
     $('#tr_taxi_type').hide();
@@ -461,6 +425,14 @@ $("#tour_type").change(function()
                 $('#tr_taxi_type').hide();
                 $('#tr_package').hide();
                 $('#tr_no_of_days').hide();
+                $("#package_id").attr('required',false);
+                $("#select_taxi_type").attr('required',false);
+                $("#id_no_of_days").attr('required',false);
+                $("#drop_location").attr('required',true);
+                $("#pickup_city").attr('required',true);
+                $("#current_city_id").attr('required',false);
+                $('#pickup_city_row').show();
+                $('#current_city_id_row').hide();
                 break;
               }
            case '2':
@@ -468,6 +440,14 @@ $("#tour_type").change(function()
                 $('#tr_taxi_type').show();
                 $('#tr_package').show();
                 $('#tr_no_of_days').hide();
+                $("#select_taxi_type").attr('required',true);
+                $("#package_id").attr('required',true);
+                $("#id_no_of_days").attr('required',false);
+                $("#drop_location").attr('required',false);
+                $("#pickup_city").attr('required',false);
+                $("#current_city_id").attr('required',true);
+                $('#pickup_city_row').hide();
+                $('#current_city_id_row').show();
                 getPackage();
                 break;
               }
@@ -476,6 +456,14 @@ $("#tour_type").change(function()
                 $('#tr_taxi_type').show();
                 $('#tr_package').show();
                 $('#tr_no_of_days').show();
+                $("#select_taxi_type").attr('required',true);
+                $("#package_id").attr('required',true);
+                $("#id_no_of_days").attr('required',true);
+                $("#drop_location").attr('required',true);
+                $("#pickup_city").attr('required',false);
+                $("#current_city_id").attr('required',true);
+                $('#pickup_city_row').hide();
+                $('#current_city_id_row').show();
                 getPackage();
                 break;
               }

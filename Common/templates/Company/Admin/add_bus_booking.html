@@ -42,12 +42,32 @@
                             </div>
 
                          <div class="form-group row">
-                                <label class="col-sm-4" >Bus Type*</label>
-                                 <select name="bus_type" class="form-control col-sm-8 tour_type  myselect" style="width:66%" >
-                                     <option value="">Select Bus Type</option>
-                                      {% for bus_type in bus_types %}
-                                        <option value="{{bus_type.id}}">{{bus_type.name}}</option>
-                                        {% endfor %}
+                                <label class="col-sm-4" >Bus Type Priority1*</label>
+                                 <select name="bus_type" class="form-control col-sm-8 tour_type myselect" style="width:66%" >
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
+                                  </select>
+                            </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Bus Type Priority2*</label>
+                                 <select name="bus_type2" class="form-control col-sm-8 tour_type myselect" style="width:66%" >
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
+                                  </select>
+                            </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Bus Type Priority3*</label>
+                                 <select name="bus_type3" class="form-control col-sm-8 tour_type myselect" style="width:66%" >
+                                      <option value="1">AC Seater</option>
+                                      <option value="2">AC Sleeper</option>
+                                      <option value="3">NON AC Seater</option>
+                                      <option value="4">NON AC Sleeper</option>
                                   </select>
                             </div>
 
@@ -55,6 +75,16 @@
                                 <label class="col-sm-4" >Preferred Bus*</label>
                                  <input type="text" class="form-control col-sm-8" name="preferred_bus" placeholder="Preferred Bus" required>
                             </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Boarding Point*</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_board_point" placeholder="Preferred Boarding Point">
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-sm-4" >Drop Point</label>
+                                 <input type="text" class="form-control col-sm-8" name="preferred_drop_point" placeholder="Preferred Drop Point">
+                        </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-4" >Journey Date From*</label>

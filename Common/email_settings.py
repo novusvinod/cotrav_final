@@ -3,10 +3,24 @@ import requests
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 
-COTRAV_EMAILS = "cotrav@taxivaxi.in"
-COTRAV_NUMBERS = "9579477262,"
+from Common.models import Corporate_Agent
+
+#COTRAV_EMAILS = list(Corporate_Agent.objects.filter(is_super_admin=1).exclude(email='').values_list('email', flat=True))
+#COTRAV_NUMBERS = list(Corporate_Agent.objects.filter(is_super_admin=1).exclude(contact_no='').values_list('contact_no', flat=True))
+COTRAV_EMAILS = 'balwant@taxivaxi.in'
+COTRAV_NUMBERS = "9579477262"
+COTRAV_SIGNUP_EMAILS = "vinod@taxivaxi.com"
+
 API_ACCESS_KEY_EMPLOYEE = 'AAAAE7JHFiU:APA91bH8hJWfLlFEjL9TiSKIT0so-HL1PXqDXgKWtU_19W-3ViuJHZC8Iswkq3eXl-Tjd8jKBm7X9UxCFMKpJaBQt5Ar-9qJeAB07R753hpmamQXW6lP917Fa0S6w02qzi6tNai3Kmsh'
 API_ACCESS_KEY_SPOC = ''
+COTRAV_CC_EMAILS = "vinod@taxivaxi.com"
+COTRAV_BCC_EMAILS = "balwant@taxivaxi.in"
+
+sender_id = 'COTRAV'
+exotel_sid = "novuslogic1"
+exotel_key = "6ae4c99860c31346203da94dc98a4de7fd002addc5848182"
+exotel_token = "a2c78520d23942ad9ad457b81de2ee3f3be743a8188f8c39"
+
 
 
 class SignIn_OTP:
@@ -15,7 +29,7 @@ class SignIn_OTP:
         #email_body = "Dear User,<br><br>"+generate_otp+" is your verification code to access your profile and bookings on Cotrav app, you need to verify your email first. <br><br>Rgrds,<br>CoTrav."
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [email_to])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [email_to], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.content_subtype = "html"
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -92,19 +106,12 @@ class AddBooking_Email:
                 if approver['email_approver_1']:
                     name_approver_1 = "".join(map(str, approver['approver_1']))
                     email_approver_1 = "".join(map(str, approver['email_approver_1']))
-                    is_send_email_approver_1 = "".join(map(str, approver['is_send_email_approver_1']))
+                    is_send_email_approver_1 = approver['is_send_email_approver_1']
 
                 if approver['email_approver_2']:
                     name_approver_2 = "".join(map(str, approver['approver_2']))
                     email_approver_2 = "".join(map(str, approver['email_approver_2']))
-                    is_send_email_approver_2 = "".join(map(str, approver['is_send_email_approver_2']))
-
-        self.send_mail_to_cotrav_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body,booking_tempalte, email_content, email_title)
-        print("email_send")
-        self.send_mail_to_employee(booking, employee_emails, employee_name, email_subject, email_body, booking_tempalte, email_content, email_title)
-
-        if booking[0]['spoc_is_send_email'] == '1':
-            self.send_mail_to_spoc(booking, spoc_email, booking[0]['user_name'], email_subject, email_body,booking_tempalte, email_content, email_title)
+                    is_send_email_approver_2 = approver['is_send_email_approver_2']
 
         if email_approver_1:
             if booking_type == "Taxi":
@@ -119,6 +126,15 @@ class AddBooking_Email:
                 email_content = "Booking request for Flight is pending for approval. Details as below,"
             if is_send_email_approver_1:
                 self.send_mail_to_approvel(booking, email_approver_1, name_approver_1, email_subject, email_body,booking_tempalte, email_content, email_title)
+                self.send_mail_to_employee(booking, employee_emails, employee_name, email_subject, email_body, booking_tempalte, email_content, email_title)
+                if booking[0]['spoc_is_send_email'] == 1:
+                    self.send_mail_to_spoc(booking, spoc_email, booking[0]['user_name'], email_subject, email_body,booking_tempalte, email_content, email_title)
+                self.send_mail_to_cotrav_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body,booking_tempalte, email_content, email_title)
+        else:
+            self.send_mail_to_employee(booking, employee_emails, employee_name, email_subject, email_body,booking_tempalte, email_content, email_title)
+            if booking[0]['spoc_is_send_email'] == 1:
+                self.send_mail_to_spoc(booking, spoc_email, booking[0]['user_name'], email_subject, email_body, booking_tempalte, email_content, email_title)
+            self.send_mail_to_cotrav_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte,email_content, email_title)
         if email_approver_2:
             if booking_type == "Taxi":
                 email_content = "Booking request for Taxi is pending for approval. Details as below,"
@@ -139,7 +155,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', emails, bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -150,7 +166,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -161,7 +177,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -172,7 +188,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -183,7 +199,7 @@ class AddBooking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -208,9 +224,9 @@ class AddBooking_Email:
             for approver in approvers:
                 if approver['email_approver_1']:
                     name_approver_1 = "".join(map(str, approver['approver_1']))
-                    is_send_sms_approver_1 = "".join(map(str, approver['is_send_sms_approver_1']))
+                    is_send_sms_approver_1 = approver['is_send_sms_approver_1']
                 if approver['email_approver_2']:
-                    is_send_sms_approver_2 = "".join(map(str, approver['is_send_sms_approver_2']))
+                    is_send_sms_approver_2 = approver['is_send_sms_approver_2']
                     name_approver_2 = "".join(map(str, approver['approver_2']))
                 if approver['contact_approver_1']:
                     contact_approver_1 = "".join(map(str, approver['contact_approver_1']))
@@ -335,7 +351,7 @@ class AddBooking_Email:
         email_subject = "CoTrav New User Login Credentials"
         email_body = "Dear " + username + ",<br> Url: cotrav.co/login <br> Email:" + username + "<br> Password:" + password + "<br> UserType:" + user_type + \
                      "<br> Thank you for Signup. <br><br>Please call at  for any query. <br><br>Rgrds,<br>CoTrav."
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [username])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [username], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.content_subtype = "html"
         res = msg.send(fail_silently=True)
         return 1
@@ -365,7 +381,7 @@ class newUserAdd_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(tempalte, {'password':password, 'user_name': name,'user_type':user_type, 'username_email':username_email })
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [username_email])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [username_email], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -407,17 +423,20 @@ class Assign_Booking_Email:
 
         email_subject = "" + booking[0]['reference_no'] + "- Ride Details Confirmed"
 
-        self.send_mail_to_cotrav_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte, gen_voucher_path)
+        if booking_type == "Hotel":
+            email_subject = "" + booking[0]['reference_no'] + "- Hotel Booking Confirmed"
+
+        # self.send_mail_to_cotrav_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte, gen_voucher_path)
         print("email_send")
         self.send_mail_to_employee(booking, employee_emails, employee_name, email_subject, email_body, booking_tempalte, gen_voucher_path)
-        if booking[0]['spoc_is_send_email'] == '1':
+        if booking[0]['spoc_is_send_email'] == 1:
             self.send_mail_to_spoc(booking, spoc_email, booking[0]['user_name'], email_subject, email_body,booking_tempalte, gen_voucher_path)
 
     def send_mail_to_cotrav_agent(self, booking, emails, name, email_subject, email_body, booking_tempalte, gen_voucher_path):
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', emails, bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         if gen_voucher_path:
             msg.attach_file(gen_voucher_path)
@@ -430,7 +449,7 @@ class Assign_Booking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         if gen_voucher_path:
             msg.attach_file(gen_voucher_path)
@@ -443,7 +462,7 @@ class Assign_Booking_Email:
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         if gen_voucher_path:
             msg.attach_file(gen_voucher_path)
@@ -464,10 +483,6 @@ class Assign_Booking_Email:
 
 
     def send_sms_to_employee(self,booking, phone_number, name, booking_type):
-        sender_id = 'COTRAV'
-        exotel_sid = "novuslogic1"
-        exotel_key = "6ae4c99860c31346203da94dc98a4de7fd002addc5848182"
-        exotel_token = "a2c78520d23942ad9ad457b81de2ee3f3be743a8188f8c39"
 
         global sms_body
 
@@ -529,25 +544,43 @@ class SignupEmail():
         tempalte= ''
         email_body=''
         if self.company_location == 'contactus':
-            email_subject = "Thanks for contact us"
+            email_subject = "Welcome to CoTrav"
             tempalte = "contact_welcome.html"
             email_body = 'Thank You For Showing Interest. We will Contact You Soon'
         else:
-            email_subject = "Thanks for joining us"
+            email_subject = "Welcome to CoTrav"
             tempalte = "signup_welcome.html"
             email_body = 'Thank You For Showing Interest. We will Contact You Soon'
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(tempalte, {'company': self.company, 'location': self.company_location,
-                                                   'user_name': self.cp_name, 'cp_no': self.cp_no,
-                                                   'cp_email': self.cp_email, 'message': self.message})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to,"cotrav@taxivaxi.in"])
+        'user_name': self.cp_name, 'cp_no': self.cp_no,'cp_email': self.cp_email, 'message': self.message, 'cp_name': self.cp_name })
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
-        res = msg.send(fail_silently=True)
+        res11 = msg.send(fail_silently=True)
+        print("in second email")
+
+
+        html_content2 = render_to_string(tempalte, {'company': self.company, 'location': self.company_location, 'user_name': "CoTrav Team", 'cp_no': self.cp_no,
+        'cp_email': self.cp_email, 'message': self.message, 'cp_name': self.cp_name})
+        email_body2 = "A Company has contacted us through signup form. Please find the details below."
+        msg1 = EmailMultiAlternatives("New Lead Created | "+self.company,  email_body2 , 'cotrav@taxivaxi.in', [COTRAV_SIGNUP_EMAILS], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
+        msg1.attach_alternative(html_content2, "text/html")
+        res12 = msg1.send(fail_silently=True)
+        print("in second sent email")
         connection.close()  # Cleanup
         # res = 1
+        sms_body = "Thankyou for signing up with CoTrav. A CoTrav official would be contacting you in 24 hours to discuss the business solutions for your team."
+        requests.post(
+            'https://twilix.exotel.in/v1/Accounts/{exotel_sid}/Sms/send.json'.format(exotel_sid=exotel_sid),
+            auth=(exotel_key, exotel_token),
+            data={
+                'From': sender_id,
+                'To': self.cp_no,
+                'Body': sms_body
+            })
 
-        return (res)
+        return (1)
 
 
     def reminder_email(self):
@@ -559,7 +592,7 @@ class SignupEmail():
         html_content = render_to_string(tempalte, {'company': self.company, 'location': self.company_location,
                                                    'cp_name': self.cp_name, 'cp_no': self.cp_no,
                                                    'cp_email': self.cp_email, 'message': self.message})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.cp_email])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.cp_email], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
 
         res = msg.send(fail_silently=True)
@@ -568,26 +601,223 @@ class SignupEmail():
 
         return (res)
 
-
-class Lead_Status_Change_Email():
-    def __init__(self, message,status,ag_email,ag_name):
-        self.cp_email = "vinod@taxivaxi.com "
+class Lead_Email_To_Company_assign_agent():
+    def __init__(self, message,ag_email,ag_name,ag_no,Contact_Name,Contact_Email,Contact_Number):
+        self.cp_email = Contact_Email
         self.message = message
-        self.send_to = ag_email
+        self.ag_email = ag_email
         self.ag_name = ag_name
-        self.status = status
+        self.ag_no = ag_no
+        self.company_c_name = Contact_Name
+        self.Contact_Number = Contact_Number
 
     def send_email(self):
-        email_subject = "Cotrav Lead Status Change"
-        email_body = "Hi " + self.ag_name + ", <br><br> New Lead has been assigned to your queue <br><br> Details are as below,"+self.message+" <br><br> Please call at  for any query."+COTRAV_NUMBERS+" <br><br>Regards,<br>CoTrav."
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to])
-        msg.content_subtype = "html"
+        tempalte = "assign_agent_email_template.html"
+        email_subject = "Cotrav | Relationship Manager Assigned"
+        email_title = "Dear " + self.company_c_name + ","
+        email_body = self.message
+        connection = get_connection()  # uses SMTP server specified in settings.py
+        connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+        html_content = render_to_string(tempalte, {'cp_email': self.cp_email, 'message': '','body_message':email_body,
+            'email_title':email_title, 'ag_no':  self.ag_no, 'company_c_name':  self.company_c_name , 'ag_email': self.ag_email, 'ag_name':self.ag_name })
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.cp_email], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
+        msg.attach_alternative(html_content, "text/html")
+
         res = msg.send(fail_silently=True)
+        connection.close()  # Cleanup
+
+        sms_body = "CoTrav Agent "+self.ag_name +" has been assigned to your lead. Contact details - "+self.ag_email+"/"+self.ag_no+". He/She will pair up with you for further connection"
+        requests.post(
+            'https://twilix.exotel.in/v1/Accounts/{exotel_sid}/Sms/send.json'.format(exotel_sid=exotel_sid),
+            auth=(exotel_key, exotel_token),
+            data={
+                'From': sender_id,
+                'To': self.Contact_Number,
+                'Body': sms_body
+            })
 
         return (1)
 
 
+class Lead_Status_Change_Email():
+    def __init__(self, message,status,ag_email,ag_name,Company_Name,Contact_Name,Contact_Email,Contact_Number,Company_Location):
+        self.cp_email = Contact_Email
+        self.message = message
+        self.send_to = ag_email
+        self.ag_name = ag_name
+        self.status = status
+        self.Company_Name = Company_Name
+        self.Contact_Name = Contact_Name
+        self.Contact_Number = Contact_Number
+        self.Company_Location = Company_Location
+
+    def send_email(self):
+        tempalte = "signup_email_template.html"
+        email_subject = "Lead Update | "+self.Company_Name
+        email_title = "Dear " + self.ag_name + ","
+        email_body = self.message
+        connection = get_connection()  # uses SMTP server specified in settings.py
+        connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+        html_content = render_to_string(tempalte, {'company': self.Company_Name, 'location': self.Company_Location,
+            'cp_name': self.Contact_Name, 'cp_no': self.Contact_Number, 'cp_email': self.cp_email, 'message': '','body_message':email_body,
+            'email_title':email_title})
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
+        msg.attach_alternative(html_content, "text/html")
+
+        res = msg.send(fail_silently=True)
+        connection.close()  # Cleanup
+
+        sms_body = "Congratulations, you have been officially added to CoTrav client group"
+        requests.post(
+            'https://twilix.exotel.in/v1/Accounts/{exotel_sid}/Sms/send.json'.format(exotel_sid=exotel_sid),
+            auth=(exotel_key, exotel_token),
+            data={
+                'From': sender_id,
+                'To': self.Contact_Number,
+                'Body': sms_body
+            })
+
+        return (1)
+
+    def send_email_lost(self):
+        tempalte = "signup_email_template.html"
+        email_subject = "Lead Assigned | "+self.Company_Name
+        email_title = "Dear " + self.ag_name + ","
+        email_body = self.message
+        connection = get_connection()  # uses SMTP server specified in settings.py
+        connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+        html_content = render_to_string(tempalte, {'company': self.Company_Name, 'location': self.Company_Location,
+            'cp_name': self.Contact_Name, 'cp_no': self.Contact_Number, 'cp_email': self.cp_email, 'message': '','body_message':email_body,
+            'email_title':email_title})
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [self.send_to], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
+        msg.attach_alternative(html_content, "text/html")
+
+        res = msg.send(fail_silently=True)
+        connection.close()  # Cleanup
+
+        sms_body = "Sorry to loose you, We will miss you, let me know if we could be of any help in future. CoTrav Team"
+        requests.post(
+            'https://twilix.exotel.in/v1/Accounts/{exotel_sid}/Sms/send.json'.format(exotel_sid=exotel_sid),
+            auth=(exotel_key, exotel_token),
+            data={
+                'From': sender_id,
+                'To': self.Contact_Number,
+                'Body': sms_body
+            })
+
+        return (1)
+
 class FCM:
+
+    def send_notification_add(self, booking, approvers, booking_type):
+        api_access_key = API_ACCESS_KEY_EMPLOYEE
+        push_service = FCMNotification(api_key=api_access_key)
+
+        registration_id = []
+        registration_id.append(booking[0]['spoc_fcm_reg_id'])
+        for passangerss in booking[0]['Passangers']:
+            registration_id.append(passangerss['employee_fcm_regid'])
+
+        message_body = ""
+
+        if approvers:
+            if booking_type == "Taxi":
+                message_body = booking[0]['reference_no']+" Taxi Booking Received."
+            elif booking_type == "Bus":
+                message_body = booking[0]['reference_no'] + " Bus Booking Received."
+            elif booking_type == "Train":
+                message_body = booking[0]['reference_no'] + " Train Booking Received."
+            elif booking_type == "Flight":
+                message_body = booking[0]['reference_no'] + " Flight Booking Received."
+            else:
+                message_body = booking[0]['reference_no'] + " Hotel Booking Received."
+        else:
+            if booking_type == "Taxi":
+                message_body = booking[0]['reference_no']+" Taxi Booking Received."
+            elif booking_type == "Bus":
+                message_body = booking[0]['reference_no'] + " Bus Booking Received."
+            elif booking_type == "Train":
+                message_body = booking[0]['reference_no'] + " Train Booking Received."
+            elif booking_type == "Flight":
+                message_body = booking[0]['reference_no'] + " Flight Booking Received."
+            else:
+                message_body = booking[0]['reference_no'] + " Hotel Booking Received."
+
+            for approver in approvers:
+                if approver['email_approver_1']:
+                    registration_id.append(approver['approver1_regid'])
+                if approver['email_approver_2']:
+                    registration_id.append(approver['approver2_regid'])
+
+        message_title = "CoTrav Notification"
+        # message_body = "Your new booking request has been received..!"
+
+        if booking_type == "Taxi":
+            data_message = {
+                "booking_id": booking[0]['id'],
+                "message": message_body,
+                "reference_no": booking[0]['reference_no'],
+                "spoc_name": booking[0]['user_name'],
+                "pickup_time": booking[0]['pickup_datetime'],
+                "pickup_from": booking[0]['pickup_location'],
+                "drop_to": booking[0]['drop_location'],
+                "type": "Taxi",
+            }
+
+        elif booking_type == "Bus":
+            data_message = {
+                "booking_id": booking[0]['id'],
+                "message": message_body,
+                "reference_no": booking[0]['reference_no'],
+                "spoc_name": booking[0]['user_name'],
+                "pickup_time": booking[0]['pickup_from_datetime'],
+                "pickup_from": booking[0]['pickup_location'],
+                "drop_to": booking[0]['drop_location'],
+                "type": "Bus",
+            }
+
+        elif booking_type == "Train":
+            data_message = {
+                "booking_id": booking[0]['id'],
+                "message": message_body,
+                "reference_no": booking[0]['reference_no'],
+                "spoc_name": booking[0]['user_name'],
+                "pickup_time": booking[0]['pickup_from_datetime'],
+                "pickup_from": booking[0]['pickup_location'],
+                "drop_to": booking[0]['drop_location'],
+                "type": "Train",
+            }
+
+        elif booking_type == "Flight":
+            data_message = {
+                "booking_id": booking[0]['id'],
+                "message": message_body,
+                "reference_no": booking[0]['reference_no'],
+                "spoc_name": booking[0]['user_name'],
+                "pickup_time": booking[0]['departure_datetime'],
+                "pickup_from": booking[0]['from_location'],
+                "drop_to": booking[0]['to_location'],
+                "type": "Flight",
+            }
+
+        else:
+            data_message = {
+                "booking_id": booking[0]['id'],
+                "message": message_body,
+                "reference_no": booking[0]['reference_no'],
+                "spoc_name": booking[0]['user_name'],
+                "Checkin": booking[0]['checkin_datetime'],
+                "Checkout": booking[0]['checkin_datetime'],
+                "pickup_from": booking[0]['from_area_id_name'],
+                "type": "Hotel",
+            }
+
+
+        result = push_service.notify_multiple_devices(registration_ids=registration_id, message_title=message_title, message_body=message_body, data_message=data_message)
+        print(result)
+        return 1
+
+
     def send_notification(self, booking, approvers, booking_type):
         api_access_key = API_ACCESS_KEY_EMPLOYEE
         push_service = FCMNotification(api_key=api_access_key)
@@ -608,6 +838,8 @@ class FCM:
 
         if booking_type == "Taxi":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": booking[0]['reference_no']+" Taxi Booking Confirmed",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_datetime'],
@@ -618,6 +850,8 @@ class FCM:
 
         elif booking_type == "Bus":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": booking[0]['reference_no'] + " Bus Booking Confirmed",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_from_datetime'],
@@ -628,6 +862,8 @@ class FCM:
 
         elif booking_type == "Train":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": booking[0]['reference_no'] + " Train Booking Confirmed",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_from_datetime'],
@@ -638,9 +874,11 @@ class FCM:
 
         elif booking_type == "Flight":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": booking[0]['reference_no'] + " Flight Booking Confirmed",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
-                "pickup_time": booking[0]['date_of_journey'],
+                "pickup_time": booking[0]['departure_datetime'],
                 "pickup_from": booking[0]['from_location'],
                 "drop_to": booking[0]['to_location'],
                 "type": "Flight",
@@ -648,6 +886,8 @@ class FCM:
 
         else:
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": booking[0]['reference_no'] + " Hotel Booking Confirmed",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "Checkin": booking[0]['checkin_datetime'],
@@ -731,7 +971,7 @@ class FCM:
     def send_mail_to_user(self,email_subject, email_body, email_to):
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [email_to])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [email_to], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.content_subtype = "html"
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -745,7 +985,7 @@ class AcceptBooking_Email():
         global booking_tempalte
         global email_body
         global email_subject
-        registration_id = []
+        registration_id = list()
         global email_content
         global email_title
         email_title = "Approval confirmation"
@@ -754,33 +994,33 @@ class AcceptBooking_Email():
             booking_tempalte = "Email_Templates/taxi_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Taxi Booking Approval confirmation"
-            email_content = "Booking request for Taxi is Approved your Approver. Details as below,"
+            email_content = "Your Booking request for Taxi is Approved by your Approver. Details as below:"
 
         elif booking_type == "Bus":
             print("in bus booking")
             booking_tempalte = "Email_Templates/bus_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Bus Booking Approval confirmation"
-            email_content = "Booking request for Bus is Approved your Approver. Details as below,"
+            email_content = "Your Booking request for Bus is Approved by your Approver. Details as below:"
 
         elif booking_type == "Train":
             booking_tempalte = "Email_Templates/train_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Train Booking Approval confirmation"
-            email_content = "Booking request for Train is Approved your Approver. Details as below,"
+            email_content = "Your Booking request for Train is Approved by your Approver. Details as below:"
 
         elif booking_type == "Flight":
             booking_tempalte = "Email_Templates/flight_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Flight Booking Approval confirmation"
-            email_content = "Booking request for Flight is Approved your Approver. Details as below,"
+            email_content = "Your Booking request for Flight is Approved by your Approver. Details as below:"
 
         else:
             print("in hotel booking")
             booking_tempalte = "Email_Templates/hotel_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Hotel Booking Approval confirmation"
-            email_content = "Booking request for Hotel is Approved your Approver. Details as below,"
+            email_content = "Your Booking request for Hotel is Approved by your Approver. Details as below:"
 
         employee_name = ''
         employee_emails = ''
@@ -791,21 +1031,35 @@ class AcceptBooking_Email():
         for passangerss in booking[0]['Passangers']:
             employee_emails = "".join(map(str, passangerss['employee_email']))
             employee_name = "".join(map(str, passangerss['employee_name']))
-            registration_id = registration_id.append(passangerss['employee_fcm_regid'])
-
-        self.send_mail(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte, email_content, email_title)
+            if passangerss['employee_fcm_regid']:
+                registration_id = registration_id.append(passangerss['employee_fcm_regid'])
+        print("Print in send email")
+        print(employee_emails)
+        print(spoc_email)
+        self.send_mail_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte, email_content, email_title)
         self.send_mail(booking, employee_emails, employee_name, email_subject, email_body, booking_tempalte, email_content, email_title)
-        if booking[0]['spoc_is_send_email'] == '1':
+        if booking[0]['spoc_is_send_email'] == 1:
             self.send_mail(booking, spoc_email, booking[0]['user_name'], email_subject, email_body,booking_tempalte, email_content, email_title)
-
-        self.send_custome_notification(booking, registration_id, booking_type)
+        if registration_id:
+            self.send_custome_notification(booking, registration_id, booking_type)
         return 1
 
     def send_mail(self, booking, emails, name, email_subject, email_body, booking_tempalte, email_content, email_title):
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
+        msg.attach_alternative(html_content, "text/html")
+        res = msg.send(fail_silently=True)
+        connection.close()  # Cleanup
+        # res = 1
+        return 1
+
+    def send_mail_agent(self, booking, emails, name, email_subject, email_body, booking_tempalte, email_content, email_title):
+        connection = get_connection()  # uses SMTP server specified in settings.py
+        connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+        html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', emails, bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -819,6 +1073,8 @@ class AcceptBooking_Email():
 
         if booking_type == "Taxi":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Taxi Booking "+booking[0]['reference_no']+" is Approved ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_datetime'],
@@ -827,11 +1083,13 @@ class AcceptBooking_Email():
                 "type": "Taxi",
                 "ContentHead": "Taxi Booking Approved",
                 "ContentTitle": "Taxi Booking "+booking[0]['reference_no']+" Approved",
-                "ContentText": "'Taxi Hotel Booking "+booking[0]['reference_no']+" is Approved ",
+                "ContentText": "'Taxi Booking "+booking[0]['reference_no']+" is Approved ",
             }
 
         elif booking_type == "Bus":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Bus Booking " + booking[0]['reference_no'] + " is Approved ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_from_datetime'],
@@ -845,6 +1103,8 @@ class AcceptBooking_Email():
 
         elif booking_type == "Train":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Train Booking " + booking[0]['reference_no'] + " is Approved ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_from_datetime'],
@@ -858,6 +1118,8 @@ class AcceptBooking_Email():
 
         elif booking_type == "Flight":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Flight Booking " + booking[0]['reference_no'] + " is Approved ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['date_of_journey'],
@@ -871,6 +1133,8 @@ class AcceptBooking_Email():
 
         else:
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Hotel Booking " + booking[0]['reference_no'] + " is Approved ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "Checkin": booking[0]['checkin_datetime'],
@@ -890,7 +1154,7 @@ class RejectBooking_Email():
         global booking_tempalte
         global email_body
         global email_subject
-        registration_id = []
+        registration_id = list()
         global email_content
         global email_title
         if booking[0]['status_cotrav'] <= 2:
@@ -902,33 +1166,33 @@ class RejectBooking_Email():
             booking_tempalte = "Email_Templates/taxi_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Taxi Booking Cancelled"
-            email_content = "Booking request for Taxi is Cancelled. Details as below,"
+            email_content = "Your Booking request for Taxi is Rejected by your Approver. Details as below:"
 
         elif booking_type == "Bus":
             print("in bus booking")
             booking_tempalte = "Email_Templates/bus_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Bus Booking Cancelled"
-            email_content = "Booking request for Bus is Cancelled. Details as below,"
+            email_content = "Your Booking request for Bus is Rejected by your Approver. Details as below:"
 
         elif booking_type == "Train":
             booking_tempalte = "Email_Templates/train_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Train Booking Cancelled"
-            email_content = "Booking request for Train is Cancelled. Details as below,"
+            email_content = "Your Booking request for Train is Rejected by your Approver. Details as below:"
 
         elif booking_type == "Flight":
             booking_tempalte = "Email_Templates/flight_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Flight Booking Cancelled"
-            email_content = "Booking request for Flight is Cancelled. Details as below,"
+            email_content = "Your Booking request for Flight is Rejected by your Approver. Details as below:"
 
         else:
             print("in hotel booking")
             booking_tempalte = "Email_Templates/hotel_email_template.html"
             email_body = ""
             email_subject = "" + booking[0]['reference_no'] + "- Hotel Booking Approval confirmation"
-            email_content = "Booking request for Hotel is Cancelled. Details as below,"
+            email_content = "Your Booking request for Hotel is Rejected by your Approver. Details as below:"
 
         employee_name = ''
         employee_emails = ''
@@ -941,19 +1205,30 @@ class RejectBooking_Email():
             employee_name = "".join(map(str, passangerss['employee_name']))
             registration_id = registration_id.append(passangerss['employee_fcm_regid'])
 
-        self.send_mail(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte, email_content, email_title)
+        self.send_mail_agent(booking, COTRAV_EMAILS, "Team", email_subject, email_body, booking_tempalte, email_content, email_title)
         self.send_mail(booking, employee_emails, employee_name, email_subject, email_body, booking_tempalte, email_content, email_title)
-        if booking[0]['spoc_is_send_email'] == '1':
+        if booking[0]['spoc_is_send_email'] == 1:
             self.send_mail(booking, spoc_email, booking[0]['user_name'], email_subject, email_body,booking_tempalte, email_content, email_title)
-
-        self.send_custome_notification(booking, registration_id, booking_type)
+        if registration_id:
+            self.send_custome_notification(booking, registration_id, booking_type)
         return 1
 
     def send_mail(self, booking, emails, name, email_subject, email_body, booking_tempalte, email_content, email_title):
         connection = get_connection()  # uses SMTP server specified in settings.py
         connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
         html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
-        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails])
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', [emails], bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
+        msg.attach_alternative(html_content, "text/html")
+        res = msg.send(fail_silently=True)
+        connection.close()  # Cleanup
+        # res = 1
+        return 1
+
+    def send_mail_agent(self, booking, emails, name, email_subject, email_body, booking_tempalte, email_content, email_title):
+        connection = get_connection()  # uses SMTP server specified in settings.py
+        connection.open()  # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+        html_content = render_to_string(booking_tempalte, {'bookings': booking, 'user_name': name, 'email_content':email_content, 'email_title':email_title})
+        msg = EmailMultiAlternatives(email_subject, email_body, 'cotrav@taxivaxi.in', emails, bcc=[COTRAV_BCC_EMAILS], cc=[COTRAV_CC_EMAILS])
         msg.attach_alternative(html_content, "text/html")
         res = msg.send(fail_silently=True)
         connection.close()  # Cleanup
@@ -967,6 +1242,8 @@ class RejectBooking_Email():
 
         if booking_type == "Taxi":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Taxi Booking " + booking[0]['reference_no'] + " is Cancelled ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_datetime'],
@@ -980,6 +1257,8 @@ class RejectBooking_Email():
 
         elif booking_type == "Bus":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Bus Booking " + booking[0]['reference_no'] + " is Cancelled ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_from_datetime'],
@@ -993,6 +1272,8 @@ class RejectBooking_Email():
 
         elif booking_type == "Train":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Train Booking " + booking[0]['reference_no'] + " is Cancelled ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['pickup_from_datetime'],
@@ -1006,6 +1287,8 @@ class RejectBooking_Email():
 
         elif booking_type == "Flight":
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Flight Booking " + booking[0]['reference_no'] + " is Cancelled ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "pickup_time": booking[0]['date_of_journey'],
@@ -1019,6 +1302,8 @@ class RejectBooking_Email():
 
         else:
             data_message = {
+                "booking_id": booking[0]['id'],
+                "message": "'Hotel Booking " + booking[0]['reference_no'] + " is Cancelled ",
                 "reference_no": booking[0]['reference_no'],
                 "spoc_name": booking[0]['user_name'],
                 "Checkin": booking[0]['checkin_datetime'],

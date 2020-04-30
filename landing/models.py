@@ -10,7 +10,6 @@ sts = (
     ('Lead Created','Lead Created'),
     ('Assigned','Assigned'),
     ('In-Process','In-Process'),
-    ('Converted','Converted'),
     ('Closed-Win','Closed-Win'),
     ('Closed-Lost','Closed-Lost'),
 )
@@ -38,6 +37,16 @@ communication = (
     ('In-Person', 'In-Person'),
 )
 
+class ManagementFee(models.Model):
+    corporate_id = models.IntegerField()
+    service_fees_type_id = models.IntegerField()
+    service_fees_type_value = models.IntegerField()
+    service_fees_type = models.IntegerField()
+    is_deleted = models.IntegerField()
+    class Meta:
+        db_table = "corporate_management_fees"
+
+
 # Create your models here.
 class Leadgeneration(models.Model):
     Contact_Name = models.CharField(max_length=255)
@@ -46,6 +55,8 @@ class Leadgeneration(models.Model):
     Contact_Email = models.EmailField(max_length=255)
     Company_Location = models.CharField(max_length=255)
     Contact_Address = models.CharField(max_length=255)
+    Contact_Address_Line2 = models.CharField(max_length=255)
+    Contact_Address_Line3 = models.CharField(max_length=255)
     Company_Website = models.CharField(max_length=255)
     Message = models.CharField(max_length=255)
     Assigned_Sales_Person = models.IntegerField()

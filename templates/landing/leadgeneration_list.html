@@ -46,7 +46,9 @@
             <div class="modal-body">
             <form action="/agents/lead-assigned" method="post" enctype="multipart/form-data" id="form_id">
                 <input type="hidden" name="lead_id" id="group_id">
+                <input type="hidden" name="ag_name" id="ag_name">
                 <input type="hidden" name="agent_email" id="agent_email">
+                <input type="hidden" name="contact_no" id="contact_no">
                 <input type="hidden" name="Contact_Name" id="Contact_Name">
                 <input type="hidden" name="Company_Name" id="Company_Name">
                 <input type="hidden" name="Contact_Number" id="Contact_Number">
@@ -58,7 +60,7 @@
                             <select class="form-control myselect" name="agent_id" id="corporate_name" style="width:100%;" required>
                                 <option value="">Select Agent</option>
                                {% for agent in agents %}
-                                <option value="{{agent.id}}" email="{{agent.email}}">{{agent.user_name}} ({{agent.emp_id}})</option>
+                                <option value="{{agent.id}}" ag_name="{{agent.user_name}}" email="{{agent.email}}" contact_no="{{agent.contact_no}}">{{agent.user_name}} ({{agent.emp_id}})</option>
                                 {% endfor %}
                             </select>
 
@@ -115,7 +117,7 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+<!--                                        <th>ID</th>-->
                                         <th>Customer Name</th>
                                         <th>Company Name</th>
                                         <th>Contact Number</th>
@@ -130,7 +132,7 @@
                                     <tbody>
                                 {% for lead in leads  %}
                                     <tr>
-                                        <td>{{ lead.id }}</td>
+<!--                                        <td>{{ lead.id }}</td>-->
                                         <td>{{ lead.Contact_Name }}</td>
                                         <td>{{ lead.Company_Name }}</td>
                                         <td>{{ lead.Contact_Number }}</td>
@@ -229,8 +231,12 @@ $(function() {
 
 $("#corporate_name").change(function()
     {
+        var ag_name = $(this).find("option:selected").attr("ag_name");
         var asas = $(this).find("option:selected").attr("email");
+        var contact_no = $(this).find("option:selected").attr("contact_no");
          $('#agent_email').val(asas);
+         $('#contact_no').val(contact_no);
+         $('#ag_name').val(ag_name);
     });
 
 </script>

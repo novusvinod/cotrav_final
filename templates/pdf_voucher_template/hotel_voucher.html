@@ -1,12 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<style>
+
+   <head>
+       <title>Bus Voucher</title>
+     <style>
+
+@font-face {
+   font-family: Montserrat Medium;
+   src: url('http://cotrav.co/static/fonts/Montserrat-Medium.ttf');
+}
+
+body {
+
+font-family: Montserrat Medium;
+}
+
 @page {
 size: a4 portrait;
 
-font-family:Montserrat;
- background: whitesmoke;
+
 
 
 @frame header_frame { /* Static Frame */
@@ -27,8 +39,7 @@ font-family:Montserrat;
 
 
 @frame content_frame { /* Content Frame */
-left: 50pt; width: 512pt; top: 115pt; height: 632pt;
-
+left: 39pt; width: 512pt; top: 90pt; height: 632pt;
 
 }
 
@@ -38,7 +49,7 @@ left: 50pt; width: 512pt; top: 115pt; height: 632pt;
 position: fixed;
   bottom: 0pt;
   left: 0;
-  top: 726pt;
+  top: 760pt;
 
 }
 
@@ -63,241 +74,303 @@ position: fixed;
 }
 
 
- body {
-                font-weight: 200;
-                font-size: 14px;
-                font-family: montserrat,sans-serif;
-
-            }
-            .header {
-                font-size: 20px;
-                font-weight: 100;
-                text-align: center;
-                color: #007cae;
-            }
-            .logo{
-
-                width: 135px;
-               margin-left: 40px;
-          padding-top: -100px;
-
-            }
-
-            .title {
-                font-size: 22px;
-                font-weight: 100;
-               /* text-align: right;*/
-               padding: 10px 20px 0px 20px;
-            }
-            .title span {
-                color: #007cae;
-            }
-
-            h5 {
-                font-family: montserrat;
-                font-weight: 600;
-                font-size: 17px;
-                 }
-
-                    h6{
-                font-family: montserrat,san-serif;
-                font-weight: 600;
-                font-size: 17px;
-                 }
-                  h4{
-                font-family: montserrat,san-serif;
-                font-weight: 600;
-                font-size: 20px;
-                 }
-                 p{
-                    font-family: montserrat,san-serif;
-                font-weight: 400;
-                font-size: 13px;
-                 }
-               .p-1{
-                  font-size: 12px;
-                  font-weight: 400;
-               }
-
-             .sec{
-               text-align: center;
-             }
-             .section{
-               text-decoration-line: underline;
+h1{
+  font-size: 12px;
+font-weight: 900;
+}
 
 
-             }
+h2{
+  font-size: 10px;
+}
 
-             .section2{
-               line-height: 35px;
-             }
-             td{
-               font-size: 15px;
-             }
-             .footer{
-               height: 153px;
-             }
-             .img1{
-               margin-top: -94px;
-                 margin-bottom: 37px;
-             }
-            .img1{
-           padding-top:-90px;
-            }
-             .detail{
-                 margin-top:50px;
-             }
-             .txt-block{
-                 margin-top: -100px;
-             }
-             .font{
-                font-size: 13px;
-                 text-align:center;
-                 color:white;
-                 font-weight:600;
-             }
+p{
+  font-size: 9px;
+  font-weight: 900;
 
+}
+#header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+
+}
+#footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+ }
+
+.custom-page-start {
+    margin-top: 100px;
+}
+
+  .p-1{
+     font-size: 13px;
+  }
+
+.sec{
+  text-align: center;
+}
+.section{
+  text-decoration-line: underline;
+  line-height: 0px;
+}
+.border-left{
+  border-left: solid 1px gray;
+}
+.section2{
+  line-height: 20px;
+}
+table{
+  overflow-wrap: break-word;
+word-break: break-all;
+font-family: Montserrat;
+}
+td{
+  font-size: 9px;
+  font-family: 'Montserrat';
+font-weight: 400;
+overflow-wrap: break-word;
+word-break: break-all;
+}
+.footer{
+  height: 140px;
+}
+.img1{
+  margin-top: -94px;
+    margin-bottom: 20px;
+  }
+
+
+.flight_section{
+      padding-left: 46px;
+    margin-bottom: -8px;
+    font-size: 15px;
+
+    font-weight: 600;
+
+}
+.f1{
+  font-size: 9px;
+
+    font-weight: 600;
+}
+.section-f1{
+  font-size: 9px;
+
+    font-weight: 600;
+}
+.section-f2{
+  font-size: 9px;
+  font-family: montserrat,Regular;
+  font-weight: 500;
+}
+
+table {
+
+ vertical-align: middle;
+
+}
+table td, table th {
+    border:none;
+     padding: 1px;
+
+
+}
+th{
+  font-size: 11px;
+
+}
+
+span{
+font-size: 9px;
+font-weight: 500;
+text-align: center;
+}
+.plane{
+      width: 9px;
+
+
+}
+.plane_detail{
+  font-size: 9px;
+  text-align: center;
+
+}
+
+.plane_detail_1{
+  font-size: 9px;
+  text-align: center;
+   font-weight: 600;
+}
+.f-span{
+  margin-left: 81px;
+  font-size: 11px;
+
+}
+.total_sec{
+font-family: 'Montserrat';
+    font-size: 17px;
+    font-weight: 500;
+    position: relative;
+    right: 18%;
+    padding: 15px;
+}
+.border_bott{
+  border-bottom: 1px solid gray;
+}
 
 </style>
-<head>
+</head>
+
 <body>
-<div id="header_content">
-
-  <img src="../static/img/test/bg1.png">
-
-</div>
-<div id="logo_content">
-    <img src="../static/img/test/logo.png" class="logo">
-
+  <div id="header_content">
+ <img src="http://cotrav.co/static/img/voucher/img//bg1_flight.png" alt="bg1_flight">
 </div>
 
-<div id="footer_content">
-    <img src="../static/img/test/bg2.png">
 
-</div>
-<div id="bus_logo">
-    <img src="../static/img/test/bus.png">
+  <div id="footer_content">
+     <img src="http://cotrav.co/static/img/voucher/img/bg2_hotel.png" alt="bg2_bus">
 </div>
 
- <div id="ftr_content" >BAI INFOSOLUTION PVT LTD  <pdf:pagenumber>
-of <pdf:pagecount>
-      <br> <small style="font-weight: 500;font-size: 13px;">AGENT CONTACT : 0987654321</small>
- </div>
-
- <div class="detail">
-
- <table>
-  <tbody>
-  <tr>
-    <td align="center" class="border-bottom">
-    <h5>"Dear {{user_name}}"</h5>
-    <p> Your Booking is Confirmed </p>
-      <p class="p-1"> Thank You For using Taxivaxi.com to book your hotels. For Your Reference, Your TaxiVaxi Booking ID is...<strong> {{reference_no}} </strong> Agent Booking ID is...<strong> {{operator_name}} </strong> </p>
-  </td>
-   </tr>
-
-
-<table  class="border-bottom">
-
-    <tr>
-      <h6 align="center" class="section">User Detail</h6>
-    </tr>
-    <tr>
-     <td align="center">
-      Name : {{user_nam}}
-     </td>
-      <td td align="center">
-      Contact : {{user_contact}}
-     </td>
-
-   </tr>
-</table>
-
-
-
-    <table  class="section2 border-bottom">
-
-    <tr>
-      <h6 align="center" class="section">Hotel Detail</h6>
-    </tr>
-    <tr>
-     <td align="center">
-    Check in : {{checkin_datetime}}
-
-     </td>
-      <td td align="center">
-      Check out  :  {{checkout_datetime}}
-     </td>
-
-   </tr>
-     <tr>
-     <td align="center">
-     #Nights  : 12
-     </td>
-      <td td align="center">
-     Hotel Name  : {{operator_name}}
-     </td>
-
-   </tr>
-     <tr>
-     <td align="center">
-     Is Room AC  : {{is_ac_room}}
-     </td>
-      <td td align="center">
-     Contact  :  {{operator_contact}}
-     </td>
-
-   </tr>
-
-
-</table>
-
-
-  <table align="center" width="100%" class="section2 border-bottom">
-
-    <tr>
-      <h6 align="center" class="section">Passenger Details</h6>
-    </tr>
-    <tr>
-    {% for pasg in Passangers %}
-     <td align="center">
-         Passenger Name : {{pasg.employee_name}}<br>
-         Gender : {{pasg.gender}}<br>
-         Age : {{pasg.age}}
-
-     </td>
-      {% endfor %}
-   </tr>
-
-
-</table>
-
-
-
-    <table  class="border-bottom">
+  <div class='header'></div>
+    <div class='footer'></div>
+  <h1 align="center" style="font-family: montserrat,san-serif; font-weight: 500;border-bottom: solid 1px silver;font-size: 18px;">Hotel Confirmation Voucher </h1>
+    <table  width="100%">
 
    <tr>
-      <h6 align="center" class="section">Hotel Cancellation Policy </h6>
+  
+   <td  align="center" > <h1 style="line-height: 0px;font-family: 'Montserrat'; font-weight: 500;font-size: 18px;">"Dear {{user_name}}" </h1> <p style="font-weight: normal;font-size: 13px;"> CoTrav Booking ID is... {{reference_no}}</p> </td>
+    
+   </tr>
+
+    <tr>
+  
+    <td style="color:#383838;" align="center" >  <p style=" font-family: 'Montserrat';font-weight: normal;border-bottom: solid 1px silver;"> Thank You For using CoTrav.co to book your hotels. For Your Reference, Your CoTrav Booking ID is... <strong>{{agent_booking_id}}</strong> Agent Voucher No is...<strong> {{voucher_number}}</strong> </p>  </td>
+    
+   </tr>
+ </table>
+
+  <h1  align="center" style=" font-family: 'Montserrat';font-weight: 500;border-bottom: solid 1px silver;">User Details </h1>
+<table width="100%" >
+
+
+
+    {% for pasg in Passangers %}
+ <tr>
+  
+  <td align="left"  valign="top" colspan="8"><strong> Name  -</strong></td>
+   <td style="color:#383838;" align="left"  valign="top" colspan="8"> {{pasg.employee_name}} </td>
+ 
+   <td align="center"  valign="top" colspan="8"><strong> Email   -</strong></td>
+   <td style="color:#383838;" align="center"  valign="top" colspan="8">  {{pasg.employee_email}}  </td>
+
+     <td align="right"  valign="top" colspan="8"><strong> Contact   -</strong></td>
+   <td  style="color:#383838;" align="right"  valign="top" colspan="8">  {{pasg.employee_contact}} </td>
+
+ </tr>
+{% endfor %}
+    
+
+</table>
+<br>
+<table width="100%" >
+<tr>
+   <td align="center"  valign="top" style="background-color: whitesmoke;line-height: 15px;">
+<p style="text-align: center;font-weight: normal; font-size: 11px;padding: 5px;">THIS IS YOUR HOTEL CONFIRMATION VOUCHER A PRINTED COPY OF THIS MUST BE PRESENTED AT THE<br> HOTEL AT THE TIME OF CHECK-IN </p></td></tr>
+
+</table>
+
+  <h1 align="center" style=" font-family: 'Montserrat';font-weight: 500;line-height: 0px;border-bottom: solid 1px silver;">Hotel  Details </h1>
+<table  width="100%" >
+
+
+    <tr>
+
+         <td align="left"  valign="top" colspan="8"><strong> Hotel Name</strong></td>
+   <td style="color:#383838;" align="left"  valign="top" colspan="8">{{operator_name}}</td>
+
+<td align="center"  valign="top" colspan="16"> <strong> Hotel Address</strong></td>
+   <td style="color:#383838;" align="center"  valign="top" colspan="16">{{operator_address}}</td>
+
+
     </tr>
 
- <tr>
-     <td  align="center">
-   Following Cancellation charges will be applicable  Following Cancellation charges <br>
-  Following Cancellation charges will be applicable  Following Cancellation charges <br></td>
+       <tr>
+  
+  <td align="left"  valign="top" colspan="8"><strong> CHECK-IN </strong></td>
+   <td style="color:#383838;" align="left"  valign="top" colspan="8">{{checkin_datetime}} </td>
+
+<td align="center"  valign="top" colspan="8"> <strong>  CHECK-OUT </strong></td>
+   <td style="color:#383838;" align="center"  valign="top" colspan="8"> {{checkout_datetime}}</td>
+
+
+ <td align="right"  valign="top" colspan="8"><strong>  #Nights  -</strong></td>
+   <td style="color:#383838;" align="right"  valign="top" colspan="8" >  {{no_of_nights}}  </td>
+
+  </tr>
+  
+<tr></tr>
+  <tr>
+
+<td align="left"  valign="top" colspan="8"><strong>  Travellers -</strong></td>
+   <td style="color:#383838;" align="left"  valign="top" colspan="8">{{no_of_seats}} </td>
+
+   <td align="center"  valign="top" colspan="8"> <strong>   Is Room AC  -</strong></td>
+   <td style="color:#383838;" align="center"  valign="top" colspan="8"> {{is_ac_room|yesno:'Yes,No'}}</td>
+
+<td align="right"  valign="top" colspan="8"> <strong> Contact -</strong></td>
+   <td style="color:#383838;" align="right"  valign="top" colspan="8"> {{operator_contact}}</td>
 
 
 
+
+  </tr>
+
+  
+
+</table>
+<br>
+
+ <table  width="100%" >
+
+   <tr>
+  
+   <td  align="center" > <h1 style="font-family: 'Montserrat'; font-weight: 500;border-bottom: solid 1px silver;">Hotel Cancellation Policy </td>
+    
    </tr>
-</table>
+
+    <tr>
+  
+    <td style="color:#383838;" align="left" >  <p style=" font-family: 'Montserrat';font-weight: normal;"> Following Cancellation charges will be applicable :<br> The standard cancellation charges shall be applicable as per the below matrix: If the booking is cancelled 7 days before the check-in, no charges shall apply.  If the booking is cancelled within 7 days of the check-in but before 3 days from check-in 50% of the total charge shall be applicable. If the booking is cancelled within 3 days of check-in 100% of the total charge shall be applicable. <br>.Please note that some of the hotels have different cancellation policy and it may vary from the above. In case of variable cancellation charges, the same shall be applicable on actual
+</p></td>
+    
+   </tr>
+ </table>
 
 
+ <table  width="100%" >
 
- </tbody>
-</table>
+   <tr>
+  
+       <td  align="center" > <h1 style="font-family: 'Montserrat'; font-weight: 500;border-bottom: solid 1px silver;">General Hotel Policy</h1> </td>
+    
+   </tr>
+
+    <tr>
+  
+    <td style="color:#383838;" align="left" >  <p style=" font-family: 'Montserrat';font-weight: normal;"> -The standard checkin time is 12:00 PM and the standard checkout time is 12:00 PM. Early checkin or late checkout is strictly subjected to availability and may be chargeable by the hotel. Any early checkin or late checkout request must be directed and reconfirmed with hotel directly. <br>-Valid ID proof is required at the time of check in for all guests.<br>-Locals and unmarried couples are not allowed ( 30 KM area radius from hotel take as a local area). <br>-Most hotels do not allow unmarried / unrelated couples to checkin. <br>-This is at full discretion of the hotel management. No refund would be applicable in case the hotel denies checkin under such circumstances
+</p></td>
+    
+   </tr>
+ </table>
 
 
- </div>
-
-
+ 
 </body>
 </html>

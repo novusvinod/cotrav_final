@@ -99,12 +99,12 @@
                 <input type="hidden" name="accept_id" id="accept_id">
                 <input type="hidden" name="reject_id" id="reject_id">
                 <input type="hidden" name="current_url" value="{{ request.get_full_path }}">
-                <label>Are you sure you want to Reject Booking</label>
+                <label>Are you sure you want to Cancel Booking</label>
                 <div class="row">
                     <label class="control-label col-sm-2">Comment</label>
                     <textarea class="form-control col-sm-10" id="user_comment" rows="4" name="user_comment" placeholder="Comment.."></textarea>
                 </div>
-                </div>
+
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
@@ -210,23 +210,24 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Booking Date</th>
-                                    <th>Reference No</th>
-                                    <th>Assessment Code</th>
+<!--                                    <th>ID</th>-->
+
+                                    <th>Booking Id</th>
+
                                     <th>From City</th>
                                     <th>To City</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Departure Date</th>
                                     <th>Usage Type</th>
                                     <th>Seat Type</th>
                                     <th>Flight No.</th>
-                                    <th>SPOC Details</th>
-                                    <th>Passenger Details</th>
-                                    <th>No. Of Seats</th>
                                     <th>Client Status</th>
                                     <th>CoTrav Status</th>
+
+                                    <th>SPOC Details</th>
+                                    <th>Passenger Details</th>
+
                                     <th>Action</th>
-                                    <th>Passanger</th>
                                     <th>Details</th>
                                      {% if booking_type == 30 %}
                                         <th>Self Booking Flight Status</th>
@@ -239,16 +240,25 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
-                                    <td>{{ booking.booking_datetime }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
+
                                      <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
-                                    <td>{{ booking.assessment_code }}</td>
+
                                      <td>{{ booking.from_location }}</td>
                                     <td>{{ booking.to_location}}</td>
+                                    <td>{{ booking.booking_datetime }}</td>
                                      <td>{{ booking.departure_datetime }}</td>
                                      <td>{{ booking.usage_type }}</td>
                                      <td>{{ booking.seat_type }}</td>
                                     <td>{{  booking.flight_type }}</td>
+
+                                     <td>{{ booking.client_status }} </td>
+                                    <td>{{ booking.cotrav_status }}
+                                        {% if booking.status_cotrav > 1 %}
+                                            ({{ booking.cotrav_agent_name|default:'' }})
+                                        {% endif %}
+                                    </td>
+
                                      <td>{{ booking.user_name }}<br/>({{ booking.user_contact }})</td>
 
                                      <td>
@@ -257,31 +267,14 @@
                                         {% endfor %}
                                     </td>
 
-
-
-                                    <td>{{ booking.no_of_seats }} </td>
-
-                                    <td>{{ booking.client_status }} </td>
-                                    <td>{{ booking.cotrav_status }}
-                                        {% if booking.status_cotrav > 1 %}
-                                            ({{ booking.cotrav_agent_name|default:'' }})
-                                        {% endif %}
-                                    </td>
-
                                     <td style="display: inline-flex;">
                                         {% if booking.status_cotrav == 1 %}
-                                         <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
-                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>
+<!--                                         <a title="Accept Booking" style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"-->
+<!--                                           data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i>  </a>-->
 
-                                        <a style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
+                                        <a title="Cancel Booking" style="margin-left:10px;" data-target="#model_action" data-id="{{booking.id}}" data-reject_id="1"
                                            data-toggle="modal" class="btn btn-tbl-delete btn-xs" >  <i class="fa fa-times "></i></a>
                                     {% endif %}
-                                    </td>
-
-                                      <td>
-                                        {% for passanger in booking.Passangers %}
-                                        {{ passanger.employee_name|default:'' }} <br/>({{ passanger.employee_contact|default:''}})<br/>
-                                        {% endfor %}
                                     </td>
 
 

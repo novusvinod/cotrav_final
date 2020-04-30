@@ -225,12 +225,13 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Booking Date</th>
-                                    <th>Reference No</th>
-                                    <th>Assessment Code</th>
+<!--                                    <th>ID</th>-->
+
+                                    <th>Booking Id</th>
+<!--                                    <th>Assessment Code</th>-->
                                     <th>From City</th>
                                     <th>To City</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Departure Date</th>
                                     <th>Usage Type</th>
                                     <th>Seat Type</th>
@@ -252,12 +253,13 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
-                                    <td>{{ booking.booking_datetime }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
+
                                      <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
-                                    <td>{{ booking.assessment_code }}</td>
+<!--                                    <td>{{ booking.assessment_code }}</td>-->
                                      <td>{{ booking.from_location }}</td>
                                     <td>{{ booking.to_location}}</td>
+                                     <td>{{ booking.booking_datetime }}</td>
                                      <td>{{ booking.departure_datetime }}</td>
                                      <td>{{ booking.usage_type }}</td>
                                      <td>{{ booking.seat_type }}</td>
@@ -279,11 +281,6 @@
                                     {% if booking.status_cotrav > 1 %}
                                             ({{ booking.cotrav_agent_name|default:'' }})</td>
                                         {% endif %}
-                                    </td>
-
-
-
-
 
 
                                       <td>

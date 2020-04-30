@@ -20,6 +20,13 @@ path('contact',views.contact, name="contact"),
 
 path('support',views.support, name="support"),
 
+path('cab',views.cab, name="cab"),
+path('hotel',views.hotel, name="hotel"),
+path('mice',views.mice, name="mice"),
+path('ticketing',views.ticketing, name="ticketing"),
+path('travel',views.travel, name="travel"),
+path('visa',views.visa, name="visa"),
+
 path('testsignup',views.testsignup, name="testsignup"),
 
 path('testemail',views.testemail, name="testemail"),
@@ -42,6 +49,10 @@ path('script/add_train',Cotrav_InsertData_Scripts.add_train),
 path('script/add_flight',Cotrav_InsertData_Scripts.add_flight),
 
 path('script/add_hotel',Cotrav_InsertData_Scripts.add_hotel),
+
+path('agents/testpdf',views.pdf_render_test, name="testpdf"),
+
+
 
 
 

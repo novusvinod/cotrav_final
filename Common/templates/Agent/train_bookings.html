@@ -149,7 +149,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title-status">Enter Details To Assign Agent</h4>
+                <h4 class="modal-title-status">Change Booking Status</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -349,11 +349,11 @@
                             <table id="example1" class="display full-width table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Reference No</th>
+<!--                                    <th>ID</th>-->
+                                    <th>Booking Id</th>
                                     <th>From</th>
                                     <th>To</th>
-                                    <th>Booking DateTime</th>
+                                    <th>Booking Date/Time</th>
                                     <th>Boarding Point</th>
                                     <th>Date of Journey</th>
                                     <th>Train Type</th>
@@ -373,7 +373,7 @@
                                 <tbody>
                                 {% for booking in bookings %}
                                 <tr>
-                                    <td>{{ booking.id }}</td>
+<!--                                    <td>{{ booking.id }}</td>-->
                                     <td>{{ booking.reference_no }}<br>({{booking.corporate_name}})</td>
                                     <td>{{ booking.pickup_location }}</td>
                                     <td>{{ booking.drop_location}}</td>
@@ -384,12 +384,13 @@
                                     <td>{{ booking.client_status }} </td>
                                     <td>{{ booking.cotrav_status }}
                                      {% if booking.status_cotrav > 1 %}
+                                        <br/>
                                             ({{ booking.cotrav_agent_name|default:'' }})
                                         {% endif %}
                                     </td>
 
                                     <td style="display: inline-flex;">
-                                        {% if booking.status_cotrav == 1 %}
+                                        {% if booking.status_cotrav == 1 or booking_type == 6 %}
                                      <a style="margin-left:10px; background:cadetblue; color:white;" data-target="#model_action" data-id="{{booking.id}}" data-accept_id="1"
                                            data-toggle="modal" class="btn btn-tbl-edit btn-xs"> <i class="fa fa-check"></i> </a>
                                     {% endif %}
@@ -504,10 +505,12 @@ $(function() {
     modal.find('#booking_id').val(id);
 
     if(reject_id == 1){
+        modal.find('#accept_id').val('');
         modal.find('#reject_id').val(1);
         modal.find('#user_comment').prop('required',true);
     }
     if(accept_id == 1){
+        modal.find('#reject_id').val('');
         modal.find('#accept_id').val(1);
         modal.find('#user_comment').prop('required',false);
     }

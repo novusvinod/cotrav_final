@@ -19,7 +19,7 @@
                      </div>
 
 
-        <form method="post" action="/Corporate/Admin/add-employee/{{user.corporate_id}}">
+        <form method="post" action="/Corporate/Admin/add-employee/{{user.corporate_id}}" id="model_serialize_update">
             {% csrf_token %}
             <input type="hidden" class="col-sm-8 form-control" name="user_id" value="{{user.id }}">
             <input type="hidden" class="col-sm-8 form-control" name="corporate_id" value="{{user.corporate_id }}">
@@ -285,7 +285,7 @@
                                     <option value=" " >Select Reporting Manager</option>
                                 {% if employee %}
                                 {% for employe in employee %}
-                                {% for employee in employeess %}
+                                {% for employee in employees %}
                                         <option value="{{employee.id}}" {% if employe.reporting_manager == employee.id %} selected {%endif%}>{{employee.employee_name}}</option>
                                         {% endfor %}
                                 {% endfor %}
@@ -319,17 +319,17 @@
                                 {% for employee in employee %}
                                  {% if employee.date_of_birth and employee.date_of_birth != 'None' %}
 
-                                <input type="text" class="col-sm-8 form-control datepicker1" autocomplete="off" name="date_of_birth" value="{{employee.date_of_birth}}"
+                                <input type="text" class="col-sm-8 form-control datepicker_download" autocomplete="off" name="date_of_birth" value="{{employee.date_of_birth}}"
                                        placeholder="Assistant ID" required>
                                 {% else %}
 
-                                <input type="text" class="col-sm-8 form-control datepicker1" autocomplete="off" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker_download" autocomplete="off" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                                  {% endfor %}
 
                                 {% else %}
-                                <input type="text" class="col-sm-8 form-control datepicker1" autocomplete="off" name="date_of_birth"
+                                <input type="text" class="col-sm-8 form-control datepicker_download" autocomplete="off" name="date_of_birth"
                                        placeholder="Date Of Birth" required>
                                  {% endif %}
                             </div>
@@ -493,5 +493,30 @@ var_url = '/api/'+'cities'
   });
 
 </script>
+<script>
+    $( document ).ready(function() {
 
+$('#model_serialize_update')
+.each(function(){
+$(this).data('serialized', $(this).serialize())
+})
+    .on('change input', function(){
+        $(this)
+            .find('input:submit, button:submit')
+                .attr('disabled', $(this).serialize() == $(this).data('serialized'))
+        ;
+     })
+.find('input:submit, button:submit')
+.attr('disabled', true);
+
+});
+
+$(document.body).on("change",".myselect",function(){
+  $('form')
+      .find('input:submit, button:submit')
+          .attr('disabled', $('#model_serialize_update').serialize() == $('#model_serialize_update').data('serialized'))
+  ;
+});
+
+</script>
 {% endblock %}

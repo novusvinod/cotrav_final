@@ -29,6 +29,11 @@ from django.core.files import File
 
 from threading import Thread, activeCount
 from landing.utils import render_to_pdf
+from landing.models import ManagementFee
+
+TAX_PERC = 0.18
+
+OPER_TAX_PERC = 0.18
 
 
 class BookingEmail:
@@ -68,6 +73,36 @@ class BookingEmail:
         return self.res
 
 
+class Bill():
+
+    def __init__(self, params):
+        self.params = params
+
+
+    def get_file_path(self, request):
+        params = self.params
+        pdf = render_to_pdf('pdf_voucher_template/bill_template/bill_single_invoice.html', params)
+        file = Render.render_to_bill_pdf('pdf_voucher_template/bill_template/bill_single_invoice.html', params)
+        return file
+
+    def get_file_path_multiple_invoice(self, request):
+        params = self.params
+        pdf = render_to_pdf('pdf_voucher_template/bill_template/bill_multiple_invoice.html', params)
+        file = Render.render_to_bill_pdf('pdf_voucher_template/bill_template/bill_multiple_invoice.html', params)
+        return file
+
+    def get_file_path_rembusment(self, request):
+        params = self.params
+        pdf = render_to_pdf('pdf_voucher_template/bill_template/bill_single_invoice.html', params)
+        file = Render.render_to_bill_pdf_bill('pdf_voucher_template/bill_template/bill_single_invoice.html', params)
+        return file
+
+    def get_file_path_tax(self, request):
+        params = self.params
+        pdf = render_to_pdf('pdf_voucher_template/bill_template/bill_single_invoice.html', params)
+        file = Render.render_to_bill_pdf_bill('pdf_voucher_template/bill_template/bill_single_invoice.html', params)
+        return file
+
 class Bus():
 
     def __init__(self, params):
@@ -76,8 +111,8 @@ class Bus():
 
     def get(self, request):
         params = self.params
-        pdf = render_to_pdf('pdf_voucher_template/invoice2.html', params)
-        file = Render.render_to_file('pdf_voucher_template/invoice2.html', params)
+        pdf = render_to_pdf('pdf_voucher_template/bus_voucher.html', params)
+        file = Render.render_to_file('pdf_voucher_template/bus_voucher.html', params)
 
         return file
 
@@ -302,6 +337,25 @@ class Render:
             pisa.pisaDocument(BytesIO(html.encode("UTF-8")), pdf)
         return [file_name, file_path]
 
+    @staticmethod
+    def render_to_bill_pdf(path: str, params: dict):
+        template = get_template(path)
+        html = template.render(params)
+        file_name = "{0}{1}.pdf".format('Voucher_', randint(1, 1000000))
+        file_path = os.path.join(os.path.abspath(os.path.dirname("__file__")), "media//Bill_PDF", file_name)
+        with open(file_path, 'wb') as pdf:
+            pisa.pisaDocument(BytesIO(html.encode("UTF-8")), pdf)
+        return [file_name, file_path]
+
+    def render_to_bill_pdf_bill(path: str, params: dict):
+        template = get_template(path)
+        html = template.render(params)
+        file_name = "{0}{1}.pdf".format('Bill_', randint(1, 1000000))
+        file_path = os.path.join(os.path.abspath(os.path.dirname("__file__")), "media//Bill_PDF", file_name)
+        with open(file_path, 'wb') as pdf:
+            pisa.pisaDocument(BytesIO(html.encode("UTF-8")), pdf)
+        return [file_name, file_path]
+
 
 class TaxCalc():
 
@@ -330,7 +384,290 @@ class TaxCalc():
     def taxIgst(self):
         pass
 
+class TaxCalc():
 
+    def __init__( self , corporateid , service_type , cotrav_billing_entity , corporate_billing_entity , ticket_price , no_of_passanger = 1 , oper_ticket_price = 0 , oper_cotrav_billing_entity = 0 , oper_billing_entity = 0 ):
+        self.ticket_price = int(ticket_price)
+        self.management_fee = 0
+        self.tax_on_management_fee = 0
+        self.tax_on_management_fee_percentage = TAX_PERC * 100
+        self.tax_amount_on_management_fee = 0
+        self.tax_perscentage = TAX_PERC;
+        self.sub_total = 0
+        self.booking_billing_entity = corporate_billing_entity
+        self.cotrav_billing_entity = cotrav_billing_entity
+        self.igst = 0
+        self.cgst = 0
+        self.sgst = 0
+        self.management_fee_igst = 0
+        self.management_fee_cgst = 0
+        self.management_fee_sgst = 0
+        self.management_fee_igst_rate = 0
+        self.management_fee_cgst_rate = 0
+        self.management_fee_sgst_rate = 0
+
+        self.service_fees_type = int(service_type)
+        self.no_of_passanger = int(no_of_passanger)
+
+        self.oper_tax_perscentage = OPER_TAX_PERC;
+        self.oper_ticket_price = oper_ticket_price
+        self.oper_cotrav_billing_entity = oper_cotrav_billing_entity
+        self.oper_billing_entity = oper_billing_entity
+
+        self.gst_perc = 0.0
+        self.gst_paid = 0.0
+
+        self.oper_cgst_amount = 0
+        self.oper_sgst_amount = 0
+        self.oper_igst_amount = 0
+
+        self.oper_cgst = 0.0
+        self.oper_sgst = 0.0
+        self.oper_igst = 0.0
+
+        try:
+            abc = ManagementFee.objects.get(corporate_id = int(corporateid) , service_fees_type_id = int(service_type) )
+
+            self.service_fees_type = abc.service_fees_type
+
+            print('service fee type')
+            print(self.service_fees_type)
+
+            if (self.service_fees_type == 2):
+
+                print(self.ticket_price)
+
+                if (self.ticket_price == 0):
+
+                    self.management_fee = (abc.service_fees_type_value / 100) * self.no_of_passanger
+
+                    self.management_fee = round(self.management_fee,2)
+
+                else:
+
+                    self.management_fee = ( self.ticket_price * (abc.service_fees_type_value /100 ) ) * self.no_of_passanger
+
+                    self.management_fee = round(self.management_fee, 2)
+
+            else:
+                self.management_fee = abc.service_fees_type_value * self.no_of_passanger
+
+                print(abc.service_fees_type_value)
+
+                print(self.service_fees_type)
+
+
+        except ManagementFee.DoesNotExist:
+
+            self.management_fee = 100
+
+            print('data not found')
+
+
+    def taxOnManagement(self):
+        self.tax_amount_on_management_fee =  self.management_fee * self.tax_perscentage
+        self.tax_amount_on_management_fee = round(self.tax_amount_on_management_fee,2)
+
+        return self.tax_amount_on_management_fee
+
+
+    def gst(self):
+        val1 = self.booking_billing_entity
+        val2 = self.cotrav_billing_entity
+
+        self.taxOnManagement()
+
+        v1 = val1[:2]
+        v2 = val2[:2]
+
+        if ( v1 == v2 ):
+            self.cgst = self.tax_perscentage / 2
+            self.sgst = self.tax_perscentage / 2
+
+            self.management_fee_cgst = self.cgst
+            self.management_fee_sgst = self.sgst
+
+            self.management_fee_cgst_rate = self.tax_amount_on_management_fee / 2
+            self.management_fee_sgst_rate = self.tax_amount_on_management_fee / 2
+
+        else:
+            self.igst = self.tax_perscentage
+
+            self.management_fee_igst = self.igst
+
+            self.management_fee_igst_rate = self.tax_amount_on_management_fee
+
+        return {'cgst': self.cgst , 'sgst': self.sgst , 'igst': self.igst }
+
+
+    def hotel_gst(self):
+
+        if ( self.ticket_price > 0 and self.ticket_price <1999 ) :
+
+            self.hotel_gst = 0
+
+        elif ( self.ticket_price > 1001 and self.ticket_price < 2500 ):
+
+            self.hotel_gst = 12
+
+        elif (self.ticket_price > 2501 and self.ticket_price < 7500):
+
+            self.hotel_gst = 18
+
+        else:
+
+            self.hotel_gst = 28
+
+        val1 = self.booking_billing_entity
+        val2 = self.cotrav_billing_entity
+
+        self.taxOnManagement()
+
+        v1 = val1[:2]
+        v2 = val2[:2]
+
+        if (v1 == v2):
+
+            if( self.hotel_gst == 0 ):
+                self.cgst = 0
+                self.sgst = 0
+                self.management_fee_cgst_rate = self.tax_amount_on_management_fee / 2
+                self.management_fee_sgst_rate = self.tax_amount_on_management_fee / 2
+
+            else:
+
+                self.cgst = ( self.hotel_gst / 2)
+
+                self.sgst = ( self.hotel_gst / 2)
+
+                self.management_fee_cgst = self.cgst
+                self.management_fee_sgst = self.sgst
+
+                self.management_fee_cgst_rate = self.tax_amount_on_management_fee / 2
+                self.management_fee_sgst_rate = self.tax_amount_on_management_fee / 2
+
+        else:
+
+            self.igst = self.hotel_gst
+
+            self.management_fee_igst = self.igst
+
+            self.management_fee_igst_rate = self.tax_amount_on_management_fee
+
+
+        return {'cgst': self.cgst, 'sgst': self.sgst, 'igst': self.igst}
+
+
+
+
+    def cgst(self):
+
+        return self.cgst
+
+
+    def sgst(self):
+
+        return self.sgst
+
+
+    def igst(self):
+
+        return self.igst
+
+
+
+    def total_billing_amount(self):
+
+        mang_fee_tax_amt = self.taxOnManagement()
+
+        self.sub_total = int(self.ticket_price) + int(self.management_fee) + int(mang_fee_tax_amt)
+
+        return self.sub_total
+
+
+
+    def oper_tax_calc(self):
+
+        #val1 = self.booking_billing_entity
+        #val2 = self.cotrav_billing_entity
+
+        val1 = self.oper_billing_entity
+        val2 = self.cotrav_billing_entity
+
+        print('oper_billing_entity')
+        print(val1)
+        print('cotrav_billing_entity')
+        print(val2)
+
+
+        self.amount = float(self.oper_ticket_price) * self.tax_perscentage
+
+        v1 = val1[:2]
+        v2 = val2[:2]
+
+        if (v1 == v2):
+
+            self.oper_cgst = self.oper_tax_perscentage / 2
+            self.oper_sgst = self.oper_tax_perscentage / 2
+
+            self.oper_cgst_amount = self.amount / 2
+            self.oper_sgst_amount = self.amount / 2
+
+            self.gst_perc = self.oper_tax_perscentage / 2
+
+        else:
+
+            self.oper_igst = self.oper_tax_perscentage
+            self.oper_igst_amount = self.amount
+            self.gst_perc = self.oper_tax_perscentage
+
+        self.gst_paid = float(self.oper_ticket_price) * self.gst_perc
+
+        return {'cgst': self.oper_cgst, 'sgst': self.oper_sgst, 'igst': self.oper_igst, 'gst_paid': self.gst_paid,
+                'gst_perc': self.gst_perc, 'oper_cgst_amount': self.oper_cgst_amount,
+                'oper_sgst_amount': self.oper_sgst_amount, 'oper_igst_amount': self.oper_igst_amount}
+
+
+
+    def detailTax(self):
+
+        tax = {
+
+            "ticket_price": self.ticket_price,
+            'management_fee': self.management_fee,
+            'tax_on_management_fee': self.tax_on_management_fee,
+            'tax_on_management_fee_percentage': self.tax_on_management_fee_percentage,
+            'tax_amount_on_management_fee': self.tax_amount_on_management_fee,
+            'tax_perscentage': self.tax_perscentage,
+            'sub_total': self.sub_total,
+            'booking_billing_entity': self.booking_billing_entity,
+            'cotrav_billing_entity': self.cotrav_billing_entity,
+            'igst': self.igst,
+            'cgst': self.cgst,
+            'sgst': self.sgst,
+
+            'management_fee_igst': self.management_fee_igst,
+            'management_fee_cgst': self.management_fee_cgst,
+            'management_fee_sgst': self.management_fee_sgst,
+
+            'management_fee_igst_rate': self.management_fee_igst_rate,
+            'management_fee_cgst_rate': self.management_fee_cgst_rate,
+            'management_fee_sgst_rate': self.management_fee_sgst_rate,
+
+            'oper_cgst': self.oper_cgst,
+            'oper_sgst': self.oper_sgst,
+            'oper_igst': self.oper_igst,
+
+            'gst_paid': self.gst_paid,
+            'gst_perc': self.gst_perc,
+
+            'oper_cgst_amount': self.oper_cgst_amount,
+            'oper_sgst_amount': self.oper_sgst_amount,
+            'oper_igst_amount': self.oper_igst_amount
+
+        }
+
+        return tax
 
 
 
